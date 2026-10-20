@@ -1,0 +1,101 @@
+.visualLesson{max-width:1200px;margin:auto;display:grid;gap:16px;color:#27374f}
+.visualLesson button{font-family:inherit;cursor:pointer}
+.visualLesson button:disabled{opacity:.47;cursor:not-allowed}
+.vHero{background:linear-gradient(115deg,#174b67 5%,#4257ab 70%,#6e5fc7);border-radius:24px;color:#fff;padding:27px 29px}
+.vEyebrow{font:800 11px Tahoma,sans-serif;color:#46a59b;letter-spacing:.6px}
+.vHero .vEyebrow{color:#a8e9e3}
+.vHero h1{font-size:clamp(22px,3vw,34px);line-height:1.7;margin:10px 0 3px}
+.vHero h1 em{color:#b3f4d1;font-style:normal}
+.vHero p{color:#d9e9f6;font-size:13px;line-height:1.9;max-width:700px;margin:0}
+.vHeroStats{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.vHeroStats span{border:1px solid #ffffff52;background:#ffffff1f;border-radius:99px;padding:7px 11px;font-size:11px}
+.vToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #e9ecf5;border-radius:15px;padding:8px 10px}
+.vModes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;flex:1}
+.vModes button{background:transparent;border:0;border-radius:10px;display:flex;justify-content:center;align-items:center;gap:7px;padding:11px 5px;font-size:12px;color:#808da1;font-weight:800}
+.vModes button.active{background:#e8f7f1;color:#197d6e}
+.vDownload{display:flex;align-items:center;gap:5px;border:1px solid #e4e9f2;background:#f8f9fd;border-radius:11px;color:#5b66a2;font-size:11px;white-space:nowrap;padding:10px}
+.vCategories{display:flex;flex-wrap:wrap;gap:7px}
+.vCategories button{border:1px solid #e5e9f2;border-radius:99px;background:#fff;color:#73819a;font-size:12px;padding:8px 12px;display:flex;gap:6px;align-items:center}
+.vCategories button span{font:750 11px Tahoma;opacity:.65}
+.vCategories button.active{background:#4b7d89;border-color:#4b7d89;color:white}
+.vVocabulary,.vFlashView,.vQuiz,.vDialogueView{display:grid;gap:16px}
+.vSectionHeading{display:flex;justify-content:space-between;align-items:end;gap:12px}
+.vSectionHeading h2{font-size:20px;margin:5px 0}
+.vSectionHeading p{color:#8a94a4;font-size:12px;margin:3px 0}
+.vSectionHeading>span{font-size:11px;color:#77869a;white-space:nowrap}
+.vPhraseGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.vPhraseCard{background:#fff;border:1px solid #e7eaf2;border-radius:16px;overflow:hidden;box-shadow:0 6px 19px #2834550b;min-width:0}
+.visualArt{width:100%;height:auto;display:block;aspect-ratio:480/270}
+.vPhraseInfo{padding:14px;display:grid;gap:6px}
+.vPhraseMeta{display:flex;justify-content:space-between;gap:6px;color:#7489a0;font-size:10px}
+.vPhraseMeta span{border-radius:99px;background:#edf4f4;padding:4px 8px}
+.vPhraseMeta b{color:#188763;font-size:10px}
+.vPhraseInfo h3{font:800 18px/1.55 Tahoma,sans-serif;text-align:right;color:#2d4a68;margin:4px 0 0;overflow-wrap:anywhere}
+.vPhraseInfo p{color:#6c788d;font-size:13px;margin:0;line-height:1.9}
+.vPhraseBottom{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:10px;border-top:1px solid #f0f2f5}
+.vPhraseBottom small{font-size:10px;color:#98a1b0;line-height:1.6}
+.vSpeak{border:1px solid #cae8e2;background:#e9f8f2;color:#248579;border-radius:11px;padding:9px 12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:800;white-space:nowrap}
+.vSpeak.small{padding:7px 9px;font-size:11px}
+.vSolid{display:inline-flex;justify-content:center;align-items:center;gap:9px;border:0;background:#277a75;color:#fff;border-radius:13px;padding:13px 18px;font-weight:850;font-size:13px;justify-self:center}
+.vSolid.wide{width:100%}
+.vShowMore{background:#fff;border:1px solid #dce5eb;border-radius:12px;padding:12px;color:#387a82;display:flex;align-items:center;justify-content:center;gap:8px}
+.vFlashCard{max-width:700px;width:100%;background:#fff;border:1px solid #e7e9f3;border-radius:21px;padding:17px;margin:auto;display:grid;justify-items:center;gap:15px;box-shadow:0 12px 28px #273b5412}
+.vFlashCard>.visualArt{border-radius:13px}
+.vFlashMeaning{text-align:center;display:grid;gap:8px}
+.vFlashMeaning h2{font-size:22px;margin:0;color:#314961;line-height:1.75}
+.vFlashReveal{background:#f1f9f6;padding:14px 20px;border-radius:12px;text-align:center;display:grid;gap:7px;justify-items:center;width:100%}
+.vFlashReveal h3{font:900 24px Tahoma;color:#25756e;margin:5px 0}
+.vRatings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:700px;width:100%;margin:auto}
+.vRatings button{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 9px;border-radius:12px;border:1px solid #e5e9f2;font-weight:800}
+.vRatings .again{color:#c37550;background:#fff0e9}
+.vRatings .known{color:#20815f;background:#e5f9ee}
+.vLearningNote,.vDisclaimer{text-align:center;font-size:11px;color:#95a0aa;line-height:1.9;margin:0}
+.vQuiz{max-width:800px;margin:auto;width:100%;background:#fff;border:1px solid #e9ebf2;border-radius:20px;padding:19px}
+.vQuizTop{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#6f7c90}
+.vQuizTrack{background:#e8edf2;height:9px;border-radius:99px;overflow:hidden}
+.vQuizTrack span{display:block;background:#36b99d;height:100%}
+.vQuiz>.visualArt{max-height:350px;border-radius:16px}
+.vQuestion{text-align:center}.vQuestion span{color:#77899f;font-size:12px}
+.vQuestion h3{font-size:20px;margin:7px 0}
+.vQuizChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.vQuizChoices button{background:#fff;border:2px solid #e4e8f0;border-radius:12px;min-height:66px;display:flex;align-items:center;gap:8px;padding:10px;text-align:left}
+.vQuizChoices button>span{background:#f0f1f8;color:#8892a7;padding:4px 7px;border-radius:8px;font:750 11px Tahoma}
+.vQuizChoices button>b{flex:1;font:800 14px/1.65 Tahoma;color:#35486e}
+.vQuizChoices button.correct,.vStoryChoices button.correct{border-color:#35b888;background:#e6fbef;color:#16805f}
+.vQuizChoices button.wrong,.vStoryChoices button.wrong{border-color:#ed94a2;background:#fff1f2;color:#b35162}
+.vQuizFeedback{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:12px;border-radius:12px}
+.vQuizFeedback.correct{background:#e7faef;color:#237757}
+.vQuizFeedback.wrong{background:#fff0eb;color:#ad6651}
+.vQuizFeedback>div{display:grid;gap:5px;font-size:12px}
+.vQuizFeedback span{font:800 14px Tahoma}
+.vQuizFinished{display:grid;justify-items:center;text-align:center;gap:12px;padding:29px 10px}
+.vQuizFinished>span{font-size:52px}
+.vQuizFinished h2{margin:0;font-size:21px}
+.vQuizFinished strong{font:900 48px Tahoma;color:#20846d}
+.vQuizFinished p{font-size:13px;line-height:1.9;color:#8292a4}
+.vDialogChips{display:flex;gap:7px;flex-wrap:wrap}
+.vDialogChips button{border:1px solid #dee6f1;background:#fff;color:#5c6e83;padding:9px 11px;font-size:11px;border-radius:99px}
+.vDialogChips button.active{background:#3c7d86;color:#fff;border-color:#3c7d86}
+.vMiniStory{max-width:770px;width:100%;margin:auto;display:grid;gap:13px;background:#fff;padding:18px;border:1px solid #e3e8f0;border-radius:19px}
+.vStoryHead{display:flex;justify-content:space-between;gap:8px}
+.vStoryHead b{font-size:14px}.vStoryHead small{color:#95a1b3}
+.vBubble{border-radius:17px;padding:15px;background:#eff6fb;display:grid;gap:9px}
+.vBubble.self{background:#f6f2ff}
+.vBubble>span{font-weight:800;font-size:12px;color:#4a82a7}
+.vBubble strong{font:800 18px/1.9 Tahoma;color:#30516c;text-align:right}
+.vBubble small{font-size:12px;color:#8998a8}
+.vBubble .vSpeak{justify-self:start}
+.vStoryChoices{display:grid;gap:8px}
+.vStoryChoices button{border:1px solid #e0e4ed;border-radius:11px;padding:12px;background:#fff;color:#35476b;font:750 15px/1.5 Tahoma}
+.vStoryResponse{background:#eaf7f0;color:#33815e;border-radius:11px;display:grid;gap:6px;padding:12px;font-size:12px}
+.vStoryResponse span{font:800 14px Tahoma}
+.vStoryDone{display:grid;justify-items:center;gap:14px;padding:18px;text-align:center}
+.vStoryDone button{display:flex;gap:7px;align-items:center;border:1px solid #cde4dd;padding:10px;border-radius:10px;background:#e6f6ef}
+.vBranchCTA{display:flex;align-items:center;gap:10px;background:#ecebfd;border-radius:15px;padding:15px}
+.vBranchCTA>div{flex:1;min-width:0}
+.vBranchCTA b{font-size:13px}
+.vBranchCTA p{font-size:11px;color:#858bb0;margin:4px 0;line-height:1.7}
+.vBranchCTA a{background:#5d55c6;color:#fff;border-radius:11px;display:flex;gap:7px;align-items:center;padding:11px;text-decoration:none;white-space:nowrap;font-size:11px}
+@media(max-width:920px){.vPhraseGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:610px){.vPhraseGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.vToolbar{flex-wrap:wrap}.vDownload{width:100%;justify-content:center}.vPhraseInfo{padding:10px}.vPhraseInfo h3{font-size:15px}.vPhraseInfo p{font-size:11px}.vPhraseBottom{flex-wrap:wrap}.vModes button{font-size:10px;gap:4px}.vHero{padding:20px}.vQuiz{padding:12px}.vQuizChoices{grid-template-columns:1fr}.vQuizChoices button{min-height:56px}.vBranchCTA{flex-wrap:wrap}}
+@media(max-width:400px){.vPhraseGrid{grid-template-columns:1fr}.vModes button{flex-direction:column;font-size:10px}.vPhraseInfo h3{font-size:18px}.vCategories{gap:5px}.vCategories button{font-size:11px;padding:7px}.vQuiz .visualArt{max-height:270px}}
