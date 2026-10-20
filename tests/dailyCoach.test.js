@@ -95,7 +95,7 @@ test('scheduled reviews outrank new content; weak items direct to matching exerc
  assert.equal(report.suggested.route,'srs');
  assert.ok(report.dueCount>=3);
  assert.equal(report.tasks[0].route,'srs');
- memory=recordActivity(memory,{id:'grammar:sein',kind:'grammar',label:'sein',lesson:1,correct:false},now-800000);
+ memory=recordActivity(memory,{id:'grammar:sein',kind:'grammar',label:'sein',lesson:1,correct:false},now-100000);
  report=dailyCoachReport(memory,0,10,now);
  assert.equal(report.insights.weak,1);
  assert.equal(report.suggested.route,'verbs');
