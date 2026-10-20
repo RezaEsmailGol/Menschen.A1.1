@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { AudioLines, BookOpen, Check, ChevronLeft, Ear, Headphones, Lightbulb, RotateCcw, Search, Sparkles, Volume2, X } from 'lucide-react';
 import { pronunciationGroups, pronunciationRules, shuffle } from './learningData';
+import { activityItemKey } from './learningMemory';
 
 function makeQuiz() {
   return shuffle(pronunciationRules).slice(0, 8).map(rule => ({
@@ -9,7 +10,7 @@ function makeQuiz() {
   }));
 }
 
-export default function PronunciationLab({ speak }) {
+export default function PronunciationLab({ speak, onPracticeEvent }) {
   const [mode, setMode] = useState('rules');
   const [group, setGroup] = useState('all');
   const [search, setSearch] = useState('');
@@ -27,7 +28,9 @@ export default function PronunciationLab({ speak }) {
   const choose = choice => {
     if (answer !== null) return;
     setAnswer(choice);
-    if (choice === current.word) setScore(x => x + 1);
+    const correct = choice===current.word;
+    onPracticeEvent?.({id:activityItemKey('pronunciation',current.id),kind:'pronunciation',label:current.symbol+' / '+current.word,lesson:1,correct});
+    if (correct) setScore(x => x + 1);
   };
   const next = () => { setIndex(x => x + 1); setAnswer(null); };
   const reset = () => { setQuiz(makeQuiz()); setIndex(0); setAnswer(null); setScore(0); setMode('quiz'); };
