@@ -1,7 +1,8 @@
 import React,{useState} from 'react';
-import {ArrowLeft,CheckCircle2,Gamepad2,Headphones,Hash,Heart,RotateCcw,Sparkles,Star,Trophy,Volume2,XCircle} from 'lucide-react';
+import {ArrowLeft,CheckCircle2,Gamepad2,Headphones,Hash,Heart,RotateCcw,Sparkles,Star,Trophy,Volume2,VolumeX,XCircle} from 'lucide-react';
 import {germanNumber} from './learningData.js';
 import {createNumberRound,optionLabel} from './numberGameLogic.js';
+import {playWrongBeep} from './audioFeedback.js';
 import './numberGame.css';
 
 const format=n=>n.toLocaleString('fa-IR');
@@ -17,6 +18,17 @@ export default function NumberLab({speak,onAttempt,memory}){
  const [wrongCount,setWrongCount]=useState(0);
  const [reviewCorrect,setReviewCorrect]=useState(0);
  const [studyAll,setStudyAll]=useState(false);
+ const [feedbackSound,setFeedbackSound]=useState(()=>{
+   try{return localStorage.getItem('dt_game_feedback_sound')!=='off';}
+   catch{return true;}
+ });
+ const toggleFeedbackSound=()=>{
+   setFeedbackSound(previous=>{
+     const next=!previous;
+     try{localStorage.setItem('dt_game_feedback_sound',next?'on':'off');}catch{}
+     return next;
+   });
+ };
  const item=queue[position];
  const finished=active&&position>=queue.length;
  const correct=choice!==null && choice===item?.number;
@@ -27,6 +39,16 @@ export default function NumberLab({speak,onAttempt,memory}){
  const pick=value=>{
    if(choice!==null || finished)return;
    const ok=value===item.number;
+   // Run feedback inside the actual click handler so mobile browsers allow sound.
+   if(feedbackSound){
+     if(ok){
+       // Use the same German voice and adjustable speed as other lesson exercises.
+       speak(germanNumber(item.number));
+     } else {
+       try{window.speechSynthesis?.cancel();}catch{}
+       playWrongBeep();
+     }
+   }
    setChoice(value);
    setAttempts(x=>x+1);
    if(ok){
@@ -37,8 +59,8 @@ export default function NumberLab({speak,onAttempt,memory}){
      if(!item.retry)setQueue(previous=>[...previous,{...item,retry:true}]);
    }
    onAttempt?.(ok,item.number);
-   if(ok && typeof navigator!=='undefined'&&navigator.vibrate) {
-     try{navigator.vibrate(25);}catch{}
+   if(typeof navigator!=='undefined'&&navigator.vibrate) {
+     try{navigator.vibrate(ok ? 25 : [25,45,25]);}catch{}
    }
  };
  const next=()=>{if(choice===null)return;setPosition(n=>n+1);setChoice(null);};
@@ -58,7 +80,16 @@ export default function NumberLab({speak,onAttempt,memory}){
     <div className="numberMainCard gameNumberCard">
       <div className="panelTitleRow">
         <div><small className="eyebrow">NUMBER ADVENTURE</small><h3>آزمون تصادفی اعداد</h3></div>
-        <span className="panelIcon"><Gamepad2 size={23}/></span>
+        <div className="duoSoundControls">
+          <button type="button" className={'duoSoundToggle '+(feedbackSound?'enabled':'muted')}
+            onClick={toggleFeedbackSound} aria-pressed={feedbackSound}
+            aria-label={feedbackSound?'بی‌صدا کردن بازخورد آزمون':'فعال کردن صدای بازخورد آزمون'}
+            title={feedbackSound?'خاموش کردن افکت صوتی':'روشن کردن افکت صوتی'}>
+            {feedbackSound?<Volume2 size={18}/>:<VolumeX size={18}/>}
+            <span>{feedbackSound?'صدا روشن':'بی‌صدا'}</span>
+          </button>
+          <span className="panelIcon"><Gamepad2 size={23}/></span>
+        </div>
       </div>
       {!active && <div className="numberChallengeSetup">
         <div><b>از چه اعدادی سؤال بپرسم؟</b><div className="segmentedTabs">
@@ -89,7 +120,7 @@ export default function NumberLab({speak,onAttempt,memory}){
             const right=choice!==null && number===item.number;
             const wrong=choice!==null && number===choice && choice!==item.number;
             return <button key={number} type="button" disabled={choice!==null}
-              className={(right?'isCorrect':wrong?'isWrong':'')+(choice!==null?' locked':'')}
+              className={(right?'isCorrect duoCorrectPop':wrong?'isWrong duoWrongShake':'')+(choice!==null?' locked':'')}
               onClick={()=>pick(number)}>
               <span className="duoLetter">{'ABCD'[i]}</span><span className="duoAnswer" dir="ltr">{optionLabel(number,mode)}</span>
               {right&&<CheckCircle2 size={22}/>}
@@ -99,7 +130,7 @@ export default function NumberLab({speak,onAttempt,memory}){
         </div>
         {choice!==null&&<div className={'duoFeedback '+(correct?'success':'failure')} role="status">
           {correct?<CheckCircle2 size={25}/>:<XCircle size={25}/>}
-          <div><b>{correct?'آفرین! درست انتخاب کردی!':'این دفعه اشتباه شد؛ دوباره می‌بینیمش.'}</b>
+          <div><b>{correct?'آفرین! تلفظ آلمانی پخش شد.':'اشتباه شد! یک بیپ کوتاه و مرور دوباره.'}</b>
             <span dir="ltr">{item.number} = {germanNumber(item.number)}</span></div>
           <button onClick={()=>speak(germanNumber(item.number))} aria-label="شنیدن جواب درست"><Volume2 size={19}/></button>
         </div>}
