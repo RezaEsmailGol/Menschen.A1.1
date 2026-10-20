@@ -113,12 +113,12 @@ export default async function handler(req,res){
     });
     if(!upstream.ok){
       const issue=await upstream.json().catch(()=>null);
+      const billingRequired=upstream.status===403&&/credit card|billing|payment method/i.test(String(issue?.error?.message||issue?.message||''));
       // Log only the provider status and public error classification; never tokens or prompts.
       console.warn('TUTOR_GATEWAY_FAILURE',upstream.status,trim(issue?.error?.code||issue?.code||'unknown',60));
-      return response(res,upstream.status===429?429:502,
-        {error:upstream.status===429?'provider_rate_limited':'provider_unavailable',upstreamStatus:upstream.status,
-          diagnostic:trim(issue?.error?.message||issue?.message||issue?.error?.code||'No detail',180).replace(/(sk-|Bearer |AI_GATEWAY_API_KEY)[A-Za-z0-9_.-]+/g,'[redacted]'),
-          fallback:true});
+      return response(res,billingRequired?402:upstream.status===429?429:502,
+        {error:billingRequired?'billing_required':upstream.status===429?'provider_rate_limited':'provider_unavailable',
+          upstreamStatus:upstream.status,fallback:true});
     }
     const result=await upstream.json();
     const parsed=parseTutorResult(result?.choices?.[0]?.message?.content);
