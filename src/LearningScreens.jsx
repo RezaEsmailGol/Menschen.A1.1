@@ -4,6 +4,7 @@ import { lessons } from './courseData.js';
 import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
 import { learningInsights, recommendedRoute } from './learningMemory.js';
+import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
@@ -46,8 +47,8 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
         <h1>آلمانی را <span>بازی کن!</span></h1>
         <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
         <div className="gameHeroActions">
-          <button className="gamePrimary" onClick={()=>setTab('workbook')}><BookOpen size={17}/> دفتر جلسه اول استاد <ArrowLeft size={18}/></button>
-          <button className="gameHeroSecondary" onClick={()=>setTab(choice.page)}>{choice.label}</button>
+          <RouteLink className="gamePrimary" to="workbook" navigate={setTab}><BookOpen size={17}/> دفتر جلسه اول استاد <ArrowLeft size={18}/></RouteLink>
+          <RouteLink className="gameHeroSecondary" to={choice.page} navigate={setTab}>{choice.label}</RouteLink>
         </div>
       </div>
       <div className="gameOrb" aria-hidden="true"><span>Hallo!</span><div>🇩🇪</div></div>
@@ -62,19 +63,19 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
       <div className="gameProgress"><span style={{width:dailyDone+'%'}} /></div>
       <div className="gameGoalDetail"><span><Target size={16}/> فقط ۱۰ پاسخ در روز؛ بدون فشار و جریمه</span><b>{report.today.xp||0} XP امروز</b></div>
     </div>
-    <div className="gameNext"><span className="nextSparkle"><WandSparkles size={24}/></span><div><b>پیشنهاد شخصی برای تو</b><p>{choice.why}{report.weak>0 ? ' · '+report.weak+' مورد نیازمند تمرین' : ''}</p></div><button onClick={()=>setTab(choice.page)}>شروع <ChevronLeft size={17}/></button></div>
+    <div className="gameNext"><span className="nextSparkle"><WandSparkles size={24}/></span><div><b>پیشنهاد شخصی برای تو</b><p>{choice.why}{report.weak>0 ? ' · '+report.weak+' مورد نیازمند تمرین' : ''}</p></div><RouteLink to={choice.page} navigate={setTab}>شروع <ChevronLeft size={17}/></RouteLink></div>
     <div className="gameSectionHead"><div><span className="gameEyebrow">LEARNING JOURNEY</span><h2>نقشه پیشرفت امروز</h2></div><span>{done} از ۱۲ درس تمام شده</span></div>
     <div className="learningJourney">
       {learningStages.map((x,i)=><React.Fragment key={x.id}>
-        <button className={'journeyNode '+x.color} onClick={()=>setTab(x.id)}>
+        <RouteLink className={'journeyNode '+x.color} to={x.id} navigate={setTab}>
           <span className="journeyIcon"><x.Icon size={24}/></span>
           <span><b>{x.title}</b><small>{x.subtitle}</small></span>
           <ChevronLeft size={17}/>
-        </button>
+        </RouteLink>
         {i<learningStages.length-1 && <div className="journeyConnector"><span/></div>}
       </React.Fragment>)}
     </div>
-    <div className="homeContinue"><div><Trophy size={22}/><span><b>سطح {report.level}</b><small>{report.xpIntoLevel} از ۲۰۰ XP برای سطح بعد</small></span></div><button onClick={()=>setTab('progress')}>دیدن پیشرفت <ArrowLeft size={16}/></button></div>
+    <div className="homeContinue"><div><Trophy size={22}/><span><b>سطح {report.level}</b><small>{report.xpIntoLevel} از ۲۰۰ XP برای سطح بعد</small></span></div><RouteLink to="progress" navigate={setTab}>دیدن پیشرفت <ArrowLeft size={16}/></RouteLink></div>
     {(!report.practiced && (legacyStats?.correct||legacyStats?.known)) ? <p className="migrationNote">آمار قدیمی حفظ شده؛ با اولین تمرین جدید، تحلیل دقیق هر مهارت آغاز می‌شود.</p>:null}
   </div>;
 }
@@ -89,12 +90,12 @@ export function PracticeHub({setTab,memory}) {
   const focusText=firstWeak ? 'اول این مورد را تقویت کن: '+(firstWeak.label||skillLabels[firstWeak.kind]) : 'چند تمرین انجام بده تا پیشنهاد دقیق دریافت کنی.';
   return <div className="gamePage">
     <div className="hubHeading"><span className="gameEyebrow">PRACTICE ZONE</span><h2>زمین بازی آلمانی</h2><p>هر بار روی چیزی تمرین کن که هنوز برایت سخت است.</p></div>
-    <div className="hubSuggestion"><span className="hubIcon"><Brain size={25}/></span><div><b>حافظه آموزشی تو</b><p>{report.practiced?focusText:'تمرین را شروع کن تا نقاط قوت و ضعفت را شناسایی کنیم.'}</p></div><button onClick={()=>setTab(destination)}>تمرین <ChevronLeft size={16}/></button></div>
-    <div className="practiceTiles">{practiceCategories.map(({id,label,hint,Icon,theme})=><button className={'practiceTile '+theme} key={id} onClick={()=>setTab(id)}>
+    <div className="hubSuggestion"><span className="hubIcon"><Brain size={25}/></span><div><b>حافظه آموزشی تو</b><p>{report.practiced?focusText:'تمرین را شروع کن تا نقاط قوت و ضعفت را شناسایی کنیم.'}</p></div><RouteLink to={destination} navigate={setTab}>تمرین <ChevronLeft size={16}/></RouteLink></div>
+    <div className="practiceTiles">{practiceCategories.map(({id,label,hint,Icon,theme})=><RouteLink className={'practiceTile '+theme} key={id} to={id} navigate={setTab}>
       <span className="tileIcon"><Icon size={23}/></span>
       <span className="tileCopy"><b>{label}</b><small>{hint}</small></span>
       <ChevronLeft size={18}/>
-    </button>)}</div>
+    </RouteLink>)}</div>
   </div>;
 }
 
@@ -153,7 +154,7 @@ export function ProgressPage({setTab,memory,progress,schedule}) {
       </section>
       <section className="progressPanel"><h3><Target size={19}/> چیزهایی که هنوز سخت‌اند</h3>
         {insights.weakItems.length?insights.weakItems.map(item=><div className="weakEntry" key={item.id}><div><b dir="auto">{item.label||skillLabels[item.kind]}</b><small>{skillLabels[item.kind]} · تسلط {item.mastery}٪</small></div><span>{item.wrong} خطا</span></div>):<p className="progressSoftNote">هنوز نقطه ضعف ثبت نشده. بعد از تمرین، کلمات یا موضوعات دشوار اینجا نمایش داده می‌شوند.</p>}
-        <button className="progressPractice" onClick={()=>setTab('practice')}>رفتن به تمرین <ArrowLeft size={16}/></button>
+        <RouteLink className="progressPractice" to="practice" navigate={setTab}>رفتن به تمرین <ArrowLeft size={16}/></RouteLink>
       </section>
     </div>
     <div className="gameBackup"><div><ShieldCheck size={23}/><span><b>حافظه‌ات را حفظ کن</b><small>اطلاعات فعلاً فقط روی همین گوشی و مرورگر ذخیره می‌شود. برای انتقال به دستگاه دیگر بکاپ بگیر.</small></span></div>
