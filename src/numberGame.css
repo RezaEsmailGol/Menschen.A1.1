@@ -1,0 +1,60 @@
+/* Four-choice number game: readable, touch-friendly answer cards. */
+.numberDuoHero{background:linear-gradient(108deg,#303370,#5654a9 60%,#6d71d8)}
+.gameNumberCard{min-width:0}
+.numberChallengeSetup{display:grid;gap:16px;margin:18px 0}
+.numberChallengeSetup>div{display:grid;gap:6px}
+.numberChallengeSetup b{font-size:13px}
+.numberChallengeSetup .segmentedTabs{margin:0}
+.numberGameStart{border-radius:18px;margin-top:5px}
+.numberMascot{font-size:55px;filter:drop-shadow(0 8px 9px #8d90e155);margin:8px auto 4px}
+.duoPlay{display:grid;gap:12px;padding:8px 0}
+.duoStatus{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#727997;font-size:11px}
+.duoStatus span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.duoStatus span:first-child{color:#5e54b8;font-weight:800}
+.duoStatus span:last-child{color:#d68190}
+.duoTrack{margin:0 0 2px;height:11px;background:#e4e7fb}
+.duoTrack span{background:linear-gradient(90deg,#45cfa3,#6865de)}
+.duoQuestionHead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#6c7491}
+.reviewBadge{border:1px solid #efd9af;background:#fff5dc;color:#a46f22;border-radius:99px;padding:6px 9px;font-size:11px}
+.duoQuestion{min-height:200px;background:radial-gradient(circle at 20% -30%,#efedff,#f5f7ff 65%,#eaf8f3);border-radius:20px;border:1px solid #e5e9fa;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;text-align:center;padding:16px}
+.duoQuestion>span:first-child{font-size:14px;font-weight:800;color:#565d85;line-height:1.8}
+.duoHugeNumber{font:900 clamp(67px,11vw,110px) Tahoma,sans-serif;color:#594ec8;text-shadow:0 6px 0 #bcb6ef34}
+.duoHeadphones{display:grid;place-items:center;width:88px;height:83px;border-radius:24px;background:#e5e2ff;color:#675dc8;margin:7px}
+.duoHear{display:flex;align-items:center;gap:8px;background:#5e56d5;color:white;border:0;border-radius:12px;padding:11px 17px;cursor:pointer;font-size:13px}
+.duoChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.duoChoices button{border:2px solid #e1e4f0;background:#fff;color:#334166;min-height:79px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;cursor:pointer;position:relative;box-shadow:0 4px 0 #e9eaf3;transition:background .15s,border-color .15s}
+.duoChoices button:hover:not(:disabled){border-color:#8c82e6;background:#f4f2ff}
+.duoChoices button:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #e9eaf3}
+.duoChoices button.locked{cursor:default;opacity:.73}
+.duoChoices button.isCorrect{background:#e4fbef;border-color:#35b888;color:#16794e;box-shadow:0 4px 0 #b2ebd2;opacity:1}
+.duoChoices button.isWrong{background:#fff0f1;border-color:#ed8e9b;color:#bd4e5d;box-shadow:0 4px 0 #f6ced2;opacity:1}
+.duoChoices .duoLetter{position:absolute;top:8px;left:9px;border:1px solid #e1e3ee;background:#f6f7fd;color:#9aa1b5;padding:3px 6px;border-radius:8px;font:750 10px Tahoma}
+.duoChoices .duoAnswer{font:800 clamp(17px,3vw,22px) Tahoma,sans-serif;overflow-wrap:anywhere;text-align:center;line-height:1.55}
+.duoChoices button>svg{position:absolute;right:9px;top:8px}
+.duoFeedback{display:flex;align-items:center;gap:10px;border-radius:14px;padding:13px}
+.duoFeedback.success{background:#e1f9ed;color:#167551}
+.duoFeedback.failure{background:#fff0ee;color:#a64f48}
+.duoFeedback>div{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.duoFeedback b{font-size:13px;line-height:1.6}
+.duoFeedback span{font:700 14px Tahoma;overflow-wrap:anywhere}
+.duoFeedback button{background:#ffffffb6;border:0;border-radius:11px;padding:10px;color:inherit;display:grid;place-items:center;cursor:pointer}
+.duoNext{margin-top:2px;min-height:52px}
+.duoNext:disabled{opacity:.35;cursor:not-allowed}
+.duoFinished{display:flex;flex-direction:column;align-items:center}
+.duoFinalStats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin:6px 0}
+.duoFinalStats div{background:#f4f5fc;border:1px solid #e5e7f3;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px}
+.duoFinalStats b{font:900 21px Tahoma;color:#5751c7}
+.duoFinalStats span{font-size:10px;color:#9198ac}
+@media(max-width:580px){
+ .numberDuoHero{padding:22px 16px}
+ .duoQuestion{min-height:165px;padding:13px}
+ .duoChoices button{min-height:75px;padding:8px}
+ .duoChoices .duoAnswer{font-size:17px}
+ .duoStatus{font-size:10px}
+}
+@media(max-width:360px){
+ .duoChoices .duoAnswer{font-size:15px}
+ .duoChoices button{min-height:69px}
+ .duoStatus span{white-space:normal;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.duoChoices button{transition:none}}
