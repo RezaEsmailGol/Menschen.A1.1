@@ -36,9 +36,20 @@ export default function PhaseOne({mode,setTab,speak}) {
   const [selected,select] = useLessonSelection();
   const [progress,setProgress] = useSaved(COURSE_KEY,{1:{started:true}});
   const [schedule,setSchedule]= useSaved(REVIEW_KEY,{});
+  const [personalCards] = useSaved('dt_cards', []);
+  // Keep existing manually created flashcards available for spaced review.
+  const customCards = (Array.isArray(personalCards) ? personalCards : [])
+    .filter(c => typeof c?.front === 'string' && typeof c?.back === 'string' && c.front && c.back)
+    .map((c,index) => ({
+      id: 'personal:' + index + ':' + (c.front + '|' + c.back),
+      lesson: 0,
+      front: c.front,
+      back: c.back,
+      speak: /[A-Za-zÄÖÜäöüß]/.test(c.back) ? c.back : c.front,
+    }));
   const lesson=lessons[selected-1];
   const available=lessons.filter(l=>l.id===1 || progress[l.id]?.started).map(l=>l.id);
-  const due = dueCards(allStudyCards,schedule,available);
+  const due = dueCards([...allStudyCards,...customCards],schedule,[...available,0]);
   const learned=Object.keys(schedule).length;
   const completed=lessons.filter(l=>progress[l.id]?.passed).length;
 
@@ -123,16 +134,15 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab})
 
 function ReviewPanel({available,schedule,due,rate,speak,setTab}) {
   const [revealed,setRevealed] = useState(false);
-  const [revealKey,setRevealKey]=useState('');
   const card=due[0];
   const reviewed=Object.keys(schedule).filter(id=>schedule[id]?.lastReviewed).length;
   const nextDate=Object.values(schedule).filter(x=>x?.dueAt>Date.now()).map(x=>x.dueAt).sort((a,b)=>a-b)[0];
-  function choose(grade) {rate(card,grade);setRevealed(false);setRevealKey('');}
+  function choose(grade) {rate(card,grade);setRevealed(false);}
   return <div className="reviewLayout">
     <div className="reviewCardShell">
       <div className="studyPanelHead"><div><span className="eyebrow">SPACED REPETITION</span><h3>فلش‌کارت هوشمند</h3><p>سخت‌ها زودتر برمی‌گردند؛ کارت‌های مسلط‌شده دیرتر.</p></div><div className="srsCount">{due.length}<small>آماده امروز</small></div></div>
       {card ? <>
-        <div className="srsCardMeta"><span>درس {card.lesson}</span><span>کارت {reviewed+1}</span></div>
+        <div className="srsCardMeta"><span>{card.lesson===0?'فلش‌کارت شخصی':'درس '+card.lesson}</span><span>کارت {reviewed+1}</span></div>
         <button className={'srsFlash '+(revealed?'showBack':'')} onClick={()=>{setRevealed(v=>!v);setRevealKey(card.id)}} aria-label="برگرداندن فلش کارت">
           <small>{revealed?'پاسخ آلمانی':'معنی فارسی — پاسخ را حدس بزن'}</small>
           <strong dir={revealed?'ltr':'rtl'}>{revealed?card.back:card.front}</strong>
