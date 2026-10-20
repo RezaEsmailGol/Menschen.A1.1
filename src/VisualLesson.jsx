@@ -47,13 +47,16 @@ function Vocabulary({phrases,speak,memory,setMode}){
  </section>;
 }
 function PictureFlashcards({phrases,memory,speak,onEvent}){
- const priority=useMemo(()=>{
+ // Freeze this review order during the session so rating a card cannot move
+ // the next item or silently skip it. A fresh session reprioritizes weak cards.
+ const [priority]=useState(()=>{
   const due=phrases.filter(p=>{
    const m=memory.items?.[visualAnswerId(p)];
-   return m && (m.mastery<55||m.nextAt<=Date.now()||m.lastCorrect===false);
+   return m&&(m.mastery<55||m.nextAt<=Date.now()||m.lastCorrect===false);
   });
-  return [...due,...phrases.filter(p=>!due.some(q=>q.id===p.id))];
- },[phrases,memory]);
+  const dueIds=new Set(due.map(p=>p.id));
+  return [...due,...phrases.filter(p=>!dueIds.has(p.id))];
+ });
  const [idx,setIdx]=useState(0),[reveal,setReveal]=useState(false);
  const current=priority[idx%priority.length];
  if(!current)return null;
