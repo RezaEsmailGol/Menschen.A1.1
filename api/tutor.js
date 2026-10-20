@@ -111,8 +111,13 @@ export default async function handler(req,res){
         response_format:{type:'json_object'}
       })
     });
-    if(!upstream.ok)return response(res,upstream.status===429?429:502,
-      {error:upstream.status===429?'provider_rate_limited':'provider_unavailable',fallback:true});
+    if(!upstream.ok){
+      const issue=await upstream.json().catch(()=>null);
+      // Log only the provider status and public error classification; never tokens or prompts.
+      console.warn('TUTOR_GATEWAY_FAILURE',upstream.status,trim(issue?.error?.code||issue?.code||'unknown',60));
+      return response(res,upstream.status===429?429:502,
+        {error:upstream.status===429?'provider_rate_limited':'provider_unavailable',upstreamStatus:upstream.status,fallback:true});
+    }
     const result=await upstream.json();
     const parsed=parseTutorResult(result?.choices?.[0]?.message?.content);
     if(!parsed)return response(res,502,{error:'invalid_model_response',fallback:true});
