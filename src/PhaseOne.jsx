@@ -92,11 +92,15 @@ function LessonPicker({selected,select}) {
 }
 
 function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab}) {
+  const [showAll,setShowAll]=useState(false);
+  const selectAndClose=id=>{select(id);setShowAll(false);};
   const status = id => progress[id]?.passed ? 'passed' : progress[id]?.started||id===1?'started':'not-started';
   return <div className="courseSplit">
     <aside className="courseSyllabus">
-      <div className="courseSideHeader"><b>درس‌های من</b><small>انتخاب و شروع هر درس آزاد است</small></div>
-      <div className="courseLessonList">{lessons.map(l=><button key={l.id} onClick={()=>select(l.id)} className={'courseLesson '+(selected===l.id?'chosen':'')}>
+      <div className="courseSideHeader"><div><b>درس‌های من</b><small>درس {selected} از ۱۲ · برای انتخاب درس روی دکمه بزن</small></div>
+        <button type="button" className="courseToggle" aria-expanded={showAll} onClick={()=>setShowAll(v=>!v)}>{showAll?'بستن فهرست':'تغییر درس'} <ChevronLeft size={16}/></button>
+      </div>
+      <div className={'courseLessonList '+(showAll?'open':'')}>{lessons.map(l=><button key={l.id} onClick={()=>selectAndClose(l.id)} className={'courseLesson '+(selected===l.id?'chosen':'')}>
         <span className={'lessonIndex '+status(l.id)}>{progress[l.id]?.passed?<Check size={17}/>:String(l.id).padStart(2,'0')}</span>
         <span className="lessonNames"><b>{l.label}</b><small dir="ltr">{l.german}</small></span>
         <ChevronLeft size={15}/>
