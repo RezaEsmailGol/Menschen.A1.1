@@ -114,13 +114,21 @@ function App() {
   const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
   const [schedule, setSchedule] = useLocalStorage(REVIEW_KEY, {});
   const [memory, setMemory] = useLocalStorage(MEMORY_KEY, {version:1,items:{},days:{},totalXP:0,history:[]});
-  const onPracticeEvent = event => setMemory(previous => recordActivity(previous,event));
+  const [feedback,setFeedback]=useState(null);
+  const onPracticeEvent = event => {
+    setMemory(previous => recordActivity(previous,event));
+    setFeedback({xp:event.correct?10:2,correct:event.correct,key:Date.now()+Math.random()});
+    try { if(event.correct && navigator.vibrate) navigator.vibrate(18); } catch {}
+  };
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
   const insights=learningInsights(memory);
+  useEffect(() => { window.scrollTo({top:0,behavior:'auto'}); }, [tab]);
   useEffect(() => {
-    window.scrollTo({top:0,behavior:'auto'});
-  }, [tab]);
+    if(!feedback)return;
+    const timer=setTimeout(()=>setFeedback(null),1800);
+    return ()=>clearTimeout(timer);
+  },[feedback]);
 
   return <div className="app">
     <header className="topbar">
@@ -154,6 +162,10 @@ function App() {
     </main>
 
     <footer>تمرین مستقل و مکمل کتاب Menschen A1.1 · اطلاعات شما فقط روی همین دستگاه ذخیره می‌شود.</footer>
+    {feedback && <div key={feedback.key} className={'gameFeedbackToast '+(feedback.correct?'win':'retry')} role="status">
+      {feedback.correct?<CheckCircle2 size={20}/>:<RotateCcw size={20}/>}
+      <span>{feedback.correct?'آفرین!':'ادامه بده!'} +{feedback.xp} XP</span>
+    </div>}
     <BottomNav tab={tab} setTab={setTab}/>
   </div>
 }
