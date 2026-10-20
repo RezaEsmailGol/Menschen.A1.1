@@ -1,3 +1,5 @@
+import {makeNumberOptions} from './numberGameLogic.js';
+import {germanNumber} from './learningData.js';
 // Instructor-notes companion for the first private A1 lesson.
 // All wording, challenges and illustrations are original to this application.
 export const workbookSections = [
@@ -102,8 +104,10 @@ export function makeWorkbookExam(random=Math.random) {
   ],random).slice(0,3);
   const sentences=shuffleWorkbook(workbookFillSentences,random).slice(0,2);
   const questions=[
-    ...selectedNumbers.map(n=>({id:'number:'+n.number,type:'type',kind:'number',
-      question:'عدد '+n.number+' را به آلمانی بنویس.',answer:n.word,audio:n.word,label:String(n.number)})),
+    ...selectedNumbers.map(n=>({id:'number:'+n.number,type:'choice',kind:'number',
+      question:'نوشتار درست عدد '+n.number+' کدام است؟',answer:n.word,
+      choices:makeNumberOptions(n.number,12,random).map(germanNumber),
+      audio:n.word,label:String(n.number)})),
     ...selectedPronouns.map(p=>({id:'verb:'+p.person,type:'type',kind:'grammar',
       question:'فعل kommen را برای «'+p.person+'» صرف کن.',answer:p.kommen,
       verb:'kommen',pronoun:p.person==='er / sie / es'?'er/sie/es':p.person==='sie / Sie'?'sie/Sie':p.person,
