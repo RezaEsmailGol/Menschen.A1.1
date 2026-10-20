@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="پرچم آلمان">
+  <defs>
+    <clipPath id="flag-shape">
+      <rect x="3" y="3" width="58" height="58" rx="13"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#flag-shape)">
+    <path fill="#000000" d="M3 3h58v19.333H3z"/>
+    <path fill="#DD0000" d="M3 22.333h58v19.334H3z"/>
+    <path fill="#FFCE00" d="M3 41.667h58V61H3z"/>
+  </g>
+</svg>
