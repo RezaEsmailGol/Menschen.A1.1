@@ -1,0 +1,27 @@
+/* Navigation destinations are ordinary anchors, with URL fallback and browser history. */
+.bottomNav a{border:0;background:transparent;border-radius:15px;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:9px 5px 7px;cursor:pointer;color:#8990a5;font-size:11px;min-height:59px;font-weight:750;white-space:nowrap;text-decoration:none}
+.bottomNav a.selected{background:#eeecff;color:#5b51cf}
+.bottomNav a:hover:not(.selected){background:#f7f7fc;color:#5858a5}
+.subpageReturn a{background:#fff;border:1px solid #e8eaf4;color:#635dd0;padding:8px 12px;border-radius:10px;display:flex;align-items:center;gap:5px;font-size:12px;text-decoration:none}
+.gameHeroActions a,.gameNext a,.homeContinue a,.hubSuggestion a,.journeyNode,.practiceTile,.progressPractice,.wbCourseBanner,.courseLesson{text-decoration:none}
+.gameNext a{display:flex;align-items:center;gap:3px;background:#5953cb;color:white;border:0;border-radius:11px;padding:10px;white-space:nowrap;font-size:12px}
+.homeContinue a{border:0;border-radius:11px;padding:11px 12px;background:#fff;color:#5b52cd;font-weight:750;display:flex;gap:5px;align-items:center;font-size:11px}
+.hubSuggestion a{border:0;color:#fff;background:#5b54d0;padding:10px 11px;display:flex;align-items:center;gap:4px;border-radius:10px}
+.practiceTile{color:#818aa0}
+.journeyNode{color:#4e5479}
+.progressPractice{background:#6056d5;color:#fff}
+.wbCourseBanner{color:#197a6b}
+.wbTopline>a{border:1px solid #dfe4ec;background:#fff;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:4px;color:#565e8e;font-weight:750;text-decoration:none}
+.wbSectionPicker>a{background:#fff;border:1px solid #e5eaf0;border-radius:14px;min-width:0;padding:9px 7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#526f82;min-height:80px;text-decoration:none}
+.wbSectionPicker>a.current{background:#e6f4ee;border-color:#86ccaf;box-shadow:0 6px 18px #2c96751b}
+.wbSectionPicker>a.finished:not(.current){background:#f5faf6}
+.wbSectionPicker>a.current .wbSectionIndex{background:#168a76}
+.wbSectionPicker>a.finished .wbSectionIndex{background:#2db58a}
+.wbSectionPicker>a>span:last-child{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.wbSectionPicker>a b{font-size:11px;line-height:1.5;max-width:100%;text-align:center}
+.wbSectionPicker>a small{font:10px Tahoma;color:#8f9fab;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.wbFooterNav>a,.wbFooterNav>.wbDisabledNav{border:1px solid #d7e1e0;border-radius:12px;padding:12px 17px;background:#fff;color:#2b7480;display:flex;align-items:center;gap:7px;font-weight:750;text-decoration:none}
+.wbFooterNav>a.wbPrimary{border:0;background:#227970;color:#fff}
+.wbFooterNav>.wbDisabledNav{opacity:.35;cursor:default}
+.bottomNav a:focus-visible,.wbSectionPicker>a:focus-visible,.courseLesson:focus-visible,.practiceTile:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+@media(max-width:450px){.wbSectionPicker>a{padding:7px 3px;min-height:69px}.wbSectionPicker>a b{font-size:10px}.wbSectionPicker>a small{font-size:8px}.wbFooterNav>a{font-size:12px;padding:12px 11px}.bottomNav a{font-size:11px}}
