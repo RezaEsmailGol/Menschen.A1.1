@@ -5,6 +5,7 @@ import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
 } from './teacherLessonData.js';
+import RouteLink from './RouteLink';
 import './teacherWorkbook.css';
 
 const STORE_KEY='dt_teacher_workbook_v1';
@@ -272,15 +273,16 @@ function CheckpointPage({speak,onEvent,onComplete,onExam}) {
   </div>;
 }
 
-export default function TeacherWorkbook({speak,onPracticeEvent,goBack}) {
+export default function TeacherWorkbook({speak,onPracticeEvent,goBack,navigate,routePage,onPageNavigate}) {
   const [page,setPage]=useState(()=>{
     try {const value=localStorage.getItem(PAGE_KEY);return workbookSections.some(p=>p.id===value)?value:'start';}
     catch{return 'start';}
   });
   const [saved,setSaved]=useState(loadState);
+  const selectedPage=workbookSections.some(section=>section.id===routePage)?routePage:page;
   useEffect(()=>{try{localStorage.setItem(STORE_KEY,JSON.stringify(saved));}catch{}},[saved]);
-  useEffect(()=>{try{localStorage.setItem(PAGE_KEY,page);}catch{}},[page]);
-  const idx=workbookSections.findIndex(p=>p.id===page);
+  useEffect(()=>{try{localStorage.setItem(PAGE_KEY,selectedPage);}catch{}},[selectedPage]);
+  const idx=workbookSections.findIndex(p=>p.id===selectedPage);
   const section=workbookSections[idx];
   const percent=progressPercent(saved);
   const markPage=(name,passed)=>{
@@ -290,11 +292,15 @@ export default function TeacherWorkbook({speak,onPracticeEvent,goBack}) {
   const markExam=(score,total)=>{
     setSaved(prev=>({...prev,best:Math.max(prev.best||0,Math.round(score/total*100)),attempts:(prev.attempts||0)+1}));
   };
-  function openPage(id) { setPage(id);window.scrollTo({top:0,behavior:'smooth'}); }
+  function openPage(id) {
+    setPage(id);
+    onPageNavigate?.(id);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
   const props={speak,onEvent:onPracticeEvent,onComplete:markPage};
   return <div className="wbRoot">
     <div className="wbTopline">
-      <button onClick={goBack}><ChevronRight size={17}/> برگشت به درس‌ها</button>
+      <RouteLink to="course" navigate={navigate}><ChevronRight size={17}/> برگشت به درس‌ها</RouteLink>
       <div><span className="wbTopBadge">مکمل کلاس خصوصی</span><span>Deutsch · A1.1</span></div>
     </div>
     <header className="wbCover">
@@ -311,30 +317,33 @@ export default function TeacherWorkbook({speak,onPracticeEvent,goBack}) {
       <div className="wbCompletionTrack"><span style={{width:percent+'%'}}/></div>
     </div>
     <div className="wbSectionPicker" aria-label="فهرست صفحه‌های دفتر تمرین">
-      {workbookSections.map((item,i)=><button key={item.id} className={(page===item.id?'current ':'')+(saved.pages[item.id]?.passed?'finished':'')} onClick={()=>openPage(item.id)} aria-current={page===item.id?'step':undefined}>
+      {workbookSections.map((item,i)=><RouteLink key={item.id} to={'workbook/'+item.id} navigate={()=>openPage(item.id)}
+        className={(selectedPage===item.id?'current ':'')+(saved.pages[item.id]?.passed?'finished':'')}
+        aria-current={selectedPage===item.id?'step':undefined}>
         <span className="wbSectionIndex">{saved.pages[item.id]?.passed?<Check size={17}/>:String(i+1).padStart(2,'0')}</span>
         <span><b>{item.title}</b><small dir="ltr">{item.label}</small></span>
-      </button>)}
+      </RouteLink>)}
     </div>
     <article className="wbPaper">
       <div className="wbPaperMargin" aria-hidden="true"/>
       <div className="wbPageHeader"><span>DEUTSCH TRAINER / LEKTION 01</span><span>صفحه {idx+1} از {workbookSections.length}</span></div>
-      {page==='start'&&<IntroPage speak={speak} goNext={()=>openPage('alphabet')} onComplete={markPage}/>}
-      {page==='alphabet'&&<AlphabetPage {...props}/>}
-      {page==='sounds'&&<SoundsPage {...props}/>}
-      {page==='numbers'&&<NumbersPage {...props}/>}
-      {page==='verbs'&&<VerbsPage {...props}/>}
-      {page==='dialog'&&<DialogPage {...props}/>}
-      {page==='checkpoint'&&<CheckpointPage {...props} onExam={markExam}/>}
+      {selectedPage==='start'&&<IntroPage speak={speak} goNext={()=>openPage('alphabet')} onComplete={markPage}/>}
+      {selectedPage==='alphabet'&&<AlphabetPage {...props}/>}
+      {selectedPage==='sounds'&&<SoundsPage {...props}/>}
+      {selectedPage==='numbers'&&<NumbersPage {...props}/>}
+      {selectedPage==='verbs'&&<VerbsPage {...props}/>}
+      {selectedPage==='dialog'&&<DialogPage {...props}/>}
+      {selectedPage==='checkpoint'&&<CheckpointPage {...props} onExam={markExam}/>}
       <div className="wbPageFooter">
         <span>{String(idx+1).padStart(2,'0')} / {String(workbookSections.length).padStart(2,'0')}</span>
         <b>{section.label} · A1.1</b>
       </div>
     </article>
     <div className="wbFooterNav">
-      <button disabled={idx===0} onClick={()=>openPage(workbookSections[idx-1].id)}><ChevronRight size={18}/> صفحه قبل</button>
-      {idx<workbookSections.length-1?<button className="wbPrimary" onClick={()=>openPage(workbookSections[idx+1].id)}>صفحه بعد <ChevronLeft size={18}/></button>:
-      <button className="wbPrimary" onClick={()=>openPage('start')}><BookOpen size={17}/> بازگشت به شروع</button>}
+      {idx===0?<span className="wbDisabledNav"><ChevronRight size={18}/> صفحه قبل</span>:
+      <RouteLink to={'workbook/'+workbookSections[idx-1].id} navigate={()=>openPage(workbookSections[idx-1].id)}><ChevronRight size={18}/> صفحه قبل</RouteLink>}
+      {idx<workbookSections.length-1?<RouteLink className="wbPrimary" to={'workbook/'+workbookSections[idx+1].id} navigate={()=>openPage(workbookSections[idx+1].id)}>صفحه بعد <ChevronLeft size={18}/></RouteLink>:
+      <RouteLink className="wbPrimary" to="workbook/start" navigate={()=>openPage('start')}><BookOpen size={17}/> بازگشت به شروع</RouteLink>}
     </div>
     <p className="wbCopyrightNote">این دفتر، محتوای تمرینی تألیفی مطابق جزوه کلاس توست و بازتولید صفحات، متن کامل یا تصاویر ناشر نیست. تلفظ خودکار به صدای آلمانی دستگاه بستگی دارد.</p>
   </div>;
