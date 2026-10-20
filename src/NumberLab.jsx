@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Check, Dice5, Headphones, Hash, RotateCcw, Sparkles, Trophy, Volume2, X } from 'lucide-react';
-import { germanNumber, shuffle } from './learningData';
+import { germanNumber } from './learningData';
+import { chooseAdaptiveNumbers } from './learningMemory';
 
-function freshQuestions(maximum) {
-  const count = Math.min(10, maximum + 1);
-  return shuffle(Array.from({length:maximum + 1}, (_, i) => i)).slice(0, count);
+function freshQuestions(maximum,memory) {
+  return chooseAdaptiveNumbers(maximum,memory,Math.min(10,maximum+1));
 }
 function clean(text) {
   return text.toLocaleLowerCase('de').normalize('NFC').replace(/[\s.!,?]/g, '').trim();
 }
 
-export default function NumberLab({ speak, onAttempt }) {
+export default function NumberLab({ speak, onAttempt, memory }) {
   const [maximum, setMaximum] = useState(12);
   const [challenge, setChallenge] = useState('write');
   const [studyAll, setStudyAll] = useState(false);
   const [active, setActive] = useState(false);
-  const [questions, setQuestions] = useState(() => freshQuestions(12));
+  const [questions, setQuestions] = useState(() => freshQuestions(12,memory));
   const [position, setPosition] = useState(0);
   const [input, setInput] = useState('');
   const [judged, setJudged] = useState(null);
@@ -23,7 +23,7 @@ export default function NumberLab({ speak, onAttempt }) {
   const current = questions[position];
   const finished = active && position >= questions.length;
   const restart = (nextMaximum = maximum, nextChallenge = challenge) => {
-    setQuestions(freshQuestions(nextMaximum));
+    setQuestions(freshQuestions(nextMaximum,memory));
     setPosition(0); setInput(''); setJudged(null); setScore(0); setActive(true);
     setMaximum(nextMaximum); setChallenge(nextChallenge);
   };
@@ -32,7 +32,7 @@ export default function NumberLab({ speak, onAttempt }) {
     const ok = clean(input) === clean(germanNumber(current));
     setJudged(ok);
     if (ok) setScore(s => s + 1);
-    onAttempt?.(ok);
+    onAttempt?.(ok,current);
   };
   const next = () => { setPosition(s => s + 1); setInput(''); setJudged(null); };
   const count = studyAll ? 101 : 21;
@@ -42,7 +42,7 @@ export default function NumberLab({ speak, onAttempt }) {
       <div>
         <span className="sectionKicker"><Hash size={17}/> Zahlen Lab · Lektion 1</span>
         <h2>اعداد آلمانی، <em>مثل یک بازی!</em></h2>
-        <p>از اعداد ۰ تا ۱۲ که استاد گفته شروع کن، بعد مرحله‌به‌مرحله تا ۱۰۰ پیش برو. هر آزمون ۱۰ سؤال کاملاً تصادفی و غیرتکراری دارد.</p>
+        <p>از اعداد ۰ تا ۱۲ که استاد گفته شروع کن، بعد مرحله‌به‌مرحله تا ۱۰۰ پیش برو. هر آزمون ۱۰ سؤال متفاوت دارد؛ سؤال‌های دشوار قبلی شانس بیشتری برای مرور دارند.</p>
         <div className="numberFeatures"><span><Dice5 size={16}/> سؤال‌های تصادفی</span><span><Headphones size={16}/> شنیدن و نوشتن</span><span><Trophy size={16}/> امتیاز پایان بازی</span></div>
       </div>
       <div className="numberHeroDecoration" aria-hidden="true"><span>7</span><span>12</span><span>20</span><span>99</span></div>
