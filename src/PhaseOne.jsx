@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronLeft, CircleHelp, Clock3, GraduationCap, Headphones, Layers, RotateCcw, Shuffle, Sparkles, Target, Trophy, Volume2, X, Zap } from 'lucide-react';
 import { allStudyCards, getLessonCards, lessons, pronouns, verbForms } from './courseData.js';
 import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KEY, shuffleArray, safeParse, todayKey } from './studyEngine.js';
+import { activityItemKey } from './learningMemory.js';
 import './phaseOne.css';
 
 function useSaved(key, initial) {
@@ -32,10 +33,8 @@ const modes = [
   {id:'exam',title:'آزمون پایان درس',Icon:GraduationCap}
 ];
 
-export default function PhaseOne({mode,setTab,speak}) {
+export default function PhaseOne({mode,setTab,speak,progress,setProgress,schedule,setSchedule,onPracticeEvent}) {
   const [selected,select] = useLessonSelection();
-  const [progress,setProgress] = useSaved(COURSE_KEY,{1:{started:true}});
-  const [schedule,setSchedule]= useSaved(REVIEW_KEY,{});
   const [personalCards] = useSaved('dt_cards', []);
   // Keep existing manually created flashcards available for spaced review.
   const customCards = (Array.isArray(personalCards) ? personalCards : [])
@@ -59,6 +58,7 @@ export default function PhaseOne({mode,setTab,speak}) {
   }
   function rate(card,grade) {
     setSchedule(previous=>({...previous,[card.id]:nextReview(previous[card.id],grade)}));
+    onPracticeEvent?.({id:card.id,kind:'vocab',lesson:card.lesson,label:card.back,correct:grade!=='again',grade});
   }
   function examDone(lessonId,score,total) {
     const percent=Math.round(score/total*100);
@@ -76,13 +76,11 @@ export default function PhaseOne({mode,setTab,speak}) {
       </div>
       <div className="phaseIndicators"><div><strong>{completed}<small> / 12</small></strong><span>درس قبول‌شده</span></div><div><strong>{due.length}</strong><span>کارت آماده مرور</span></div><div><strong>{learned}</strong><span>کارت مرورشده</span></div></div>
     </header>
-    <nav className="phaseNav" aria-label="بخش‌های فاز یک">
-      {modes.map(({id,title,Icon})=><button key={id} className={mode===id?'active':''} onClick={()=>setTab(id)}><Icon size={18}/>{title}</button>)}
-    </nav>
+
     {mode==='course' && <CoursePanel lesson={lesson} selected={selected} select={select} progress={progress} startLesson={startLesson} speak={speak} setTab={setTab}/>}
     {mode==='srs' && <ReviewPanel available={available} schedule={schedule} due={due} rate={rate} speak={speak} setTab={setTab}/>}
-    {mode==='builder' && <BuilderPanel lesson={lesson} selected={selected} select={select} speak={speak}/>}
-    {mode==='exam' && <ExamPanel lesson={lesson} selected={selected} select={select} progress={progress} examDone={examDone} speak={speak}/>}
+    {mode==='builder' && <BuilderPanel lesson={lesson} selected={selected} select={select} speak={speak} onPracticeEvent={onPracticeEvent}/>}
+    {mode==='exam' && <ExamPanel lesson={lesson} selected={selected} select={select} progress={progress} examDone={examDone} speak={speak} onPracticeEvent={onPracticeEvent}/>}
     <div className="phaseFoot"><CircleHelp size={17}/><span>تمرین‌ها تألیفی و همراه سطح A1.1 هستند. موضوع دقیق هر درس کتاب را مطابق برنامه استاد خودت تنظیم می‌کنیم.</span></div>
   </div>;
 }
@@ -166,7 +164,7 @@ function ReviewPanel({available,schedule,due,rate,speak,setTab}) {
   </div>;
 }
 
-function BuilderPanel({lesson,selected,select,speak}) {
+function BuilderPanel({lesson,selected,select,speak,onPracticeEvent}) {
   const [index,setIndex]=useState(0);
   const [chosen,setChosen]=useState([]);
   const [checked,setChecked]=useState(false);
@@ -179,6 +177,11 @@ function BuilderPanel({lesson,selected,select,speak}) {
   function next(){
     setIndex(i=>(i+1)%sentences.length);setChosen([]);setChecked(false);setRound(x=>x+1);
   }
+  function verify(){
+    if(checked||!chosen.length)return;
+    onPracticeEvent?.({id:activityItemKey('sentence',lesson.id,de),kind:'sentence',lesson:lesson.id,label:de,correct:isCorrect});
+    setChecked(true);
+  }
   function changeLesson(id){select(id);setIndex(0);setChosen([]);setChecked(false);setRound(x=>x+1);}
   return <section className="builderPanel">
     <div className="studyPanelHead"><div><span className="eyebrow">SENTENCE BUILDER</span><h3>بازی جمله‌سازی</h3><p>کلمات را به ترتیب درست لمس کن؛ سپس جمله‌ات را بررسی کن.</p></div><LessonPicker selected={selected} select={changeLesson}/></div>
@@ -187,7 +190,7 @@ function BuilderPanel({lesson,selected,select,speak}) {
       {selectedWords.length ? selectedWords.map((word,i)=><span key={chosen[i]}>{word}</span>) : <small>جمله آلمانی را اینجا بساز ...</small>}
     </div>
     <div className="builderTokens" dir="ltr">{tokens.map(t=><button key={t.id} disabled={chosen.includes(t.id)||checked} onClick={()=>setChosen(prev=>[...prev,t.id])}>{t.value}</button>)}</div>
-    <div className="builderActions"><button className="softButton" disabled={!chosen.length||checked} onClick={()=>setChosen(prev=>prev.slice(0,-1))}><RotateCcw size={16}/> بازگرداندن کلمه</button><button className="builderCheck" disabled={!chosen.length||checked} onClick={()=>setChecked(true)}>بررسی جمله <Check size={17}/></button></div>
+    <div className="builderActions"><button className="softButton" disabled={!chosen.length||checked} onClick={()=>setChosen(prev=>prev.slice(0,-1))}><RotateCcw size={16}/> بازگرداندن کلمه</button><button className="builderCheck" disabled={!chosen.length||checked} onClick={verify}>بررسی جمله <Check size={17}/></button></div>
     {checked && <div className={'builderResult '+(isCorrect?'positive':'negative')}>
       <strong>{isCorrect?'عالی، جمله‌ات درست است!':'هنوز درست نیست؛ ترتیب صحیح را ببین.'}</strong>
       <p dir="ltr">{de}</p><button onClick={()=>speak(de)}><Volume2 size={16}/> تلفظ</button>
@@ -197,7 +200,7 @@ function BuilderPanel({lesson,selected,select,speak}) {
   </section>;
 }
 
-function ExamPanel({lesson,selected,select,progress,examDone,speak}) {
+function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEvent}) {
   const [round,setRound]=useState(0);
   const exam=useMemo(()=>buildExam(lesson),[lesson,round]);
   const [index,setIndex]=useState(0);
@@ -207,7 +210,17 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak}) {
   const q=exam[index];
   function reset(){setRound(x=>x+1);setIndex(0);setAnswer(null);setScore(0);setFinished(false);}
   function changeLesson(id){select(id);reset();}
-  function respond(choice){if(answer!==null)return;setAnswer(choice);if(choice===q.answer)setScore(s=>s+1);}
+  function respond(choice){
+    if(answer!==null)return;
+    setAnswer(choice);
+    const correct=choice===q.answer;
+    if(correct)setScore(s=>s+1);
+    const kind=q.kind==='vocab'?'vocab':q.kind==='grammar'?'grammar':'reading';
+    const id=q.kind==='vocab'
+      ? (allStudyCards.find(c=>c.lesson===lesson.id&&c.back===q.answer)?.id || activityItemKey('vocab',lesson.id,q.answer))
+      : activityItemKey(kind,lesson.id,q.audio);
+    onPracticeEvent?.({id,kind,lesson:lesson.id,label:q.audio||q.answer,correct});
+  }
   function next(){if(index===exam.length-1){setFinished(true);examDone(lesson.id,score,exam.length);}else{setIndex(i=>i+1);setAnswer(null);}}
   const percent=Math.round(score/exam.length*100);
   return <section className="examPanel">
