@@ -38,7 +38,11 @@ function shuffle(arr,random){
  return out;
 }
 export function wordTiles(sentence,random=Math.random){
- const tiles=wordTokens(sentence).map((word,index)=>({id:index,word}));
+ // Display the real capitalized German words (Ich, Sie, Morgen), not a
+ // lowercased normalization. Validation still tolerates user capitalization.
+ const tiles=String(sentence||'').normalize('NFC')
+   .replace(/[.,!?;:«»„“”"()[\\]]/g,' ')
+   .split(/\\s+/).filter(Boolean).map((word,index)=>({id:index,word}));
  let scrambled=shuffle(tiles,random);
  // Never offer a pre-solved arrangement, even with a deterministic RNG.
  if(scrambled.length>1 && scrambled.every((x,i)=>x.id===i)){
