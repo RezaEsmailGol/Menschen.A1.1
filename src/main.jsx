@@ -141,7 +141,7 @@ function App() {
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
       {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} />}
       {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
-      {tab==='pronunciation' && <PronunciationLab speak={speak} onPracticeEvent={onPracticeEvent} />}
+      {tab==='pronunciation' && <PronunciationLab speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} />}
       {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
       {tab==='listen' && <ListenType stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
       {tab==='words' && <Words />}
