@@ -106,3 +106,26 @@
 @media(max-width:680px){.pgHero{padding:20px}.pgHeroDecor{display:none}.pgModes{gap:7px}.pgMode{min-height:122px;padding:12px 9px}.pgMode>b{font-size:12px}.pgMode small{font-size:10px}.pgModePlayed{font-size:9px}.pgSetup,.pgBoard,.pgFinish{padding:14px}.pgIntro{grid-template-columns:1fr;gap:12px}.pgIllustrationPreview{max-height:185px;overflow:hidden}.pgIllustrationPreview .visualArt{max-height:185px}.pgOptions{grid-template-columns:1fr}.pgOptions button{min-height:66px}.pgImageBadge{font-size:10px}}
 @media(max-width:400px){.pgMode{min-height:115px;gap:6px}.pgMode>svg{width:20px}.pgModeIndex{width:21px;height:21px;left:7px;top:7px;font-size:10px}.pgMode b{font-size:11px}.pgMode small{font-size:9px}.pgPills>span{font-size:10px}.pgDropZone button,.pgTileTray button{font-size:14px;padding:9px}.pgFeedbackText strong{font-size:15px}.pgBuilderActions .pgPrimary{width:100%;margin:0}.pgFinishActions>.pgPrimary,.pgFinishActions>.pgSecondary{width:100%}}
 @media(prefers-reduced-motion:reduce){.pgFeedback,.pgOptions button.wrong{animation:none}.pgTrack span{transition:none}}
+
+
+/* Accessible micro-celebrations for XP, streaks and optional haptic feedback. */
+.pgBoardTopRight{flex-wrap:wrap;justify-content:flex-end}
+.pgSound{position:relative;min-width:36px;min-height:36px}
+.pgHapticOn{background:#e5f8f0;color:#20866a;border-color:#b8e5d0}
+.pgHapticOffMark{position:absolute;top:0;right:2px;font-size:15px;font-weight:900;color:#c35b66;line-height:1}
+.pgCombo{display:inline-flex;align-items:center;background:#fff0dc;color:#a56b23;padding:6px 10px;
+ border-radius:99px;font-size:11px;font-weight:850;white-space:nowrap;animation:pgComboPop .38s ease both}
+.pgXPFlight{position:absolute;left:14px;top:-12px;padding:7px 10px;background:#fff;
+ border-radius:99px;font:850 14px Tahoma,sans-serif;box-shadow:0 7px 16px #293e6a24;
+ white-space:nowrap;z-index:1;pointer-events:none;animation:pgXPUp 1.3s ease-out both}
+.pgXPFlight.positive{color:#17826a}.pgXPFlight.retry{color:#ab7262}
+.pgFeedback{position:relative;overflow:visible}
+.pgFinish>.gcCelebration{margin-bottom:5px}
+@keyframes pgXPUp{0%{opacity:0;transform:translateY(13px) scale(.75)}
+ 25%{opacity:1;transform:translateY(0) scale(1.1)}
+ 65%{opacity:1;transform:translateY(-6px) scale(1)}
+ 100%{opacity:.95;transform:translateY(-14px) scale(1)}}
+@keyframes pgComboPop{0%{transform:scale(.75);opacity:0}100%{transform:scale(1);opacity:1}}
+@media(max-width:500px){.pgBoardTop{align-items:start}.pgBoardTopRight{max-width:58%;gap:4px}
+ .pgScore,.pgCombo{font-size:10px}.pgSound{padding:6px;min-width:31px;min-height:31px}}
+@media(prefers-reduced-motion:reduce){.pgXPFlight,.pgCombo{animation:none}}
