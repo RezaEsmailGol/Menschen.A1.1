@@ -5,6 +5,7 @@ import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
+import Dialogues from './Dialogues';
 import RouteLink from './RouteLink';
 import {usePageRoute} from './usePageRoute';
 import { pronouns, verbForms } from './courseData';
@@ -95,7 +96,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
@@ -113,7 +114,7 @@ function BottomNav({tab,setTab}) {
 
 function App() {
   const [route, setTab] = usePageRoute();
-  const tab=route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route;
+  const tab=route.startsWith('dialogues/')?'dialogues':route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route;
   const [audioSpeed, setAudioSpeed] = useLocalStorage('dt_audio_speed', 0.82);
   const [cards, setCards] = useLocalStorage('dt_cards', defaultCards);
   const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
@@ -152,6 +153,7 @@ function App() {
     <main>
       {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} />}
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
+      {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
       {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
         onPageNavigate={id=>setTab('workbook/'+id)} goBack={()=>setTab('course')} navigate={setTab} />}
