@@ -127,6 +127,9 @@ test('Groq response is parsed into a German-Persian tutoring turn',async()=>{
    const body=JSON.parse(fetched.opts.body);
    assert.equal(body.model,'openai/gpt-oss-20b');
    assert.equal(body.response_format.type,'json_object');
+   assert.equal(body.reasoning_effort,'low');
+   assert.equal(body.reasoning_format,'hidden');
+   assert.ok(body.max_completion_tokens>=1600);
    assert.equal(fetched.opts.headers.Authorization,'Bearer private-testing-groq-key');
  }finally{
    globalThis.fetch=fetchBefore;restoreEnv('GROQ_API_KEY',old.groq);restoreEnv('TUTOR_ACCESS_CODE',old.code);
@@ -152,5 +155,43 @@ test('Groq free-tier 429, restricted 403 and invalid key errors are safe',async(
    }
  }finally{
    globalThis.fetch=fetchBefore;restoreEnv('GROQ_API_KEY',old.groq);restoreEnv('TUTOR_ACCESS_CODE',old.code);
+ }
+});
+
+test('Groq malformed response returns an actionable classification without leaking text',async()=>{
+ const before={groq:process.env.GROQ_API_KEY,code:process.env.TUTOR_ACCESS_CODE,fetch:globalThis.fetch};
+ process.env.GROQ_API_KEY='test-groq-key';process.env.TUTOR_ACCESS_CODE='local-test-password';
+ globalThis.fetch=async()=>({ok:true,json:async()=>({
+  choices:[{finish_reason:'length',message:{content:null}}]
+ })});
+ try{
+  const res=mockResponse();
+  await handler(baseRequest('groq-malformed-json'),res);
+  assert.equal(res.code,502);
+  assert.equal(res.data.error,'invalid_model_response');
+  assert.equal(res.data.finishReason,'length');
+  assert.equal(JSON.stringify(res.data).includes('test-groq-key'),false);
+ }finally{
+  restoreEnv('GROQ_API_KEY',before.groq);restoreEnv('TUTOR_ACCESS_CODE',before.code);
+  globalThis.fetch=before.fetch;
+ }
+});
+test('network errors and timeouts have different retryable status codes',async()=>{
+ const before={groq:process.env.GROQ_API_KEY,code:process.env.TUTOR_ACCESS_CODE,fetch:globalThis.fetch};
+ process.env.GROQ_API_KEY='test-groq-key';process.env.TUTOR_ACCESS_CODE='local-test-password';
+ try{
+  globalThis.fetch=async()=>{throw new Error('temporary failure')};
+  const unavailable=mockResponse();
+  await handler(baseRequest('groq-network-failure'),unavailable);
+  assert.equal(unavailable.code,502);
+  assert.equal(unavailable.data.error,'provider_network_error');
+  globalThis.fetch=async()=>{const err=new Error('aborted');err.name='AbortError';throw err};
+  const late=mockResponse();
+  await handler(baseRequest('groq-network-timeout'),late);
+  assert.equal(late.code,504);
+  assert.equal(late.data.error,'tutor_timeout');
+ }finally{
+  restoreEnv('GROQ_API_KEY',before.groq);restoreEnv('TUTOR_ACCESS_CODE',before.code);
+  globalThis.fetch=before.fetch;
  }
 });
