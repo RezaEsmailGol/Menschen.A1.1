@@ -119,7 +119,12 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
        res.status===401?'کد دسترسی مربی درست نیست.':
        res.status===429?'سهمیه رایگان Groq موقتاً تمام شده؛ بعد از زمان انتظار دوباره تلاش کن.':
        res.status===503?'کلید GROQ_API_KEY هنوز روی سرور تنظیم نشده است.':
-       'پاسخ مربی دریافت نشد؛ از مکالمه آفلاین ادامه بده.'
+       data?.error==='tutor_timeout'?'پاسخ Groq دیر رسید و مهلت درخواست تمام شد. متن تو حفظ شده؛ دوباره روی بررسی با AI بزن.':
+       data?.error==='invalid_model_response'?'Groq پاسخ داد، اما متن آن برای برنامه قابل‌خواندن نبود. لطفاً دوباره امتحان کن.':
+       data?.error==='provider_bad_request'?'مدل یا قالب درخواست Groq پذیرفته نشد. تنظیمات سرور باید بررسی شوند.':
+       data?.error==='provider_network_error'?'ارتباط سرور با Groq موقتاً قطع شد. دوباره تلاش کن.':
+       data?.error==='provider_unavailable'?'سرویس Groq موقتاً در دسترس نیست. کمی بعد دوباره تلاش کن.':
+       'پاسخ مربی دریافت نشد؛ لطفاً دوباره تلاش کن یا مکالمه آفلاین را ادامه بده.'
      );
      }
      onPracticeEvent?.({id:activityItemKey('dialogue',scene.id,'ai',aiQuestion),kind:'dialogue',
@@ -182,7 +187,7 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
     </div>}
     {!isFinished&&<div className="dialogueAICoach">
       <div className="dialogueAIHeading"><div><span className="dialogueAIIcon"><WandSparkles size={24}/></span><span><b>مربی هوش مصنوعی</b><small>تصحیح جمله و ادامه مکالمه با GroqCloud</small></span></div>
-       <span className={'dialogueAIState '+(status==='ready'?'on':'off')}>{status==='checking'?'در حال بررسی':status==='ready'?'آماده بررسی':status==='restricted'?'دسترسی Groq محدود است':'کلید Groq تنظیم نشده'}</span></div>
+       <span className={'dialogueAIState '+(status==='ready'?'on':'off')}>{status==='checking'?'در حال بررسی':status==='ready'?'کلید API تنظیم شده':status==='restricted'?'دسترسی Groq محدود است':'کلید Groq تنظیم نشده'}</span></div>
       {status==='ready'?<div className="dialogueAIForm">
         <label>کد دسترسی خصوصی مربی
          <input type="password" autoComplete="off" placeholder="رمز خصوصی مربی (TUTOR_ACCESS_CODE)" value={access} onChange={e=>updateAccess(e.target.value)}/>
