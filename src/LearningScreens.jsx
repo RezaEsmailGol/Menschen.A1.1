@@ -77,9 +77,15 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
 
 export function PracticeHub({setTab,memory}) {
   const report=learningInsights(memory);
+  const firstWeak=report.weakItems[0];
+  const destination=firstWeak ? ({
+    number:'numbers',pronunciation:'pronunciation',sentence:'builder',grammar:'verbs',
+    reading:'exam',dictation:'listen',vocab:'srs'
+  }[firstWeak.kind] || 'srs') : 'srs';
+  const focusText=firstWeak ? 'اول این مورد را تقویت کن: '+(firstWeak.label||skillLabels[firstWeak.kind]) : 'چند تمرین انجام بده تا پیشنهاد دقیق دریافت کنی.';
   return <div className="gamePage">
     <div className="hubHeading"><span className="gameEyebrow">PRACTICE ZONE</span><h2>زمین بازی آلمانی</h2><p>هر بار روی چیزی تمرین کن که هنوز برایت سخت است.</p></div>
-    <div className="hubSuggestion"><span className="hubIcon"><Brain size={25}/></span><div><b>حافظه آموزشی تو</b><p>{report.practiced?report.weak+' مورد به تمرین بیشتری نیاز دارد.':'تمرین را شروع کن تا نقاط قوت و ضعفت را شناسایی کنیم.'}</p></div><button onClick={()=>setTab('srs')}>مرور <ChevronLeft size={16}/></button></div>
+    <div className="hubSuggestion"><span className="hubIcon"><Brain size={25}/></span><div><b>حافظه آموزشی تو</b><p>{report.practiced?focusText:'تمرین را شروع کن تا نقاط قوت و ضعفت را شناسایی کنیم.'}</p></div><button onClick={()=>setTab(destination)}>تمرین <ChevronLeft size={16}/></button></div>
     <div className="practiceTiles">{practiceCategories.map(({id,label,hint,Icon,theme})=><button className={'practiceTile '+theme} key={id} onClick={()=>setTab(id)}>
       <span className="tileIcon"><Icon size={23}/></span>
       <span className="tileCopy"><b>{label}</b><small>{hint}</small></span>
