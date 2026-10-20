@@ -25,11 +25,11 @@ const practiceCategories=[
 ];
 const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',reading:'درک جمله',
-  number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ'
+  number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_current_lesson','dt_audio_speed'];
 
-export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
+export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}) {
   const report=learningInsights(memory);
   const currentId = Number(localStorage.getItem('dt_current_lesson')) || 1;
   const lesson=lessons.find(x=>x.id===currentId)||lessons[0];
@@ -37,7 +37,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
   const scheduleDue=dueCards(allStudyCards,schedule,enabled).length;
   const choice=recommendedRoute(report,scheduleDue);
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
-  const dailyDone=Math.min(100,Math.round(report.today.attempts/10*100));
+  const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
   const learningStages=[
     {id:'pictureGame',title:'بازی تصویر به آلمانی',subtitle:'۳ مرحله، XP و مرور هوشمند',Icon:Gamepad2,color:'green'},
     {id:'visual',title:'کلمات تصویری جلسه اول',subtitle:'۵۰ عبارت + ۱۰ مکالمه',Icon:BookOpen,color:'green'},
@@ -65,10 +65,15 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
       <div><span className="scoreIcon green"><CheckCircle2 size={19}/></span><strong>{report.mastered}</strong><small>آموخته با تسلط</small></div>
     </div>
     <div className="gameGoals">
-      <div className="gameGoalHeader"><div><span className="gameEyebrow">DAILY MISSION</span><h2>ماموریت کوچک امروز</h2></div><span className="gameGoalNumber">{Math.min(report.today.attempts,10)} / ۱۰ تمرین</span></div>
+      <div className="gameGoalHeader"><div><span className="gameEyebrow">DAILY MISSION</span><h2>ماموریت کوچک امروز</h2></div><span className="gameGoalNumber">{Math.min(report.today.attempts,dailyGoal)} / {dailyGoal} تمرین</span></div>
       <div className="gameProgress"><span style={{width:dailyDone+'%'}} /></div>
-      <div className="gameGoalDetail"><span><Target size={16}/> فقط ۱۰ پاسخ در روز؛ بدون فشار و جریمه</span><b>{report.today.xp||0} XP امروز</b></div>
+      <div className="gameGoalDetail"><span><Target size={16}/> هدف قابل‌تنظیم در مربی روزانه؛ بدون جریمه</span><b>{report.today.xp||0} XP امروز</b></div>
     </div>
+    <RouteLink to="coach" navigate={setTab} className="dailyCoachShortcut">
+      <span className="dailyCoachShortcutIcon"><Brain size={25}/></span>
+      <span><b>مربی روزانه تو</b><small>برنامه ۳ مرحله‌ای، گزارش هفتگی، نمودار تمرین و شناسایی نقاط ضعف</small></span>
+      <span className="dailyCoachShortcutCTA">دیدن برنامه <ArrowLeft size={17}/></span>
+    </RouteLink>
     <div className="gameNext"><span className="nextSparkle"><WandSparkles size={24}/></span><div><b>پیشنهاد شخصی برای تو</b><p>{choice.why}{report.weak>0 ? ' · '+report.weak+' مورد نیازمند تمرین' : ''}</p></div><RouteLink to={choice.page} navigate={setTab}>شروع <ChevronLeft size={17}/></RouteLink></div>
     <div className="gameSectionHead"><div><span className="gameEyebrow">LEARNING JOURNEY</span><h2>نقشه پیشرفت امروز</h2></div><span>{done} از ۱۲ درس تمام شده</span></div>
     <div className="learningJourney">
@@ -105,7 +110,7 @@ export function PracticeHub({setTab,memory}) {
   </div>;
 }
 
-export function ProgressPage({setTab,memory,progress,schedule}) {
+export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10}) {
   const insights=learningInsights(memory);
   const masteredCourses=lessons.filter(x=>progress[x.id]?.passed).length;
   const upload=useRef(null);
@@ -151,8 +156,13 @@ export function ProgressPage({setTab,memory,progress,schedule}) {
       ].map(([value,name,Icon])=><div key={name}><Icon size={21}/><b>{value}</b><span>{name}</span></div>)}</div>
     </div>
     <div className="gameGoals"><div className="gameGoalHeader"><div><span className="gameEyebrow">TODAY</span><h2>تمرین امروز</h2></div><strong>{insights.today.attempts} پاسخ</strong></div>
-      <div className="gameProgress"><span style={{width:Math.min(100,insights.today.attempts*10)+'%'}}/></div>
+      <div className="gameProgress"><span style={{width:Math.min(100,insights.today.attempts/Math.max(dailyGoal,1)*100)+'%'}}/></div>
       <p className="progressSoftNote">هر پاسخ درست ۱۰ XP و تلاش برای پاسخ اشتباه ۲ XP دارد؛ اشتباه کردن بخشی از یادگیری است.</p></div>
+    <RouteLink to="coach" navigate={setTab} className="dailyCoachShortcut">
+      <span className="dailyCoachShortcutIcon"><CalendarDays size={25}/></span>
+      <span><b>گزارش کامل مربی روزانه</b><small>نمودار ۱۴ روز، نرخ پاسخ‌های درست، برنامه تمرین و گزارش قابل ارسال</small></span>
+      <span className="dailyCoachShortcutCTA">مشاهده <ArrowLeft size={17}/></span>
+    </RouteLink>
     <div className="progressColumns">
       <section className="progressPanel"><h3><Brain size={19}/> عملکرد بر اساس مهارت</h3>
         {insights.byType.map(item=><div className="skillRow" key={item.kind}><span>{skillLabels[item.kind]}</span><div className="skillMiniTrack"><span style={{width:(item.attempts ? item.mastered/Math.max(item.mastered+item.weak,1)*100:0)+'%'}}/></div><small>{item.attempts} تمرین</small></div>)}
