@@ -7,6 +7,7 @@ import { learningInsights, recommendedRoute } from './learningMemory.js';
 import './mobileGame.css';
 
 const practiceCategories=[
+  {id:'workbook',label:'دفتر جلسه اول استاد',hint:'الفبا، استثناها، اعداد، صرف فعل و آزمون',Icon:BookOpen,theme:'green'},
   {id:'srs',label:'مرور هوشمند',hint:'کلمه‌هایی که زمان مرورشان رسیده',Icon:Layers,theme:'purple'},
   {id:'builder',label:'بازی جمله‌سازی',hint:'کلمات را به جمله صحیح تبدیل کن',Icon:Gamepad2,theme:'green'},
   {id:'numbers',label:'بازی اعداد',hint:'رندوم، دیکته و اعداد دشوار',Icon:Hash,theme:'amber'},
@@ -22,7 +23,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ'
 };
-const backupKeys=['dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_current_lesson','dt_audio_speed'];
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
   const report=learningInsights(memory);
@@ -34,7 +35,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/10*100));
   const learningStages=[
-    {id:'course',title:'درس امروز',subtitle:lesson.label,Icon:BookOpen,color:'purple'},
+    {id:'workbook',title:'جلسه اول استاد',subtitle:'دفتر مصور + تمرین و آزمون',Icon:BookOpen,color:'purple'},
     {id:'srs',title:'تمرین کلمات',subtitle:scheduleDue ? scheduleDue+' کارت موعددار' : 'مرور واژه‌ها',Icon:Brain,color:'green'},
     {id:'builder',title:'چالش جمله‌سازی',subtitle:'۴ جمله از درس انتخابی',Icon:Gamepad2,color:'amber'},
     {id:'exam',title:'آزمون دانش',subtitle:'نمره پایانی را ثبت کن',Icon:GraduationCap,color:'sky'}
@@ -44,7 +45,10 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
       <div><span className="gameEyebrow"><Sparkles size={16}/> MENSCHEN A1.1 · COMPANION</span>
         <h1>آلمانی را <span>بازی کن!</span></h1>
         <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
-        <button className="gamePrimary" onClick={()=>setTab(choice.page)}>{choice.label}<ArrowLeft size={18}/></button>
+        <div className="gameHeroActions">
+          <button className="gamePrimary" onClick={()=>setTab('workbook')}><BookOpen size={17}/> دفتر جلسه اول استاد <ArrowLeft size={18}/></button>
+          <button className="gameHeroSecondary" onClick={()=>setTab(choice.page)}>{choice.label}</button>
+        </div>
       </div>
       <div className="gameOrb" aria-hidden="true"><span>Hallo!</span><div>🇩🇪</div></div>
     </div>
@@ -121,7 +125,7 @@ export function ProgressPage({setTab,memory,progress,schedule}) {
       const entries=backupKeys.filter(key=>typeof backup.data[key]==='string').map(key=>[key,backup.data[key]]);
       if(!entries.length)throw Error('empty');
       for(const [key,value] of entries){
-        if(key!=='dt_current_lesson' && key!=='dt_audio_speed') JSON.parse(value);
+        if(!['dt_current_lesson','dt_audio_speed','dt_teacher_workbook_page_v1'].includes(key)) JSON.parse(value);
       }
       if(!confirm('اطلاعات موجود این مرورگر با اطلاعات بکاپ جایگزین شوند؟'))return;
       for(const [key,value] of entries)localStorage.setItem(key,value);
