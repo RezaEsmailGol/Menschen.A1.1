@@ -101,7 +101,7 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
       </div>
       {current.type==='choice'
         ?<div className="wbChoices">{current.choices.map(choice=><button key={choice} disabled={answer!==null}
-          className={answer===null?'':choice===current.answer?'right':(answer===false&&false)?'wrong':''}
+          className={answer===null?'':choice===current.answer?'right':choice===text?'wrong':''}
           onClick={()=>{setText(choice);judge(choice)}} dir="auto">{choice}</button>)}</div>
         :current.type==='arrange'
           ?<><div className="wbSentenceOutput" dir="ltr">{composed||'… جمله را اینجا بساز'}</div>
@@ -212,7 +212,7 @@ function NumbersPage({speak,memory,onEvent,onComplete}) {
     </div>
     <div className="wbTip"><Lightbulb size={19}/> یادآوری: <b dir="ltr">eins</b> برای عدد ۱ است؛ <b dir="ltr">sechs</b> مثل «زِکس» و <b dir="ltr">zwölf</b> دارای حرف ö است.</div>
     <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن آزمون اعداد':'شروع دیکته تصادفی ۸ عدد'}</button>
-    {showQuiz&&<ExamRunner questions={questions} onEvent={onEvent} onEnd={(score,total)=>onComplete('numbers',score/total>=.7)} speak={speak} label="دیکته عدد"/>)}
+    {showQuiz&&<ExamRunner questions={questions} onEvent={onEvent} onEnd={(score,total)=>onComplete('numbers',score/total>=.7)} speak={speak} label="دیکته عدد"/>}
   </div>;
 }
 
