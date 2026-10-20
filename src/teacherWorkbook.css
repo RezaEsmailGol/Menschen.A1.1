@@ -1,0 +1,164 @@
+/* Original workbook visual language: cream paper, task markers, print-style panels.
+   This is an independent educational design, not a reproduction of Hueber book pages. */
+.wbRoot{--paper:#fffdf6;--pageInk:#24415a;--inkLight:#627a90;--coral:#f07f6f;--mint:#a6dec6;--indigo:#5255a5;display:grid;gap:16px;max-width:1130px;margin:0 auto;color:var(--pageInk)}
+.wbRoot button,.wbRoot input{font:inherit}
+.wbTopline{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px}
+.wbTopline>button{border:1px solid #dfe4ec;background:#fff;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:4px;color:#565e8e;font-weight:750;cursor:pointer}
+.wbTopline>div{display:flex;align-items:center;gap:9px;color:#738398}
+.wbTopBadge{background:#e4f6ef;border-radius:99px;color:#188775;padding:6px 10px;font-weight:800}
+.wbCover{position:relative;overflow:hidden;border-radius:24px;background:#16455a;min-height:238px;padding:29px 35px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 13px 31px #1e516d29;color:#fff}
+.wbCover:after{content:"";position:absolute;width:380px;height:380px;border-radius:50%;border:1px solid #ffffff34;left:-180px;top:-190px;box-shadow:0 0 0 45px #ffffff0a,0 0 0 95px #ffffff06}
+.wbCoverCopy{position:relative;z-index:1}
+.wbCoverNumber{font:900 13px Tahoma;letter-spacing:1.9px;background:#f6e3b9;color:#455266;border-radius:99px;padding:8px 14px;display:inline-block}
+.wbCover h1{font-size:35px;margin:17px 0 0;line-height:1.5;font-weight:900;letter-spacing:.1px;direction:ltr;text-align:right}
+.wbCover p{font-size:18px;margin:3px 0 18px;color:#eff6fa;font-weight:750}
+.wbCoverCopy>div{display:flex;gap:8px;flex-wrap:wrap}
+.wbCoverCopy>div span{border:1px solid #ffffff50;background:#ffffff14;border-radius:999px;padding:6px 13px;font-size:12px;color:#dcecf2}
+.wbCoverArt{position:relative;display:grid;place-items:center;width:220px;height:168px;flex-shrink:0}
+.wbCoverArt>div{background:#fff3d8;color:#1a5a68;padding:18px 22px;border-radius:28px 28px 7px 28px;font:900 32px Tahoma;transform:rotate(-8deg);box-shadow:0 18px 25px #0003}
+.wbCoverArt>div span{color:#ee8366}
+.wbCoverArt>span{position:absolute;left:0;top:9px;background:#d4e8f7;color:#5560a0;font:850 23px Tahoma;padding:9px;border-radius:13px;transform:rotate(9deg)}
+.wbCoverArt>i{position:absolute;bottom:3px;left:14px;background:#f39a86;border-radius:17px;padding:10px 14px;font:800 22px Tahoma;color:#fff;transform:rotate(-10deg)}
+.wbCompletion{background:#fff;padding:13px 17px;border:1px solid #eaecf3;border-radius:16px}
+.wbCompletion>div:first-child{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#647287;margin-bottom:10px}
+.wbCompletion b{font-size:13px;color:#254458}
+.wbCompletionTrack{height:9px;border-radius:99px;background:#eaf0f2;overflow:hidden}
+.wbCompletionTrack>span{height:100%;display:block;background:linear-gradient(90deg,#80d3b9,#64b7a4);border-radius:99px;transition:width .2s}
+.wbSectionPicker{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.wbSectionPicker>button{background:#fff;border:1px solid #e5eaf0;border-radius:14px;min-width:0;padding:9px 7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;color:#526f82;min-height:80px}
+.wbSectionPicker>button.current{background:#e6f4ee;border-color:#86ccaf;box-shadow:0 6px 18px #2c96751b}
+.wbSectionPicker>button.finished:not(.current){background:#f5faf6}
+.wbSectionIndex{display:grid;place-items:center;font:800 12px Tahoma;width:27px;height:27px;color:#fff;background:#55859a;border-radius:50%}
+.wbSectionPicker>button.current .wbSectionIndex{background:#168a76}
+.wbSectionPicker>button.finished .wbSectionIndex{background:#2db58a}
+.wbSectionPicker>button>span:last-child{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.wbSectionPicker b{font-size:11px;line-height:1.5;max-width:100%;text-align:center}
+.wbSectionPicker small{font:10px Tahoma;color:#8f9fab;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.wbPaper{position:relative;background:var(--paper);border:1px solid #efe7d9;border-radius:18px;box-shadow:0 15px 33px #69707018;overflow:hidden;min-height:520px;padding:28px 49px 15px 33px}
+.wbPaper:before{content:"";position:absolute;top:0;bottom:0;right:22px;border-right:2px dotted #d6dedb}
+.wbPaperMargin{position:absolute;right:0;top:0;bottom:0;width:11px;background:linear-gradient(90deg,#e3e4d9,#fdf7e8)}
+.wbPageHeader{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #d4dad9;padding:0 0 14px;color:#829198;font:800 10px Tahoma,sans-serif;letter-spacing:.7px}
+.wbPageFooter{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #d4dad9;color:#7a919e;padding:14px 0 2px;margin-top:26px;font:800 10px Tahoma,sans-serif;letter-spacing:.6px}
+.wbContent{display:grid;gap:17px}
+.wbChapterTitle{margin:19px 0 3px}
+.wbChapterTitle>span{font:900 11px Tahoma;letter-spacing:1.5px;color:#ce6e61}
+.wbChapterTitle h2{font-size:31px;margin:9px 0 6px;line-height:1.5;color:#18455e}
+.wbChapterTitle p{font-size:13px;color:#668090;line-height:1.9;margin:0}
+.wbScene{padding:9px;border-radius:17px;background:#f4f8f4;border:1px solid #e3efea}
+.wbIllustration{width:100%;height:auto;display:block;max-height:240px}
+.wbSceneCaption{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 11px 8px}
+.wbSceneCaption span{font:750 11px Tahoma;color:#879997}
+.wbSceneCaption button,.wbSoundButton{border:0;border-radius:10px;background:#d9f3e9;color:#197d6b;display:flex;gap:7px;align-items:center;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.wbExerciseHead{display:flex;align-items:center;gap:13px;background:#edf3f2;padding:13px;border-radius:14px;color:#246176}
+.wbExerciseHead>div{flex:1}
+.wbExerciseHead b{font-size:15px;font-weight:850}
+.wbExerciseHead p{font-size:12px;color:#6d8995;margin:4px 0 0}
+.wbExerciseNum{min-width:35px;height:35px;border-radius:50%;background:#ef947b;color:white;display:grid;place-items:center;font:900 18px Tahoma}
+.wbDialogCards{display:grid;gap:9px}
+.wbDialogCards button{display:flex;align-items:center;gap:11px;min-height:64px;background:#fff;border:1px solid #e8e6d7;border-radius:12px;padding:11px 13px;text-align:right;cursor:pointer;color:#4d6378}
+.wbDialogCards button:hover{background:#f3f9f5;border-color:#badcc9}
+.wbSpeaker{background:#f8d9bc;color:#b96736;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;font:900 16px Tahoma;flex-shrink:0}
+.wbDialogCards button:nth-child(2n) .wbSpeaker{background:#d8edda;color:#318974}
+.wbDialogCards button>span:nth-child(2){display:flex;flex-direction:column;gap:4px;flex:1;align-items:flex-start;min-width:0}
+.wbDialogCards b{font-size:16px;color:#1c546a;overflow-wrap:anywhere}
+.wbDialogCards small{font-size:12px;color:#85959a}
+.wbTip{display:flex;align-items:start;gap:9px;border-radius:13px;background:#fff2d4;border-right:4px solid #e5ad57;color:#805a24;padding:13px 16px;font-size:12px;line-height:2}
+.wbTip svg{flex-shrink:0;margin-top:2px}
+.wbTip p{margin:4px 0}
+.wbTip b{font-weight:900}
+.wbPrimary,.wbSecondary{border:0;background:#1c8277;color:#fff;border-radius:12px;padding:12px 18px;display:inline-flex;gap:8px;align-items:center;justify-content:center;font-weight:850;cursor:pointer}
+.wbSecondary{background:#e0f3ed;color:#126e6b;border:1px solid #bce3d9}
+.wbWide{width:100%;min-height:48px}
+.wbPrimary:disabled,.wbSecondary:disabled{opacity:.45;cursor:not-allowed}
+.wbLetterGrid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px}
+.wbLetterGrid button{border:1px solid #e7e3d9;background:#fff;padding:11px 4px;display:grid;place-items:center;border-radius:10px;font:900 20px Tahoma;color:#2c6574;cursor:pointer}
+.wbLetterGrid button.active{background:#246c73;color:#fff;border-color:#246c73}
+.wbLetterDetail{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e8e4d6;border-radius:15px;padding:16px}
+.wbBigLetter{min-width:80px;height:80px;background:#d9eee7;border-radius:17px;display:grid;place-items:center;font:900 48px Tahoma;color:#1c6874}
+.wbLetterDetail>div:last-child{display:flex;flex-direction:column;gap:7px}
+.wbLetterDetail strong{font-size:21px;color:#1c5167}
+.wbLetterDetail span{font-size:12px;color:#7c8b94}
+.wbLetterDetail button{display:flex;align-items:center;gap:7px;background:transparent;border:0;color:#138a78;cursor:pointer;padding:3px 0;font-size:12px}
+.wbFilter{display:flex;flex-wrap:wrap;gap:6px}
+.wbFilter button{background:#fff;border:1px solid #e6e5de;border-radius:99px;color:#6a7e85;padding:8px 12px;font-size:11px;cursor:pointer}
+.wbFilter button.active{background:#2d7174;color:#fff;border-color:#2d7174}
+.wbSoundGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.wbSoundCard{background:#fff;border:1px solid #e6e6dc;border-radius:14px;padding:12px;min-width:0}
+.wbSoundCard.open{border-color:#8ecfba;background:#fbfffd}
+.wbSoundTop{display:flex;gap:10px;align-items:center}
+.wbSoundSymbol{font:900 19px Tahoma;color:#176873;background:#e0f0e9;min-width:62px;min-height:46px;border-radius:12px;padding:8px;display:grid;place-items:center}
+.wbSoundTop>div{display:flex;flex-direction:column;gap:3px}
+.wbSoundTop small{font-size:10px;color:#a08e80}
+.wbSoundTop b{font-size:12px;color:#5a7580}
+.wbWordCompare{display:flex;align-items:center;gap:5px;margin:12px 0 0}
+.wbWordCompare>span{font:800 13px Tahoma;color:#b9a99a}
+.wbWordCompare button{flex:1;min-width:0;background:#f5faf8;border:1px solid #e0eeea;color:#2d6e74;padding:9px 7px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer}
+.wbWordCompare button span{font:700 12px Tahoma;overflow-wrap:anywhere}
+.wbShowRule{margin-top:11px;border:0;background:transparent;color:#1e8a79;padding:2px 0;font-weight:750;font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer}
+.wbSoundCard>p{font-size:11px;line-height:2;color:#6b7d85;border-top:1px solid #e7eeea;padding-top:9px;margin:9px 0 0}
+.wbNumberGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.wbNumberGrid button{background:#fff;border:1px solid #e5e4d8;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 8px;cursor:pointer;color:#2e7180}
+.wbNumberGrid button:hover{border-color:#9dd7c7;background:#f7fdfb}
+.wbNumberGrid strong{font:900 22px Tahoma;color:#c06b52}
+.wbNumberGrid span{font:14px Tahoma;flex:1;text-align:left}
+.wbPronounGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.wbPronounGrid>div{background:#fff;border:1px solid #e4e7df;border-radius:13px;padding:13px;display:flex;flex-direction:column;gap:5px}
+.wbPronounGrid b{font:900 17px Tahoma;color:#27727d}
+.wbPronounGrid span{color:#7b8893;font-size:12px}
+.wbVerbTabs{display:flex;gap:9px}
+.wbVerbTabs button{background:#fff;border:1px solid #dbe5dd;border-radius:99px;padding:10px 17px;color:#52777d;font-weight:850;cursor:pointer;min-width:110px}
+.wbVerbTabs button.active{background:#2a7580;color:#fff;border-color:#2a7580}
+.wbVerbTable{border-radius:15px;overflow:hidden;border:1px solid #dce8e2}
+.wbTableHead,.wbVerbRow{display:grid;grid-template-columns:1.2fr 1.2fr 1fr 45px;align-items:center;gap:8px;padding:12px 13px}
+.wbTableHead{background:#dceee9;color:#355c6a;font-size:12px;font-weight:800}
+.wbVerbRow{background:#fff;font-size:13px;border-top:1px solid #e7ece6}
+.wbVerbRow:nth-child(2n){background:#fafcf9}
+.wbVerbRow>span,.wbVerbRow>b{text-align:left;font:800 15px Tahoma}
+.wbVerbRow>b{color:#1a6f76}
+.wbVerbRow>strong{color:#dc8270;font:800 13px Tahoma;text-align:left}
+.wbVerbRow button{border:0;background:#e3f5ec;color:#207a71;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;cursor:pointer}
+.wbExamRunner{background:#fff;border:1px solid #e5e5d8;border-radius:17px;padding:18px;box-shadow:0 5px 16px #1c4b520b}
+.wbQuizTop{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#6d838d;font-weight:800}
+.wbQuizProgress{height:9px;border-radius:99px;background:#e6eae6;overflow:hidden;margin:11px 0 17px}
+.wbQuizProgress span{display:block;height:100%;background:linear-gradient(90deg,#76bca6,#47869b)}
+.wbPrompt{padding:21px 15px;background:#eff7f4;border:1px solid #dcece5;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.wbTaskType{font:800 10px Tahoma;color:#5a8792;letter-spacing:1.2px}
+.wbPrompt h3{font-size:18px;line-height:1.9;margin:2px 0;color:#234b62}
+.wbChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:15px}
+.wbChoices button{border:1px solid #d9e6de;background:#fff;border-radius:12px;padding:15px;color:#326479;font:800 17px Tahoma;cursor:pointer}
+.wbChoices button.right{background:#e4f8ee;border-color:#44b98d;color:#1c825d}
+.wbInputRow{display:flex;gap:9px;margin-top:15px}
+.wbInputRow input{border:2px solid #dbe5e0;background:#fff;border-radius:11px;padding:13px 15px;width:100%;min-width:0;font:17px Tahoma;color:#254d61;outline:0}
+.wbInputRow input:focus{border-color:#2d9785}
+.wbSentenceOutput{min-height:70px;border:2px dashed #d8e6df;background:#f8fcfa;border-radius:11px;display:flex;align-items:center;justify-content:center;padding:12px;margin:14px 0;font-size:17px;color:#2b6073;text-align:center;line-height:1.9}
+.wbWordTiles{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:15px 0}
+.wbWordTiles button{border:1px solid #d9e2df;border-radius:9px;background:#fff;padding:10px 12px;font:15px Tahoma;color:#286273;cursor:pointer}
+.wbWordTiles button:disabled{opacity:.25;cursor:not-allowed}
+.wbQuizActions{display:flex;justify-content:space-between;gap:9px}
+.wbGhost{background:#f0f5f3;border:0;border-radius:10px;padding:11px 12px;color:#60828c;cursor:pointer}
+.wbGhost:disabled{opacity:.4;cursor:not-allowed}
+.wbResponse{padding:12px;display:flex;align-items:center;gap:9px;margin-top:14px;border-radius:12px}
+.wbResponse.ok{background:#e5f7e8;color:#197b54}
+.wbResponse.bad{background:#fff0e8;color:#aa5e45}
+.wbResponse>div{display:flex;flex-direction:column;flex:1;gap:4px;min-width:0}
+.wbResponse b{font-size:12px}
+.wbResponse span{font:800 14px Tahoma;overflow-wrap:anywhere}
+.wbResponse>button{border:0;border-radius:9px;background:#ffffffb0;color:inherit;padding:8px;display:grid;place-items:center;cursor:pointer}
+.wbNextQuestion{background:#255d6d;color:white;border:0;border-radius:11px;padding:11px 17px;display:flex;align-items:center;gap:9px;margin:12px 0 0 auto;cursor:pointer;font-weight:850}
+.wbResult{text-align:center;padding:30px 15px;display:flex;align-items:center;flex-direction:column;gap:13px}
+.wbResultIcon{height:82px;width:82px;display:grid;place-items:center;background:#fff0d0;color:#bf8a2e;border-radius:25px}
+.wbResult h3{font-size:19px;margin:0;line-height:1.8}
+.wbResult strong{font:900 44px Tahoma;color:#1a827a}
+.wbResult p{font-size:12px;color:#778995;line-height:1.9;max-width:480px}
+.wbCheckpointIntro{display:flex;align-items:center;gap:12px;background:#fff0d7;padding:17px;border-radius:13px;color:#ac732a}
+.wbCheckpointIntro b{font-size:15px}
+.wbCheckpointIntro p{font-size:12px;line-height:2;margin:5px 0 0}
+.wbFooterNav{display:flex;justify-content:space-between;gap:12px}
+.wbFooterNav button{border:1px solid #d7e1e0;border-radius:12px;padding:12px 17px;background:#fff;color:#2b7480;display:flex;align-items:center;gap:7px;font-weight:750;cursor:pointer}
+.wbFooterNav button.wbPrimary{border:0;background:#227970;color:#fff}
+.wbFooterNav button:disabled{opacity:.35;cursor:not-allowed}
+.wbCopyrightNote{font-size:11px;line-height:1.9;text-align:center;color:#91a0a5;margin:0}
+@media(max-width:920px){.wbSectionPicker{grid-template-columns:repeat(4,minmax(0,1fr))}.wbLetterGrid{grid-template-columns:repeat(8,minmax(0,1fr))}}
+@media(max-width:670px){.wbCover{min-height:190px;padding:23px 21px}.wbCover h1{font-size:27px}.wbCover p{font-size:14px}.wbCoverArt{width:100px;height:100px}.wbCoverArt>div{font-size:19px;padding:14px}.wbCoverArt>span,.wbCoverArt>i{display:none}.wbPaper{padding:20px 23px 12px 20px}.wbPaper:before{right:11px}.wbPaperMargin{width:6px}.wbChapterTitle h2{font-size:25px}.wbSectionPicker{grid-template-columns:repeat(4,minmax(0,1fr))}.wbSectionPicker button{min-height:69px}.wbSectionPicker b{font-size:10px}.wbLetterGrid{grid-template-columns:repeat(6,minmax(0,1fr))}.wbNumberGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.wbSoundGrid{grid-template-columns:1fr}.wbPronounGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:450px){.wbTopline>div{font-size:10px;gap:5px}.wbTopBadge{padding:5px 7px}.wbCover{padding:18px;min-height:160px}.wbCover h1{font-size:23px}.wbCoverNumber{font-size:10px}.wbCover p{font-size:12px}.wbCoverArt{width:82px}.wbCoverArt>div{font-size:15px}.wbCoverCopy>div span{font-size:10px;padding:5px 8px}.wbPaper{padding:17px 18px 11px 15px}.wbPageHeader{font-size:9px}.wbSectionPicker{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.wbSectionPicker button{padding:7px 3px}.wbSectionPicker small{font-size:8px}.wbLetterGrid{grid-template-columns:repeat(5,minmax(0,1fr))}.wbLetterGrid button{font-size:18px}.wbNumberGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.wbNumberGrid button{padding:12px 8px}.wbScene{padding:4px}.wbLetterDetail{gap:10px}.wbBigLetter{min-width:63px;height:66px;font-size:38px}.wbExerciseHead{gap:8px;padding:10px}.wbExerciseHead b{font-size:13px}.wbExerciseHead p{font-size:10px}.wbInputRow{flex-direction:column}.wbInputRow input{width:100%}.wbChoices{gap:7px}.wbChoices button{padding:12px 6px}.wbDialogCards b{font-size:14px}.wbFooterNav button{font-size:12px;padding:12px 11px}.wbVerbTable{font-size:12px}.wbTableHead,.wbVerbRow{grid-template-columns:1.3fr 1.15fr .75fr 32px;gap:4px;padding:10px 6px}.wbVerbRow>span,.wbVerbRow>b{font-size:12px}.wbVerbRow strong{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.wbCompletionTrack span{transition:none}}
