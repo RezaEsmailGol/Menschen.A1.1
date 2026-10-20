@@ -134,3 +134,18 @@
 .gameFeedbackToast.retry{background:#5b55a7}
 @keyframes toastArrive{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 @media(prefers-reduced-motion:reduce){.gameFeedbackToast{animation:none}}
+
+
+.dailyCoachShortcut{display:flex;align-items:center;gap:14px;padding:15px 17px;border-radius:17px;
+ text-decoration:none;color:#365b76;background:linear-gradient(110deg,#e9f8ef,#e9ecfd);
+ border:1px solid #cbdedc;margin:12px 0}
+.dailyCoachShortcutIcon{display:grid;place-items:center;width:50px;height:50px;flex-shrink:0;border-radius:15px;
+ background:#fff;color:#329481}
+.dailyCoachShortcut>span:nth-child(2){flex:1;display:grid;gap:6px;min-width:0}
+.dailyCoachShortcut b{font-size:14px;color:#3b687d}
+.dailyCoachShortcut small{font-size:11px;line-height:1.8;color:#758b9b}
+.dailyCoachShortcutCTA{display:inline-flex;align-items:center;gap:6px;padding:11px 13px;border-radius:11px;
+ background:#5b60c1;color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
+@media(max-width:480px){.dailyCoachShortcut{gap:9px;padding:11px}
+ .dailyCoachShortcutIcon{width:40px;height:40px}.dailyCoachShortcut b{font-size:12px}
+ .dailyCoachShortcut small{font-size:10px}.dailyCoachShortcutCTA{padding:8px 9px;font-size:10px}}
