@@ -1,9 +1,10 @@
 import React,{useMemo,useRef,useState} from 'react';
 import {ArrowLeft,BookOpen,Brain,Check,CheckCircle2,ChevronLeft,Delete,Headphones,Image as ImageIcon,
- Keyboard,Lightbulb,RotateCcw,Shuffle,Sparkles,Trophy,Volume2,VolumeX,XCircle} from 'lucide-react';
+ Keyboard,Lightbulb,RotateCcw,Shuffle,Smartphone,Sparkles,Trophy,Volume2,VolumeX,XCircle} from 'lucide-react';
 import visualData from './visualLessonData.json';
 import VisualArt from './VisualArt.jsx';
-import {playWrongBeep} from './audioFeedback.js';
+import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,saveGameFeedbackPreference,giveGameFeedback} from './gameEffects.js';
+import GameCelebration from './GameCelebration.jsx';
 import {PICTURE_LEVELS,eligiblePicturePhrases,generatePictureRound,checkGermanAnswer,
  pictureMemoryId,answerFromTiles} from './pictureGameLogic.js';
 import RouteLink from './RouteLink.jsx';
@@ -31,9 +32,9 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
  const [placed,setPlaced]=useState([]);
  const [correctCount,setCorrectCount]=useState(0);
  const [mistakes,setMistakes]=useState(0);
- const [sound,setSound]=useState(()=>{
-  try{return localStorage.getItem('dt_game_feedback_sound')!=='off';}catch{return true}
- });
+ const [streak,setStreak]=useState(0);
+ const [preferences,setPreferences]=useState(readGameFeedbackPreferences);
+ const {sound,haptics}=preferences;
  const typedRef=useRef(null);
  const pool=useMemo(()=>all.filter(p=>category==='all'||p.category===category),[category]);
  const available=eligiblePicturePhrases(pool,level);
@@ -43,10 +44,11 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
  const progress=statsFor(memory,level);
  const selection=placed.length&&current?answerFromTiles(current.tiles,placed):'';
 
- const toggleSound=()=>{
-  setSound(old=>{
-   const next=!old;
-   try{localStorage.setItem('dt_game_feedback_sound',next?'on':'off');}catch{}
+ const togglePreference=key=>{
+  setPreferences(old=>{
+   const field=key===GAME_SOUND_KEY?'sound':'haptics';
+   const next={...old,[field]:!old[field]};
+   saveGameFeedbackPreference(key,next[field]);
    return next;
   });
  };
@@ -54,31 +56,25 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
   const questions=generatePictureRound(pool,level,memory,10);
   setRound(questions);
   setPosition(0);setResponse(null);setTyped('');setPlaced([]);
-  setCorrectCount(0);setMistakes(0);setPlaying(Boolean(questions.length));
+  setCorrectCount(0);setMistakes(0);setStreak(0);setPlaying(Boolean(questions.length));
  }
  function submit(text){
   if(!current||response!==null)return;
   const correct=checkGermanAnswer(text,current.item.de);
   setResponse({correct,input:text});
-  if(correct)setCorrectCount(n=>n+1);
-  else setMistakes(n=>n+1);
+  if(correct){setCorrectCount(n=>n+1);setStreak(n=>n+1);}
+  else {setMistakes(n=>n+1);setStreak(0);}
   // The existing global callback awards exactly one XP event per completed question.
   onPracticeEvent?.({
     id:pictureMemoryId(current.item,level),kind:'visual',
-    label:current.item.de,lesson:1,correct
+    label:current.item.de,lesson:1,correct,feedbackHandled:true
   });
-  if(sound){
-   if(correct)speak(current.item.de);else{
-    try{window.speechSynthesis?.cancel()}catch{}
-    playWrongBeep();
-   }
-  }
-  if(typeof navigator!=='undefined'&&navigator.vibrate){
-   try{navigator.vibrate(correct?25:[30,50,30])}catch{}
-  }
+  giveGameFeedback(correct?'correct':'wrong',preferences);
+  if(sound&&correct)speak(current.item.de);
  }
  function next(){
   if(response===null)return;
+  if(position===round.length-1)giveGameFeedback('finish',preferences);
   setPosition(n=>n+1);setResponse(null);setTyped('');setPlaced([]);
  }
  function changeLevel(nextLevel){
@@ -146,8 +142,17 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
      <div><b>مرحله {step.number} · {step.name}</b><small>سؤال {position+1} از {round.length}</small></div>
      <div className="pgBoardTopRight">
       <span className="pgScore"><Trophy size={16}/>{correctCount} درست</span>
+      {streak>=2&&<span className="pgCombo" aria-label={streak+' پاسخ درست پی‌درپی'}>🔥 {streak} پشت‌سرهم</span>}
       <button className="pgSound" type="button" aria-label={sound?'خاموش‌کردن صدا':'روشن‌کردن صدا'}
-        aria-pressed={sound} onClick={toggleSound}>{sound?<Volume2 size={18}/>:<VolumeX size={18}/>}</button>
+        title={sound?'خاموش‌کردن صدا':'روشن‌کردن صدا'}
+        aria-pressed={sound} onClick={()=>togglePreference(GAME_SOUND_KEY)}>
+        {sound?<Volume2 size={18}/>:<VolumeX size={18}/>}</button>
+      <button className={'pgSound '+(haptics?'pgHapticOn':'')} type="button"
+        aria-label={haptics?'خاموش‌کردن ویبره':'روشن‌کردن ویبره'}
+        title={haptics?'ویبره روشن':'ویبره خاموش'} aria-pressed={haptics}
+        onClick={()=>togglePreference(GAME_HAPTIC_KEY)}>
+        <Smartphone size={18}/>{!haptics&&<span className="pgHapticOffMark">×</span>}
+      </button>
      </div>
     </div>
     <div className="pgTrack"><span style={{width:((position+Number(response!==null))/round.length*100)+'%'}}/></div>
@@ -208,8 +213,11 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
      </div>
     </div>}
 
-    {response!==null&&<div className={'pgFeedback '+(response.correct?'good':'bad')} role="status">
+    {response!==null&&<div key={position} className={'pgFeedback '+(response.correct?'good':'bad')} role="status">
      <div className="pgFeedbackSymbol">{response.correct?<CheckCircle2 size={27}/>:<XCircle size={27}/>}</div>
+     <div className={'pgXPFlight '+(response.correct?'positive':'retry')}>
+       {response.correct?'✨ +۱۰ XP':'+۲ XP'}
+     </div>
      <div className="pgFeedbackText">
       <b>{response.correct?'آفرین! درست گفتی!':'این بار اشتباه شد؛ جمله درست را به خاطر بسپار.'}</b>
       <strong dir="ltr">{current.item.de}</strong>
@@ -223,10 +231,8 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
   </>}
 
   {finished&&<section className="pgFinish">
-   <span className="pgTrophy" aria-hidden="true">{correctCount>=8?'🏆':'🌱'}</span>
-   <span className="pgEyebrow">RUN COMPLETED · {step.name}</span>
-   <h2>{correctCount>=8?'آفرین! یک مرحله جلوتر رفتی!':'آفرین که تمرین را تمام کردی!'}</h2>
-   <strong dir="ltr">{correctCount} / {round.length}</strong>
+   <GameCelebration correct={correctCount} total={round.length}
+      caption={'اتمام مرحله '+step.number+' · '+step.name}/>
    <p>هر پاسخ در XP و حافظه مرور ذخیره شد. عبارت‌هایی که اشتباه کردی در دورهای بعدی اولویت خواهند داشت.</p>
    <div className="pgFinishStats"><div><b>{correctCount}</b><small>پاسخ درست</small></div>
     <div><b>{mistakes}</b><small>نیازمند مرور</small></div>
