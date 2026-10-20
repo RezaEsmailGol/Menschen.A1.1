@@ -106,3 +106,14 @@ test('direct coach route works from home and through browser reload',()=>{
  assert.equal(routeFromPath('/coach'),'coach');
  assert.equal(routeFromPath('/coach/'),'coach');
 });
+
+test('overdue visual typing is routed to the picture game rather than unrelated deck',()=>{
+ let memory=empty();
+ memory=recordActivity(memory,{
+  id:'visual:l1-04:type',kind:'visual',label:'Ich lerne Deutsch.',correct:false,lesson:1
+ },now-16*60*1000);
+ const report=dailyCoachReport(memory,0,10,now);
+ assert.equal(report.insights.due,1);
+ assert.equal(report.suggested.route,'pictureGame');
+ assert.equal(report.tasks[0].route,'pictureGame');
+});
