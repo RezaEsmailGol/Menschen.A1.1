@@ -8,6 +8,7 @@ import TeacherWorkbook from './TeacherWorkbook';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
 import PictureGame from './PictureGame';
+import {vibrateGame,readGameFeedbackPreferences} from './gameEffects.js';
 import RouteLink from './RouteLink';
 import {usePageRoute} from './usePageRoute';
 import { pronouns, verbForms } from './courseData';
@@ -126,7 +127,10 @@ function App() {
   const onPracticeEvent = event => {
     setMemory(previous => recordActivity(previous,event));
     setFeedback({xp:event.correct?10:2,correct:event.correct,key:Date.now()+Math.random()});
-    try { if(event.correct && navigator.vibrate) navigator.vibrate(18); } catch {}
+    // Game-specific feedback already handled the tap. Other practice screens
+    // share the same optional haptic setting without double vibration.
+    if(!event.feedbackHandled)vibrateGame(event.correct?'correct':'wrong',
+      readGameFeedbackPreferences().haptics);
   };
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
