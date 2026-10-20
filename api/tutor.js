@@ -1,7 +1,9 @@
 import {timingSafeEqual} from 'node:crypto';
 import {getScene} from '../src/dialogueData.js';
 
-const GATEWAY_URL='https://ai-gateway.vercel.sh/v1/chat/completions';
+// Explicit GroqCloud backend: never fall back to the billable Vercel AI Gateway.
+const GROQ_URL='https://api.groq.com/openai/v1/chat/completions';
+const DEFAULT_GROQ_MODEL='openai/gpt-oss-20b';
 const visits=new Map();
 const WINDOW=60_000;
 const MAX_PER_MINUTE=8;
@@ -78,17 +80,16 @@ Each answer and question should stay on subject, short and respectful; use Sie i
     })}
   ];
 }
-function gatewayCredential(req){
-  return process.env.AI_GATEWAY_API_KEY
-    || req.headers?.['x-vercel-oidc-token']
-    || process.env.VERCEL_OIDC_TOKEN
-    || '';
-}
 export default async function handler(req,res){
-  if(req.method==='GET')return response(res,200,{provider:'Vercel AI Gateway',configured:Boolean(gatewayCredential(req) && process.env.TUTOR_ACCESS_CODE)});
+  if(req.method==='GET')return response(res,200,{
+    provider:'GroqCloud',
+    model:process.env.GROQ_MODEL||DEFAULT_GROQ_MODEL,
+    configured:Boolean(process.env.GROQ_API_KEY && process.env.TUTOR_ACCESS_CODE),
+    providerConfigured:Boolean(process.env.GROQ_API_KEY)
+  });
   if(req.method!=='POST')return response(res,405,{error:'method_not_allowed'},{Allow:'GET, POST'});
-  if(!gatewayCredential(req) || !process.env.TUTOR_ACCESS_CODE)
-    return response(res,503,{error:'not_configured',fallback:true});
+  if(!process.env.GROQ_API_KEY || !process.env.TUTOR_ACCESS_CODE)
+    return response(res,503,{error:'not_configured',provider:'GroqCloud',fallback:true});
   const ip=trim(req.headers['x-forwarded-for']?.split(',')[0]||'unknown',90);
   if(isRateLimited(ip))return response(res,429,{error:'rate_limited',fallback:true},{'Retry-After':'60'});
   const provided=req.headers['x-tutor-access-code'];
@@ -102,28 +103,31 @@ export default async function handler(req,res){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),12000);
   try{
-    const upstream=await fetch(GATEWAY_URL,{
+    const upstream=await fetch(GROQ_URL,{
       method:'POST',signal:controller.signal,
-      headers:{Authorization:`Bearer ${gatewayCredential(req)}`,'Content-Type':'application/json'},
+      headers:{Authorization:`Bearer ${process.env.GROQ_API_KEY}`,'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:process.env.AI_TUTOR_MODEL||'deepseek/deepseek-v4.1-flash',
-        messages:promptFor(input),temperature:0.4,max_tokens:450,stream:false,
+        model:process.env.GROQ_MODEL||DEFAULT_GROQ_MODEL,
+        messages:promptFor(input),temperature:0.35,max_completion_tokens:950,stream:false,
         response_format:{type:'json_object'}
       })
     });
     if(!upstream.ok){
-      const issue=await upstream.json().catch(()=>null);
-      const billingRequired=upstream.status===403&&/credit card|billing|payment method/i.test(String(issue?.error?.message||issue?.message||''));
-      // Log only the provider status and public error classification; never tokens or prompts.
-      console.warn('TUTOR_GATEWAY_FAILURE',upstream.status,trim(issue?.error?.code||issue?.code||'unknown',60));
-      return response(res,billingRequired?402:upstream.status===429?429:502,
-        {error:billingRequired?'billing_required':upstream.status===429?'provider_rate_limited':'provider_unavailable',
-          upstreamStatus:upstream.status,fallback:true});
+      // Only provider status and classification are recorded; no prompts, passwords or API keys.
+      const category=upstream.status===429?'provider_rate_limited'
+        :upstream.status===401?'provider_auth_failed'
+        :upstream.status===403?'provider_access_restricted'
+        :upstream.status===400?'provider_bad_request'
+        :'provider_unavailable';
+      console.warn('TUTOR_GROQ_FAILURE',upstream.status,category);
+      const status=upstream.status===429?429:upstream.status===401?502:upstream.status===403?403:502;
+      return response(res,status,{error:category,provider:'GroqCloud',fallback:true},
+        upstream.status===429?{'Retry-After':upstream.headers?.get?.('retry-after')||'60'}:{});
     }
     const result=await upstream.json();
     const parsed=parseTutorResult(result?.choices?.[0]?.message?.content);
     if(!parsed)return response(res,502,{error:'invalid_model_response',fallback:true});
-    return response(res,200,{...parsed,provider:'Vercel AI Gateway'});
+    return response(res,200,{...parsed,provider:'GroqCloud'});
   }catch(error){
     return response(res,504,{error:'tutor_timeout',fallback:true});
   }finally{clearTimeout(timer);}
