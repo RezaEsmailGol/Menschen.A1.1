@@ -101,14 +101,15 @@ export default async function handler(req,res){
   const input=validateTutorInput(body);
   if(!input)return response(res,400,{error:'invalid_input'});
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),12000);
+  const timer=setTimeout(()=>controller.abort(),22000);
   try{
     const upstream=await fetch(GROQ_URL,{
       method:'POST',signal:controller.signal,
       headers:{Authorization:`Bearer ${process.env.GROQ_API_KEY}`,'Content-Type':'application/json'},
       body:JSON.stringify({
         model:process.env.GROQ_MODEL||DEFAULT_GROQ_MODEL,
-        messages:promptFor(input),temperature:0.35,max_completion_tokens:950,stream:false,
+        messages:promptFor(input),temperature:0.35,reasoning_effort:'low',reasoning_format:'hidden',
+        max_completion_tokens:1800,stream:false,
         response_format:{type:'json_object'}
       })
     });
@@ -126,9 +127,16 @@ export default async function handler(req,res){
     }
     const result=await upstream.json();
     const parsed=parseTutorResult(result?.choices?.[0]?.message?.content);
-    if(!parsed)return response(res,502,{error:'invalid_model_response',fallback:true});
+    if(!parsed){
+      console.warn('TUTOR_GROQ_INVALID_JSON',trim(result?.choices?.[0]?.finish_reason||'unknown',36));
+      return response(res,502,{error:'invalid_model_response',
+        finishReason:trim(result?.choices?.[0]?.finish_reason||'unknown',36),fallback:true});
+    }
     return response(res,200,{...parsed,provider:'GroqCloud'});
   }catch(error){
-    return response(res,504,{error:'tutor_timeout',fallback:true});
+    const timedOut=controller.signal.aborted || error?.name==='AbortError';
+    console.warn('TUTOR_GROQ_NETWORK_FAILURE',timedOut?'timeout':'network');
+    return response(res,timedOut?504:502,
+      {error:timedOut?'tutor_timeout':'provider_network_error',fallback:true});
   }finally{clearTimeout(timer);}
 }
