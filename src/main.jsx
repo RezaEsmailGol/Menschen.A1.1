@@ -5,6 +5,8 @@ import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
+import RouteLink from './RouteLink';
+import {usePageRoute} from './usePageRoute';
 import { pronouns, verbForms } from './courseData';
 import { Home as HomeIcon, BookOpenCheck, LayoutGrid, ChartNoAxesCombined, ChevronRight } from 'lucide-react';
 import { TodayDashboard, PracticeHub, ProgressPage } from './LearningScreens';
@@ -100,16 +102,17 @@ const secondaryTitles = {
 function BottomNav({tab,setTab}) {
   const selected=['home','course','practice','progress'].includes(tab)?tab:(tab==='workbook'?'course':'practice');
   return <nav className="bottomNav" aria-label="منوی اصلی">
-    {routes.map(({id,title,Icon})=><button key={id} aria-current={selected===id?'page':undefined}
-      className={selected===id?'selected':''} onClick={()=>setTab(id)}>
+    {routes.map(({id,title,Icon})=><RouteLink key={id} to={id} navigate={setTab} aria-current={selected===id?'page':undefined}
+      className={selected===id?'selected':''}>
       <span className="bottomNavIcon"><Icon size={22} strokeWidth={selected===id?2.65:2.05}/></span>
       <span>{title}</span>
-    </button>)}
+    </RouteLink>)}
   </nav>;
 }
 
 function App() {
-  const [tab, setTab] = useState('home');
+  const [route, setTab] = usePageRoute();
+  const tab=route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route;
   const [audioSpeed, setAudioSpeed] = useLocalStorage('dt_audio_speed', 0.82);
   const [cards, setCards] = useLocalStorage('dt_cards', defaultCards);
   const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
@@ -124,7 +127,7 @@ function App() {
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
   const insights=learningInsights(memory);
-  useEffect(() => { window.scrollTo({top:0,behavior:'auto'}); }, [tab]);
+  useEffect(() => { window.scrollTo({top:0,behavior:'auto'}); }, [route]);
   useEffect(() => {
     if(!feedback)return;
     const timer=setTimeout(()=>setFeedback(null),1800);
@@ -141,16 +144,19 @@ function App() {
     </header>
 
     {secondaryTitles[tab] && <div className="subpageReturn">
-      <button onClick={()=>setTab('practice')}><ChevronRight size={17}/> تمرین‌ها</button>
+      <RouteLink to="practice" navigate={setTab}><ChevronRight size={17}/> تمرین‌ها</RouteLink>
       <span>{secondaryTitles[tab]}</span>
     </div>}
 
     <main>
       {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} />}
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
-      {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent} goBack={()=>setTab('course')} />}
+      {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent}
+        routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
+        onPageNavigate={id=>setTab('workbook/'+id)} goBack={()=>setTab('course')} navigate={setTab} />}
       {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} />}
-      {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
+      {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} routeLesson={route.startsWith('course/')?Number(route.slice(7)):null}
+        setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
       {tab==='pronunciation' && <PronunciationLab speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} />}
       {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
       {tab==='listen' && <ListenType stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
