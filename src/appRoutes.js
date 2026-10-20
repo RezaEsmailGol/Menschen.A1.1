@@ -12,6 +12,7 @@ export function normalizeRoute(route) {
   if (typeof route!=='string') return 'home';
   const sanitized=route.trim().replace(/^\/+|\/+$/g,'');
   if (sanitized==='workbook') return 'workbook';
+  if (/^course\\/(?:[1-9]|1[0-2])$/.test(sanitized)) return sanitized;
   if (sanitized.startsWith('workbook/')) {
     const page=sanitized.slice('workbook/'.length);
     return WORKBOOK_PAGES.includes(page) ? 'workbook/'+page : 'workbook';
@@ -22,11 +23,13 @@ export function normalizeRoute(route) {
 export function pathForRoute(route) {
   const id=normalizeRoute(route);
   if (id.startsWith('workbook/')) return '/workbook/'+id.slice('workbook/'.length);
+  if (id.startsWith('course/')) return '/lessons/'+id.slice('course/'.length);
   return ROUTES[id]||'/';
 }
 
 export function routeFromPath(pathname) {
   const path=String(pathname||'/').replace(/\/+$/,'') || '/';
+  if (/^\\/lessons\\/(?:[1-9]|1[0-2])$/.test(path)) return 'course/'+path.slice('/lessons/'.length);
   if (path.startsWith('/workbook/')) {
     const page=path.slice('/workbook/'.length);
     return WORKBOOK_PAGES.includes(page) ? 'workbook/'+page : 'home';
