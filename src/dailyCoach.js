@@ -63,19 +63,21 @@ export function dailyCoachReport(memory={},scheduleDue=0,goal=10,now=Date.now())
  const productionGoal=Math.max(1,Math.round(target*.4));
  const conversationGoal=Math.max(1,target-recognitionGoal-productionGoal);
  const dueCount=Math.max(0,insights.due+Math.max(0,Number(scheduleDue)||0));
+ const firstDue=insights.dueItems[0]||null;
+ const reviewRoute=scheduleDue>0?'srs':firstDue?keyForWeakKind(firstDue.kind,firstDue.id):'pictureGame';
  const weak=insights.weakItems;
  const firstWeak=weak[0]||null;
  const firstRoute=firstWeak?keyForWeakKind(firstWeak.kind,firstWeak.id):null;
  const tasks=[
   {id:'recognition',title:'مرور و یادآوری',details:dueCount?'ابتدا کارت‌های موعددار یا دشوار را مرور کن':'کلمات و تصویرها را بدون عجله مرور کن',
-   route:dueCount?'srs':'pictureGame',target:recognitionGoal,done:counts.recognition},
+   route:dueCount?reviewRoute:'pictureGame',target:recognitionGoal,done:counts.recognition},
   {id:'production',title:'تولید جمله از حافظه',details:'تایپ آلمانی، صرف فعل یا ساختن جمله؛ نه فقط حدس گزینه',
    route:firstWeak&&['grammar','sentence','dictation'].includes(firstWeak.kind)?firstRoute:'pictureGame',
    target:productionGoal,done:counts.production},
   {id:'conversation',title:'تمرین پاسخ در گفت‌وگو',details:'یک پاسخ واقعی در داستان یا مربی مکالمه ثبت کن',
    route:'dialogues/greetings',target:conversationGoal,done:counts.conversation}
  ];
- const suggested=dueCount?{route:'srs',label:'مرورهای عقب‌افتاده',reason:dueCount+' کارت یا مورد موعددار داری'}
+ const suggested=dueCount?{route:reviewRoute,label:'مرورهای موعددار',reason:dueCount+' کارت یا مورد موعددار داری'}
    :firstWeak?{route:firstRoute,label:'تقویت نقطه‌ضعف',reason:'تمرین دوباره: '+(firstWeak.label||firstWeak.kind)}
    :counts.production<productionGoal?{route:'pictureGame',label:'تایپ یا جمله‌سازی',reason:'دانستن گزینه کافی نیست؛ جمله بساز'}
    :{route:'dialogues/greetings',label:'گفت‌وگوی کوتاه',reason:'پاسخ دادن در موقعیت واقعی را تمرین کن'};
