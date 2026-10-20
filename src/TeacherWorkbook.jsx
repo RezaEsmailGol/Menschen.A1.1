@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, AudioLines, BookOpen, BookOpenCheck, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleHelp, Ear, GraduationCap, Headphones, Keyboard, Lightbulb, PencilLine, Play, RotateCcw, Sparkles, Star, Trophy, Volume2, X } from 'lucide-react';
 import { activityItemKey, chooseAdaptiveNumbers } from './learningMemory.js';
+import {makeNumberOptions} from './numberGameLogic.js';
+import {germanNumber} from './learningData.js';
 import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
@@ -199,9 +201,10 @@ function SoundsPage({speak,onEvent,onComplete}) {
 function NumbersPage({speak,memory,onEvent,onComplete}) {
   const [showQuiz,setShowQuiz]=useState(false);
   const questions=useMemo(()=>chooseAdaptiveNumbers(12,memory,8).map((n,i)=>({
-    id:'number:'+n,type:'type',kind:'number',label:String(n),
-    question:i%2===0?'عدد '+n+' را به آلمانی بنویس.':'گوش بده و واژه آلمانی عدد را بنویس.',
-    answer:workbookNumbers[n].word,audio:workbookNumbers[n].word
+    id:'number:'+n,type:'choice',kind:'number',label:String(n),
+    question:'نوشتار درست عدد '+n+' کدام است؟',
+    answer:germanNumber(n),audio:germanNumber(n),
+    choices:makeNumberOptions(n,12).map(value=>germanNumber(value))
   })),[]);
   return <div className="wbContent">
     <div className="wbChapterTitle"><span>04 · ZAHLEN</span><h2>Null bis zwölf</h2><p>اعداد ۰ تا ۱۲ را یاد بگیر؛ هر عدد را لمس کن و تکرار کن.</p></div>
@@ -211,8 +214,8 @@ function NumbersPage({speak,memory,onEvent,onComplete}) {
         <strong>{n.number}</strong><span>{n.word}</span><Volume2 size={16}/></button>)}
     </div>
     <div className="wbTip"><Lightbulb size={19}/> یادآوری: <b dir="ltr">eins</b> برای عدد ۱ است؛ <b dir="ltr">sechs</b> مثل «زِکس» و <b dir="ltr">zwölf</b> دارای حرف ö است.</div>
-    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن آزمون اعداد':'شروع دیکته تصادفی ۸ عدد'}</button>
-    {showQuiz&&<ExamRunner questions={questions} onEvent={onEvent} onEnd={(score,total)=>onComplete('numbers',score/total>=.7)} speak={speak} label="دیکته عدد"/>}
+    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن آزمون اعداد':'شروع آزمون چهارگزینه‌ای ۸ عدد'}</button>
+    {showQuiz&&<ExamRunner questions={questions} onEvent={onEvent} onEnd={(score,total)=>onComplete('numbers',score/total>=.7)} speak={speak} label="آزمون چهارگزینه‌ای اعداد"/>}
   </div>;
 }
 
