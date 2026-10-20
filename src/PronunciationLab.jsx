@@ -3,19 +3,26 @@ import { AudioLines, BookOpen, Check, ChevronLeft, Ear, Headphones, Lightbulb, R
 import { pronunciationGroups, pronunciationRules, shuffle } from './learningData';
 import { activityItemKey } from './learningMemory';
 
-function makeQuiz() {
-  return shuffle(pronunciationRules).slice(0, 8).map(rule => ({
+function makeQuiz(memory) {
+  const mastery=memory?.items||{};
+  const missed=shuffle(pronunciationRules.filter(rule=>{
+    const current=mastery[activityItemKey('pronunciation',rule.id)];
+    return current && (current.mastery<60 || !current.lastCorrect);
+  })).slice(0,4);
+  const selected=new Set(missed.map(r=>r.id));
+  const rest=shuffle(pronunciationRules.filter(r=>!selected.has(r.id))).slice(0,8-missed.length);
+  return shuffle([...missed,...rest]).map(rule => ({
     ...rule,
     choices: shuffle([rule.word, ...shuffle(pronunciationRules.filter(r => r.id !== rule.id).map(r => r.word)).slice(0, 3)]),
   }));
 }
 
-export default function PronunciationLab({ speak, onPracticeEvent }) {
+export default function PronunciationLab({ speak, onPracticeEvent, memory }) {
   const [mode, setMode] = useState('rules');
   const [group, setGroup] = useState('all');
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState('v');
-  const [quiz, setQuiz] = useState(() => makeQuiz());
+  const [quiz, setQuiz] = useState(() => makeQuiz(memory));
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState(null);
   const [score, setScore] = useState(0);
@@ -33,14 +40,14 @@ export default function PronunciationLab({ speak, onPracticeEvent }) {
     if (correct) setScore(x => x + 1);
   };
   const next = () => { setIndex(x => x + 1); setAnswer(null); };
-  const reset = () => { setQuiz(makeQuiz()); setIndex(0); setAnswer(null); setScore(0); setMode('quiz'); };
+  const reset = () => { setQuiz(makeQuiz(memory)); setIndex(0); setAnswer(null); setScore(0); setMode('quiz'); };
 
   return <section className="labPage">
     <div className="soundHero">
       <div className="soundHeroCopy">
         <span className="sectionKicker"><AudioLines size={17}/> Pronunciation Studio · Lektion 1</span>
         <h2>صداها را <em>درست بشنو،</em> درست بگو.</h2>
-        <p>قواعد تلفظ و استثناهای جلسه اول استاد، همراه با مثال واقعی، صدای آلمانی و تمرین شنیداری.</p>
+        <p>قواعد تلفظ و استثناهای جلسه اول استاد همراه با صدا؛ آزمون بعدی به صداهایی که اشتباه کرده‌ای توجه بیشتری می‌کند.</p>
         <div className="soundHeroBadges"><span>۲۴ نکته آموزشی</span><span>تفاوت‌های مهم اتریشی</span><span>تمرین شنیداری</span></div>
       </div>
       <div className="soundHeroArt" aria-hidden="true">
