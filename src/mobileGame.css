@@ -128,3 +128,9 @@
 @media(max-width:480px){
  .courseLessonList.open{grid-template-columns:1fr!important;max-height:330px!important;overflow-y:auto!important}
 }
+
+
+.gameFeedbackToast{position:fixed;bottom:calc(105px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:80;background:#126e59;color:#fff;display:flex;align-items:center;gap:9px;box-shadow:0 13px 36px #162e3760;border-radius:99px;padding:11px 18px;font-weight:850;font-size:13px;white-space:nowrap;pointer-events:none;animation:toastArrive .23s ease-out both}
+.gameFeedbackToast.retry{background:#5b55a7}
+@keyframes toastArrive{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){.gameFeedbackToast{animation:none}}
