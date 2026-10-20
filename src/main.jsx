@@ -6,6 +6,7 @@ import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
 import Dialogues from './Dialogues';
+import VisualLesson from './VisualLesson';
 import RouteLink from './RouteLink';
 import {usePageRoute} from './usePageRoute';
 import { pronouns, verbForms } from './courseData';
@@ -96,7 +97,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
@@ -153,6 +154,7 @@ function App() {
     <main>
       {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} />}
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
+      {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
       {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
