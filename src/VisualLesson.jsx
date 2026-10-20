@@ -179,6 +179,11 @@ export default function VisualLesson({speak,memory,onPracticeEvent,setTab}){
    <p>۵۰ جمله کاربردی، تصویرهای اختصاصی، تلفظ و ۱۰ گفت‌وگوی کوتاه؛ از سلام تا خداحافظی.</p>
    <div className="vHeroStats"><span>🖼️ ۵۰ تصویر و عبارت</span><span>💬 ۱۰ دیالوگ</span><span>⭐ {memorized} عبارت مسلط</span></div>
   </div>
+  <RouteLink to="pictureGame" navigate={setTab} className="vGameInvitation">
+    <span className="vGameInvitationIcon"><Target size={25}/></span>
+    <span><b>بازی جدید: تصویر را ببین، آلمانی بگو!</b><small>۴ گزینه، تایپ عبارت و ساخت جمله؛ با امتیاز و مرور هوشمند</small></span>
+    <span className="vGameInvitationGo">شروع بازی <ArrowLeft size={16}/></span>
+  </RouteLink>
   <div className="vToolbar"><nav className="vModes" aria-label="شیوه تمرین">{Object.entries(labels).map(([id,text])=>{
    const Icon=icons[id];
    return <button type="button" className={id===mode?'active':''} aria-pressed={mode===id} key={id} onClick={()=>setMode(id)}><Icon size={18}/>{text}</button>;
