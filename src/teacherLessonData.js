@@ -39,6 +39,14 @@ export const workbookSounds = [
  {id:'eu',cluster:'eu / äu',word:'heute',contrast:'Häuser',fa:'امروز',phonetic:'/ɔɪ̯/',note:'eu و äu معمولاً صدای مرکب شبیه «اُی» دارند.',rule:'واکه‌ها'},
  {id:'ig',cluster:'-ig',word:'wichtig',contrast:'Tag',fa:'مهم',phonetic:'تفاوت تلفظ منطقه‌ای',note:'پایان -ig در بعضی تلفظ‌های معیار /ɪç/ است؛ در اتریش اغلب /ɪk/ می‌شنوی.',rule:'استثنا'},
  {id:'en',cluster:'-en / -n',word:'kommen',contrast:'sammeln',fa:'آمدن',phonetic:'پایان مصدر',note:'بسیاری از فعل‌ها با -en تمام می‌شوند؛ مانند kommen. برخی با -n: sammeln.',rule:'گرامر'},
+
+ {id:'g',cluster:'G / g',word:'gut',contrast:'Tag',fa:'خوب',phonetic:'/g/ در برابر /k/',note:'g در ابتدای gut صدای /g/ دارد، ولی پایان Tag به‌طور معمول مثل /k/ شنیده می‌شود.',rule:'استثنا'},
+ {id:'w',cluster:'w',word:'Wasser',contrast:'Vater',fa:'آب',phonetic:'/v/',note:'حرف W در آلمانی صدای /v/ دارد؛ ولی V در Vater شبیه «ف» است.',rule:'صامت‌ها'},
+ {id:'r',cluster:'r',word:'rot',contrast:'Bruder',fa:'قرمز',phonetic:'تغییر در موقعیت',note:'صدای R در آلمانی معیار بسته به موقعیت و لهجه متفاوت است؛ R انتهای هجا ممکن است واکه‌مانند شنیده شود.',rule:'استثنا'},
+ {id:'ss',cluster:'ß / ss',word:'heißen',contrast:'Fluss',fa:'نام داشتن',phonetic:'/s/',note:'ß و ss صدای /s/ دارند؛ اما قواعد املایی‌شان یکسان نیست. پسوند ß را با حرف B اشتباه نگیر.',rule:'استثنا'},
+ {id:'tsch',cluster:'tsch',word:'Deutsch',contrast:'Schule',fa:'آلمانی',phonetic:'/tʃ/',note:'tsch صدای «چ» دارد، ولی sch در Schule مثل «ش» است.',rule:'صامت‌ها'},
+ {id:'ie',cluster:'ie',word:'Liebe',contrast:'mein',fa:'عشق',phonetic:'/iː/',note:'ie بیشتر مانند «ای» کشیده شنیده می‌شود؛ ei برعکس، در mein صدای «آی» دارد.',rule:'واکه‌ها'},
+ {id:'umlaut',cluster:'ä / ö / ü',word:'fünf',contrast:'schön',fa:'پنج',phonetic:'واکه‌های ویژه',note:'نقطه‌های Ä، Ö، Ü در تلفظ و معنی مهم‌اند؛ مثلاً fünf را بدون ü ننویس.',rule:'واکه‌ها'},
 ];
 
 export const workbookNumbers = [
@@ -98,6 +106,7 @@ export function makeWorkbookExam(random=Math.random) {
       question:'عدد '+n.number+' را به آلمانی بنویس.',answer:n.word,audio:n.word,label:String(n.number)})),
     ...selectedPronouns.map(p=>({id:'verb:'+p.person,type:'type',kind:'grammar',
       question:'فعل kommen را برای «'+p.person+'» صرف کن.',answer:p.kommen,
+      verb:'kommen',pronoun:p.person==='er / sie / es'?'er/sie/es':p.person==='sie / Sie'?'sie/Sie':p.person,
       audio:p.person.replace(' / ',' ')+' '+p.kommen,label:'kommen / '+p.person})),
     ...sounds.map(item=>({id:'sound:'+item.id,type:'choice',kind:'pronunciation',
       question:item.question,answer:item.answer,choices:shuffleWorkbook(item.choices,random),audio:item.audio,label:item.question})),
