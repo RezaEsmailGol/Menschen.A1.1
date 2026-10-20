@@ -24,9 +24,10 @@ test('word tiles remain separately identifiable, never already ordered and can b
  for(const value of ['Ich komme aus dem Iran.','Ich arbeite mit Python.','Vielen Dank für Ihre Zeit.','Ich ich lerne Deutsch.']){
   const tokens=wordTokens(value);
   const scrambled=wordTiles(value,()=>0.99);
-  assert.deepEqual([...scrambled].sort((a,b)=>a.id-b.id).map(t=>t.word),tokens);
+  assert.deepEqual([...scrambled].sort((a,b)=>a.id-b.id).map(t=>t.word.toLocaleLowerCase('de-DE')),tokens);
   if(tokens.length>1)assert.notDeepEqual(scrambled.map(t=>t.id),tokens.map((_,i)=>i));
   assert.equal(checkGermanAnswer(answerFromTiles(scrambled,tokens.map((_,i)=>i)),value),true);
+  if(value.startsWith('Ich'))assert.equal(scrambled.find(x=>x.id===0).word,'Ich');
   assert.equal(answerFromTiles(scrambled,[0,0]),'');
  }
 });
