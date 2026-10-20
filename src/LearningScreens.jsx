@@ -8,6 +8,7 @@ import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
+  {id:'pictureGame',label:'تصویر را ببین، آلمانی بگو',hint:'۳ سطح: چهارگزینه‌ای، تایپ و جمله‌سازی تصویری',Icon:Gamepad2,theme:'green'},
   {id:'visual',label:'جملات و فلش‌کارت تصویری',hint:'۵۰ عبارت مصور، بازی انتخاب جمله و ۱۰ مکالمه',Icon:BookOpen,theme:'sky'},
   {id:'dialogues',label:'گفت‌وگوی تعاملی هوشمند',hint:'۵ داستان مصور، پاسخ انتخابی و مربی AI اختیاری',Icon:MessageCircle,theme:'purple'},
   {id:'workbook',label:'دفتر جلسه اول استاد',hint:'الفبا، استثناها، اعداد، صرف فعل و آزمون',Icon:BookOpen,theme:'green'},
@@ -38,6 +39,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/10*100));
   const learningStages=[
+    {id:'pictureGame',title:'بازی تصویر به آلمانی',subtitle:'۳ مرحله، XP و مرور هوشمند',Icon:Gamepad2,color:'green'},
     {id:'visual',title:'کلمات تصویری جلسه اول',subtitle:'۵۰ عبارت + ۱۰ مکالمه',Icon:BookOpen,color:'green'},
     {id:'dialogues',title:'مکالمه‌های تصویری',subtitle:'پنج داستان شاخه‌دار و روزمره',Icon:MessageCircle,color:'purple'},
     {id:'workbook',title:'جلسه اول استاد',subtitle:'دفتر مصور + تمرین و آزمون',Icon:BookOpen,color:'purple'},
