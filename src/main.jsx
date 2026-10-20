@@ -15,6 +15,7 @@ import { COURSE_KEY, REVIEW_KEY } from './studyEngine';
 import './mobileGame.css';
 import './styles.css';
 import './upgrade.css';
+import './routeLinks.css';
 
 const lessonOneWords = [
   { de: 'Sonne', fa: 'خورشید', hint: 'S در ابتدای واژه معمولاً /z/ شنیده می‌شود.' },
