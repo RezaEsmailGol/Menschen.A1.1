@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, BookOpen, BookOpenCheck, Check, CheckCircle2, Ch
 import { allStudyCards, getLessonCards, lessons, pronouns, verbForms } from './courseData.js';
 import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KEY, shuffleArray, safeParse, todayKey } from './studyEngine.js';
 import { activityItemKey } from './learningMemory.js';
+import RouteLink from './RouteLink';
 import './phaseOne.css';
 
 function useSaved(key, initial) {
@@ -33,8 +34,14 @@ const modes = [
   {id:'exam',title:'آزمون پایان درس',Icon:GraduationCap}
 ];
 
-export default function PhaseOne({mode,setTab,speak,progress,setProgress,schedule,setSchedule,onPracticeEvent}) {
-  const [selected,select] = useLessonSelection();
+export default function PhaseOne({mode,routeLesson,setTab,speak,progress,setProgress,schedule,setSchedule,onPracticeEvent}) {
+  const [selectedLocal,selectLocal] = useLessonSelection();
+  const selected=routeLesson||selectedLocal;
+  useEffect(()=>{if(routeLesson&&routeLesson!==selectedLocal)selectLocal(routeLesson);},[routeLesson]);
+  const select=id=>{
+    selectLocal(id);
+    if(mode==='course')setTab('course/'+id);
+  };
   const [personalCards] = useSaved('dt_cards', []);
   // Keep existing manually created flashcards available for spaced review.
   const customCards = (Array.isArray(personalCards) ? personalCards : [])
@@ -100,18 +107,18 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab})
       <div className="courseSideHeader"><div><b>درس‌های من</b><small>درس {selected} از ۱۲ · برای انتخاب درس روی دکمه بزن</small></div>
         <button type="button" className="courseToggle" aria-expanded={showAll} onClick={()=>setShowAll(v=>!v)}>{showAll?'بستن فهرست':'تغییر درس'} <ChevronLeft size={16}/></button>
       </div>
-      <div className={'courseLessonList '+(showAll?'open':'')}>{lessons.map(l=><button key={l.id} onClick={()=>selectAndClose(l.id)} className={'courseLesson '+(selected===l.id?'chosen':'')}>
+      <div className={'courseLessonList '+(showAll?'open':'')}>{lessons.map(l=><RouteLink key={l.id} to={'course/'+l.id} navigate={()=>selectAndClose(l.id)} className={'courseLesson '+(selected===l.id?'chosen':'')}>
         <span className={'lessonIndex '+status(l.id)}>{progress[l.id]?.passed?<Check size={17}/>:String(l.id).padStart(2,'0')}</span>
         <span className="lessonNames"><b>{l.label}</b><small dir="ltr">{l.german}</small></span>
         <ChevronLeft size={15}/>
-      </button>)}</div>
+      </RouteLink>)}</div>
     </aside>
     <div className="courseLessonBody">
-      <button className="wbCourseBanner" onClick={()=>setTab('workbook')}>
+      <RouteLink className="wbCourseBanner" to="workbook" navigate={setTab}>
         <span className="wbCourseBannerIcon"><BookOpenCheck size={23}/></span>
         <span><b>دفتر تمرین جلسه اول استاد</b><small>الفبا، تلفظ و استثناها، ۰ تا ۱۲، ضمیر و صرف kommen — با آزمون تعاملی</small></span>
         <ChevronLeft size={20}/>
-      </button>
+      </RouteLink>
       <article className="courseIntro">
         <span className="courseTopline">LEKTION {String(lesson.id).padStart(2,'0')} · A1.1</span>
         <h3>{lesson.label}</h3>
