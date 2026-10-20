@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, AudioLines, BookOpen, BookOpenCheck, Check, Chec
 import { activityItemKey, chooseAdaptiveNumbers } from './learningMemory.js';
 import {makeNumberOptions} from './numberGameLogic.js';
 import {germanNumber} from './learningData.js';
+import {playWrongBeep} from './audioFeedback.js';
 import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
@@ -70,6 +71,19 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
   function judge(value){
     if(answer!==null||!current)return;
     const correct=cleanWorkbookAnswer(value)===cleanWorkbookAnswer(current.answer);
+    // Match the four-choice number game feedback when the learner selects an option.
+    // Typing/arrangement challenges keep their existing explicit listen control.
+    if(current.type==='choice'){
+      let soundOn=true;
+      try{soundOn=localStorage.getItem('dt_game_feedback_sound')!=='off';}catch{}
+      if(soundOn){
+        if(correct)speak(current.audio||current.answer);
+        else {
+          try{window.speechSynthesis?.cancel();}catch{}
+          playWrongBeep();
+        }
+      }
+    }
     setAnswer(correct);
     if(correct)setScore(n=>n+1);
     const key=current.kind==='number' ? activityItemKey('number',current.label)
