@@ -2,7 +2,7 @@ import React from 'react';
 import {Sparkles,Star,Trophy} from 'lucide-react';
 import './gameCelebration.css';
 
-export default function GameCelebration({correct=0,total=0,caption='پایان تمرین'}){
+export default function GameCelebration({correct=0,total=0,caption='پایان تمرین',showScore=true}){
  const ratio=total?correct/total:0;
  const grade=ratio>=.9?{emoji:'🏆',title:'Wunderbar!',fa:'فوق‌العاده بود!'}
   :ratio>=.6?{emoji:'🌟',title:'Sehr gut!',fa:'خیلی خوب پیش رفتی!'}
@@ -14,6 +14,6 @@ export default function GameCelebration({correct=0,total=0,caption='پایان �
   <div className="gcCaption"><Trophy size={16}/>{caption}<Star size={16}/></div>
   <h2 dir="ltr">{grade.title}</h2>
   <p>{grade.fa}</p>
-  <strong className="gcScore" dir="ltr">{correct} / {total}</strong>
+  {showScore&&<strong className="gcScore" dir="ltr">{correct} / {total}</strong>}
  </div>;
 }
