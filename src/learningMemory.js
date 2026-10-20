@@ -19,15 +19,21 @@ export function recordActivity(previous, event, now = Date.now()) {
   const before = items[event.id] || {};
   const correct = event.correct;
   const formerMastery = Math.max(0, Math.min(100, Number(before.mastery) || 0));
+  // Repetition immediately after an answer is useful practice, but not proof of long-term retention.
+  const rapidRepeat=Boolean(before.lastAt && now-before.lastAt < 15*60000);
+  const gain=event.grade==='easy' ? 27 : event.grade==='hard' ? 11 : 21;
   const strength = correct
-    ? Math.min(100, formerMastery + (event.grade === 'easy' ? 27 : event.grade === 'hard' ? 11 : 21))
+    ? Math.min(100, formerMastery + (rapidRepeat ? Math.min(8,gain) : gain))
     : Math.max(0, formerMastery - (event.grade === 'again' ? 20 : 24));
   const wins = (Number(before.correct) || 0) + (correct ? 1 : 0);
   const misses = (Number(before.wrong) || 0) + (correct ? 0 : 1);
   const consecutive = correct ? (Number(before.streak) || 0) + 1 : 0;
   const interval = !correct ? 10 * 60000 :
     strength >= 80 ? 5 * DAY : strength >= 55 ? 2 * DAY : 12 * 3600000;
+  const currentDay=localDay(now);
+  const reviewedDays=(Number(before.reviewedDays)||0)+(before.lastDay!==currentDay ? 1 : 0);
   const updated = {
+    reviewedDays,lastDay:currentDay,
     id:event.id, kind:event.kind, label:String(event.label || before.label || ''),
     lesson:Number(event.lesson ?? before.lesson ?? 0),
     mastery:strength, correct:wins, wrong:misses, attempts:wins + misses,
@@ -53,7 +59,7 @@ export function recordActivity(previous, event, now = Date.now()) {
 export function learningInsights(memory={}, now=Date.now()) {
   const items=Object.values(memory.items||{});
   const practiced=items.filter(x=>x.attempts>0);
-  const mastered=practiced.filter(x=>x.mastery>=80 && x.correct>=3);
+  const mastered=practiced.filter(x=>x.mastery>=80 && x.correct>=3 && x.reviewedDays>=2);
   const weak=practiced.filter(x=>x.mastery<55 || x.wrong>x.correct);
   const due=practiced.filter(x=>x.nextAt<=now);
   const day=localDay(now), today=memory.days?.[day]||{attempts:0,correct:0,xp:0};
@@ -69,7 +75,7 @@ export function learningInsights(memory={}, now=Date.now()) {
   }
   const byType=['vocab','grammar','sentence','reading','number','dictation','pronunciation'].map(kind=>{
     const list=practiced.filter(x=>x.kind===kind);
-    return {kind,attempts:list.reduce((s,x)=>s+x.attempts,0),mastered:list.filter(x=>x.mastery>=80&&x.correct>=3).length,
+    return {kind,attempts:list.reduce((s,x)=>s+x.attempts,0),mastered:list.filter(x=>x.mastery>=80&&x.correct>=3&&x.reviewedDays>=2).length,
       weak:list.filter(x=>x.mastery<55).length};
   });
   return {
