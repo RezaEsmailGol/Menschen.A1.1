@@ -1,0 +1,115 @@
+/* Compact mobile-first game shell. Fixed four-item navigation replaces scrolling tab bar. */
+.app{padding-bottom:calc(115px + env(safe-area-inset-bottom,0px))}
+.topbar{max-width:1230px;margin:0 auto 14px;display:flex;justify-content:space-between}
+.bottomNav{position:fixed;z-index:70;bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(520px,calc(100% - 24px));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fffffffa;backdrop-filter:blur(20px);border:1px solid #e6e7f2;border-radius:23px;box-shadow:0 14px 55px #19245130,0 -1px 12px #ffffff70;padding:7px 9px}
+.bottomNav button{border:0;background:transparent;border-radius:15px;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:9px 5px 7px;cursor:pointer;color:#8990a5;font-size:11px;min-height:59px;font-weight:750;white-space:nowrap}
+.bottomNav button.selected{background:#eeecff;color:#5b51cf}
+.bottomNavIcon{height:25px;display:grid;place-items:center}
+.bottomNav button:hover:not(.selected){background:#f7f7fc;color:#5858a5}
+.subpageReturn{display:flex;align-items:center;gap:8px;margin:0 0 12px;color:#99a1b0;font-size:12px}
+.subpageReturn button{background:#fff;border:1px solid #e8eaf4;color:#635dd0;padding:8px 12px;border-radius:10px;display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px}
+.gameHome,.gamePage{display:grid;gap:16px}
+.gameEyebrow{display:inline-flex;align-items:center;gap:7px;color:#7771d2;font:800 11px Tahoma,system-ui,sans-serif;letter-spacing:.4px}
+.gameIntro{background:linear-gradient(115deg,#282361,#423c9d 70%,#6965ce);color:#fff;border-radius:25px;min-height:245px;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden;padding:26px 34px}
+.gameIntro:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;left:-100px;top:-260px;border:1px solid #ffffff25;box-shadow:0 0 0 65px #ffffff09,0 0 0 125px #ffffff06}
+.gameIntro>div{position:relative;z-index:1}
+.gameIntro .gameEyebrow{color:#c7c5fa;font-size:10px}
+.gameIntro h1{font-size:34px;line-height:1.55;margin:9px 0 4px;font-weight:900}
+.gameIntro h1 span{color:#aaf3d7}
+.gameIntro p{color:#dfe1ff;font-size:13px;line-height:2;max-width:550px;margin:0 0 17px}
+.gamePrimary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#b6f5da;color:#163b4b;border:0;border-radius:13px;padding:12px 18px;font-weight:850;font-size:13px;cursor:pointer}
+.gameOrb{min-width:150px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;transform:rotate(-9deg)}
+.gameOrb span{background:#fff;color:#3e3d94;border-radius:20px 20px 2px 20px;padding:8px 14px;font:800 16px Tahoma;position:absolute;right:0;top:3px}
+.gameOrb div{font-size:65px;background:#ffffff21;width:123px;height:123px;border-radius:35px;display:grid;place-items:center;border:1px solid #ffffff43;box-shadow:0 15px 30px #11113544}
+.gameScorebar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.gameScorebar>div{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #eceef5;border-radius:17px;padding:14px;box-shadow:0 6px 23px #32396b0a}
+.scoreIcon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center}
+.scoreIcon.violet{background:#ebe9ff;color:#6860d9}.scoreIcon.amber{background:#fff2e1;color:#d58a18}.scoreIcon.green{background:#dcf8ee;color:#079773}
+.gameScorebar strong{font:900 21px Tahoma;color:#353665}
+.gameScorebar small{color:#939caf;font-size:11px}
+.gameGoals{border:1px solid #ededf5;background:#fff;border-radius:19px;padding:17px 21px;box-shadow:0 5px 21px #30375e09}
+.gameGoalHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gameGoalHeader h2{font-size:18px;margin:5px 0 13px}
+.gameGoalNumber{font:800 13px Tahoma;color:#7069d6;white-space:nowrap}
+.gameProgress{height:11px;border-radius:99px;background:#e9eaf6;overflow:hidden}
+.gameProgress span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#37dcae,#5c67e1);min-width:0;transition:width .28s}
+.gameGoalDetail{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;color:#8e95aa;font-size:11px}
+.gameGoalDetail span{display:flex;gap:6px;align-items:center}
+.gameGoalDetail b{color:#1d9c85;white-space:nowrap}
+.gameNext{background:linear-gradient(110deg,#e7faf5,#f3f1ff);border:1px solid #dcece8;padding:16px;display:flex;align-items:center;gap:13px;border-radius:19px}
+.nextSparkle{display:grid;place-items:center;background:#fff;width:49px;height:49px;border-radius:15px;color:#219e85;flex-shrink:0}
+.gameNext>div{flex:1;min-width:0}
+.gameNext b{font-size:14px}
+.gameNext p{margin:3px 0 0;color:#79849a;font-size:11px;line-height:1.8}
+.gameNext button{display:flex;align-items:center;gap:3px;background:#5953cb;color:white;border:0;border-radius:11px;padding:10px;white-space:nowrap;font-size:12px;cursor:pointer}
+.gameSectionHead{display:flex;justify-content:space-between;align-items:end;gap:9px;margin:6px 0 -5px}
+.gameSectionHead h2{font-size:19px;margin:4px 0}
+.gameSectionHead>span{font-size:11px;color:#918fa4}
+.learningJourney{background:#fff;border:1px solid #e9ebf5;border-radius:22px;padding:18px 20px;display:grid;justify-items:center;box-shadow:0 8px 27px #3035550a}
+.journeyNode{width:min(100%,590px);background:#f8f9ff;border:1px solid #e9e9f7;border-radius:16px;padding:12px 15px;display:flex;align-items:center;gap:13px;color:#4e5479;text-align:right;cursor:pointer}
+.journeyNode .journeyIcon{background:#efecff;color:#665dd5;min-width:53px;height:53px;border-radius:16px;display:grid;place-items:center}
+.journeyNode>span:nth-child(2){flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.journeyNode b{font-size:14px}
+.journeyNode small{font-size:11px;color:#9097aa}
+.journeyNode.green .journeyIcon{background:#dff8ed;color:#179a77}
+.journeyNode.amber .journeyIcon{background:#fff0db;color:#ca8a2e}
+.journeyNode.sky .journeyIcon{background:#e2f1ff;color:#387cca}
+.journeyNode:hover{border-color:#c2c1ee;background:#f2f3ff}
+.journeyConnector{height:25px;width:2px;background:repeating-linear-gradient(to bottom,#bbb6ec 0 4px,transparent 4px 8px)}
+.homeContinue{background:#eae8ff;border-radius:17px;padding:15px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.homeContinue>div{display:flex;gap:12px;align-items:center;color:#5f57cc}
+.homeContinue span{display:flex;flex-direction:column;gap:3px}
+.homeContinue b{font-size:14px}
+.homeContinue small{font-size:11px;color:#8b87bf}
+.homeContinue button{border:0;border-radius:11px;padding:11px 12px;background:#fff;color:#5b52cd;font-weight:750;display:flex;gap:5px;align-items:center;cursor:pointer;font-size:11px}
+.migrationNote,.progressSoftNote{color:#9a9faf;font-size:11px;line-height:1.9;margin:4px 0}
+.hubHeading{background:#fff;border:1px solid #ededf5;padding:21px;border-radius:20px}
+.hubHeading h2{font-size:25px;margin:7px 0 4px}
+.hubHeading p{color:#9197aa;font-size:13px;margin:0;line-height:1.9}
+.hubSuggestion{display:flex;align-items:center;gap:13px;background:linear-gradient(105deg,#e6f8f5,#f3f0ff);border:1px solid #d9ece9;padding:15px;border-radius:19px}
+.hubIcon{width:50px;height:50px;display:grid;place-items:center;border-radius:15px;background:#fff;color:#129c86;flex-shrink:0}
+.hubSuggestion div{flex:1;min-width:0}
+.hubSuggestion b{font-size:14px}
+.hubSuggestion p{font-size:11px;color:#8793a0;line-height:1.9;margin:3px 0 0}
+.hubSuggestion button{border:0;color:#fff;background:#5b54d0;padding:10px 11px;display:flex;align-items:center;gap:4px;border-radius:10px;cursor:pointer}
+.practiceTiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.practiceTile{border:1px solid #ebedf6;border-radius:18px;background:#fff;display:flex;align-items:center;gap:14px;padding:19px;text-align:right;color:#818aa0;min-width:0;cursor:pointer;box-shadow:0 7px 21px #3a41650c}
+.practiceTile:hover{border-color:#c6c1ec;transform:translateY(-2px)}
+.tileIcon{background:#eeebff;color:#625bd0;min-width:54px;height:54px;border-radius:16px;display:grid;place-items:center}
+.practiceTile.green .tileIcon{background:#e0f8f0;color:#0b9979}
+.practiceTile.amber .tileIcon{background:#fff0d9;color:#d5912f}
+.practiceTile.sky .tileIcon{background:#e4f2fe;color:#408acb}
+.practiceTile.pink .tileIcon{background:#ffe7ee;color:#dc6586}
+.tileCopy{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.tileCopy b{font-size:14px;color:#2d3655}
+.tileCopy small{color:#97a0b1;line-height:1.7;font-size:11px}
+.progressOverview{display:grid;grid-template-columns:240px 1fr;gap:12px}
+.progressLevel{background:linear-gradient(135deg,#3c3487,#615acb);color:#fff;border-radius:21px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.progressLevel strong{font:900 48px Tahoma}.progressLevel small{font-size:11px;color:#dbddff}.progressLevel .gameProgress{width:100%;background:#ffffff30}
+.progressQuickstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.progressQuickstats>div{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #ebeef6;padding:16px;border-radius:17px}
+.progressQuickstats svg{color:#6960d4}.progressQuickstats b{font:850 24px Tahoma;color:#38375c}.progressQuickstats span{font-size:11px;color:#8d94a7}
+.progressColumns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.progressPanel{background:#fff;border:1px solid #ededf5;border-radius:21px;padding:22px}
+.progressPanel h3{font-size:16px;display:flex;align-items:center;gap:8px;margin:0 0 18px}
+.progressPanel h3 svg{color:#665dd2}
+.skillRow{display:flex;align-items:center;gap:10px;font-size:12px;padding:10px 0;border-bottom:1px solid #f2f3f7}
+.skillRow>span:first-child{width:83px;flex-shrink:0}
+.skillMiniTrack{height:8px;border-radius:99px;background:#eeeef6;overflow:hidden;flex:1}
+.skillMiniTrack span{display:block;height:100%;background:#35c39f;border-radius:99px}
+.skillRow small{font-size:10px;color:#9fa3b3;min-width:40px;text-align:left}
+.weakEntry{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #eeeef3}
+.weakEntry>div{display:flex;flex-direction:column;gap:6px;min-width:0}.weakEntry b{font-size:12px;overflow-wrap:anywhere}.weakEntry small{font-size:10px;color:#8994a5}.weakEntry>span{font-size:10px;color:#bb5f5d;white-space:nowrap}
+.progressPractice{background:#6056d5;border:0;border-radius:11px;padding:11px;color:#fff;display:flex;align-items:center;gap:8px;margin-top:15px;cursor:pointer}
+.gameBackup{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:19px;background:#fff;border:1px solid #e8ebf4;border-radius:20px}
+.gameBackup>div:first-child{display:flex;align-items:center;gap:11px;flex:1}
+.gameBackup svg{color:#6158d0;flex-shrink:0}
+.gameBackup span{display:flex;flex-direction:column;gap:5px}
+.gameBackup b{font-size:14px}
+.gameBackup small{color:#9aa0b2;font-size:11px;line-height:1.9}
+.backupActions{display:flex;gap:8px;flex-wrap:wrap}
+.backupActions button{border:1px solid #dddaf9;background:#f0efff;border-radius:10px;padding:10px;color:#5852ba;display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px}
+@media(max-width:900px){.gameOrb{display:none}.progressOverview{grid-template-columns:200px 1fr}}
+@media(max-width:680px){.app{padding:10px 12px calc(116px + env(safe-area-inset-bottom,0px))}.topbar{margin-bottom:12px}.gameIntro{padding:22px;min-height:0}.gameIntro h1{font-size:27px}.gameIntro p{font-size:12px}.gameScorebar>div{padding:12px 8px;display:grid;justify-items:center;gap:4px;text-align:center}.gameScorebar strong{font-size:20px}.gameScorebar small{font-size:10px}.gameNext{padding:12px}.gameNext button{padding:9px}.gameGoals{padding:14px}.gameGoalHeader h2{font-size:16px}.gameSectionHead h2{font-size:17px}.learningJourney{padding:14px 12px}.progressOverview{grid-template-columns:1fr}.progressLevel{flex-direction:row;justify-content:space-around;flex-wrap:wrap}.progressLevel .gameProgress{width:100%}.progressColumns{grid-template-columns:1fr}.gameBackup{flex-direction:column;align-items:stretch}.backupActions{justify-content:flex-start}.phaseHero{padding:18px!important}.phaseHero h2{font-size:22px}.phaseHero p{font-size:12px}.courseLessonList{max-height:none!important}}
+@media(max-width:460px){.topbar{padding:11px 12px}.topbar h1{font-size:17px}.topbar p{font-size:10px;max-width:195px}.voiceControl select{max-width:82px}.gameScorebar{gap:7px}.gameScorebar>div{border-radius:13px}.scoreIcon{width:33px;height:33px}.gameIntro{padding:18px;border-radius:19px}.gameIntro h1{font-size:25px}.gameIntro p{line-height:1.85}.gamePrimary{width:100%;font-size:12px}.gameNext .nextSparkle{width:38px;height:38px}.gameNext p{font-size:10px}.gameNext button{font-size:11px}.homeContinue{padding:11px}.gameSectionHead>span{font-size:10px}.practiceTiles{grid-template-columns:1fr}.practiceTile{padding:14px}.hubHeading{padding:17px}.hubHeading h2{font-size:20px}.progressQuickstats{gap:8px}.progressQuickstats>div{display:grid;justify-items:center;text-align:center;padding:11px;gap:5px}.progressQuickstats b{font-size:20px}.gameGoalDetail{align-items:flex-start;flex-wrap:wrap;font-size:10px}.journeyNode{padding:10px}.journeyNode .journeyIcon{width:47px;min-width:47px;height:47px}.bottomNav{width:calc(100% - 18px);padding:6px;bottom:max(8px,env(safe-area-inset-bottom));border-radius:20px}.bottomNav button{font-size:11px}.phaseIndicators>div{padding:9px 4px}}
+@media(prefers-reduced-motion:reduce){.gameProgress span,.practiceTile{transition:none}}
