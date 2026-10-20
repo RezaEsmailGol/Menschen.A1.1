@@ -114,6 +114,12 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab})
       </RouteLink>)}</div>
     </aside>
     <div className="courseLessonBody">
+      <RouteLink className="wbCourseBanner dialogueLessonBanner"
+        to={lesson.id===7?'dialogues/cafe':lesson.id===4?'dialogues/office':lesson.id===12?'dialogues/interview':lesson.id===2?'dialogues/origin':'dialogues/greetings'} navigate={setTab}>
+        <span className="wbCourseBannerIcon"><Headphones size={23}/></span>
+        <span><b>گفت‌وگوی تعاملی این درس</b><small>مکالمه تصویری با انتخاب مسیر و تمرین موقعیت واقعی</small></span>
+        <ChevronLeft size={20}/>
+      </RouteLink>
       <RouteLink className="wbCourseBanner" to="workbook" navigate={setTab}>
         <span className="wbCourseBannerIcon"><BookOpenCheck size={23}/></span>
         <span><b>دفتر تمرین جلسه اول استاد</b><small>الفبا، تلفظ و استثناها، ۰ تا ۱۲، ضمیر و صرف kommen — با آزمون تعاملی</small></span>
