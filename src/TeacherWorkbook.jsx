@@ -9,7 +9,6 @@ import './teacherWorkbook.css';
 
 const STORE_KEY='dt_teacher_workbook_v1';
 const PAGE_KEY='dt_teacher_workbook_page_v1';
-const capitalize=s=>s.charAt(0).toUpperCase()+s.slice(1);
 function loadState(){
   try {
     const data=JSON.parse(localStorage.getItem(STORE_KEY)||'null');
@@ -50,7 +49,7 @@ function BookScene({speak}){
   </div>;
 }
 
-function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش',className=''}) {
+function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش',className='',passThreshold=.7}) {
   const [position,setPosition]=useState(0);
   const [answer,setAnswer]=useState(null);
   const [score,setScore]=useState(0);
@@ -87,9 +86,9 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
   return <div className={'wbExamRunner '+className}>
     {finished?<div className="wbResult">
       <div className="wbResultIcon"><Trophy size={35}/></div>
-      <h3>{score/currentQuestions.length>=.7?'آفرین، تمرین این بخش را انجام دادی!':'دوباره تمرین کن؛ هر بار بهتر می‌شوی.'}</h3>
+      <h3>{score/currentQuestions.length>=passThreshold?'آفرین، تمرین این بخش را انجام دادی!':'دوباره تمرین کن؛ هر بار بهتر می‌شوی.'}</h3>
       <strong dir="ltr">{score} / {currentQuestions.length}</strong>
-      <p>هدف این تمرین: ۷۰٪ پاسخ درست یا بیشتر. سؤال‌های اشتباه وارد حافظه یادگیری می‌شوند.</p>
+      <p>هدف این تمرین: {Math.round(passThreshold*100)}٪ پاسخ درست یا بیشتر. سؤال‌های اشتباه وارد حافظه یادگیری می‌شوند.</p>
       <button className="wbPrimary" onClick={restart}><RotateCcw size={17}/> یک دور دیگر</button>
     </div>:<>
       <div className="wbQuizTop"><span>{label}</span><b>{position+1} / {currentQuestions.length}</b></div>
@@ -268,7 +267,7 @@ function CheckpointPage({speak,onEvent,onComplete,onExam}) {
   return <div className="wbContent">
     <div className="wbChapterTitle"><span>07 · LERNKONTROLLE</span><h2>آماده کلاس بعدی هستی؟</h2><p>۱۲ سؤال از اعداد، صرف فعل، شنیدن صداها و جمله‌سازی.</p></div>
     <div className="wbCheckpointIntro"><Trophy size={32}/><div><b>آزمون پایان جلسه اول</b><p>سؤال‌ها هر بار جابه‌جا می‌شوند. نمره قبولی ۸۰٪ است؛ اشتباه‌ها برای مرورهای بعدی ثبت می‌شوند.</p></div></div>
-    <ExamRunner key={seed} questions={quiz} onEvent={onEvent} onEnd={done} speak={speak} label="آزمون جامع جلسه"/>
+    <ExamRunner key={seed} questions={quiz} onEvent={onEvent} onEnd={done} speak={speak} label="آزمون جامع جلسه" passThreshold={.8}/>
     {result&&<button className="wbSecondary wbWide" onClick={()=>{setResult(null);setSeed(n=>n+1)}}><RotateCcw size={17}/> آزمون تازه با سؤال‌های تصادفی</button>}
   </div>;
 }
