@@ -99,3 +99,18 @@
 @media(max-width:920px){.vPhraseGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:610px){.vPhraseGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.vToolbar{flex-wrap:wrap}.vDownload{width:100%;justify-content:center}.vPhraseInfo{padding:10px}.vPhraseInfo h3{font-size:15px}.vPhraseInfo p{font-size:11px}.vPhraseBottom{flex-wrap:wrap}.vModes button{font-size:10px;gap:4px}.vHero{padding:20px}.vQuiz{padding:12px}.vQuizChoices{grid-template-columns:1fr}.vQuizChoices button{min-height:56px}.vBranchCTA{flex-wrap:wrap}}
 @media(max-width:400px){.vPhraseGrid{grid-template-columns:1fr}.vModes button{flex-direction:column;font-size:10px}.vPhraseInfo h3{font-size:18px}.vCategories{gap:5px}.vCategories button{font-size:11px;padding:7px}.vQuiz .visualArt{max-height:270px}}
+
+
+/* Entry point to the three-level "picture -> German" adventure. */
+.vGameInvitation{display:flex;align-items:center;gap:13px;padding:17px;border:1px solid #a6ded0;
+ border-radius:16px;background:linear-gradient(110deg,#e4f7ee,#eef4ff);text-decoration:none;color:#2c716d}
+.vGameInvitationIcon{display:grid;place-items:center;border-radius:14px;background:#fff;
+ color:#32a58e;width:49px;height:49px;flex-shrink:0}
+.vGameInvitation>span:nth-child(2){display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
+.vGameInvitation b{font-size:14px;color:#2d6678}
+.vGameInvitation small{color:#668b8f;font-size:11px;line-height:1.8}
+.vGameInvitationGo{display:inline-flex;align-items:center;gap:5px;padding:10px 12px;
+ background:#2d8885;color:white;border-radius:11px;white-space:nowrap;font-size:12px;font-weight:800}
+@media(max-width:540px){.vGameInvitation{padding:12px;gap:9px}
+ .vGameInvitationIcon{width:40px;height:40px}.vGameInvitation b{font-size:12px}
+ .vGameInvitation small{font-size:10px}.vGameInvitationGo{padding:8px;font-size:10px}}
