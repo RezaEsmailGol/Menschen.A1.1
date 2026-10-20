@@ -60,3 +60,15 @@ test('route recommendations favor overdue reviews and leave room for next lesson
  assert.equal(recommendedRoute(empty,0).page,'course');
  assert.equal(activityItemKey('sentence',2,'Ich habe Zeit.'),'sentence:2:Ich%20habe%20Zeit.');
 });
+
+
+test('replaying a single card immediately cannot fake long-term mastery',()=>{
+ const t=Date.UTC(2026,9,20,9);
+ let state={};
+ for(let i=0;i<8;i++)state=recordActivity(state,{id:'vocab:repeat',kind:'vocab',label:'Buch',correct:true},t+i*10000);
+ assert.equal(state.items['vocab:repeat'].reviewedDays,1);
+ assert.ok(state.items['vocab:repeat'].mastery<85);
+ assert.equal(learningInsights(state,t+7200000).mastered,0);
+ state=recordActivity(state,{id:'vocab:repeat',kind:'vocab',label:'Buch',correct:true},t+86400000);
+ assert.equal(state.items['vocab:repeat'].reviewedDays,2);
+});
