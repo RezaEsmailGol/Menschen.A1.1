@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ArrowLeft, BookOpen, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap } from 'lucide-react';
+import { ArrowLeft, BookOpen, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap } from 'lucide-react';
 import { lessons } from './courseData.js';
 import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
@@ -8,6 +8,7 @@ import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
+  {id:'dialogues',label:'گفت‌وگوی تعاملی هوشمند',hint:'۵ داستان مصور، پاسخ انتخابی و مربی AI اختیاری',Icon:MessageCircle,theme:'purple'},
   {id:'workbook',label:'دفتر جلسه اول استاد',hint:'الفبا، استثناها، اعداد، صرف فعل و آزمون',Icon:BookOpen,theme:'green'},
   {id:'srs',label:'مرور هوشمند',hint:'کلمه‌هایی که زمان مرورشان رسیده',Icon:Layers,theme:'purple'},
   {id:'builder',label:'بازی جمله‌سازی',hint:'کلمات را به جمله صحیح تبدیل کن',Icon:Gamepad2,theme:'green'},
@@ -24,7 +25,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ'
 };
-const backupKeys=['dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_current_lesson','dt_audio_speed'];
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
   const report=learningInsights(memory);
@@ -36,6 +37,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/10*100));
   const learningStages=[
+    {id:'dialogues',title:'مکالمه‌های تصویری',subtitle:'پنج داستان شاخه‌دار و روزمره',Icon:MessageCircle,color:'purple'},
     {id:'workbook',title:'جلسه اول استاد',subtitle:'دفتر مصور + تمرین و آزمون',Icon:BookOpen,color:'purple'},
     {id:'srs',title:'تمرین کلمات',subtitle:scheduleDue ? scheduleDue+' کارت موعددار' : 'مرور واژه‌ها',Icon:Brain,color:'green'},
     {id:'builder',title:'چالش جمله‌سازی',subtitle:'۴ جمله از درس انتخابی',Icon:Gamepad2,color:'amber'},
@@ -48,7 +50,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats}) {
         <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
         <div className="gameHeroActions">
           <RouteLink className="gamePrimary" to="workbook" navigate={setTab}><BookOpen size={17}/> دفتر جلسه اول استاد <ArrowLeft size={18}/></RouteLink>
-          <RouteLink className="gameHeroSecondary" to={choice.page} navigate={setTab}>{choice.label}</RouteLink>
+          <RouteLink className="gameHeroSecondary" to="dialogues" navigate={setTab}>گفت‌وگوهای جدید</RouteLink>
         </div>
       </div>
       <div className="gameOrb" aria-hidden="true"><span>Hallo!</span><div>🇩🇪</div></div>
