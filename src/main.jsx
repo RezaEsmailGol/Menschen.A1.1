@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, Languages, Play, Shuffle, Trophy, Upload, Download, Plus, Trash2 } from 'lucide-react';
 import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
+import PhaseOne from './PhaseOne';
+import { pronouns, verbForms } from './courseData';
 import './styles.css';
 import './upgrade.css';
 
@@ -26,20 +28,17 @@ const numbers = [
   ['0','null'],['1','eins'],['2','zwei'],['3','drei'],['4','vier'],['5','fünf'],['6','sechs'],['7','sieben'],['8','acht'],['9','neun'],['10','zehn'],['11','elf'],['12','zwölf'],['13','dreizehn'],['14','vierzehn'],['15','fünfzehn'],['16','sechzehn'],['17','siebzehn'],['18','achtzehn'],['19','neunzehn'],['20','zwanzig']
 ].map(([n,de]) => ({ n, de }));
 
-const verbs = {
-  kommen: {
-    fa: 'آمدن',
-    forms: { ich: 'komme', du: 'kommst', 'er/sie/es': 'kommt', wir: 'kommen', ihr: 'kommt', 'sie/Sie': 'kommen' }
-  },
-  lernen: {
-    fa: 'یاد گرفتن',
-    forms: { ich: 'lerne', du: 'lernst', 'er/sie/es': 'lernt', wir: 'lernen', ihr: 'lernt', 'sie/Sie': 'lernen' }
-  },
-  arbeiten: {
-    fa: 'کار کردن',
-    forms: { ich: 'arbeite', du: 'arbeitest', 'er/sie/es': 'arbeitet', wir: 'arbeiten', ihr: 'arbeitet', 'sie/Sie': 'arbeiten' }
-  }
+const verbMeanings = {
+  kommen:'آمدن', heißen:'نام داشتن', sein:'بودن', wohnen:'ساکن بودن', sprechen:'صحبت کردن',
+  haben:'داشتن', arbeiten:'کار کردن', machen:'انجام دادن', spielen:'بازی کردن', lesen:'خواندن',
+  brauchen:'نیاز داشتن', kaufen:'خریدن', suchen:'جست‌وجو کردن', fahren:'رفتن با وسیله',
+  gehen:'رفتن پیاده', müssen:'مجبور بودن / باید', schreiben:'نوشتن', schicken:'فرستادن',
+  möchten:'مایل بودن / خواستن', können:'توانستن'
 };
+const verbs = Object.fromEntries(Object.entries(verbForms).map(([infinitive,forms]) => [
+  infinitive,
+  { fa:verbMeanings[infinitive] || '', forms:Object.fromEntries(pronouns.map((person,index)=>[person,forms[index]])) }
+]));
 
 const defaultCards = [
   { front: 'من اهل ایران هستم.', back: 'Ich komme aus dem Iran.' },
@@ -81,7 +80,7 @@ function useLocalStorage(key, initial) {
 }
 
 const tabs = [
-  ['home','خانه'],['pronunciation','تلفظ و استثناها'],['numbers','اعداد'],['flash','فلش‌کارت'],['listen','شنیدن و تایپ'],['words','کلمات'],['alphabet','الفبا'],['verbs','صرف افعال']
+  ['home','خانه'],['course','درس‌های A1.1'],['srs','مرور هوشمند'],['builder','جمله‌سازی'],['exam','آزمون درس'],['pronunciation','تلفظ و استثناها'],['numbers','اعداد'],['flash','فلش‌کارت'],['listen','شنیدن و تایپ'],['words','کلمات'],['alphabet','الفبا'],['verbs','صرف افعال']
 ];
 
 function App() {
@@ -114,6 +113,7 @@ function App() {
 
     <main>
       {tab==='home' && <Home stats={stats} setTab={setTab} />}
+      {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} setTab={setTab} speak={speak} />}
       {tab==='pronunciation' && <PronunciationLab speak={speak} />}
       {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} />}
       {tab==='listen' && <ListenType stats={stats} setStats={setStats} />}
@@ -131,23 +131,27 @@ function Home({stats,setTab}) {
   const total = stats.known + stats.missed;
   const accuracy = total ? Math.round(100 * stats.known / total) : 0;
   const items = [
+    ['مسیر ۱۲ درس A1.1', 'واژگان، دستور زبان، مثال و آزمون هر درس', 'course', BookOpen, 'teal'],
+    ['مرور هوشمند', 'کلمات فراموش‌شده را در موعد مناسب ببین', 'srs', RotateCcw, 'violet'],
+    ['جمله‌سازی تعاملی', 'با لمس کلمات، جمله درست بساز', 'builder', Shuffle, 'orange'],
+    ['آزمون پایان درس', 'امتیاز از ۱۰۰ و ثبت وضعیت قبولی', 'exam', Trophy, 'blue'],
     ['تلفظ و استثناها', 'از «ich» تا «Bach»؛ قوانین همراه با صدا', 'pronunciation', Volume2, 'teal'],
     ['بازی اعداد', '۱۰ سؤال رندوم؛ شنیدن و تایپ تا ۱۰۰', 'numbers', Hash, 'orange'],
     ['فلش‌کارت', 'مرور روزانه، پاسخ صحیح و غلط', 'flash', BookOpen, 'violet'],
     ['دیکته شنیداری', 'گوش بده، کلمه را با دقت بنویس', 'listen', Keyboard, 'blue'],
     ['کلمات جلسه اول', 'کلمات مهم جزوه با معنی و صدا', 'words', Languages, 'rose'],
     ['الفبای آلمانی', 'حروف ویژه و شنیدن نام حروف', 'alphabet', Languages, 'green'],
-    ['صرف افعال', 'kommen، lernen، arbeiten', 'verbs', Shuffle, 'indigo'],
+    ['صرف افعال', '۲۰ فعل پرکاربرد و آزمون صرف', 'verbs', Shuffle, 'indigo'],
   ];
   return <>
     <section className="hero upgradedHero">
       <div className="heroIntro">
-        <span className="pill">MENSCHEN A1.1 · LEKTION 1</span>
+        <span className="pill">A1.1 · 12 LEARNING UNITS</span>
         <h2>هر روز یک قدم،<br/><span>نزدیک‌تر به آلمانی روان.</span></h2>
-        <p>همه چیزهایی که استاد در جلسه اول گفته: قوانین تلفظ، استثناها، اعداد و صرف افعال؛ این بار با بازی و تمرین عملی.</p>
+        <p>۱۲ واحد تمرینی از سطح A1.1، به‌علاوه تلفظ، استثناها، اعداد، مرور هوشمند، جمله‌سازی و تمرین‌های کلاس.</p>
         <div className="heroButtons">
-          <button onClick={() => setTab('pronunciation')}><Volume2 size={18}/> شروع تلفظ <span>←</span></button>
-          <button className="outlineBtn" onClick={() => setTab('numbers')}><Hash size={18}/> آزمون اعداد</button>
+          <button onClick={() => setTab('course')}><BookOpen size={18}/> شروع درس‌های A1.1 <span>←</span></button>
+          <button className="outlineBtn" onClick={() => setTab('srs')}><RotateCcw size={18}/> مرور امروز</button>
         </div>
       </div>
       <div className="heroDashboard">
@@ -163,7 +167,7 @@ function Home({stats,setTab}) {
         <h3>{title}</h3><p>{desc}</p><div className="featureFoot"><span>{index < 2 ? 'پیشنهاد امروز' : 'درس اول'}</span><span>شروع ←</span></div>
       </button>)}
     </section>
-    <div className="homePracticeStrip"><div className="practiceIcon">🎧</div><div><b>نکته امروز: صدای «ch» دو نوع اصلی دارد</b><p>تفاوت ich و Bach را بشنو؛ یکی نرم و دیگری خشن است.</p></div><button onClick={()=>setTab('pronunciation')}>بشنو و تمرین کن ←</button></div>
+    <div className="homePracticeStrip"><div className="practiceIcon">🎧</div><div><b>نکته امروز: صدای «ch» دو نوع اصلی دارد</b><p>تفاوت ich و Bach را بشنو؛ بعد در مسیر درس‌ها جمله‌سازی کن.</p></div><button onClick={()=>setTab('pronunciation')}>بشنو و تمرین کن ←</button></div>
   </>;
 }
 
