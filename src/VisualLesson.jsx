@@ -3,7 +3,10 @@ import {ArrowLeft,BookOpen,Check,CheckCircle2,ChevronLeft,Download,Headphones,Im
 import data from './visualLessonData.json';
 import VisualArt from './VisualArt.jsx';
 import {makeVisualQuestions,shuffleItems,visualAnswerId} from './visualLessonUtils.js';
-import {playWrongBeep} from './audioFeedback.js';
+import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,saveGameFeedbackPreference,
+ giveGameFeedback,playGameSound} from './gameEffects.js';
+import GameCelebration from './GameCelebration.jsx';
+import {Smartphone,VolumeX} from 'lucide-react';
 import RouteLink from './RouteLink.jsx';
 import './visualLesson.css';
 
@@ -46,7 +49,7 @@ function Vocabulary({phrases,speak,memory,setMode}){
   <button className="vSolid wide" onClick={()=>setMode('flash')}><Layers size={17}/> مرور تصویری کلمات <ArrowLeft size={17}/></button>
  </section>;
 }
-function PictureFlashcards({phrases,memory,speak,onEvent}){
+function PictureFlashcards({phrases,memory,speak,onEvent,preferences}){
  // Freeze this review order during the session so rating a card cannot move
  // the next item or silently skip it. A fresh session reprioritizes weak cards.
  const [priority]=useState(()=>{
@@ -57,16 +60,33 @@ function PictureFlashcards({phrases,memory,speak,onEvent}){
   const dueIds=new Set(due.map(p=>p.id));
   return [...due,...phrases.filter(p=>!dueIds.has(p.id))];
  });
- const [idx,setIdx]=useState(0),[reveal,setReveal]=useState(false);
- const current=priority[idx%priority.length];
- if(!current)return null;
+ const [idx,setIdx]=useState(0),[reveal,setReveal]=useState(false),[correctCount,setCorrectCount]=useState(0);
+ const finished=idx>=priority.length;
+ const current=priority[idx];
+ if(!priority.length)return <p>کارت تصویری برای مرور وجود ندارد.</p>;
  const answer=correct=>{
-  onEvent?.({id:visualAnswerId(current),kind:'visual',label:current.de,lesson:1,correct});
-  if(correct)speak(current.de);else playWrongBeep();
+  if(finished||!current)return;
+  onEvent?.({id:visualAnswerId(current),kind:'visual',label:current.de,
+   lesson:1,correct,feedbackHandled:true});
+  giveGameFeedback(correct?'correct':'wrong',preferences);
+  if(correct){
+   setCorrectCount(n=>n+1);
+   if(preferences.sound)speak(current.de);
+  }
+  if(idx+1===priority.length&&preferences.sound){
+   setTimeout(()=>playGameSound('finish',true),360);
+  }
   setReveal(false);setIdx(n=>n+1);
  };
+ if(finished)return <section className="vFlashView vFlashFinished">
+  <GameCelebration correct={correctCount} total={priority.length} caption="پایان مرور کارت‌ها"/>
+  <p className="vLearningNote">آفرین! همه کارت‌های این دسته را مرور کردی. کارت‌هایی که یادت نبودند برای مرور بعدی ثبت شدند.</p>
+  <button className="vSolid wide" onClick={()=>{
+    setIdx(0);setReveal(false);setCorrectCount(0);giveGameFeedback('finish',preferences);
+   }}><RotateCcw size={17}/> یک دور دیگر</button>
+ </section>;
  return <section className="vFlashView">
-  <div className="vSectionHeading"><div><span className="vEyebrow">PICTURE FLASHCARDS</span><h2>تصویر را ببین، جمله را به یاد بیاور</h2></div><span>{idx%priority.length+1} / {priority.length}</span></div>
+  <div className="vSectionHeading"><div><span className="vEyebrow">PICTURE FLASHCARDS</span><h2>تصویر را ببین، جمله را به یاد بیاور</h2></div><span>{idx+1} / {priority.length}</span></div>
   <div className="vFlashCard">
    <VisualArt item={current} large/>
    <div className="vFlashMeaning"><span className="vEyebrow">موقعیت: {current.imageIdea}</span><h2>{current.fa}</h2></div>
@@ -75,12 +95,12 @@ function PictureFlashcards({phrases,memory,speak,onEvent}){
   </div>
   {reveal&&<div className="vRatings">
    <button className="again" onClick={()=>answer(false)}><RotateCcw size={17}/> دوباره تمرین کنم</button>
-   <button className="known" onClick={()=>answer(true)}><CheckCircle2 size={17}/> بلدم</button>
+   <button className="known" onClick={()=>answer(true)}><CheckCircle2 size={17}/> بلدم · +۱۰ XP</button>
   </div>}
   <p className="vLearningNote">هر کارت به حافظه بلندمدت متصل است؛ کارت‌های دشوار زودتر مرور می‌شوند.</p>
  </section>;
 }
-function PictureQuiz({phrases,memory,speak,onEvent}){
+function PictureQuiz({phrases,memory,speak,onEvent,preferences}){
  const [round,setRound]=useState(0);
  const questions=useMemo(()=>makeVisualQuestions(phrases,memory,Math.min(10,phrases.length)),[phrases,round]);
  const [pos,setPos]=useState(0),[picked,setPicked]=useState(null),[score,setScore]=useState(0);
@@ -89,15 +109,16 @@ function PictureQuiz({phrases,memory,speak,onEvent}){
   if(picked!==null||!current)return;
   const correct=choice.id===current.item.id;
   setPicked(choice.id);
-  if(correct){setScore(v=>v+1);speak(current.item.de)}
-  else playWrongBeep();
-  onEvent?.({id:visualAnswerId(current.item),kind:'visual',label:current.item.de,lesson:1,correct});
+  if(correct){setScore(v=>v+1);if(preferences.sound)speak(current.item.de)}
+  giveGameFeedback(correct?'correct':'wrong',preferences);
+  onEvent?.({id:visualAnswerId(current.item),kind:'visual',
+    label:current.item.de,lesson:1,correct,feedbackHandled:true});
  };
  const restart=()=>{setRound(x=>x+1);setPos(0);setPicked(null);setScore(0)};
  if(!questions.length)return <p>در این گروه فعلاً کارت موجود نیست.</p>;
  return <section className="vQuiz">
   {finished?<div className="vQuizFinished">
-   <span>🏆</span><h2>دور تصویری تمام شد!</h2><strong>{score} / {questions.length}</strong>
+   <GameCelebration correct={score} total={questions.length} caption="پایان آزمون تصویری"/>
    <p>اشتباه‌ها ذخیره شدند تا در نوبت بعدی دوباره تمرین کنی.</p>
    <button className="vSolid" onClick={restart}><RotateCcw size={18}/> دور تصادفی جدید</button>
   </div>:<>
@@ -118,13 +139,16 @@ function PictureQuiz({phrases,memory,speak,onEvent}){
     <div><b>{picked===current.item.id?'درست گفتی!':'این‌بار اشتباه شد؛ دوباره مرور می‌کنیم.'}</b><span dir="ltr">{current.item.de}</span></div>
     <SpeakButton speak={speak} de={current.item.de} small/>
    </div>}
-   <button className="vSolid wide" disabled={picked===null} onClick={()=>{setPos(n=>n+1);setPicked(null)}}>
+   <button className="vSolid wide" disabled={picked===null} onClick={()=>{
+     if(pos===questions.length-1)giveGameFeedback('finish',preferences);
+     setPos(n=>n+1);setPicked(null)
+    }}>
     {pos+1===questions.length?'مشاهده نتیجه':'سؤال بعدی'} <ArrowLeft size={17}/>
    </button>
   </>}
  </section>;
 }
-function Dialogues({speak,onEvent,setTab}){
+function Dialogues({speak,onEvent,setTab,preferences}){
  const [scriptId,setScriptId]=useState(scripts[0].id),[position,setPosition]=useState(0),[selected,setSelected]=useState(null);
  const script=scripts.find(s=>s.id===scriptId)||scripts[0],line=script.turns[position],done=position>=script.turns.length;
  const isLearner=line?.speaker==='Reza';
@@ -137,8 +161,9 @@ function Dialogues({speak,onEvent,setTab}){
   if(selected!==null)return;
   setSelected(option);
   const ok=option===line.de;
-  onEvent?.({id:'visual-dialogue:'+script.id+':'+position,kind:'dialogue',lesson:1,label:line.de,correct:ok});
-  if(ok)speak(line.de);else playWrongBeep();
+  onEvent?.({id:'visual-dialogue:'+script.id+':'+position,kind:'dialogue',lesson:1,label:line.de,correct:ok,feedbackHandled:true});
+  giveGameFeedback(ok?'correct':'wrong',preferences);
+  if(ok&&preferences.sound)speak(line.de);
  }
  const reset=id=>{setScriptId(id);setPosition(0);setSelected(null)};
  return <section className="vDialogueView">
@@ -147,7 +172,7 @@ function Dialogues({speak,onEvent,setTab}){
   <div className="vMiniStory">
    <VisualArt item={{id:'story-'+script.id,scene:script.scene,emoji:'💬',imageIdea:script.title}} large/>
    <div className="vStoryHead"><b>{script.title}</b><small>{Math.min(position+1,script.turns.length)} / {script.turns.length}</small></div>
-   {done?<div className="vStoryDone"><b>آفرین! این مکالمه را تمام کردی.</b>
+   {done?<div className="vStoryDone"><GameCelebration correct={1} total={1} caption="پایان گفت‌وگو"/>
     <button onClick={()=>reset(script.id)}><RotateCcw size={17}/> تکرار</button></div>:<>
     <div className={'vBubble '+(isLearner?'self':'other')}>
      <span>{line.speaker}</span>
@@ -158,7 +183,11 @@ function Dialogues({speak,onEvent,setTab}){
     {isLearner?<div className="vStoryChoices" dir="ltr">{options.map(o=><button key={o} disabled={selected!==null} onClick={()=>pick(o)}
      className={selected!==null?(o===line.de?'correct':selected===o?'wrong':''):''}>{o}</button>)}</div>:null}
     {selected!==null?<div className="vStoryResponse"><b>{selected===line.de?'آفرین!':'پاسخ مناسب این است:'}</b><span dir="ltr">{line.de}</span></div>:null}
-    <button className="vSolid wide" disabled={isLearner&&selected===null} onClick={()=>{if(isLearner&&selected!==line.de){setSelected(null);return}setPosition(v=>v+1);setSelected(null)}}>
+    <button className="vSolid wide" disabled={isLearner&&selected===null} onClick={()=>{
+      if(isLearner&&selected!==line.de){setSelected(null);return}
+      if(position===script.turns.length-1)giveGameFeedback('finish',preferences);
+      setPosition(v=>v+1);setSelected(null)
+     }}>
      {isLearner&&selected!==null&&selected!==line.de?'تلاش دوباره':'ادامه گفتگو'} <ArrowLeft size={17}/>
     </button>
    </>}
@@ -170,6 +199,13 @@ function Dialogues({speak,onEvent,setTab}){
 }
 export default function VisualLesson({speak,memory,onPracticeEvent,setTab}){
  const [mode,setMode]=useState('study'),[category,setCategory]=useState('all');
+ const [preferences,setPreferences]=useState(readGameFeedbackPreferences);
+ function toggle(key){
+  const prop=key===GAME_SOUND_KEY?'sound':'haptics';
+  const next=!preferences[prop];
+  saveGameFeedbackPreference(key,next);
+  setPreferences(prev=>({...prev,[prop]:next}));
+ }
  const phrases=useMemo(()=>category==='all'?all:all.filter(p=>p.category===category),[category]);
  const switchCategory=id=>setCategory(id);
  const memorized=all.filter(p=>{const s=memory.items?.[visualAnswerId(p)];return s?.mastery>=80&&s?.reviewedDays>=2}).length;
@@ -188,13 +224,22 @@ export default function VisualLesson({speak,memory,onPracticeEvent,setTab}){
    const Icon=icons[id];
    return <button type="button" className={id===mode?'active':''} aria-pressed={mode===id} key={id} onClick={()=>setMode(id)}><Icon size={18}/>{text}</button>;
   })}</nav><DownloadDataset/></div>
+  {mode!=='study'&&<div className="vEffectSettings" role="group" aria-label="تنظیمات صدای بازی و ویبره">
+   <button type="button" aria-pressed={preferences.sound} onClick={()=>toggle(GAME_SOUND_KEY)}>
+    {preferences.sound?<Volume2 size={17}/>:<VolumeX size={17}/>} صدای بازی: {preferences.sound?'روشن':'خاموش'}
+   </button>
+   <button type="button" aria-pressed={preferences.haptics} onClick={()=>toggle(GAME_HAPTIC_KEY)}>
+    <Smartphone size={17}/> ویبره: {preferences.haptics?'روشن':'خاموش'}
+   </button>
+   <span>ویبره فقط روی دستگاه‌ها و مرورگرهای پشتیبانی‌شده اجرا می‌شود.</span>
+  </div>}
   {mode!=='dialog'&&<div className="vCategories"><button className={category==='all'?'active':''} onClick={()=>switchCategory('all')}>همه</button>
    {categories.map(c=><button key={c.id} className={category===c.id?'active':''} onClick={()=>switchCategory(c.id)}>{c.title} <span>{all.filter(p=>p.category===c.id).length}</span></button>)}
   </div>}
   {mode==='study'&&<Vocabulary phrases={phrases} speak={speak} memory={memory} setMode={setMode}/>}
-  {mode==='flash'&&<PictureFlashcards key={category} phrases={phrases} speak={speak} memory={memory} onEvent={onPracticeEvent}/>}
-  {mode==='quiz'&&<PictureQuiz key={category} phrases={phrases} speak={speak} memory={memory} onEvent={onPracticeEvent}/>}
-  {mode==='dialog'&&<Dialogues speak={speak} onEvent={onPracticeEvent} setTab={setTab}/>}
+  {mode==='flash'&&<PictureFlashcards key={category} phrases={phrases} speak={speak} memory={memory} preferences={preferences} onEvent={onPracticeEvent}/>}
+  {mode==='quiz'&&<PictureQuiz key={category} phrases={phrases} speak={speak} memory={memory} preferences={preferences} onEvent={onPracticeEvent}/>}
+  {mode==='dialog'&&<Dialogues speak={speak} onEvent={onPracticeEvent} setTab={setTab} preferences={preferences}/>}
   <p className="vDisclaimer">محتوا و تصویرسازی این بخش تألیفی و مکمل کلاس A1.1 است؛ ترتیب آن معادل صفحات رسمی کتاب ناشر نیست.</p>
  </div>;
 }
