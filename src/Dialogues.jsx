@@ -112,12 +112,13 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
      });
      const data=await res.json().catch(()=>null);
      if(!res.ok||!data?.nextQuestion){
-       if(res.status===402||data?.error==='billing_required')setStatus('billing');
+       if(res.status===403 && data?.error==='provider_access_restricted')setStatus('restricted');
        throw new Error(
-       res.status===402?'حساب Vercel برای استفاده از AI Gateway به کارت پرداخت معتبر نیاز دارد.':
+       data?.error==='provider_access_restricted'?'GroqCloud دسترسی حساب یا منطقه را محدود کرده است. شرایط حساب خود را در کنسول Groq بررسی کن.':
+       data?.error==='provider_auth_failed'?'کلید GroqCloud سرور نامعتبر است؛ مقدار GROQ_API_KEY را بررسی کن.':
        res.status===401?'کد دسترسی مربی درست نیست.':
-       res.status===429?'سهمیه درخواست‌ها موقتاً پر شده؛ یک دقیقه دیگر تلاش کن.':
-       res.status===503?'کلید AI Gateway هنوز روی سرور تنظیم نشده است.':
+       res.status===429?'سهمیه رایگان Groq موقتاً تمام شده؛ بعد از زمان انتظار دوباره تلاش کن.':
+       res.status===503?'کلید GROQ_API_KEY هنوز روی سرور تنظیم نشده است.':
        'پاسخ مربی دریافت نشد؛ از مکالمه آفلاین ادامه بده.'
      );
      }
@@ -180,20 +181,22 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
       <div className="dialogueLastTurns">{history.slice(-2).map((h,i)=><div key={i}><span>{h.prompt}</span><strong>{h.answer}</strong></div>)}</div>
     </div>}
     {!isFinished&&<div className="dialogueAICoach">
-      <div className="dialogueAIHeading"><div><span className="dialogueAIIcon"><WandSparkles size={24}/></span><span><b>مربی هوش مصنوعی</b><small>تصحیح جمله و ادامه مکالمه با Vercel AI Gateway</small></span></div>
-       <span className={'dialogueAIState '+(status==='ready'?'on':'off')}>{status==='checking'?'در حال بررسی':status==='ready'?'آماده بررسی':'حساب نیازمند فعال‌سازی'}</span></div>
+      <div className="dialogueAIHeading"><div><span className="dialogueAIIcon"><WandSparkles size={24}/></span><span><b>مربی هوش مصنوعی</b><small>تصحیح جمله و ادامه مکالمه با GroqCloud</small></span></div>
+       <span className={'dialogueAIState '+(status==='ready'?'on':'off')}>{status==='checking'?'در حال بررسی':status==='ready'?'آماده بررسی':status==='restricted'?'دسترسی Groq محدود است':'کلید Groq تنظیم نشده'}</span></div>
       {status==='ready'?<div className="dialogueAIForm">
         <label>کد دسترسی خصوصی مربی
-         <input type="password" autoComplete="off" placeholder="کد تعریف‌شده در Vercel" value={access} onChange={e=>updateAccess(e.target.value)}/>
+         <input type="password" autoComplete="off" placeholder="رمز خصوصی مربی (TUTOR_ACCESS_CODE)" value={access} onChange={e=>updateAccess(e.target.value)}/>
         </label>
         <label>پاسخ آزاد خودت را به آلمانی بنویس
          <textarea dir="ltr" rows={2} maxLength={220} placeholder="Ich komme aus dem Iran..." value={freeText} onChange={e=>setFreeText(e.target.value)}/>
         </label>
         <button disabled={!freeText.trim()||!access.trim()||aiBusy||aiDepth>=4} onClick={()=>askTutor(freeText)}><Send size={17}/>{aiBusy?'در حال بررسی…':'بررسی و ادامه با AI'}</button>
-      </div>:status==='billing'?<p className="dialogueOfflineNote">
-        <LockKeyhole size={18}/> حساب Vercel به روش پرداخت معتبر نیاز دارد. پس از فعال‌سازی در پنل Vercel، این صفحه را تازه‌سازی کن.
-        <a href="https://vercel.com/ai-gateway" target="_blank" rel="noopener noreferrer">مشاهده AI Gateway</a>
-      </p>:<p className="dialogueOfflineNote"><LockKeyhole size={18}/> مربی آنلاین در حال حاضر فعال نیست؛ مسیرهای انتخابی بالا بدون API قابل تمرین هستند.</p>}
+      </div>:status==='restricted'?<p className="dialogueOfflineNote">
+        <LockKeyhole size={18}/> دسترسی GroqCloud برای این حساب یا منطقه مجاز نیست یا محدود شده است. شرایط خدمات را در کنسول Groq بررسی کن.
+        <a href="https://console.groq.com/" target="_blank" rel="noopener noreferrer">کنسول Groq</a>
+      </p>:<p className="dialogueOfflineNote"><LockKeyhole size={18}/> برای فعال‌سازی مربی آنلاین، ابتدا کلید GROQ_API_KEY را در متغیرهای امن Production پروژه Vercel ثبت کن. گفت‌وگوهای چندمسیره بدون API در دسترس‌اند.
+       <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">مدیریت کلید Groq</a>
+      </p>}
       {aiError&&<p className="dialogueAIError" role="alert">{aiError}</p>}
       {aiReply&&<div className="dialogueAIResponse">
         <span className="dialogueAIResult">{aiReply.correct?'✓ پاسخ مناسب':'✎ نکته اصلاحی'}</span>
