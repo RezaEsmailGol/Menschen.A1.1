@@ -107,6 +107,11 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab})
       </button>)}</div>
     </aside>
     <div className="courseLessonBody">
+      <button className="wbCourseBanner" onClick={()=>setTab('workbook')}>
+        <span className="wbCourseBannerIcon"><BookOpenCheck size={23}/></span>
+        <span><b>دفتر تمرین جلسه اول استاد</b><small>الفبا، تلفظ و استثناها، ۰ تا ۱۲، ضمیر و صرف kommen — با آزمون تعاملی</small></span>
+        <ChevronLeft size={20}/>
+      </button>
       <article className="courseIntro">
         <span className="courseTopline">LEKTION {String(lesson.id).padStart(2,'0')} · A1.1</span>
         <h3>{lesson.label}</h3>
