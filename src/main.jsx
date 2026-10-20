@@ -5,6 +5,11 @@ import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import { pronouns, verbForms } from './courseData';
+import { Home as HomeIcon, BookOpenCheck, LayoutGrid, ChartNoAxesCombined, ChevronRight } from 'lucide-react';
+import { TodayDashboard, PracticeHub, ProgressPage } from './LearningScreens';
+import { MEMORY_KEY, recordActivity, learningInsights, activityItemKey } from './learningMemory';
+import { COURSE_KEY, REVIEW_KEY } from './studyEngine';
+import './mobileGame.css';
 import './styles.css';
 import './upgrade.css';
 
@@ -79,24 +84,43 @@ function useLocalStorage(key, initial) {
   return [value, setValue];
 }
 
-const tabs = [
-  ['home','خانه'],['course','درس‌های A1.1'],['srs','مرور هوشمند'],['builder','جمله‌سازی'],['exam','آزمون درس'],['pronunciation','تلفظ و استثناها'],['numbers','اعداد'],['flash','فلش‌کارت'],['listen','شنیدن و تایپ'],['words','کلمات'],['alphabet','الفبا'],['verbs','صرف افعال']
+const routes = [
+  {id:'home',title:'خانه',Icon:HomeIcon},
+  {id:'course',title:'درس‌ها',Icon:BookOpenCheck},
+  {id:'practice',title:'تمرین',Icon:LayoutGrid},
+  {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
+const secondaryTitles = {
+  srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
+  flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
+  words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
+};
+function BottomNav({tab,setTab}) {
+  const selected=['home','course','practice','progress'].includes(tab)?tab:'practice';
+  return <nav className="bottomNav" aria-label="منوی اصلی">
+    {routes.map(({id,title,Icon})=><button key={id} aria-current={selected===id?'page':undefined}
+      className={selected===id?'selected':''} onClick={()=>setTab(id)}>
+      <span className="bottomNavIcon"><Icon size={22} strokeWidth={selected===id?2.65:2.05}/></span>
+      <span>{title}</span>
+    </button>)}
+  </nav>;
+}
 
 function App() {
   const [tab, setTab] = useState('home');
   const [audioSpeed, setAudioSpeed] = useLocalStorage('dt_audio_speed', 0.82);
   const [cards, setCards] = useLocalStorage('dt_cards', defaultCards);
+  const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
+  const [schedule, setSchedule] = useLocalStorage(REVIEW_KEY, {});
+  const [memory, setMemory] = useLocalStorage(MEMORY_KEY, {version:1,items:{},days:{},totalXP:0,history:[]});
+  const onPracticeEvent = event => setMemory(previous => recordActivity(previous,event));
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
-  const bumpStreak = () => {
-    const today = new Date().toISOString().slice(0,10);
-    if (stats.lastDay === today) return;
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-    setStats(s => ({ ...s, streak: s.lastDay === yesterday ? s.streak + 1 : 1, lastDay: today }));
-  };
-
-  useEffect(() => bumpStreak(), []);
+  const insights=learningInsights(memory);
+  useEffect(() => {
+    window.scrollTo({top:0,behavior:'auto'});
+  }, [tab]);
 
   return <div className="app">
     <header className="topbar">
@@ -104,26 +128,33 @@ function App() {
         <h1>Deutsch Trainer</h1>
         <p>همراه تمرین Menschen A1.1 — بر اساس درس‌های کلاس خودت</p>
       </div>
-      <div className="headerTools"><label className="voiceControl" title="سرعت تلفظ"><Volume2 size={17}/><select aria-label="سرعت پخش تلفظ" value={audioSpeed} onChange={e => setAudioSpeed(Number(e.target.value))}><option value={0.65}>آرام</option><option value={0.82}>معمولی</option><option value={1}>سریع</option></select></label><div className="streak"><Trophy size={18}/> {stats.streak} روز</div></div>
+      <div className="headerTools"><label className="voiceControl" title="سرعت تلفظ"><Volume2 size={17}/><select aria-label="سرعت پخش تلفظ" value={audioSpeed} onChange={e => setAudioSpeed(Number(e.target.value))}><option value={0.65}>آرام</option><option value={0.82}>معمولی</option><option value={1}>سریع</option></select></label><div className="streak"><Trophy size={18}/> {insights.streak} روز</div></div>
     </header>
 
-    <nav className="tabs">
-      {tabs.map(([id,label]) => <button key={id} onClick={() => setTab(id)} className={tab===id?'active':''}>{label}</button>)}
-    </nav>
+    {secondaryTitles[tab] && <div className="subpageReturn">
+      <button onClick={()=>setTab('practice')}><ChevronRight size={17}/> تمرین‌ها</button>
+      <span>{secondaryTitles[tab]}</span>
+    </div>}
 
     <main>
-      {tab==='home' && <Home stats={stats} setTab={setTab} />}
-      {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} setTab={setTab} speak={speak} />}
-      {tab==='pronunciation' && <PronunciationLab speak={speak} />}
-      {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} />}
-      {tab==='listen' && <ListenType stats={stats} setStats={setStats} />}
+      {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} />}
+      {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
+      {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} />}
+      {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
+      {tab==='pronunciation' && <PronunciationLab speak={speak} onPracticeEvent={onPracticeEvent} />}
+      {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
+      {tab==='listen' && <ListenType stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
       {tab==='words' && <Words />}
-      {tab==='numbers' && <NumberLab speak={speak} onAttempt={ok => setStats(s => ({...s, typed:s.typed+1, correct:s.correct+(ok?1:0)}))} />}
+      {tab==='numbers' && <NumberLab speak={speak} memory={memory} onAttempt={(ok,number) => {
+        setStats(s => ({...s, typed:s.typed+1, correct:s.correct+(ok?1:0)}));
+        onPracticeEvent({id:activityItemKey('number',number),kind:'number',label:String(number),lesson:1,correct:ok});
+      }} />}
       {tab==='alphabet' && <Alphabet />}
-      {tab==='verbs' && <Verbs />}
+      {tab==='verbs' && <Verbs onPracticeEvent={onPracticeEvent}/>}
     </main>
 
-    <footer>این اپ محتوای کامل کتاب را بازنشر نمی‌کند؛ برای تمرین درس‌های کلاس و محتوای شخصی طراحی شده است.</footer>
+    <footer>تمرین مستقل و مکمل کتاب Menschen A1.1 · اطلاعات شما فقط روی همین دستگاه ذخیره می‌شود.</footer>
+    <BottomNav tab={tab} setTab={setTab}/>
   </div>
 }
 
@@ -171,11 +202,12 @@ function Home({stats,setTab}) {
   </>;
 }
 
-function Flashcards({cards,setCards,stats,setStats}) {
+function Flashcards({cards,setCards,stats,setStats,onPracticeEvent}) {
   const [i,setI] = useState(0); const [flip,setFlip]=useState(false);
   const card = cards[i % cards.length];
   const mark = good => {
     setStats(s => ({...s, known:s.known+(good?1:0), missed:s.missed+(good?0:1)}));
+    if(card) onPracticeEvent?.({id:'personal:'+ (i%cards.length) + ':'+card.front+'|'+card.back,kind:'vocab',label:card.back,lesson:0,correct:good});
     setFlip(false); setI(v => (v+1)%cards.length);
   };
   const exportCards = () => {
@@ -203,12 +235,18 @@ function Flashcards({cards,setCards,stats,setStats}) {
   </section>
 }
 
-function ListenType({stats,setStats}) {
+function ListenType({stats,setStats,onPracticeEvent}) {
   const pool = useMemo(() => [...lessonOneWords.map(w=>w.de), ...numbers.slice(0,13).map(x=>x.de), 'Ich komme aus dem Iran.', 'Ich lerne Deutsch.', 'Ich bin Softwareentwickler.'], []);
   const [target,setTarget] = useState(pool[Math.floor(Math.random()*pool.length)]);
   const [answer,setAnswer]=useState(''); const [status,setStatus]=useState(null);
   const next=()=>{setTarget(pool[Math.floor(Math.random()*pool.length)]);setAnswer('');setStatus(null)};
-  const check=()=>{const ok=normalize(answer)===normalize(target);setStatus(ok?'ok':'bad');setStats(s=>({...s,typed:s.typed+1,correct:s.correct+(ok?1:0)}));};
+  const check=()=>{
+    if(status!==null || !answer.trim()) return;
+    const ok=normalize(answer)===normalize(target);
+    setStatus(ok?'ok':'bad');
+    setStats(s=>({...s,typed:s.typed+1,correct:s.correct+(ok?1:0)}));
+    onPracticeEvent?.({id:activityItemKey('dictation',target),kind:'dictation',label:target,lesson:1,correct:ok});
+  };
   return <section className="panel narrow"><h2>شنیدن و تایپ</h2><p>روی پخش بزن، گوش بده و چیزی که شنیدی تایپ کن.</p>
     <button className="bigPlay" onClick={()=>speak(target)}><Play fill="currentColor"/> پخش آلمانی</button>
     <input className="typeInput" value={answer} onChange={e=>setAnswer(e.target.value)} onKeyDown={e=>e.key==='Enter'&&check()} placeholder="اینجا تایپ کن…" dir="ltr"/>
@@ -225,7 +263,12 @@ function NumberQuiz({item,next}){const [a,setA]=useState('');const [s,setS]=useS
 
 function Alphabet(){return <section className="panel"><h2>الفبای آلمانی</h2><p>روی هر حرف بزن تا نام حرف را بشنوی. چهار حرف ویژه آلمانی هم پایین هستند.</p><div className="alphaGrid">{alphabet.map(x=><button key={x.letter} onClick={()=>speak(x.letter)}>{x.letter}</button>)}</div><div className="specials">{['Ä','Ö','Ü','ß'].map(x=><button key={x} onClick={()=>speak(x)}>{x}</button>)}</div></section>}
 
-function Verbs(){const [verb,setVerb]=useState('kommen');const [practice,setPractice]=useState(false);const data=verbs[verb];return <section className="panel"><div className="panelHead"><div><h2>صرف افعال</h2><p>الگوی صرف را ببین، گوش بده، بعد خودت تایپ کن.</p></div><select value={verb} onChange={e=>setVerb(e.target.value)}>{Object.keys(verbs).map(v=><option key={v}>{v}</option>)}</select></div><div className="verbTitle"><b dir="ltr">{verb}</b><span>{data.fa}</span><button onClick={()=>speak(verb)}><Volume2/></button></div><div className="conj">{Object.entries(data.forms).map(([p,f])=><div key={p}><span dir="ltr">{p}</span><b dir="ltr">{f}</b><button onClick={()=>speak(`${p} ${f}`)}><Volume2 size={16}/></button></div>)}</div><button onClick={()=>setPractice(!practice)}>{practice?'بستن تمرین':'شروع تمرین تایپی'}</button>{practice&&<VerbPractice verb={verb} forms={data.forms}/>}</section>}
-function VerbPractice({verb,forms}){const pronouns=Object.keys(forms);const [p,setP]=useState(pronouns[0]);const [a,setA]=useState('');const [s,setS]=useState(null);const next=()=>{setP(pronouns[Math.floor(Math.random()*pronouns.length)]);setA('');setS(null)};return <div className="miniQuiz"><b>صرف <span dir="ltr">{verb}</span> برای <span dir="ltr">{p}</span> چیست؟</b><input dir="ltr" value={a} onChange={e=>setA(e.target.value)}/><button onClick={()=>setS(normalize(a)===normalize(forms[p]))}>بررسی</button>{s===true&&<span className="green">درست ✓</span>}{s===false&&<span className="red">{forms[p]}</span>}<button className="secondary" onClick={next}>بعدی</button></div>}
+function Verbs({onPracticeEvent}){const [verb,setVerb]=useState('kommen');const [practice,setPractice]=useState(false);const data=verbs[verb];return <section className="panel"><div className="panelHead"><div><h2>صرف افعال</h2><p>الگوی صرف را ببین، گوش بده، بعد خودت تایپ کن.</p></div><select value={verb} onChange={e=>setVerb(e.target.value)}>{Object.keys(verbs).map(v=><option key={v}>{v}</option>)}</select></div><div className="verbTitle"><b dir="ltr">{verb}</b><span>{data.fa}</span><button onClick={()=>speak(verb)}><Volume2/></button></div><div className="conj">{Object.entries(data.forms).map(([p,f])=><div key={p}><span dir="ltr">{p}</span><b dir="ltr">{f}</b><button onClick={()=>speak(`${p} ${f}`)}><Volume2 size={16}/></button></div>)}</div><button onClick={()=>setPractice(!practice)}>{practice?'بستن تمرین':'شروع تمرین تایپی'}</button>{practice&&<VerbPractice verb={verb} forms={data.forms} onPracticeEvent={onPracticeEvent}/>}</section>}
+function VerbPractice({verb,forms,onPracticeEvent}){const pronouns=Object.keys(forms);const [p,setP]=useState(pronouns[0]);const [a,setA]=useState('');const [s,setS]=useState(null);const next=()=>{setP(pronouns[Math.floor(Math.random()*pronouns.length)]);setA('');setS(null)};return <div className="miniQuiz"><b>صرف <span dir="ltr">{verb}</span> برای <span dir="ltr">{p}</span> چیست؟</b><input dir="ltr" value={a} onChange={e=>setA(e.target.value)}/><button onClick={()=>{
+  if(s!==null || !a.trim())return;
+  const correct=normalize(a)===normalize(forms[p]);
+  setS(correct);
+  onPracticeEvent?.({id:activityItemKey('grammar',verb,p),kind:'grammar',label:verb+' / '+p,lesson:1,correct});
+}}>بررسی</button>{s===true&&<span className="green">درست ✓</span>}{s===false&&<span className="red">{forms[p]}</span>}<button className="secondary" onClick={next}>بعدی</button></div>}
 
 createRoot(document.getElementById('root')).render(<App/>);
