@@ -78,10 +78,16 @@ Each answer and question should stay on subject, short and respectful; use Sie i
     })}
   ];
 }
+function gatewayCredential(req){
+  return process.env.AI_GATEWAY_API_KEY
+    || req.headers?.['x-vercel-oidc-token']
+    || process.env.VERCEL_OIDC_TOKEN
+    || '';
+}
 export default async function handler(req,res){
-  if(req.method==='GET')return response(res,200,{provider:'Vercel AI Gateway',configured:Boolean(process.env.AI_GATEWAY_API_KEY && process.env.TUTOR_ACCESS_CODE)});
+  if(req.method==='GET')return response(res,200,{provider:'Vercel AI Gateway',configured:Boolean(gatewayCredential(req) && process.env.TUTOR_ACCESS_CODE)});
   if(req.method!=='POST')return response(res,405,{error:'method_not_allowed'},{Allow:'GET, POST'});
-  if(!process.env.AI_GATEWAY_API_KEY || !process.env.TUTOR_ACCESS_CODE)
+  if(!gatewayCredential(req) || !process.env.TUTOR_ACCESS_CODE)
     return response(res,503,{error:'not_configured',fallback:true});
   const ip=trim(req.headers['x-forwarded-for']?.split(',')[0]||'unknown',90);
   if(isRateLimited(ip))return response(res,429,{error:'rate_limited',fallback:true},{'Retry-After':'60'});
@@ -98,7 +104,7 @@ export default async function handler(req,res){
   try{
     const upstream=await fetch(GATEWAY_URL,{
       method:'POST',signal:controller.signal,
-      headers:{Authorization:`Bearer ${process.env.AI_GATEWAY_API_KEY}`,'Content-Type':'application/json'},
+      headers:{Authorization:`Bearer ${gatewayCredential(req)}`,'Content-Type':'application/json'},
       body:JSON.stringify({
         model:process.env.AI_TUTOR_MODEL||'deepseek/deepseek-v4.1-flash',
         messages:promptFor(input),temperature:0.4,max_tokens:450,stream:false,
