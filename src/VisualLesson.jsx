@@ -172,7 +172,7 @@ function Dialogues({speak,onEvent,setTab,preferences}){
   <div className="vMiniStory">
    <VisualArt item={{id:'story-'+script.id,scene:script.scene,emoji:'💬',imageIdea:script.title}} large/>
    <div className="vStoryHead"><b>{script.title}</b><small>{Math.min(position+1,script.turns.length)} / {script.turns.length}</small></div>
-   {done?<div className="vStoryDone"><GameCelebration correct={1} total={1} caption="پایان گفت‌وگو"/>
+   {done?<div className="vStoryDone"><GameCelebration correct={1} total={1} caption="پایان گفت‌وگو" showScore={false}/>
     <button onClick={()=>reset(script.id)}><RotateCcw size={17}/> تکرار</button></div>:<>
     <div className={'vBubble '+(isLearner?'self':'other')}>
      <span>{line.speaker}</span>
