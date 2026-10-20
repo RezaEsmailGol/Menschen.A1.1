@@ -83,3 +83,29 @@ test('API health reports offline when no gateway key or tutor access is configur
    if(originalCode!==undefined)process.env.TUTOR_ACCESS_CODE=originalCode;
  }
 });
+
+test('tutor reports missing billing card as an actionable 402 error, without exposing provider credentials',async()=>{
+ const originalEnv={key:process.env.AI_GATEWAY_API_KEY,code:process.env.TUTOR_ACCESS_CODE};
+ const originalFetch=globalThis.fetch;
+ process.env.AI_GATEWAY_API_KEY='dummy-test-key';process.env.TUTOR_ACCESS_CODE='unit-test-private';
+ globalThis.fetch=async()=>({ok:false,status:403,json:async()=>({error:{code:'FORBIDDEN',message:'AI Gateway requires a valid credit card on file.'}})});
+ const res={
+   headers:{},setHeader(k,v){this.headers[k]=v},
+   status(status){this.code=status;return this},
+   json(body){this.data=body;return this}
+ };
+ try{
+   await handler({method:'POST',headers:{'x-tutor-access-code':'unit-test-private','x-forwarded-for':'unit-test-unique'},
+     body:{sceneId:'greetings',nodeId:'hello',answer:'Ich heiße Reza.'}},res);
+   assert.equal(res.code,402);
+   assert.equal(res.data.error,'billing_required');
+   assert.equal(res.data.fallback,true);
+   assert.equal(JSON.stringify(res.data).includes('dummy-test-key'),false);
+ }finally{
+   globalThis.fetch=originalFetch;
+   if(originalEnv.key===undefined)delete process.env.AI_GATEWAY_API_KEY;
+   else process.env.AI_GATEWAY_API_KEY=originalEnv.key;
+   if(originalEnv.code===undefined)delete process.env.TUTOR_ACCESS_CODE;
+   else process.env.TUTOR_ACCESS_CODE=originalEnv.code;
+ }
+});
