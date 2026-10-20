@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronLeft, CircleHelp, Clock3, GraduationCap, Headphones, Layers, RotateCcw, Shuffle, Sparkles, Target, Trophy, Volume2, X, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, BookOpenCheck, Check, CheckCircle2, ChevronLeft, CircleHelp, Clock3, GraduationCap, Headphones, Layers, RotateCcw, Shuffle, Sparkles, Target, Trophy, Volume2, X, Zap } from 'lucide-react';
 import { allStudyCards, getLessonCards, lessons, pronouns, verbForms } from './courseData.js';
 import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KEY, shuffleArray, safeParse, todayKey } from './studyEngine.js';
 import { activityItemKey } from './learningMemory.js';
