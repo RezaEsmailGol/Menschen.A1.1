@@ -1,0 +1,868 @@
+{
+  "version": 1,
+  "title": "Deutsch Trainer — Lesson 1 visual expressions",
+  "description": "محتوای تألیفی A1.1 مکمل کلاس؛ نه متن یا تصویر رسمی کتاب Menschen",
+  "categories": [
+    {
+      "id": "greeting",
+      "title": "سلام",
+      "de": "Begrüßung",
+      "accent": "#469db4",
+      "lesson": 1
+    },
+    {
+      "id": "feeling",
+      "title": "احوال‌پرسی",
+      "de": "Wie geht's?",
+      "accent": "#dca970",
+      "lesson": 1
+    },
+    {
+      "id": "intro",
+      "title": "معرفی",
+      "de": "Vorstellung",
+      "accent": "#797cd0",
+      "lesson": 1
+    },
+    {
+      "id": "origin",
+      "title": "کشور و زبان",
+      "de": "Herkunft",
+      "accent": "#68b39b",
+      "lesson": 1
+    },
+    {
+      "id": "courtesy",
+      "title": "عبارت‌های مؤدبانه",
+      "de": "Höflichkeit",
+      "accent": "#dd8b8e",
+      "lesson": 1
+    },
+    {
+      "id": "farewell",
+      "title": "خداحافظی",
+      "de": "Abschied",
+      "accent": "#8e92b5",
+      "lesson": 1
+    }
+  ],
+  "phrases": [
+    {
+      "id": "l1-01",
+      "category": "greeting",
+      "de": "Hallo!",
+      "fa": "سلام!",
+      "scene": "wave",
+      "emoji": "👋",
+      "imageIdea": "دو نفر در کلاس دست تکان می‌دهند",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-02",
+      "category": "greeting",
+      "de": "Hi!",
+      "fa": "سلام دوستانه!",
+      "scene": "friends",
+      "emoji": "🤝",
+      "imageIdea": "دو دوست صمیمی در خیابان",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-03",
+      "category": "greeting",
+      "de": "Guten Morgen!",
+      "fa": "صبح بخیر!",
+      "scene": "morning",
+      "emoji": "🌅",
+      "imageIdea": "خورشید صبح از پشت کوه‌ها",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-04",
+      "category": "greeting",
+      "de": "Guten Tag!",
+      "fa": "روز بخیر!",
+      "scene": "day",
+      "emoji": "☀️",
+      "imageIdea": "آفتاب نیمروز و ملاقات رسمی",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-05",
+      "category": "greeting",
+      "de": "Guten Abend!",
+      "fa": "عصر بخیر!",
+      "scene": "evening",
+      "emoji": "🌇",
+      "imageIdea": "آسمان نارنجی عصر هنگام ورود به خانه",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-06",
+      "category": "greeting",
+      "de": "Grüß Gott!",
+      "fa": "سلام محترمانه؛ رایج در اتریش",
+      "scene": "austria",
+      "emoji": "🇦🇹",
+      "imageIdea": "سلام به فروشنده در اتریش",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-07",
+      "category": "greeting",
+      "de": "Servus!",
+      "fa": "سلام یا خداحافظ دوستانه؛ اتریش",
+      "scene": "friends",
+      "emoji": "👋",
+      "imageIdea": "دو دوست در وین یکدیگر را می‌بینند",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-08",
+      "category": "greeting",
+      "de": "Willkommen!",
+      "fa": "خوش آمدید!",
+      "scene": "door",
+      "emoji": "🚪",
+      "imageIdea": "در باز و تابلوی خوشامدگویی",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-09",
+      "category": "greeting",
+      "de": "Schön, dich zu sehen!",
+      "fa": "خوشحالم می‌بینمت!",
+      "scene": "friends",
+      "emoji": "😊",
+      "imageIdea": "دو دوست پس از مدتی یکدیگر را می‌بینند",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-10",
+      "category": "feeling",
+      "de": "Wie geht es dir?",
+      "fa": "حالت چطوره؟",
+      "scene": "friends",
+      "emoji": "🙂",
+      "imageIdea": "دو دوست و علامت سؤالِ احوال‌پرسی",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-11",
+      "category": "feeling",
+      "de": "Wie geht es Ihnen?",
+      "fa": "حال شما چطور است؟",
+      "scene": "office",
+      "emoji": "👔",
+      "imageIdea": "پرسش مؤدبانه از مدیر شرکت",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-12",
+      "category": "feeling",
+      "de": "Wie geht’s?",
+      "fa": "حالت چطوره؟",
+      "scene": "wave",
+      "emoji": "❓",
+      "imageIdea": "احوال‌پرسی کوتاه در خیابان",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-13",
+      "category": "feeling",
+      "de": "Gut, danke.",
+      "fa": "خوبم، ممنون.",
+      "scene": "happy",
+      "emoji": "🙂",
+      "imageIdea": "چهره خندان",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-14",
+      "category": "feeling",
+      "de": "Sehr gut, danke!",
+      "fa": "خیلی خوبم، ممنون!",
+      "scene": "happy",
+      "emoji": "😄",
+      "imageIdea": "چهره بسیار خوشحال",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-15",
+      "category": "feeling",
+      "de": "Es geht.",
+      "fa": "بد نیست؛ می‌گذره.",
+      "scene": "neutral",
+      "emoji": "😐",
+      "imageIdea": "چهره خنثی",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-16",
+      "category": "feeling",
+      "de": "Nicht so gut.",
+      "fa": "زیاد خوب نیستم.",
+      "scene": "sad",
+      "emoji": "😟",
+      "imageIdea": "چهره ناراحت",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-17",
+      "category": "feeling",
+      "de": "Und dir?",
+      "fa": "و تو چطور؟",
+      "scene": "friends",
+      "emoji": "↩️",
+      "imageIdea": "دو دوست نوبت سؤال را برمی‌گردانند",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-18",
+      "category": "intro",
+      "de": "Ich heiße Reza.",
+      "fa": "اسم من رضاست.",
+      "scene": "badge",
+      "emoji": "🪪",
+      "imageIdea": "نشان اسم روی پیراهن",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-19",
+      "category": "intro",
+      "de": "Mein Name ist Reza.",
+      "fa": "نام من رضاست.",
+      "scene": "badge",
+      "emoji": "📛",
+      "imageIdea": "کارت معرفی رسمی",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-20",
+      "category": "intro",
+      "de": "Wie heißt du?",
+      "fa": "اسمت چیست؟",
+      "scene": "classroom",
+      "emoji": "❔",
+      "imageIdea": "آشنایی دو زبان‌آموز در کلاس",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-21",
+      "category": "intro",
+      "de": "Wie heißen Sie?",
+      "fa": "نام شما چیست؟",
+      "scene": "office",
+      "emoji": "📋",
+      "imageIdea": "مسئول پذیرش نام مراجع را می‌پرسد",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-22",
+      "category": "intro",
+      "de": "Ich bin Softwareentwickler.",
+      "fa": "من توسعه‌دهنده نرم‌افزار هستم.",
+      "scene": "laptop",
+      "emoji": "💻",
+      "imageIdea": "برنامه‌نویس پشت لپ‌تاپ",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-23",
+      "category": "intro",
+      "de": "Ich arbeite mit Python.",
+      "fa": "من با پایتون کار می‌کنم.",
+      "scene": "laptop",
+      "emoji": "⌨️",
+      "imageIdea": "نمای کد روی لپ‌تاپ",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-24",
+      "category": "intro",
+      "de": "Schön, Sie kennenzulernen.",
+      "fa": "از آشنایی با شما خوشحالم.",
+      "scene": "office",
+      "emoji": "🤝",
+      "imageIdea": "دست‌دادن رسمی در شرکت",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-25",
+      "category": "intro",
+      "de": "Freut mich!",
+      "fa": "خوشوقتم!",
+      "scene": "wave",
+      "emoji": "😊",
+      "imageIdea": "آشنایی در جمع دوستان",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-26",
+      "category": "origin",
+      "de": "Woher kommst du?",
+      "fa": "اهل کجایی؟",
+      "scene": "map",
+      "emoji": "🌍",
+      "imageIdea": "نقشه جهان و دو کشور",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-27",
+      "category": "origin",
+      "de": "Woher kommen Sie?",
+      "fa": "اهل کجا هستید؟",
+      "scene": "map",
+      "emoji": "📍",
+      "imageIdea": "نقشه و پرسش رسمی درباره مبدأ",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-28",
+      "category": "origin",
+      "de": "Ich komme aus dem Iran.",
+      "fa": "من اهل ایران هستم.",
+      "scene": "iran",
+      "emoji": "🇮🇷",
+      "imageIdea": "نقشه ایران و پرچم",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-29",
+      "category": "origin",
+      "de": "Wo wohnst du?",
+      "fa": "کجا زندگی می‌کنی؟",
+      "scene": "house",
+      "emoji": "🏠",
+      "imageIdea": "خانه و علامت سؤال",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-30",
+      "category": "origin",
+      "de": "Ich wohne in Qom.",
+      "fa": "من در قم زندگی می‌کنم.",
+      "scene": "house",
+      "emoji": "📍",
+      "imageIdea": "نشان قم کنار خانه",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-31",
+      "category": "origin",
+      "de": "Welche Sprachen sprichst du?",
+      "fa": "چه زبان‌هایی صحبت می‌کنی؟",
+      "scene": "languages",
+      "emoji": "🗣️",
+      "imageIdea": "سه حباب گفت‌وگو با زبان‌های متفاوت",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-32",
+      "category": "origin",
+      "de": "Ich spreche Persisch und Englisch.",
+      "fa": "من فارسی و انگلیسی صحبت می‌کنم.",
+      "scene": "languages",
+      "emoji": "🔤",
+      "imageIdea": "حباب‌های فارسی و انگلیسی",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-33",
+      "category": "origin",
+      "de": "Ich lerne Deutsch.",
+      "fa": "من آلمانی یاد می‌گیرم.",
+      "scene": "book",
+      "emoji": "📖",
+      "imageIdea": "کتاب آلمانی روی میز",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-34",
+      "category": "courtesy",
+      "de": "Danke!",
+      "fa": "ممنون!",
+      "scene": "gift",
+      "emoji": "🙏",
+      "imageIdea": "کسی در حال تشکر برای کمک",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-35",
+      "category": "courtesy",
+      "de": "Danke schön!",
+      "fa": "خیلی ممنون!",
+      "scene": "gift",
+      "emoji": "💐",
+      "imageIdea": "دسته‌گل و قدردانی",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-36",
+      "category": "courtesy",
+      "de": "Vielen Dank!",
+      "fa": "بسیار ممنون!",
+      "scene": "gift",
+      "emoji": "🎁",
+      "imageIdea": "هدیه و تشکر محترمانه",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-37",
+      "category": "courtesy",
+      "de": "Bitte!",
+      "fa": "لطفاً؛ خواهش می‌کنم!",
+      "scene": "door",
+      "emoji": "🙌",
+      "imageIdea": "کمک و تعارف محترمانه",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-38",
+      "category": "courtesy",
+      "de": "Entschuldigung!",
+      "fa": "ببخشید!",
+      "scene": "attention",
+      "emoji": "🙋",
+      "imageIdea": "کسی برای جلب توجه دست بلند می‌کند",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-39",
+      "category": "courtesy",
+      "de": "Es tut mir leid.",
+      "fa": "متأسفم.",
+      "scene": "sad",
+      "emoji": "😔",
+      "imageIdea": "چهره پشیمان پس از اشتباه",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-40",
+      "category": "courtesy",
+      "de": "Kein Problem!",
+      "fa": "اشکالی ندارد!",
+      "scene": "happy",
+      "emoji": "👌",
+      "imageIdea": "پاسخ آرام به عذرخواهی",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-41",
+      "category": "courtesy",
+      "de": "Ich verstehe nicht.",
+      "fa": "متوجه نمی‌شوم.",
+      "scene": "classroom",
+      "emoji": "❓",
+      "imageIdea": "دانش‌آموز گیج در کلاس زبان",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-42",
+      "category": "courtesy",
+      "de": "Können Sie das bitte wiederholen?",
+      "fa": "ممکن است لطفاً آن را تکرار کنید؟",
+      "scene": "classroom",
+      "emoji": "🔁",
+      "imageIdea": "معلم در حال تکرار جمله روی تخته",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-43",
+      "category": "farewell",
+      "de": "Tschüss!",
+      "fa": "خداحافظ!",
+      "scene": "wave",
+      "emoji": "👋",
+      "imageIdea": "دوست هنگام خروج دست تکان می‌دهد",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-44",
+      "category": "farewell",
+      "de": "Auf Wiedersehen!",
+      "fa": "خداحافظ رسمی!",
+      "scene": "office",
+      "emoji": "🤝",
+      "imageIdea": "خداحافظی از همکار در شرکت",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-45",
+      "category": "farewell",
+      "de": "Bis bald!",
+      "fa": "به‌زودی می‌بینمت!",
+      "scene": "clock",
+      "emoji": "📅",
+      "imageIdea": "تقویم ملاقات نزدیک",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-46",
+      "category": "farewell",
+      "de": "Bis morgen!",
+      "fa": "تا فردا!",
+      "scene": "calendar",
+      "emoji": "🌄",
+      "imageIdea": "ورق تقویم به روز بعد می‌رود",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-47",
+      "category": "farewell",
+      "de": "Bis später!",
+      "fa": "بعداً می‌بینمت!",
+      "scene": "clock",
+      "emoji": "🕒",
+      "imageIdea": "ساعت و دیدار چند ساعت بعد",
+      "register": "casual",
+      "lesson": 1
+    },
+    {
+      "id": "l1-48",
+      "category": "farewell",
+      "de": "Gute Nacht!",
+      "fa": "شب بخیر!",
+      "scene": "night",
+      "emoji": "🌙",
+      "imageIdea": "ماه و ستارگان پشت پنجره",
+      "register": "neutral",
+      "lesson": 1
+    },
+    {
+      "id": "l1-49",
+      "category": "farewell",
+      "de": "Schönen Tag noch!",
+      "fa": "روز خوبی داشته باشید!",
+      "scene": "day",
+      "emoji": "🌞",
+      "imageIdea": "فروشنده با لبخند مشتری را بدرقه می‌کند",
+      "register": "formal",
+      "lesson": 1
+    },
+    {
+      "id": "l1-50",
+      "category": "farewell",
+      "de": "Mach’s gut!",
+      "fa": "مراقب خودت باش!",
+      "scene": "friends",
+      "emoji": "💚",
+      "imageIdea": "خداحافظی محبت‌آمیز دو دوست",
+      "register": "casual",
+      "lesson": 1
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "friends",
+      "title": "دیدار دوستانه",
+      "scene": "friends",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Max",
+          "de": "Hallo, Reza!",
+          "fa": "سلام رضا!"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Hallo, Max! Wie geht’s?",
+          "fa": "سلام مکس! حالت چطوره؟"
+        },
+        {
+          "speaker": "Max",
+          "de": "Gut, danke. Und dir?",
+          "fa": "خوبم ممنون، تو چطور؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Auch gut. Danke!",
+          "fa": "من هم خوبم، ممنون!"
+        }
+      ]
+    },
+    {
+      "id": "teacher",
+      "title": "شروع کلاس",
+      "scene": "classroom",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Lehrerin",
+          "de": "Guten Morgen!",
+          "fa": "صبح بخیر!"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Guten Morgen!",
+          "fa": "صبح بخیر!"
+        },
+        {
+          "speaker": "Lehrerin",
+          "de": "Wie heißen Sie?",
+          "fa": "نام شما چیست؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Ich heiße Reza.",
+          "fa": "اسم من رضاست."
+        }
+      ]
+    },
+    {
+      "id": "formal",
+      "title": "آشنایی رسمی",
+      "scene": "office",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Frau Berger",
+          "de": "Guten Tag. Mein Name ist Berger.",
+          "fa": "روز بخیر. نام من برگر است."
+        },
+        {
+          "speaker": "Reza",
+          "de": "Guten Tag. Ich heiße Reza.",
+          "fa": "روز بخیر. اسم من رضاست."
+        },
+        {
+          "speaker": "Frau Berger",
+          "de": "Schön, Sie kennenzulernen.",
+          "fa": "از آشنایی با شما خوشحالم."
+        },
+        {
+          "speaker": "Reza",
+          "de": "Freut mich!",
+          "fa": "خوشوقتم!"
+        }
+      ]
+    },
+    {
+      "id": "origin",
+      "title": "اهل کجایی؟",
+      "scene": "map",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Lena",
+          "de": "Woher kommst du?",
+          "fa": "اهل کجایی؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Ich komme aus dem Iran.",
+          "fa": "من اهل ایران هستم."
+        },
+        {
+          "speaker": "Lena",
+          "de": "Wo wohnst du?",
+          "fa": "کجا زندگی می‌کنی؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Ich wohne in Qom.",
+          "fa": "در قم زندگی می‌کنم."
+        }
+      ]
+    },
+    {
+      "id": "languages",
+      "title": "در کلاس زبان",
+      "scene": "languages",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Max",
+          "de": "Welche Sprachen sprichst du?",
+          "fa": "چه زبان‌هایی صحبت می‌کنی؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Ich spreche Persisch und Englisch.",
+          "fa": "فارسی و انگلیسی صحبت می‌کنم."
+        },
+        {
+          "speaker": "Max",
+          "de": "Lernst du Deutsch?",
+          "fa": "آلمانی یاد می‌گیری؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Ja, ich lerne Deutsch.",
+          "fa": "بله، آلمانی یاد می‌گیرم."
+        }
+      ]
+    },
+    {
+      "id": "feelings",
+      "title": "امروز چطوری؟",
+      "scene": "neutral",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Anna",
+          "de": "Wie geht’s?",
+          "fa": "چطوری؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Es geht. Und dir?",
+          "fa": "بد نیست؛ تو چطور؟"
+        },
+        {
+          "speaker": "Anna",
+          "de": "Nicht so gut.",
+          "fa": "زیاد خوب نیستم."
+        },
+        {
+          "speaker": "Reza",
+          "de": "Es tut mir leid.",
+          "fa": "متأسفم."
+        }
+      ]
+    },
+    {
+      "id": "classHelp",
+      "title": "کمک‌خواستن در کلاس",
+      "scene": "classroom",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Lehrerin",
+          "de": "Bitte lesen Sie den Satz.",
+          "fa": "لطفاً جمله را بخوانید."
+        },
+        {
+          "speaker": "Reza",
+          "de": "Entschuldigung, ich verstehe nicht.",
+          "fa": "ببخشید، متوجه نمی‌شوم."
+        },
+        {
+          "speaker": "Reza",
+          "de": "Können Sie das bitte wiederholen?",
+          "fa": "ممکن است لطفاً آن را تکرار کنید؟"
+        },
+        {
+          "speaker": "Lehrerin",
+          "de": "Ja, natürlich.",
+          "fa": "بله، البته."
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "title": "ورود به شرکت",
+      "scene": "laptop",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Frau Berger",
+          "de": "Guten Morgen. Wie heißen Sie?",
+          "fa": "صبح بخیر. نام شما چیست؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Mein Name ist Reza.",
+          "fa": "نام من رضاست."
+        },
+        {
+          "speaker": "Frau Berger",
+          "de": "Was sind Sie von Beruf?",
+          "fa": "شغل شما چیست؟"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Ich bin Softwareentwickler.",
+          "fa": "من توسعه‌دهنده نرم‌افزار هستم."
+        }
+      ]
+    },
+    {
+      "id": "goodbye",
+      "title": "پایان کلاس",
+      "scene": "wave",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Lehrerin",
+          "de": "Bis morgen!",
+          "fa": "تا فردا!"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Tschüss, bis morgen!",
+          "fa": "خداحافظ، تا فردا!"
+        },
+        {
+          "speaker": "Lehrerin",
+          "de": "Mach’s gut!",
+          "fa": "مراقب خودت باش!"
+        }
+      ]
+    },
+    {
+      "id": "night",
+      "title": "شب‌بخیر",
+      "scene": "night",
+      "lesson": 1,
+      "turns": [
+        {
+          "speaker": "Max",
+          "de": "Gute Nacht, Reza!",
+          "fa": "شب بخیر رضا!"
+        },
+        {
+          "speaker": "Reza",
+          "de": "Gute Nacht. Bis bald!",
+          "fa": "شب بخیر، به‌زودی می‌بینمت!"
+        }
+      ]
+    }
+  ]
+}
