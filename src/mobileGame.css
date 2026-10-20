@@ -113,3 +113,18 @@
 @media(max-width:680px){.app{padding:10px 12px calc(116px + env(safe-area-inset-bottom,0px))}.topbar{margin-bottom:12px}.gameIntro{padding:22px;min-height:0}.gameIntro h1{font-size:27px}.gameIntro p{font-size:12px}.gameScorebar>div{padding:12px 8px;display:grid;justify-items:center;gap:4px;text-align:center}.gameScorebar strong{font-size:20px}.gameScorebar small{font-size:10px}.gameNext{padding:12px}.gameNext button{padding:9px}.gameGoals{padding:14px}.gameGoalHeader h2{font-size:16px}.gameSectionHead h2{font-size:17px}.learningJourney{padding:14px 12px}.progressOverview{grid-template-columns:1fr}.progressLevel{flex-direction:row;justify-content:space-around;flex-wrap:wrap}.progressLevel .gameProgress{width:100%}.progressColumns{grid-template-columns:1fr}.gameBackup{flex-direction:column;align-items:stretch}.backupActions{justify-content:flex-start}.phaseHero{padding:18px!important}.phaseHero h2{font-size:22px}.phaseHero p{font-size:12px}.courseLessonList{max-height:none!important}}
 @media(max-width:460px){.topbar{padding:11px 12px}.topbar h1{font-size:17px}.topbar p{font-size:10px;max-width:195px}.voiceControl select{max-width:82px}.gameScorebar{gap:7px}.gameScorebar>div{border-radius:13px}.scoreIcon{width:33px;height:33px}.gameIntro{padding:18px;border-radius:19px}.gameIntro h1{font-size:25px}.gameIntro p{line-height:1.85}.gamePrimary{width:100%;font-size:12px}.gameNext .nextSparkle{width:38px;height:38px}.gameNext p{font-size:10px}.gameNext button{font-size:11px}.homeContinue{padding:11px}.gameSectionHead>span{font-size:10px}.practiceTiles{grid-template-columns:1fr}.practiceTile{padding:14px}.hubHeading{padding:17px}.hubHeading h2{font-size:20px}.progressQuickstats{gap:8px}.progressQuickstats>div{display:grid;justify-items:center;text-align:center;padding:11px;gap:5px}.progressQuickstats b{font-size:20px}.gameGoalDetail{align-items:flex-start;flex-wrap:wrap;font-size:10px}.journeyNode{padding:10px}.journeyNode .journeyIcon{width:47px;min-width:47px;height:47px}.bottomNav{width:calc(100% - 18px);padding:6px;bottom:max(8px,env(safe-area-inset-bottom));border-radius:20px}.bottomNav button{font-size:11px}.phaseIndicators>div{padding:9px 4px}}
 @media(prefers-reduced-motion:reduce){.gameProgress span,.practiceTile{transition:none}}
+
+
+/* Compact lesson chooser: always visible on desktop, expandable on phones. */
+.courseSideHeader{flex-direction:row;align-items:center;justify-content:space-between;gap:8px}
+.courseSideHeader>div{display:flex;flex-direction:column;gap:5px}
+.courseToggle{display:none;border:1px solid #dddaf9;background:#efeeff;color:#5a54c7;border-radius:10px;padding:9px 10px;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;font-size:11px;font-weight:800}
+@media(max-width:750px){
+ .courseToggle{display:flex}
+ .courseLessonList{display:none!important}
+ .courseLessonList.open{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .courseSyllabus{position:static}
+}
+@media(max-width:480px){
+ .courseLessonList.open{grid-template-columns:1fr!important;max-height:330px!important;overflow-y:auto!important}
+}
