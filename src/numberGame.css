@@ -58,3 +58,19 @@
  .duoStatus span{white-space:normal;font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){.duoChoices button{transition:none}}
+
+
+/* Answer feedback: bright but calm visual response, no external sound assets. */
+.duoSoundControls{display:flex;align-items:center;gap:8px}
+.duoSoundToggle{border:1px solid #d7daf0;background:#f8f8ff;color:#5752bf;border-radius:12px;display:flex;align-items:center;gap:7px;padding:10px 12px;min-height:40px;font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap}
+.duoSoundToggle.muted{background:#f5f6f8;border-color:#e3e5eb;color:#8890a3}
+.duoSoundToggle:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+.duoChoices button.duoCorrectPop{animation:duoPop .32s cubic-bezier(.2,.8,.2,1) both}
+.duoChoices button.duoWrongShake{animation:duoShake .30s ease-in-out both}
+.duoFeedback.success{animation:duoFeedbackArrive .2s ease-out both}
+.duoFeedback.failure{animation:duoFeedbackArrive .2s ease-out both}
+@keyframes duoPop{0%{transform:scale(.96)}55%{transform:scale(1.045)}100%{transform:scale(1)}}
+@keyframes duoShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}55%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+@keyframes duoFeedbackArrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:400px){.duoSoundToggle span{display:none}.duoSoundToggle{padding:10px}}
+@media(prefers-reduced-motion:reduce){.duoChoices button.duoCorrectPop,.duoChoices button.duoWrongShake,.duoFeedback.success,.duoFeedback.failure{animation:none}}
