@@ -100,3 +100,5 @@
 @media(max-width:650px){.dialogueHeader{padding:21px}.dialogueHeader h1{font-size:24px}.dialogueCards{grid-template-columns:1fr 1fr;gap:9px}.dialogueCardText{padding:12px}.dialogueSceneArt{height:115px}.dialogueSceneArt.large{height:auto;max-height:none;min-height:0}.dialogueStage,.dialogueAICoach{padding:16px}.dialogueChoices{grid-template-columns:1fr}.dialogueChoices button{min-height:72px}.dialogueAIHeading{align-items:start}.dialogueStageTop button{font-size:11px}.dialogueChoiceFeedback{flex-wrap:wrap}.dialogueChoiceFeedback button{margin-right:auto}}
 @media(max-width:410px){.dialogueCards{grid-template-columns:1fr}.dialogueSceneArt{height:150px}.dialogueHeader h1{font-size:22px}.dialogueAIHeading small{font-size:10px}.dialogueAIState{font-size:9px}.dialogueNPC{padding:20px 12px}.dialogueNPC>span{font-size:18px}.dialogueStageTop{align-items:start}.dialogueStageTop button{padding:8px}}
 @media(prefers-reduced-motion:reduce){.dialogueCard{transition:none}}
+
+.dialogueOfflineNote a{color:#544dc6;text-decoration:underline;font-weight:800;white-space:nowrap}
