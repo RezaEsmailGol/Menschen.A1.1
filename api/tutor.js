@@ -83,11 +83,11 @@ export default async function handler(req,res){
   if(req.method!=='POST')return response(res,405,{error:'method_not_allowed'},{Allow:'GET, POST'});
   if(!process.env.AI_GATEWAY_API_KEY || !process.env.TUTOR_ACCESS_CODE)
     return response(res,503,{error:'not_configured',fallback:true});
+  const ip=trim(req.headers['x-forwarded-for']?.split(',')[0]||'unknown',90);
+  if(isRateLimited(ip))return response(res,429,{error:'rate_limited',fallback:true},{'Retry-After':'60'});
   const provided=req.headers['x-tutor-access-code'];
   if(!secureEqual(provided,process.env.TUTOR_ACCESS_CODE))
     return response(res,401,{error:'unauthorized',fallback:true});
-  const ip=trim(req.headers['x-forwarded-for']?.split(',')[0]||'unknown',90);
-  if(isRateLimited(ip))return response(res,429,{error:'rate_limited',fallback:true},{'Retry-After':'60'});
   let body=req.body;
   if(typeof body==='string'&&body.length<=MAX_BODY){try{body=JSON.parse(body)}catch{}}
   if(JSON.stringify(body||{}).length>MAX_BODY)return response(res,413,{error:'payload_too_large'});
