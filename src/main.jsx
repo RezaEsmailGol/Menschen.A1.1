@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, Languages, Play, Shuffle, Trophy, Upload, Download, Plus, Trash2 } from 'lucide-react';
+import PronunciationLab from './PronunciationLab';
+import NumberLab from './NumberLab';
 import './styles.css';
+import './upgrade.css';
 
 const lessonOneWords = [
   { de: 'Sonne', fa: 'خورشید', hint: 'S در ابتدای واژه معمولاً /z/ شنیده می‌شود.' },
@@ -48,13 +51,21 @@ const defaultCards = [
 ];
 
 function speak(text) {
-  if (!('speechSynthesis' in window)) return;
+  if (!('speechSynthesis' in window)) {
+    window.alert('مرورگر شما پخش صدای گفتاری را پشتیبانی نمی‌کند.');
+    return;
+  }
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'de-DE';
-  u.rate = 0.82;
-  u.pitch = 1;
-  window.speechSynthesis.speak(u);
+  const utterance = new SpeechSynthesisUtterance(String(text));
+  const available = window.speechSynthesis.getVoices();
+  const germanVoice = available.find(v => v.lang.toLowerCase() === 'de-at')
+    || available.find(v => v.lang.toLowerCase() === 'de-de')
+    || available.find(v => v.lang.toLowerCase().startsWith('de'));
+  if (germanVoice) utterance.voice = germanVoice;
+  utterance.lang = germanVoice?.lang || 'de-DE';
+  utterance.rate = Number(localStorage.getItem('dt_audio_speed') || 0.82);
+  utterance.pitch = 1;
+  window.speechSynthesis.speak(utterance);
 }
 
 function normalize(text) {
@@ -70,11 +81,12 @@ function useLocalStorage(key, initial) {
 }
 
 const tabs = [
-  ['home','خانه'],['flash','فلش‌کارت'],['listen','شنیدن و تایپ'],['words','خواندن کلمات'],['numbers','اعداد'],['alphabet','الفبا'],['verbs','صرف افعال']
+  ['home','خانه'],['pronunciation','تلفظ و استثناها'],['numbers','اعداد'],['flash','فلش‌کارت'],['listen','شنیدن و تایپ'],['words','کلمات'],['alphabet','الفبا'],['verbs','صرف افعال']
 ];
 
 function App() {
   const [tab, setTab] = useState('home');
+  const [audioSpeed, setAudioSpeed] = useLocalStorage('dt_audio_speed', 0.82);
   const [cards, setCards] = useLocalStorage('dt_cards', defaultCards);
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
@@ -93,7 +105,7 @@ function App() {
         <h1>Deutsch Trainer</h1>
         <p>همراه تمرین Menschen A1.1 — بر اساس درس‌های کلاس خودت</p>
       </div>
-      <div className="streak"><Trophy size={18}/> {stats.streak} روز</div>
+      <div className="headerTools"><label className="voiceControl" title="سرعت تلفظ"><Volume2 size={17}/><select aria-label="سرعت پخش تلفظ" value={audioSpeed} onChange={e => setAudioSpeed(Number(e.target.value))}><option value={0.65}>آرام</option><option value={0.82}>معمولی</option><option value={1}>سریع</option></select></label><div className="streak"><Trophy size={18}/> {stats.streak} روز</div></div>
     </header>
 
     <nav className="tabs">
@@ -102,10 +114,11 @@ function App() {
 
     <main>
       {tab==='home' && <Home stats={stats} setTab={setTab} />}
+      {tab==='pronunciation' && <PronunciationLab speak={speak} />}
       {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} />}
       {tab==='listen' && <ListenType stats={stats} setStats={setStats} />}
       {tab==='words' && <Words />}
-      {tab==='numbers' && <Numbers />}
+      {tab==='numbers' && <NumberLab speak={speak} onAttempt={ok => setStats(s => ({...s, typed:s.typed+1, correct:s.correct+(ok?1:0)}))} />}
       {tab==='alphabet' && <Alphabet />}
       {tab==='verbs' && <Verbs />}
     </main>
@@ -115,32 +128,42 @@ function App() {
 }
 
 function Home({stats,setTab}) {
+  const total = stats.known + stats.missed;
+  const accuracy = total ? Math.round(100 * stats.known / total) : 0;
   const items = [
-    ['فلش‌کارت', 'مرور جمله‌ها و لغت‌های کلاس', 'flash', BookOpen],
-    ['شنیدن و تایپ', 'کلمه را گوش بده و درست تایپ کن', 'listen', Keyboard],
-    ['تلفظ و خواندن', 'کلمات جلسه اول را با صدا تمرین کن', 'words', Volume2],
-    ['اعداد', 'از ۰ تا ۲۰ با تلفظ', 'numbers', Hash],
-    ['الفبا', 'حروف آلمانی با تلفظ', 'alphabet', Languages],
-    ['صرف افعال', 'kommen، lernen، arbeiten', 'verbs', Shuffle],
+    ['تلفظ و استثناها', 'از «ich» تا «Bach»؛ قوانین همراه با صدا', 'pronunciation', Volume2, 'teal'],
+    ['بازی اعداد', '۱۰ سؤال رندوم؛ شنیدن و تایپ تا ۱۰۰', 'numbers', Hash, 'orange'],
+    ['فلش‌کارت', 'مرور روزانه، پاسخ صحیح و غلط', 'flash', BookOpen, 'violet'],
+    ['دیکته شنیداری', 'گوش بده، کلمه را با دقت بنویس', 'listen', Keyboard, 'blue'],
+    ['کلمات جلسه اول', 'کلمات مهم جزوه با معنی و صدا', 'words', Languages, 'rose'],
+    ['الفبای آلمانی', 'حروف ویژه و شنیدن نام حروف', 'alphabet', Languages, 'green'],
+    ['صرف افعال', 'kommen، lernen، arbeiten', 'verbs', Shuffle, 'indigo'],
   ];
   return <>
-    <section className="hero">
-      <div>
-        <span className="pill">Lektion 1</span>
-        <h2>امروز ۲۰ دقیقه آلمانی واقعی تمرین کن</h2>
-        <p>هدف: تلفظ بهتر، تایپ دقیق، و ساختن جمله‌های کوتاه بدون حفظ طوطی‌وار.</p>
+    <section className="hero upgradedHero">
+      <div className="heroIntro">
+        <span className="pill">MENSCHEN A1.1 · LEKTION 1</span>
+        <h2>هر روز یک قدم،<br/><span>نزدیک‌تر به آلمانی روان.</span></h2>
+        <p>همه چیزهایی که استاد در جلسه اول گفته: قوانین تلفظ، استثناها، اعداد و صرف افعال؛ این بار با بازی و تمرین عملی.</p>
+        <div className="heroButtons">
+          <button onClick={() => setTab('pronunciation')}><Volume2 size={18}/> شروع تلفظ <span>←</span></button>
+          <button className="outlineBtn" onClick={() => setTab('numbers')}><Hash size={18}/> آزمون اعداد</button>
+        </div>
       </div>
-      <div className="progressCard">
-        <div><b>{stats.correct}</b><span>پاسخ درست</span></div>
-        <div><b>{stats.known}</b><span>کارت بلد بودم</span></div>
-        <div><b>{stats.missed}</b><span>نیاز به مرور</span></div>
+      <div className="heroDashboard">
+        <div className="dailyBadge">برنامه امروز <span>۲۰ دقیقه</span></div>
+        <div className="progressDial" style={{'--value': accuracy}}><div><strong>{accuracy}%</strong><span>کارت‌های درست</span></div></div>
+        <div className="miniStats"><div><strong>{stats.correct}</strong><span>تایپ درست</span></div><div><strong>{stats.missed}</strong><span>مرور مجدد</span></div></div>
       </div>
     </section>
-    <section className="grid">
-      {items.map(([title,desc,id,Icon]) => <button className="feature" key={id} onClick={()=>setTab(id)}>
-        <Icon size={28}/><h3>{title}</h3><p>{desc}</p>
+    <div className="homeSectionTitle"><div><span className="eyebrow">YOUR LEARNING SPACE</span><h2>امروز چه چیزی تمرین کنیم؟</h2><p>یکی از بخش‌ها را انتخاب کن و پیشرفتت را بساز.</p></div><span className="courseTag">سطح A1.1</span></div>
+    <section className="grid upgradedGrid">
+      {items.map(([title,desc,id,Icon,tone],index) => <button className={'feature updatedFeature tone-'+tone} key={id} onClick={()=>setTab(id)}>
+        <div className="featureUpper"><span className="featureIcon"><Icon size={25}/></span><span className="featureArrow">↗</span></div>
+        <h3>{title}</h3><p>{desc}</p><div className="featureFoot"><span>{index < 2 ? 'پیشنهاد امروز' : 'درس اول'}</span><span>شروع ←</span></div>
       </button>)}
     </section>
+    <div className="homePracticeStrip"><div className="practiceIcon">🎧</div><div><b>نکته امروز: صدای «ch» دو نوع اصلی دارد</b><p>تفاوت ich و Bach را بشنو؛ یکی نرم و دیگری خشن است.</p></div><button onClick={()=>setTab('pronunciation')}>بشنو و تمرین کن ←</button></div>
   </>;
 }
 
