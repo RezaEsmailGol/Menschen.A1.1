@@ -73,7 +73,7 @@ export function learningInsights(memory={}, now=Date.now()) {
     streak++;
     start.setDate(start.getDate()-1);
   }
-  const byType=['vocab','grammar','sentence','reading','number','dictation','pronunciation'].map(kind=>{
+  const byType=['vocab','grammar','sentence','reading','number','dictation','pronunciation','dialogue'].map(kind=>{
     const list=practiced.filter(x=>x.kind===kind);
     return {kind,attempts:list.reduce((s,x)=>s+x.attempts,0),mastered:list.filter(x=>x.mastery>=80&&x.correct>=3&&x.reviewedDays>=2).length,
       weak:list.filter(x=>x.mastery<55).length};
