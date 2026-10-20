@@ -4,6 +4,7 @@ import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, La
 import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
+import TeacherWorkbook from './TeacherWorkbook';
 import { pronouns, verbForms } from './courseData';
 import { Home as HomeIcon, BookOpenCheck, LayoutGrid, ChartNoAxesCombined, ChevronRight } from 'lucide-react';
 import { TodayDashboard, PracticeHub, ProgressPage } from './LearningScreens';
@@ -91,13 +92,13 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
 };
 function BottomNav({tab,setTab}) {
-  const selected=['home','course','practice','progress'].includes(tab)?tab:'practice';
+  const selected=['home','course','practice','progress'].includes(tab)?tab:(tab==='workbook'?'course':'practice');
   return <nav className="bottomNav" aria-label="منوی اصلی">
     {routes.map(({id,title,Icon})=><button key={id} aria-current={selected===id?'page':undefined}
       className={selected===id?'selected':''} onClick={()=>setTab(id)}>
@@ -147,6 +148,7 @@ function App() {
     <main>
       {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} />}
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
+      {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent} goBack={()=>setTab('course')} />}
       {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} />}
       {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
       {tab==='pronunciation' && <PronunciationLab speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} />}
