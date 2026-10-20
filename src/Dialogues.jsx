@@ -42,7 +42,13 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
  const [history,setHistory]=useState([]);
  const [progress,setProgress]=useState(loadProgress);
  const [freeText,setFreeText]=useState('');
- const [access,setAccess]=useState('');
+ const [access,setAccess]=useState(()=>{
+   try{return sessionStorage.getItem('dt_tutor_access_session')||'';}catch{return ''}
+ });
+ const updateAccess=value=>{
+   setAccess(value);
+   try{sessionStorage.setItem('dt_tutor_access_session',value);}catch{}
+ };
  const [status,setStatus]=useState('checking');
  const [aiBusy,setAiBusy]=useState(false);
  const [aiError,setAiError]=useState('');
@@ -105,12 +111,16 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
          dynamicPrompt:aiPrompt,history:aiHistory.slice(-4),weakness:weakTopics})
      });
      const data=await res.json().catch(()=>null);
-     if(!res.ok||!data?.nextQuestion)throw new Error(
+     if(!res.ok||!data?.nextQuestion){
+       if(res.status===402||data?.error==='billing_required')setStatus('billing');
+       throw new Error(
+       res.status===402?'حساب Vercel برای استفاده از AI Gateway به کارت پرداخت معتبر نیاز دارد.':
        res.status===401?'کد دسترسی مربی درست نیست.':
        res.status===429?'سهمیه درخواست‌ها موقتاً پر شده؛ یک دقیقه دیگر تلاش کن.':
        res.status===503?'کلید AI Gateway هنوز روی سرور تنظیم نشده است.':
        'پاسخ مربی دریافت نشد؛ از مکالمه آفلاین ادامه بده.'
      );
+     }
      onPracticeEvent?.({id:activityItemKey('dialogue',scene.id,'ai',aiQuestion),kind:'dialogue',
        label:aiQuestion,lesson:scene.lesson,correct:data.correct});
      setAiHistory(prev=>[...prev,{prompt:aiQuestion,answer}].slice(-4));
@@ -171,16 +181,19 @@ export default function Dialogues({routeScene,setTab,speak,onPracticeEvent,memor
     </div>}
     {!isFinished&&<div className="dialogueAICoach">
       <div className="dialogueAIHeading"><div><span className="dialogueAIIcon"><WandSparkles size={24}/></span><span><b>مربی هوش مصنوعی</b><small>تصحیح جمله و ادامه مکالمه با Vercel AI Gateway</small></span></div>
-       <span className={'dialogueAIState '+(status==='ready'?'on':'off')}>{status==='checking'?'در حال بررسی':status==='ready'?'قابل فعال‌سازی':'در حال حاضر آفلاین'}</span></div>
+       <span className={'dialogueAIState '+(status==='ready'?'on':'off')}>{status==='checking'?'در حال بررسی':status==='ready'?'آماده بررسی':'حساب نیازمند فعال‌سازی'}</span></div>
       {status==='ready'?<div className="dialogueAIForm">
         <label>کد دسترسی خصوصی مربی
-         <input type="password" autoComplete="off" placeholder="کد تعریف‌شده در Vercel" value={access} onChange={e=>setAccess(e.target.value)}/>
+         <input type="password" autoComplete="off" placeholder="کد تعریف‌شده در Vercel" value={access} onChange={e=>updateAccess(e.target.value)}/>
         </label>
         <label>پاسخ آزاد خودت را به آلمانی بنویس
          <textarea dir="ltr" rows={2} maxLength={220} placeholder="Ich komme aus dem Iran..." value={freeText} onChange={e=>setFreeText(e.target.value)}/>
         </label>
         <button disabled={!freeText.trim()||!access.trim()||aiBusy||aiDepth>=4} onClick={()=>askTutor(freeText)}><Send size={17}/>{aiBusy?'در حال بررسی…':'بررسی و ادامه با AI'}</button>
-      </div>:<p className="dialogueOfflineNote"><LockKeyhole size={18}/> تا تنظیم کلید و کد خصوصی AI Gateway، مکالمه شاخه‌دار بالا کاملاً کار می‌کند و هیچ درخواست پولی ارسال نمی‌شود.</p>}
+      </div>:status==='billing'?<p className="dialogueOfflineNote">
+        <LockKeyhole size={18}/> حساب Vercel به روش پرداخت معتبر نیاز دارد. پس از فعال‌سازی در پنل Vercel، این صفحه را تازه‌سازی کن.
+        <a href="https://vercel.com/ai-gateway" target="_blank" rel="noopener noreferrer">مشاهده AI Gateway</a>
+      </p>:<p className="dialogueOfflineNote"><LockKeyhole size={18}/> مربی آنلاین در حال حاضر فعال نیست؛ مسیرهای انتخابی بالا بدون API قابل تمرین هستند.</p>}
       {aiError&&<p className="dialogueAIError" role="alert">{aiError}</p>}
       {aiReply&&<div className="dialogueAIResponse">
         <span className="dialogueAIResult">{aiReply.correct?'✓ پاسخ مناسب':'✎ نکته اصلاحی'}</span>
