@@ -8,6 +8,8 @@ import TeacherWorkbook from './TeacherWorkbook';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
 import PictureGame from './PictureGame';
+import DailyCoach from './DailyCoach.jsx';
+import {DAILY_GOAL_KEY,safeDailyGoal} from './dailyCoach.js';
 import {vibrateGame,readGameFeedbackPreferences} from './gameEffects.js';
 import RouteLink from './RouteLink';
 import {usePageRoute} from './usePageRoute';
@@ -99,7 +101,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
@@ -123,6 +125,8 @@ function App() {
   const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
   const [schedule, setSchedule] = useLocalStorage(REVIEW_KEY, {});
   const [memory, setMemory] = useLocalStorage(MEMORY_KEY, {version:1,items:{},days:{},totalXP:0,history:[]});
+  const [dailyGoal, setDailyGoal] = useLocalStorage(DAILY_GOAL_KEY, 10);
+  const updateDailyGoal=value=>setDailyGoal(safeDailyGoal(value));
   const [feedback,setFeedback]=useState(null);
   const onPracticeEvent = event => {
     setMemory(previous => recordActivity(previous,event));
@@ -157,15 +161,16 @@ function App() {
     </div>}
 
     <main>
-      {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} />}
+      {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} dailyGoal={safeDailyGoal(dailyGoal)} />}
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
+      {tab==='coach' && <DailyCoach setTab={setTab} memory={memory} progress={progress} schedule={schedule} goal={dailyGoal} setGoal={updateDailyGoal} />}
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}
       {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
       {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
         onPageNavigate={id=>setTab('workbook/'+id)} goBack={()=>setTab('course')} navigate={setTab} />}
-      {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} />}
+      {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} dailyGoal={dailyGoal} />}
       {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} routeLesson={route.startsWith('course/')?Number(route.slice(7)):null}
         setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
       {tab==='pronunciation' && <PronunciationLab speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} />}
