@@ -87,12 +87,8 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
       let soundOn=true;
       try{soundOn=localStorage.getItem('dt_game_feedback_sound')!=='off';}catch{}
       if(soundOn){
+        if(!correct)playWrongBeep();
         quizAudio.playChoice(value);
-        else {
-          try{window.speechSynthesis?.cancel();}catch{}
-          playWrongBeep();
-          quizAudio.playChoice(value);
-        }
       }
     }
     setAnswer(correct);
