@@ -5,6 +5,7 @@ import {createWorkbookChallenge,WB_CHALLENGE_MODES,WB_VERBS} from './workbookCha
 import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,
  saveGameFeedbackPreference,giveGameFeedback} from './gameEffects.js';
 import GameCelebration from './GameCelebration.jsx';
+import QuizFocusShell from './QuizFocusShell.jsx';
 import './workbookChallenge.css';
 
 const TITLES={alphabet:'بازی تشخیص حروف',sounds:'بازی تلفظ و استثناها',
@@ -17,7 +18,7 @@ const INFO={
  dialog:'معنی جمله را به آلمانی بگو یا جمله شنیده‌شده را تشخیص بده.',
  checkpoint:'ترکیبی از اعداد، حروف، تلفظ، صرف فعل و مکالمه؛ هر بار تازه.'
 };
-export default function WorkbookChallenge({section,speak=()=>{},memory={},onEvent,onEnd}){
+export default function WorkbookChallenge({section,speak=()=>{},memory={},onEvent,onEnd,onClose=()=>{}}){
  const [mode,setMode]=useState('mixed'),[verb,setVerb]=useState('mixed');
  const [questions,setQuestions]=useState(()=>createWorkbookChallenge({section,memory}));
  const [position,setPosition]=useState(0),[chosen,setChosen]=useState(null);
@@ -57,7 +58,8 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
    giveGameFeedback('finish',feedback);
   }else{setPosition(p=>p+1);setChosen(null);}
  }
- return <div className="wcGame">
+ return <QuizFocusShell title={TITLES[section]} onClose={onClose}>
+ <div className="wcGame">
   <header className="wcHead">
    <span className="wcMascot" aria-hidden="true">{ICONS[section]||'🧠'}</span>
    <div className="wcHeadText"><span className="wcEyebrow">DEUTSCH · QUIZ · A1.1</span>
@@ -73,8 +75,10 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
       aria-pressed={feedback.haptics}>📳</button>
    </div>
   </header>
-  {section!=='checkpoint'&&<div className="wcSettings">
-   <span><Shuffle size={15}/> روش تمرین</span>
+  {section!=='checkpoint'&&<details className="wcSettings">
+   <summary><Shuffle size={15}/> تنظیمات آزمون
+    <span>{WB_CHALLENGE_MODES.find(x=>x.id===mode)?.title}{section==='verbs'?' · '+(verb==='mixed'?'هر دو فعل':verb):''}</span></summary>
+   <span className="wcSettingLabel">روش تمرین</span>
    <div className="wcModeChoices">
     {WB_CHALLENGE_MODES.map(entry=><button type="button" key={entry.id}
      className={mode===entry.id?'active':''} aria-pressed={mode===entry.id}
@@ -85,7 +89,7 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
       <button type="button" key={entry.id} className={verb===entry.id?'active':''}
        aria-pressed={verb===entry.id} onClick={()=>begin(mode,entry.id)}>{entry.title}</button>)}
    </div></>}
-  </div>}
+  </details>}
   {done?<div className="wcFinish">
    <GameCelebration correct={correctCount} total={total} caption={TITLES[section]}/>
    <p>{correctCount/total>=.8?'خیلی خوب! در دور بعد سؤال‌ها عوض می‌شوند.':
@@ -105,9 +109,9 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
         <Volume2 size={19}/> شنیدن سؤال</button>
        <small>پاسخ را فقط از روی صدا تشخیص بده؛ برای تکرار دوباره بزن.</small>
      </div>:
-     <div className="wcDisplay" lang="de" dir={/^[A-Za-zÄÖÜßäöü]/.test(current.display||'')?'ltr':'auto'}>
-       {current.display||<Sparkles size={28}/>}
-     </div>}
+     current.display?<div className="wcDisplay" lang="de" dir={/^[A-Za-zÄÖÜßäöü]/.test(current.display)?'ltr':'auto'}>
+       {current.display}
+     </div>:null}
    </div>
    <div className="wcOptions" dir="ltr" role="group" aria-label="پاسخ‌های چهارگزینه‌ای">
     {current.choices.map((option,i)=>{
@@ -128,10 +132,9 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
      <button type="button" onClick={()=>speak(current.audio||current.answer)}
        aria-label="شنیدن پاسخ درست"><Volume2 size={19}/></button>
     </div>}
-   {chosen!==null&&<button type="button" className="wcNext" onClick={advance}>
-     {position===total-1?'دیدن نتیجه':'سؤال بعدی'} <RotateCcw size={16}/></button>}
+   <button type="button" className="wcNext" disabled={chosen===null} onClick={advance}>
+     {chosen===null?'یک پاسخ انتخاب کن':position===total-1?'دیدن نتیجه':'سؤال بعدی'}
+     <RotateCcw size={16}/></button>
   </div>:<p>سؤالی برای این درس پیدا نشد.</p>}
-  <footer className="wcReminder"><Brain size={18}/>
-   هر سؤال یک بار امتیاز می‌گیرد. اشتباه‌ها در مرور هوشمند ذخیره می‌شوند و دور بعدی سؤال‌های تازه دارد.</footer>
- </div>;
+ </div></QuizFocusShell>;
 }
