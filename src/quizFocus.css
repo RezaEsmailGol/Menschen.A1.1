@@ -24,6 +24,9 @@
  normal portrait 360px+ quizzes fit without any scrolling. */
 @media(max-height:510px){
  .qfContent{overflow-y:auto;align-items:stretch}
- .qfContent>*{height:auto;min-height:350px;flex-shrink:0;margin-inline:auto}
+ .qfContent>*{height:auto;min-height:480px;max-height:none;flex-shrink:0;margin-inline:auto}
+ .qfOverlay .wcGame,.qfOverlay .nrGame,.qfOverlay .pgBoard,
+ .qfOverlay .pgFinish,.qfOverlay .vQuiz,.qfOverlay .wbExamRunner,
+ .qfOverlay .examFocusBody{min-height:480px;height:auto;max-height:none;overflow:visible}
 }
 @media(prefers-reduced-motion:reduce){.qfOverlay *{scroll-behavior:auto!important}}
