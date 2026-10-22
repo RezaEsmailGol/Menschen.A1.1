@@ -173,3 +173,12 @@
 .gameHeroActions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .gameHeroSecondary{border:1px solid #ffffff70;border-radius:13px;background:#ffffff17;color:#fff;padding:12px 15px;cursor:pointer;font-size:12px;font-weight:750}
 @media(max-width:450px){.wbCourseBanner{padding:12px;gap:9px}.wbCourseBannerIcon{width:43px;height:43px}.wbCourseBanner b{font-size:13px}.wbCourseBanner small{font-size:10px}.gameHeroActions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.gameHeroActions .gamePrimary{padding:10px 8px}.gameHeroActions button{font-size:10px;min-width:0}.gameHeroSecondary{padding:10px 8px}}
+
+
+/* Maintain two learning paths: fast adaptive choice practice and harder typed production. */
+.wbPracticeModes{display:flex;flex-wrap:wrap;gap:9px;background:#f2f8f6;
+ border-radius:13px;padding:10px;margin:12px 0}
+.wbPracticeModes button{display:inline-flex;align-items:center;gap:7px;border:1px solid #d7e8e1;
+ background:#fff;color:#548178;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:850;cursor:pointer}
+.wbPracticeModes button.active{background:#338975;border-color:#338975;color:#fff}
+@media(max-width:500px){.wbPracticeModes button{flex:1;justify-content:center;font-size:11px}}
