@@ -144,3 +144,45 @@
 @media(max-width:1070px){.courseSplit{grid-template-columns:250px minmax(0,1fr)}.phaseHero{flex-direction:column;align-items:flex-start}.phaseIndicators{width:100%}.phaseIndicators>div{flex:1}}
 @media(max-width:750px){.courseSplit,.reviewLayout{grid-template-columns:1fr}.courseSyllabus{position:static}.courseLessonList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:265px;overflow:auto}.phaseHero{padding:22px}.phaseHero h2{font-size:24px}.phaseNav button{flex:1;justify-content:center}.courseIntro{padding:20px}}
 @media(max-width:490px){.phaseNav{display:grid;grid-template-columns:1fr 1fr}.phaseNav button{font-size:11px;padding:11px 5px}.phaseIndicators{gap:5px}.phaseIndicators>div{min-width:0;padding:10px 5px}.phaseIndicators strong{font-size:19px}.phaseIndicators span{font-size:9px}.courseLessonList{grid-template-columns:1fr}.courseIntro h3{font-size:22px}.courseCTA{flex-direction:column}.vocabGrid,.examOptions{grid-template-columns:1fr}.reviewCardShell,.reviewSidebar,.builderPanel,.examPanel,.courseContentBlock{padding:15px}.srsFlash{height:245px}.srsFlash strong{font-size:24px}.rateButtons{grid-template-columns:repeat(2,1fr)}.studyPanelHead{align-items:flex-start;flex-direction:column}.builderQuestion h3{font-size:18px}.lessonPick{width:100%;white-space:normal}.lessonPick select{max-width:85%}}
+
+
+/* Lesson-check questions use the same single-screen study surface as workbook. */
+.examLaunch{width:100%;justify-content:center;margin-top:16px}
+.qfOverlay .examFocusBody{width:100%;height:100%;min-height:0;max-width:900px;
+ margin:auto;border:0;border-radius:15px;background:#fff;
+ padding:clamp(8px,1.5dvh,15px);display:flex;flex-direction:column;
+ justify-content:center;gap:clamp(6px,1.1dvh,12px);overflow:hidden}
+.qfOverlay .examHeader{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.qfOverlay .examTrack{height:6px;min-height:6px;margin:0;flex:0 0 auto;background:#ebeefa;border-radius:99px;overflow:hidden}
+.qfOverlay .examTrack>span{display:block;height:100%;background:#62afa0}
+.qfOverlay .examPrompt{flex:0 0 auto;padding:clamp(9px,2dvh,15px);gap:7px;
+ border-radius:13px;min-height:85px}
+.qfOverlay .examPrompt h3{font-size:clamp(14px,2.4dvh,19px);line-height:1.55;margin:0}
+.qfOverlay .examPrompt button{padding:8px;font-size:12px}
+.qfOverlay .examOptions{flex:0 0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:clamp(6px,.9dvh,10px);margin:0}
+.qfOverlay .examOptions button{min-width:0;min-height:clamp(50px,8.7dvh,72px);
+ padding:9px;font-size:clamp(11px,2.2dvh,15px);line-height:1.5}
+.qfOverlay .examOptions button span{overflow-wrap:anywhere}
+.qfOverlay .examExplanation{flex:0 0 auto;min-height:45px;max-height:69px;
+ padding:9px 12px;margin:0;gap:6px;display:flex;align-items:center}
+.qfOverlay .examExplanation b{width:auto;font-size:12px}
+.qfOverlay .examExplanation span{font:800 14px Tahoma;overflow-wrap:anywhere}
+.qfOverlay .examFocusNext{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+ min-height:clamp(42px,6dvh,51px);gap:8px;border:0;border-radius:11px;
+ padding:10px;background:#4b65b4;color:#fff;font-weight:800;cursor:pointer}
+.qfOverlay .examFocusNext:disabled{opacity:.48;cursor:default}
+.qfOverlay .examResultCard{min-height:0;max-height:100%;justify-content:center;padding:15px}
+.qfOverlay .examResultCard h3{font-size:18px}
+.qfOverlay .examResultCard strong{font-size:36px}
+@media(max-width:540px){
+ .qfOverlay .examFocusBody{padding:8px;gap:7px}
+ .qfOverlay .examOptions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .qfOverlay .examOptions button{min-height:clamp(48px,8dvh,67px);padding:7px;font-size:clamp(11px,3.1vw,14px)}
+ .qfOverlay .examPrompt{padding:9px}
+}
+@media(max-height:620px){
+ .qfOverlay .examPrompt{min-height:67px;padding:7px}
+ .qfOverlay .examOptions button{min-height:44px}
+ .qfOverlay .examExplanation{max-height:55px}
+}
