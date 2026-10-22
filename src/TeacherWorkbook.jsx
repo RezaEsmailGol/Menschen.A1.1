@@ -6,6 +6,7 @@ import {germanNumber} from './learningData.js';
 import {playWrongBeep} from './audioFeedback.js';
 import NumberRecallGame from './NumberRecallGame.jsx';
 import WorkbookChallenge from './WorkbookChallenge.jsx';
+import QuizFocusShell from './QuizFocusShell.jsx';
 import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
@@ -55,7 +56,7 @@ function BookScene({speak}){
   </div>;
 }
 
-function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش',className='',passThreshold=.7}) {
+function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش',className='',passThreshold=.7,onClose=()=>{}}) {
   const [position,setPosition]=useState(0);
   const [answer,setAnswer]=useState(null);
   const [score,setScore]=useState(0);
@@ -102,7 +103,8 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
     setCurrentQuestions(shuffleWorkbook(questions));setPosition(0);setAnswer(null);setScore(0);setText('');setSelected([]);setShowFinished(false);setRound(n=>n+1);
   }
   if(!currentQuestions.length)return <p>برای این بخش هنوز سؤالی تعریف نشده است.</p>;
-  return <div className={'wbExamRunner '+className}>
+  return <QuizFocusShell title={label} onClose={onClose} variant="writing">
+   <div className={'wbExamRunner '+className}>
     {finished?<div className="wbResult">
       <div className="wbResultIcon"><Trophy size={35}/></div>
       <h3>{score/currentQuestions.length>=passThreshold?'آفرین، تمرین این بخش را انجام دادی!':'دوباره تمرین کن؛ هر بار بهتر می‌شوی.'}</h3>
@@ -135,9 +137,11 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
         <div><b>{answer?'درست بود!':'یک بار دیگر این کلمه را مرور کن.'}</b><span dir="ltr">{current.answer}</span></div>
         <button onClick={()=>speak(current.audio||current.answer)} title="شنیدن پاسخ"><Volume2 size={17}/></button>
       </div>}
-      {answer!==null&&<button className="wbNextQuestion" onClick={next}>{position===currentQuestions.length-1?'دیدن نتیجه':'سؤال بعدی'} <ArrowLeft size={18}/></button>}
+      <button type="button" className="wbNextQuestion" disabled={answer===null} onClick={next}>
+       {answer===null?'پاسخ را کامل کن و بررسی کن':position===currentQuestions.length-1?'دیدن نتیجه':'سؤال بعدی'}
+       <ArrowLeft size={18}/></button>
     </>}
-  </div>;
+  </div></QuizFocusShell>;
 }
 
 function IntroPage({speak,goNext,onComplete}) {
@@ -173,7 +177,7 @@ function AlphabetPage({speak,memory,onEvent,onComplete}) {
     </div>
     <div className="wbTip"><Lightbulb size={18}/> نکته: ß نامش <b dir="ltr">Eszett</b> است و در نوشتار کاربرد خاص دارد؛ Ä، Ö و Ü صدای واژه را تغییر می‌دهند.</div>
     <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن تمرین':'تمرین تشخیص حروف'}</button>
-    {showQuiz&&<WorkbookChallenge section="alphabet" speak={speak} onEvent={onEvent} memory={memory} onEnd={(score,total)=>onComplete('alphabet',score/total>=.7)}/>}
+    {showQuiz&&<WorkbookChallenge section="alphabet" speak={speak} onEvent={onEvent} memory={memory} onEnd={(score,total)=>onComplete('alphabet',score/total>=.7)} onClose={()=>setShowQuiz(false)}/>}
   </div>;
 }
 
@@ -195,7 +199,7 @@ function SoundsPage({speak,memory,onEvent,onComplete}) {
       </article>)}
     </div>
     <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><Headphones size={17}/>{showQuiz?'بستن آزمون':'آزمون تشخیص صدا'}</button>
-    {showQuiz&&<WorkbookChallenge section="sounds" speak={speak} memory={memory} onEvent={onEvent} onEnd={(score,total)=>onComplete('sounds',score/total>=.7)}/>}
+    {showQuiz&&<WorkbookChallenge section="sounds" speak={speak} memory={memory} onEvent={onEvent} onEnd={(score,total)=>onComplete('sounds',score/total>=.7)} onClose={()=>setShowQuiz(false)}/>}
   </div>;
 }
 
@@ -217,7 +221,8 @@ function NumbersPage({speak,memory,onEvent,onComplete}) {
       <Headphones size={18}/>{showQuiz?'بستن بازی اعداد':'شروع بازی تصادفی اعداد · شنیداری و تصویری'}
     </button>
     {showQuiz&&<NumberRecallGame speak={speak} memory={memory} onEvent={onEvent}
-      onEnd={(score,total)=>onComplete('numbers',score/total>=.7)}/>}
+      onEnd={(score,total)=>onComplete('numbers',score/total>=.7)}
+      onClose={()=>setShowQuiz(false)}/>}
   </div>;
 }
 
@@ -254,9 +259,9 @@ function VerbsPage({speak,memory,onEvent,onComplete}) {
     </button>
     {showQuiz&&(practiceMode==='choice'?
       <WorkbookChallenge key={target} section="verbs" speak={speak} memory={memory} onEvent={onEvent}
-        onEnd={(score,total)=>onComplete('verbs',score/total>=.7)}/>:
+        onEnd={(score,total)=>onComplete('verbs',score/total>=.7)} onClose={()=>setShowQuiz(false)}/>:
       <ExamRunner key={target} questions={conjugation} onEvent={onEvent}
-        onEnd={(score,total)=>onComplete('verbs',score/total>=.7)} speak={speak} label="تمرین تایپی صرف فعل"/>)}
+        onEnd={(score,total)=>onComplete('verbs',score/total>=.7)} speak={speak} label="تمرین تایپی صرف فعل" onClose={()=>setShowQuiz(false)}/>)}
   </div>;
 }
 
@@ -285,21 +290,26 @@ function DialogPage({speak,memory,onEvent,onComplete}) {
     </button>
     {showQuiz&&(practiceMode==='choice'?
       <WorkbookChallenge section="dialog" speak={speak} memory={memory} onEvent={onEvent}
-        onEnd={(score,total)=>onComplete('dialog',score/total>=.7)}/>:
+        onEnd={(score,total)=>onComplete('dialog',score/total>=.7)} onClose={()=>setShowQuiz(false)}/>:
       <ExamRunner questions={questions} speak={speak} onEvent={onEvent} label="ساختن جمله"
-        onEnd={(score,total)=>onComplete('dialog',score/total>=.7)}/>)}
+        onEnd={(score,total)=>onComplete('dialog',score/total>=.7)} onClose={()=>setShowQuiz(false)}/>)}
   </div>;
 }
 
 function CheckpointPage({speak,memory,onEvent,onComplete,onExam}) {
   const [seed,setSeed]=useState(0);
+  const [quizOpen,setQuizOpen]=useState(true);
   const [result,setResult]=useState(null);
   const done=(score,total)=>{setResult({score,total});onExam(score,total);onComplete('checkpoint',score/total>=.8)};
   return <div className="wbContent">
     <div className="wbChapterTitle"><span>07 · LERNKONTROLLE</span><h2>آماده کلاس بعدی هستی؟</h2><p>۱۵ سؤال چهارگزینه‌ای تصادفی از اعداد، الفبا، تلفظ، صرف افعال و مکالمه.</p></div>
     <div className="wbCheckpointIntro"><Trophy size={32}/><div><b>آزمون پایان جلسه اول</b><p>سؤال‌ها هر بار جابه‌جا می‌شوند. نمره قبولی ۸۰٪ است؛ اشتباه‌ها برای مرورهای بعدی ثبت می‌شوند.</p></div></div>
-    <WorkbookChallenge key={seed} section="checkpoint" memory={memory} onEvent={onEvent} onEnd={done} speak={speak}/>
-    {result&&<button className="wbSecondary wbWide" onClick={()=>{setResult(null);setSeed(n=>n+1)}}><RotateCcw size={17}/> آزمون تازه با سؤال‌های تصادفی</button>}
+    {quizOpen?<WorkbookChallenge key={seed} section="checkpoint" memory={memory}
+      onEvent={onEvent} onEnd={done} speak={speak} onClose={()=>setQuizOpen(false)}/>:
+      <button type="button" className="wbPrimary wbWide" onClick={()=>{setSeed(n=>n+1);setResult(null);setQuizOpen(true)}}>
+       <Trophy size={18}/> شروع آزمون جامع در حالت تمرکز
+      </button>}
+    {result&&<button className="wbSecondary wbWide" onClick={()=>{setResult(null);setSeed(n=>n+1);setQuizOpen(true)}}><RotateCcw size={17}/> آزمون تازه با سؤال‌های تصادفی</button>}
   </div>;
 }
 
