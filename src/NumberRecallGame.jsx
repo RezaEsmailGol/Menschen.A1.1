@@ -8,6 +8,7 @@ import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,
  saveGameFeedbackPreference,giveGameFeedback} from './gameEffects.js';
 import GameCelebration from './GameCelebration.jsx';
 import QuizFocusShell from './QuizFocusShell.jsx';
+import {useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import './numberRecallGame.css';
 
 const NUMBER_MODE_DETAILS={
@@ -23,6 +24,9 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
  const [correctCount,setCorrectCount]=useState(0),[finished,setFinished]=useState(false);
  const [preferences,setPreferences]=useState(readGameFeedbackPreferences);
  const current=round[position];
+ const audio=useQuizQuestionAudio({questionKey:finished?null:mode+':'+maximum+':'+position+':'+current?.id,
+  mode:finished?null:current?.mode==='listenWord'?'listen':'read',audio:current?.word,
+  sound:preferences.sound,speak});
  const correct=selection!==null&&numberMemoryCorrect(current,selection);
  const wrong=selection!==null&&!correct;
  const progress=Math.round((position+Number(selection!==null))/Math.max(1,round.length)*100);
@@ -49,7 +53,8 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
    label:String(current.number),lesson:1,correct:ok,feedbackHandled:true
   });
   giveGameFeedback(ok?'correct':'wrong',preferences);
-  if(ok&&preferences.sound)speak(current.word);
+  // Each choice is spoken as German, including wrong ones, once per answer.
+  if(preferences.sound)audio.playChoice(current.options.find(option=>option.value===value)?.label);
  }
  function next(){
   if(selection===null)return;
@@ -59,6 +64,9 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
    giveGameFeedback('finish',preferences);
    return;
   }
+  const upcoming=round[position+1];
+  audio.playUpcoming(mode+':'+maximum+':'+(position+1)+':'+upcoming.id,upcoming.word,
+   upcoming.mode==='listenWord'?'listen':'read');
   setPosition(n=>n+1);
   setSelection(null);
  }
@@ -106,12 +114,12 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
       'نوشتار آلمانی این عدد کدام است؟'}</p>
      {current.mode==='listenWord'?<div className="nrListenOnly">
       <div className="nrEarArt" aria-hidden="true"><Headphones size={42}/><span>♪</span></div>
-      <button type="button" className="nrListenButton" onClick={()=>speak(current.word)}>
+      <button type="button" className="nrListenButton" onClick={()=>audio.replay()}>
        <Volume2 size={21}/> پخش تلفظ عدد</button>
       <small>عدد و معنی تا زمان پاسخ دادن مخفی‌اند. برای تکرار صدا دوباره بزن.</small>
      </div>:<div className={'nrBigPrompt '+(current.mode==='digitWord'?'nrDigit':'nrWord')}
        dir="ltr">{current.mode==='digitWord'?current.number:current.word}</div>}
-     {current.mode==='wordDigit'&&<button type="button" className="nrSmallListen" onClick={()=>speak(current.word)}>
+     {current.mode==='wordDigit'&&<button type="button" className="nrSmallListen" onClick={()=>audio.replay()}>
       <Volume2 size={17}/> شنیدن تلفظ کلمه</button>}
      {current.mode==='digitWord'&&<span className="nrHelp">اول کلمه را انتخاب کن؛ بعد تلفظ درست را می‌شنوی.</span>}
     </div>
@@ -129,7 +137,7 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
      <div>{correct?<CheckCircle2 size={24}/>:<XCircle size={24}/>}</div>
      <div><b>{correct?'درست بود! +۱۰ XP':'این یکی نیاز به مرور دارد. +۲ XP'}</b>
       <strong dir="ltr">{current.number} — {current.word}</strong></div>
-     <button type="button" onClick={()=>speak(current.word)} aria-label={'شنیدن '+current.word}>
+     <button type="button" onClick={()=>audio.replay()} aria-label={'شنیدن '+current.word}>
       <Volume2 size={19}/></button>
     </div>}
     <button type="button" className="nrNext" disabled={selection===null} onClick={next}>
