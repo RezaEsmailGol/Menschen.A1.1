@@ -5,6 +5,7 @@ import {makeNumberOptions} from './numberGameLogic.js';
 import {germanNumber} from './learningData.js';
 import {playWrongBeep} from './audioFeedback.js';
 import NumberRecallGame from './NumberRecallGame.jsx';
+import WorkbookChallenge from './WorkbookChallenge.jsx';
 import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
@@ -159,15 +160,7 @@ function AlphabetPage({speak,memory,onEvent,onComplete}) {
   const [letter,setLetter]=useState(null);
   const [showQuiz,setShowQuiz]=useState(false);
   const selected=workbookAlphabet.find(x=>x.letter===letter);
-  const quiz=useMemo(()=>{
-    const alphabet=workbookAlphabet.filter(x=>x.letter!=='ß');
-    return shuffleWorkbook(alphabet).slice(0,5).map(x=>({
-      id:'letter:'+x.letter,type:'choice',kind:'pronunciation',
-      question:'کدام حرف را می‌شنوی؟',answer:x.letter,audio:x.letter,label:'حرف '+x.letter,
-      choices:shuffleWorkbook([x.letter,...shuffleWorkbook(alphabet.filter(y=>y.letter!==x.letter)).slice(0,3).map(y=>y.letter)])
-    }));
-  },[]);
-  return <div className="wbContent">
+    return <div className="wbContent">
     <div className="wbChapterTitle"><span>02 · ALPHABET</span><h2>Das Alphabet</h2><p>۲۶ حرف اصلی، به‌علاوه Ä Ö Ü و ß؛ هر حرف را لمس کن.</p></div>
     <div className="wbExerciseHead"><span className="wbExerciseNum">2</span><div><b>Hör zu: A, B, C …</b><p>حرف را انتخاب کن، اسم آلمانی‌اش را بشنو و نمونه‌اش را یاد بگیر.</p></div><Ear size={22}/></div>
     <div className="wbLetterGrid" dir="ltr">
@@ -180,23 +173,16 @@ function AlphabetPage({speak,memory,onEvent,onComplete}) {
     </div>
     <div className="wbTip"><Lightbulb size={18}/> نکته: ß نامش <b dir="ltr">Eszett</b> است و در نوشتار کاربرد خاص دارد؛ Ä، Ö و Ü صدای واژه را تغییر می‌دهند.</div>
     <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن تمرین':'تمرین تشخیص حروف'}</button>
-    {showQuiz&&<ExamRunner questions={quiz} speak={speak} onEvent={onEvent} label="تمرین الفبا" onEnd={(score,total)=>onComplete('alphabet',score/total>=.7)}/>}
+    {showQuiz&&<WorkbookChallenge section="alphabet" speak={speak} onEvent={onEvent} memory={memory} onEnd={(score,total)=>onComplete('alphabet',score/total>=.7)}/>}
   </div>;
 }
 
-function SoundsPage({speak,onEvent,onComplete}) {
+function SoundsPage({speak,memory,onEvent,onComplete}) {
   const [filter,setFilter]=useState('همه');
   const [expanded,setExpanded]=useState('ch');
   const [showQuiz,setShowQuiz]=useState(false);
   const groups=['همه','صامت‌ها','واکه‌ها','استثنا','گرامر'];
-  const quiz=useMemo(()=>shuffleWorkbook([
-    {id:'ch',type:'choice',kind:'pronunciation',rule:'ch',label:'ch (ich)',question:'کلمه‌ای که شنیدی کدام است؟',answer:'ich',audio:'ich',choices:['ich','Dach','Bach','Buch']},
-    {id:'v',type:'choice',kind:'pronunciation',rule:'v',label:'v (Vater)',question:'کلمه‌ای که شنیدی کدام است؟',answer:'Vater',audio:'Vater',choices:['Vater','Verb','Video','Vase']},
-    {id:'ei',type:'choice',kind:'pronunciation',rule:'ei',label:'ei (mein)',question:'کلمه‌ای که شنیدی کدام است؟',answer:'mein',audio:'mein',choices:['mein','Liebe','sieben','Milch']},
-    {id:'st',type:'choice',kind:'pronunciation',rule:'st',label:'st (Stadt)',question:'کلمه‌ای که شنیدی کدام است؟',answer:'Stadt',audio:'Stadt',choices:['Stadt','Sport','Sonne','Zeit']},
-    {id:'z',type:'choice',kind:'pronunciation',rule:'z',label:'z (Zeit)',question:'کلمه‌ای که شنیدی کدام است؟',answer:'Zeit',audio:'Zeit',choices:['Zeit','Sonne','Vater','sehen']},
-  ]).map(q=>({...q,choices:shuffleWorkbook(q.choices)})),[]);
-  return <div className="wbContent">
+    return <div className="wbContent">
     <div className="wbChapterTitle"><span>03 · AUSSPRACHE</span><h2>بشنو، مقایسه کن</h2><p>قوانین تلفظ و استثناهایی که استاد در جزوه یاد داده است.</p></div>
     <div className="wbExerciseHead"><span className="wbExerciseNum">3</span><div><b>Hör den Unterschied!</b><p>روی واژه‌ها بزن و تفاوت صدای آن‌ها را گوش بده.</p></div><AudioLines size={22}/></div>
     <div className="wbFilter">{groups.map(group=><button key={group} className={filter===group?'active':''} onClick={()=>setFilter(group)}>{group}</button>)}</div>
@@ -209,7 +195,7 @@ function SoundsPage({speak,onEvent,onComplete}) {
       </article>)}
     </div>
     <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><Headphones size={17}/>{showQuiz?'بستن آزمون':'آزمون تشخیص صدا'}</button>
-    {showQuiz&&<ExamRunner questions={quiz} speak={speak} onEvent={onEvent} label="تشخیص تلفظ" onEnd={(score,total)=>onComplete('sounds',score/total>=.7)}/>}
+    {showQuiz&&<WorkbookChallenge section="sounds" speak={speak} memory={memory} onEvent={onEvent} onEnd={(score,total)=>onComplete('sounds',score/total>=.7)}/>}
   </div>;
 }
 
@@ -235,9 +221,10 @@ function NumbersPage({speak,memory,onEvent,onComplete}) {
   </div>;
 }
 
-function VerbsPage({speak,onEvent,onComplete}) {
+function VerbsPage({speak,memory,onEvent,onComplete}) {
   const [target,setTarget]=useState('kommen');
   const [showQuiz,setShowQuiz]=useState(false);
+  const [practiceMode,setPracticeMode]=useState('choice');
   const conjugation=useMemo(()=>shuffleWorkbook(workbookPronouns).map(p=>({
     id:'verb:'+target+':'+p.person,type:'type',kind:'grammar',verb:target,
     pronoun:p.person==='er / sie / es'?'er/sie/es':p.person==='sie / Sie'?'sie/Sie':p.person,
@@ -256,13 +243,26 @@ function VerbsPage({speak,onEvent,onComplete}) {
         <button onClick={()=>speak(p.person.split(' / ')[0]+' '+p[target])}><Volume2 size={17}/></button></div>)}
     </div>
     <div className="wbTip"><Lightbulb size={19}/><div><b>نکته مهم مصدر</b><p><span dir="ltr">kommen</span> با <b dir="ltr">-en</b> و <span dir="ltr">sammeln</span> با <b dir="ltr">-n</b> تمام می‌شوند. در «ich sammle» شکل خاص کوتاه‌شده را می‌بینی.</p></div></div>
-    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><Keyboard size={17}/>{showQuiz?'بستن تمرین':'تمرین تایپی صرف '+target}</button>
-    {showQuiz&&<ExamRunner key={target} questions={conjugation} onEvent={onEvent} onEnd={(score,total)=>onComplete('verbs',score/total>=.7)} speak={speak} label="صرف فعل"/>}
+    <div className="wbPracticeModes">
+      <button type="button" className={practiceMode==='choice'?'active':''}
+        onClick={()=>{setPracticeMode('choice');setShowQuiz(true)}}><CheckCircle2 size={16}/> بازی چهارگزینه‌ای</button>
+      <button type="button" className={practiceMode==='type'?'active':''}
+        onClick={()=>{setPracticeMode('type');setShowQuiz(true)}}><Keyboard size={16}/> تمرین تایپی</button>
+    </div>
+    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}>
+      <Sparkles size={17}/>{showQuiz?'بستن تمرین':'شروع تمرین صرف فعل'}
+    </button>
+    {showQuiz&&(practiceMode==='choice'?
+      <WorkbookChallenge key={target} section="verbs" speak={speak} memory={memory} onEvent={onEvent}
+        onEnd={(score,total)=>onComplete('verbs',score/total>=.7)}/>:
+      <ExamRunner key={target} questions={conjugation} onEvent={onEvent}
+        onEnd={(score,total)=>onComplete('verbs',score/total>=.7)} speak={speak} label="تمرین تایپی صرف فعل"/>)}
   </div>;
 }
 
-function DialogPage({speak,onEvent,onComplete}) {
+function DialogPage({speak,memory,onEvent,onComplete}) {
   const [showQuiz,setShowQuiz]=useState(false);
+  const [practiceMode,setPracticeMode]=useState('choice');
   const questions=useMemo(()=>shuffleWorkbook(workbookFillSentences).map(item=>({
     id:'sentence:'+item.id,type:'arrange',kind:'sentence',label:item.sentence,
     question:item.fa,answer:item.sentence,audio:item.sentence
@@ -274,20 +274,31 @@ function DialogPage({speak,onEvent,onComplete}) {
     <div className="wbDialogCards">{workbookDialog.map(line=><button key={line.id} onClick={()=>speak(line.de)}>
       <span className="wbSpeaker">{line.speaker}</span><span><b dir="ltr">{line.de}</b><small>{line.fa}</small></span><Volume2 size={18}/></button>)}</div>
     <div className="wbTip"><Lightbulb size={19}/> قانون ساده: در جمله خبری، فعل صرف‌شده اغلب دوم است: <b dir="ltr">Ich komme aus dem Iran.</b></div>
-    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن جمله‌سازی':'جمله‌ها را خودت بساز'}</button>
-    {showQuiz&&<ExamRunner questions={questions} speak={speak} onEvent={onEvent} label="ساختن جمله" onEnd={(score,total)=>onComplete('dialog',score/total>=.7)}/>}
+    <div className="wbPracticeModes">
+      <button type="button" className={practiceMode==='choice'?'active':''}
+        onClick={()=>{setPracticeMode('choice');setShowQuiz(true)}}><CheckCircle2 size={16}/> بازی چهارگزینه‌ای و شنیداری</button>
+      <button type="button" className={practiceMode==='arrange'?'active':''}
+        onClick={()=>{setPracticeMode('arrange');setShowQuiz(true)}}><Keyboard size={16}/> خودت جمله بساز</button>
+    </div>
+    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}>
+      <PencilLine size={17}/>{showQuiz?'بستن تمرین':'شروع تمرین مکالمه'}
+    </button>
+    {showQuiz&&(practiceMode==='choice'?
+      <WorkbookChallenge section="dialog" speak={speak} memory={memory} onEvent={onEvent}
+        onEnd={(score,total)=>onComplete('dialog',score/total>=.7)}/>:
+      <ExamRunner questions={questions} speak={speak} onEvent={onEvent} label="ساختن جمله"
+        onEnd={(score,total)=>onComplete('dialog',score/total>=.7)}/>)}
   </div>;
 }
 
-function CheckpointPage({speak,onEvent,onComplete,onExam}) {
+function CheckpointPage({speak,memory,onEvent,onComplete,onExam}) {
   const [seed,setSeed]=useState(0);
-  const quiz=useMemo(()=>makeWorkbookExam(),[seed]);
   const [result,setResult]=useState(null);
   const done=(score,total)=>{setResult({score,total});onExam(score,total);onComplete('checkpoint',score/total>=.8)};
   return <div className="wbContent">
-    <div className="wbChapterTitle"><span>07 · LERNKONTROLLE</span><h2>آماده کلاس بعدی هستی؟</h2><p>۱۲ سؤال از اعداد، صرف فعل، شنیدن صداها و جمله‌سازی.</p></div>
+    <div className="wbChapterTitle"><span>07 · LERNKONTROLLE</span><h2>آماده کلاس بعدی هستی؟</h2><p>۱۵ سؤال چهارگزینه‌ای تصادفی از اعداد، الفبا، تلفظ، صرف افعال و مکالمه.</p></div>
     <div className="wbCheckpointIntro"><Trophy size={32}/><div><b>آزمون پایان جلسه اول</b><p>سؤال‌ها هر بار جابه‌جا می‌شوند. نمره قبولی ۸۰٪ است؛ اشتباه‌ها برای مرورهای بعدی ثبت می‌شوند.</p></div></div>
-    <ExamRunner key={seed} questions={quiz} onEvent={onEvent} onEnd={done} speak={speak} label="آزمون جامع جلسه" passThreshold={.8}/>
+    <WorkbookChallenge key={seed} section="checkpoint" memory={memory} onEvent={onEvent} onEnd={done} speak={speak}/>
     {result&&<button className="wbSecondary wbWide" onClick={()=>{setResult(null);setSeed(n=>n+1)}}><RotateCcw size={17}/> آزمون تازه با سؤال‌های تصادفی</button>}
   </div>;
 }
