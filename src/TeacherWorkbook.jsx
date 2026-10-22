@@ -4,6 +4,7 @@ import { activityItemKey, chooseAdaptiveNumbers } from './learningMemory.js';
 import {makeNumberOptions} from './numberGameLogic.js';
 import {germanNumber} from './learningData.js';
 import {playWrongBeep} from './audioFeedback.js';
+import NumberRecallGame from './NumberRecallGame.jsx';
 import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
@@ -214,22 +215,23 @@ function SoundsPage({speak,onEvent,onComplete}) {
 
 function NumbersPage({speak,memory,onEvent,onComplete}) {
   const [showQuiz,setShowQuiz]=useState(false);
-  const questions=useMemo(()=>chooseAdaptiveNumbers(12,memory,8).map((n,i)=>({
-    id:'number:'+n,type:'choice',kind:'number',label:String(n),
-    question:'نوشتار درست عدد '+n+' کدام است؟',
-    answer:germanNumber(n),audio:germanNumber(n),
-    choices:makeNumberOptions(n,12).map(value=>germanNumber(value))
-  })),[]);
   return <div className="wbContent">
-    <div className="wbChapterTitle"><span>04 · ZAHLEN</span><h2>Null bis zwölf</h2><p>اعداد ۰ تا ۱۲ را یاد بگیر؛ هر عدد را لمس کن و تکرار کن.</p></div>
-    <div className="wbExerciseHead"><span className="wbExerciseNum">4</span><div><b>Hör zu und zähl!</b><p>بشنو، بشمار و عدد را به آلمانی بنویس.</p></div><Headphones size={22}/></div>
+    <div className="wbChapterTitle"><span>04 · ZAHLEN</span><h2>Null bis zwölf</h2>
+      <p>اعداد ۰ تا ۱۲ را با تصویر، شنیدن و انتخاب کلمه حفظ کن. بعد می‌توانی محدوده را تا ۲۰ یا ۱۰۰ افزایش بدهی.</p></div>
+    <div className="wbExerciseHead"><span className="wbExerciseNum">4</span>
+      <div><b>Hör zu und zähl!</b><p>اول روی عدد بزن و تلفظ را بشنو؛ سپس حفظ‌کردنت را با آزمون‌های تصادفی بسنج.</p></div>
+      <Headphones size={22}/></div>
     <div className="wbNumberGrid" dir="ltr">
       {workbookNumbers.map(n=><button key={n.number} onClick={()=>speak(n.word)}>
         <strong>{n.number}</strong><span>{n.word}</span><Volume2 size={16}/></button>)}
     </div>
-    <div className="wbTip"><Lightbulb size={19}/> یادآوری: <b dir="ltr">eins</b> برای عدد ۱ است؛ <b dir="ltr">sechs</b> مثل «زِکس» و <b dir="ltr">zwölf</b> دارای حرف ö است.</div>
-    <button className="wbSecondary wbWide" onClick={()=>setShowQuiz(v=>!v)}><PencilLine size={17}/>{showQuiz?'بستن آزمون اعداد':'شروع آزمون چهارگزینه‌ای ۸ عدد'}</button>
-    {showQuiz&&<ExamRunner questions={questions} onEvent={onEvent} onEnd={(score,total)=>onComplete('numbers',score/total>=.7)} speak={speak} label="آزمون چهارگزینه‌ای اعداد"/>}
+    <div className="wbTip"><Lightbulb size={19}/> نکته: <b dir="ltr">eins</b> یعنی ۱؛
+      <b dir="ltr">sechs</b> «زِکس» تلفظ می‌شود و <b dir="ltr">zwölf</b> حرف ö دارد.</div>
+    <button className="wbSecondary wbWide" type="button" onClick={()=>setShowQuiz(v=>!v)}>
+      <Headphones size={18}/>{showQuiz?'بستن بازی اعداد':'شروع بازی تصادفی اعداد · شنیداری و تصویری'}
+    </button>
+    {showQuiz&&<NumberRecallGame speak={speak} memory={memory} onEvent={onEvent}
+      onEnd={(score,total)=>onComplete('numbers',score/total>=.7)}/>}
   </div>;
 }
 
@@ -290,7 +292,7 @@ function CheckpointPage({speak,onEvent,onComplete,onExam}) {
   </div>;
 }
 
-export default function TeacherWorkbook({speak,onPracticeEvent,goBack,navigate,routePage,onPageNavigate}) {
+export default function TeacherWorkbook({speak,memory,onPracticeEvent,goBack,navigate,routePage,onPageNavigate}) {
   const [page,setPage]=useState(()=>{
     try {const value=localStorage.getItem(PAGE_KEY);return workbookSections.some(p=>p.id===value)?value:'start';}
     catch{return 'start';}
@@ -314,7 +316,7 @@ export default function TeacherWorkbook({speak,onPracticeEvent,goBack,navigate,r
     onPageNavigate?.(id);
     window.scrollTo({top:0,behavior:'smooth'});
   }
-  const props={speak,onEvent:onPracticeEvent,onComplete:markPage};
+  const props={speak,memory,onEvent:onPracticeEvent,onComplete:markPage};
   return <div className="wbRoot">
     <div className="wbTopline">
       <RouteLink to="course" navigate={navigate}><ChevronRight size={17}/> برگشت به درس‌ها</RouteLink>
