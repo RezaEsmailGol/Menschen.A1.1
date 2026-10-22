@@ -7,6 +7,7 @@ import {activityItemKey} from './learningMemory.js';
 import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,
  saveGameFeedbackPreference,giveGameFeedback} from './gameEffects.js';
 import GameCelebration from './GameCelebration.jsx';
+import QuizFocusShell from './QuizFocusShell.jsx';
 import './numberRecallGame.css';
 
 const NUMBER_MODE_DETAILS={
@@ -15,7 +16,7 @@ const NUMBER_MODE_DETAILS={
  listenWord:'فقط صدای آلمانی را گوش بده؛ عدد مخفی می‌ماند تا جواب بدهی.',
  wordDigit:'کلمه آلمانی را بخوان و رقم درست را انتخاب کن.'
 };
-export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd}){
+export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,onClose=()=>{}}){
  const [mode,setMode]=useState('mixed'),[maximum,setMaximum]=useState(12);
  const [round,setRound]=useState(()=>createNumberMemoryRound({maximum:12,mode:'mixed',memory}));
  const [position,setPosition]=useState(0),[selection,setSelection]=useState(null);
@@ -61,7 +62,8 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd})
   setPosition(n=>n+1);
   setSelection(null);
  }
- return <section className="nrGame">
+ return <QuizFocusShell title="آزمون هوشمند اعداد" onClose={onClose}>
+ <section className="nrGame">
   <div className="nrHeader">
    <div><span className="nrEyebrow">ZAHLEN · HÖREN · ERINNERN</span>
     <h3>عدد را ببین، بشنو، به یاد بیاور</h3>
@@ -74,7 +76,10 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd})
      onClick={()=>toggle(GAME_HAPTIC_KEY)}>📳 {preferences.haptics?'روشن':'خاموش'}</button>
    </div>
   </div>
-  <div className="nrSettings">
+  <details className="nrSettings">
+   <summary><Settings2 size={17}/> نوع و محدوده آزمون
+     <span>{NUMBER_RECALL_MODES.find(item=>item.id===mode)?.title} · ۰ تا {maximum}</span>
+   </summary>
    <div className="nrSettingTitle"><Settings2 size={17}/> نوع آزمون</div>
    <div className="nrModes">{NUMBER_RECALL_MODES.map(item=><button type="button" key={item.id}
     aria-pressed={mode===item.id} className={mode===item.id?'active':''}
@@ -84,7 +89,7 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd})
     aria-pressed={maximum===value} className={maximum===value?'active':''} onClick={()=>start(mode,value)}>
      ۰ تا {value.toLocaleString('fa-IR')}</button>)}</div>
    <small>تغییر حالت یا محدوده، یک آزمون جدید با سؤال‌های تصادفی می‌سازد.</small>
-  </div>
+  </details>
   {finished?<div className="nrFinished">
     <GameCelebration correct={correctCount} total={round.length} caption="آزمون اعداد پایان یافت"/>
     <p>اعدادی که اشتباه شدند، به حافظه تمرینت اضافه شده‌اند و در دورهای بعد بیشتر تکرار می‌شوند.</p>
@@ -127,11 +132,9 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd})
      <button type="button" onClick={()=>speak(current.word)} aria-label={'شنیدن '+current.word}>
       <Volume2 size={19}/></button>
     </div>}
-    {selection!==null&&<button type="button" className="nrNext" onClick={next}>
-      {position===round.length-1?'مشاهده نتیجه':'سؤال بعدی'} <ArrowLeft size={17}/></button>}
+    <button type="button" className="nrNext" disabled={selection===null} onClick={next}>
+      {selection===null?'یک پاسخ انتخاب کن':position===round.length-1?'مشاهده نتیجه':'سؤال بعدی'}
+      <ArrowLeft size={17}/></button>
    </div>:null}
-  <div className="nrFooter"><Brain size={19}/>
-   <p>هدف حفظ‌کردن است، نه فقط شناخت گزینه‌ها. حالت «ترکیبی» را تمرین کن و سپس «صدا ← کلمه» را جداگانه امتحان کن.</p>
-  </div>
- </section>;
+ </section></QuizFocusShell>;
 }
