@@ -182,3 +182,46 @@
  background:#fff;color:#548178;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:850;cursor:pointer}
 .wbPracticeModes button.active{background:#338975;border-color:#338975;color:#fff}
 @media(max-width:500px){.wbPracticeModes button{flex:1;justify-content:center;font-size:11px}}
+
+
+/* Short, viewport-fit layouts for typed conjugation and arrange-the-sentence tasks. */
+.qfOverlay .wbExamRunner{width:100%;height:100%;max-width:900px;max-height:100%;min-height:0;
+ display:flex;flex-direction:column;justify-content:center;gap:clamp(6px,1.2dvh,12px);
+ border:0;box-shadow:none;padding:clamp(9px,1.6dvh,18px);overflow:hidden}
+.qfOverlay .wbQuizTop{flex:0 0 auto;font-size:12px}
+.qfOverlay .wbQuizProgress{flex:0 0 auto;height:6px;margin:0}
+.qfOverlay .wbPrompt{flex:0 0 auto;padding:clamp(11px,2dvh,16px);gap:7px;min-height:80px}
+.qfOverlay .wbPrompt h3{font-size:clamp(14px,2.6dvh,19px);line-height:1.7}
+.qfOverlay .wbPrompt .wbSoundButton{padding:8px;font-size:12px;min-height:38px}
+.qfOverlay .wbChoices{flex:0 0 auto;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:7px;margin:0}
+.qfOverlay .wbChoices button{padding:10px;min-height:clamp(48px,8dvh,68px);
+ font-size:clamp(12px,2.4dvh,17px);overflow-wrap:anywhere}
+.qfOverlay .wbSentenceOutput{flex:0 1 auto;min-height:55px;margin:0;padding:8px;font-size:clamp(13px,2.2dvh,17px)}
+.qfOverlay .wbWordTiles{flex:0 1 auto;min-height:0;margin:0;gap:5px;overflow:auto;padding:4px}
+.qfOverlay .wbWordTiles button{min-height:37px;padding:7px 9px;font-size:clamp(12px,2dvh,15px);flex-shrink:0}
+.qfOverlay .wbQuizActions{flex:0 0 auto;display:flex;align-items:center;gap:8px}
+.qfOverlay .wbQuizActions button{min-height:40px}
+.qfOverlay .wbInputRow{flex:0 0 auto;margin:0;flex-direction:row;gap:7px}
+.qfOverlay .wbInputRow input{padding:11px;min-height:46px;font-size:16px}
+.qfOverlay .wbInputRow button{min-width:88px}
+.qfOverlay .wbResponse{flex:0 0 auto;padding:9px;margin:0;max-height:70px;min-height:46px}
+.qfOverlay .wbNextQuestion{width:100%;flex:0 0 auto;min-height:45px;margin:0;
+ justify-content:center;gap:7px;padding:9px}
+.qfOverlay .wbNextQuestion:disabled{opacity:.48;cursor:default}
+.qfOverlay .wbResult{display:flex;flex-direction:column;align-items:center;justify-content:center;
+ min-height:0;max-height:100%;gap:13px;text-align:center}
+.qfOverlay .wbResult p{font-size:12px;line-height:1.8}
+@media(max-width:540px){
+ .qfOverlay .wbExamRunner{padding:8px;gap:7px}
+ .qfOverlay .wbInputRow{display:flex;flex-direction:row}
+ .qfOverlay .wbInputRow input{flex:1;min-width:0}
+ .qfOverlay .wbInputRow button{min-width:74px;font-size:11px;padding:7px}
+ .qfOverlay .wbChoices button{padding:7px;min-height:47px}
+ .qfOverlay .wbWordTiles{max-height:26dvh}
+}
+@media(max-height:610px){.qfOverlay .wbPrompt{padding:7px;min-height:60px}
+ .qfOverlay .wbChoices button{min-height:43px}
+ .qfOverlay .wbWordTiles{max-height:20dvh}
+ .qfOverlay .wbResponse{max-height:52px}
+}
