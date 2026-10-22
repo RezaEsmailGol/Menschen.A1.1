@@ -128,3 +128,41 @@
 .vQuizFinished .gcCelebration{max-width:100%}
 .vStoryDone{width:100%}.vStoryDone .gcCelebration{width:100%}
 @media(max-width:500px){.vEffectSettings>span{flex-basis:100%}}
+
+
+/* Image choice game shares immersive responsive two-by-two quiz layout. */
+.qfOverlay .vQuiz{max-width:900px;width:100%;height:100%;max-height:100%;min-height:0;
+ margin:0;padding:clamp(8px,1.5dvh,15px);box-shadow:none;border:0;border-radius:15px;
+ display:flex;flex-direction:column;justify-content:center;gap:clamp(5px,1dvh,10px);overflow:hidden}
+.qfOverlay .vQuizTop{flex:0 0 auto;font-size:12px;gap:8px}
+.qfOverlay .vQuizTop b{font-size:clamp(11px,2dvh,14px)}
+.qfOverlay .vQuizTrack{flex:0 0 auto;height:6px;margin:0}
+.qfOverlay .vQuiz>.visualArt{flex:0 1 auto;width:auto;height:clamp(110px,26dvh,235px);
+ min-height:0;max-width:100%;max-height:28dvh;align-self:center;aspect-ratio:auto;border-radius:12px}
+.qfOverlay .vQuestion{flex:0 0 auto}
+.qfOverlay .vQuestion>span{font-size:11px}
+.qfOverlay .vQuestion h3{font-size:clamp(14px,2.6dvh,20px);line-height:1.5;margin:4px}
+.qfOverlay .vQuizChoices{flex:0 0 auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.qfOverlay .vQuizChoices button{min-width:0;min-height:clamp(48px,8dvh,67px);
+ padding:8px 10px;border-bottom-width:3px;border-radius:11px;gap:7px}
+.qfOverlay .vQuizChoices button b{font-size:clamp(12px,2.2dvh,16px);
+ line-height:1.35;overflow-wrap:anywhere}
+.qfOverlay .vQuizFeedback{flex:0 0 auto;min-height:44px;max-height:65px;padding:8px;gap:9px}
+.qfOverlay .vQuizFeedback b{font-size:11px}
+.qfOverlay .vQuizFeedback span{font-size:clamp(12px,2.3dvh,16px)}
+.qfOverlay .vQuiz>.vSolid{flex:0 0 auto;min-height:clamp(42px,6dvh,50px);padding:8px}
+.qfOverlay .vQuizFinished{min-height:0;max-height:100%;flex:1;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.qfOverlay .vQuizFinished .gcCelebration{min-height:160px;max-height:42dvh}
+@media(max-width:540px){
+ .qfOverlay .vQuiz{padding:8px;gap:6px}
+ .qfOverlay .vQuiz>.visualArt{height:clamp(100px,24dvh,170px)}
+ .qfOverlay .vQuizChoices{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .qfOverlay .vQuizChoices button{min-height:clamp(47px,8dvh,62px);padding:7px}
+ .qfOverlay .vQuizChoices button b{font-size:clamp(11px,3.2vw,15px)}
+}
+@media(max-height:620px){
+ .qfOverlay .vQuiz>.visualArt{height:100px}
+ .qfOverlay .vQuizChoices button{min-height:44px}
+ .qfOverlay .vQuizFeedback{min-height:40px;max-height:54px}
+}
