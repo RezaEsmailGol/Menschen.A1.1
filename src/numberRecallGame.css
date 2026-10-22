@@ -59,3 +59,62 @@
 @media(max-width:600px){.nrGame{padding:11px}.nrHeader{flex-wrap:wrap}.nrQuestion{min-height:225px;padding:14px}.nrAnswers button{padding:10px;min-height:63px}.nrAnswers button>b{font-size:18px}.nrModes button{font-size:11px;padding:8px}.nrWord{font-size:28px}.nrAnswerDigits button>b{font-size:28px}}
 @media(max-width:360px){.nrAnswers{grid-template-columns:1fr}.nrMode button{padding:6px}.nrSwitches{width:100%}}
 @media(prefers-reduced-motion:reduce){.nrTrack span,.nrAnswers button{transition:none}}
+
+
+/* Dedicated on-screen number recall, with no blank listening illustrations. */
+.qfOverlay .nrGame{height:100%;max-height:100%;max-width:900px;width:100%;min-height:0;
+ display:flex;flex-direction:column;gap:clamp(5px,1.2dvh,11px);padding:clamp(8px,1.6dvh,15px);
+ border:0;border-radius:15px;overflow:hidden}
+.qfOverlay .nrHeader{align-items:center;flex:0 0 auto}
+.qfOverlay .nrHeader h3{font-size:clamp(14px,2.5dvh,20px);margin:2px 0}
+.qfOverlay .nrHeader p,.qfOverlay .nrEyebrow{display:none}
+.qfOverlay .nrSwitches button{min-height:35px}
+.qfOverlay .nrSettings{flex:0 0 auto;max-height:28dvh;overflow-y:auto;gap:7px;padding:0}
+.qfOverlay .nrSettings>summary{list-style:none;display:flex;gap:8px;align-items:center;
+ cursor:pointer;color:#3f8281;padding:8px 12px;font-size:12px;font-weight:800;min-height:35px}
+.qfOverlay .nrSettings>summary::-webkit-details-marker{display:none}
+.qfOverlay .nrSettings>summary>span{color:#889e9e;font-size:11px}
+.qfOverlay .nrSettings>.nrSettingTitle,.qfOverlay .nrSettings>.nrModes,.qfOverlay .nrSettings>.nrRanges,
+.qfOverlay .nrSettings>small{margin:6px 10px}
+.qfOverlay .nrModes button,.qfOverlay .nrRanges button{padding:7px 9px;min-height:31px}
+.qfOverlay .nrBoard{min-height:0;flex:1;display:flex;flex-direction:column;
+ justify-content:center;gap:clamp(5px,1.1dvh,11px)}
+.qfOverlay .nrRoundTop{flex:0 0 auto}
+.qfOverlay .nrTrack{flex:0 0 auto;height:6px}
+.qfOverlay .nrQuestion{flex:0 1 auto;min-height:0;max-height:clamp(100px,24dvh,185px);padding:clamp(9px,1.4dvh,16px);
+ border-radius:12px;gap:clamp(3px,.8dvh,9px)}
+.qfOverlay .nrQuestion p{font-size:clamp(14px,2.3dvh,18px);margin:0}
+.qfOverlay .nrBigPrompt{padding:6px 17px;min-width:min(180px,70%);border-radius:12px}
+.qfOverlay .nrDigit{font-size:clamp(39px,8dvh,70px)}
+.qfOverlay .nrWord{font-size:clamp(24px,4dvh,37px)}
+.qfOverlay .nrListenOnly{display:flex;align-items:center;gap:9px}
+.qfOverlay .nrEarArt,.qfOverlay .nrListenOnly>small{display:none}
+.qfOverlay .nrListenButton{min-height:43px;font-size:13px;padding:9px 16px}
+.qfOverlay .nrHelp{font-size:10px}
+.qfOverlay .nrAnswers{flex:0 0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:clamp(6px,.9dvh,10px)}
+.qfOverlay .nrAnswers button{min-width:0;min-height:clamp(48px,8.5dvh,70px);
+ padding:8px 11px;border-bottom-width:3px;border-radius:12px}
+.qfOverlay .nrAnswers button>b{font-size:clamp(14px,2.7dvh,21px)}
+.qfOverlay .nrAnswerDigits button>b{font-size:clamp(21px,3.7dvh,30px)}
+.qfOverlay .nrResponse{flex:0 0 auto;min-height:48px;max-height:70px;padding:8px 11px}
+.qfOverlay .nrResponse strong{font-size:clamp(13px,2.6dvh,17px)}
+.qfOverlay .nrNext{flex:0 0 auto;min-height:clamp(42px,6dvh,50px);padding:8px}
+.qfOverlay .nrNext:disabled{opacity:.5;cursor:default}
+.qfOverlay .nrFinished{min-height:0;flex:1;align-content:center;justify-content:center}
+.qfOverlay .nrFinished .gcCelebration{min-height:180px;max-height:40dvh}
+.qfOverlay .nrFooter{display:none}
+@media(max-width:540px){
+ .qfOverlay .nrGame{padding:8px;gap:6px}
+ .qfOverlay .nrAnswers{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .qfOverlay .nrAnswers button{min-height:clamp(49px,8dvh,66px);padding:7px}
+ .qfOverlay .nrAnswers button b{font-size:clamp(13px,3.5vw,17px)}
+ .qfOverlay .nrQuestion{max-height:150px}
+ .qfOverlay .nrSwitches button{font-size:10px}
+}
+@media(max-height:630px){
+ .qfOverlay .nrQuestion{max-height:115px;padding:7px}
+ .qfOverlay .nrAnswers button{min-height:44px}
+ .qfOverlay .nrResponse{min-height:43px;max-height:53px}
+ .qfOverlay .nrNext{min-height:40px}
+}
