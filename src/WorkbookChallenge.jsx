@@ -21,18 +21,19 @@ const INFO={
 };
 export default function WorkbookChallenge({section,speak=()=>{},memory={},onEvent,onEnd,onClose=()=>{}}){
  const [mode,setMode]=useState('mixed'),[verb,setVerb]=useState('mixed');
+ const [roundVersion,setRoundVersion]=useState(0);
  const [questions,setQuestions]=useState(()=>createWorkbookChallenge({section,memory}));
  const [position,setPosition]=useState(0),[chosen,setChosen]=useState(null);
  const [correctCount,setCorrectCount]=useState(0),[done,setDone]=useState(false);
  const [feedback,setFeedback]=useState(readGameFeedbackPreferences);
  const current=questions[position];
- const audio=useQuizQuestionAudio({questionKey:done?null:section+':'+mode+':'+verb+':'+position+':'+current?.id,
+ const audio=useQuizQuestionAudio({questionKey:done?null:section+':'+mode+':'+verb+':'+roundVersion+':'+position+':'+current?.id,
    mode:done?null:current?.mode,audio:current?.audio,sound:feedback.sound,speak});
  const isRight=chosen!==null&&chosen===current?.answer;
  const actualCount=Math.min(questions.length,position+Number(chosen!==null));
  const total=questions.length;
  function begin(nextMode=mode,nextVerb=verb){
-  setMode(nextMode);setVerb(nextVerb);
+  setMode(nextMode);setVerb(nextVerb);setRoundVersion(n=>n+1);
   setQuestions(createWorkbookChallenge({section,mode:nextMode,verb:nextVerb,memory}));
   setPosition(0);setChosen(null);setCorrectCount(0);setDone(false);
  }
@@ -63,7 +64,7 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
    giveGameFeedback('finish',feedback);
   }else{
    const upcoming=questions[position+1];
-   audio.playUpcoming(section+':'+mode+':'+verb+':'+(position+1)+':'+upcoming.id,upcoming.audio,upcoming.mode);
+   audio.playUpcoming(section+':'+mode+':'+verb+':'+roundVersion+':'+(position+1)+':'+upcoming.id,upcoming.audio,upcoming.mode);
    setPosition(p=>p+1);setChosen(null);
   }
  }
@@ -115,7 +116,7 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
     {current.mode==='listen'?<div className="wcListenArea">
        <div className="wcListenVisual" aria-hidden="true"><Headphones size={39}/><span>♪</span></div>
        <button className="wcPlay" type="button" onClick={()=>audio.replay()}>
-        <Volume2 size={19}/> شنیدن سؤال</button>
+        <Volume2 size={19}/> تکرار صدا</button>
        <small>پاسخ را فقط از روی صدا تشخیص بده؛ برای تکرار دوباره بزن.</small>
      </div>:
      current.display?<div className="wcDisplay" lang="de" dir={/^[A-Za-zÄÖÜßäöü]/.test(current.display)?'ltr':'auto'}>
