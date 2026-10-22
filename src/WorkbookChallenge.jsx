@@ -6,6 +6,7 @@ import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,
  saveGameFeedbackPreference,giveGameFeedback} from './gameEffects.js';
 import GameCelebration from './GameCelebration.jsx';
 import QuizFocusShell from './QuizFocusShell.jsx';
+import {useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import './workbookChallenge.css';
 
 const TITLES={alphabet:'بازی تشخیص حروف',sounds:'بازی تلفظ و استثناها',
@@ -25,6 +26,8 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
  const [correctCount,setCorrectCount]=useState(0),[done,setDone]=useState(false);
  const [feedback,setFeedback]=useState(readGameFeedbackPreferences);
  const current=questions[position];
+ const audio=useQuizQuestionAudio({questionKey:done?null:section+':'+mode+':'+verb+':'+position+':'+current?.id,
+   mode:done?null:current?.mode,audio:current?.audio,sound:feedback.sound,speak});
  const isRight=chosen!==null&&chosen===current?.answer;
  const actualCount=Math.min(questions.length,position+Number(chosen!==null));
  const total=questions.length;
@@ -48,7 +51,9 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
   onEvent?.({id:current.id,kind:current.kind,label:current.label,lesson:1,
    correct,feedbackHandled:true});
   giveGameFeedback(correct?'correct':'wrong',feedback);
-  if(correct&&feedback.sound)speak(current.audio||current.answer);
+  // Speak the selected German option, not just the correct answer.
+  // This preserves the beep/haptic result without repeating the target twice.
+  if(feedback.sound)audio.playChoice(value);
  }
  function advance(){
   if(chosen===null)return;
@@ -56,7 +61,11 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
    setDone(true);
    onEnd?.(correctCount,total);
    giveGameFeedback('finish',feedback);
-  }else{setPosition(p=>p+1);setChosen(null);}
+  }else{
+   const upcoming=questions[position+1];
+   audio.playUpcoming(section+':'+mode+':'+verb+':'+(position+1)+':'+upcoming.id,upcoming.audio,upcoming.mode);
+   setPosition(p=>p+1);setChosen(null);
+  }
  }
  return <QuizFocusShell title={TITLES[section]} onClose={onClose}>
  <div className="wcGame">
@@ -105,7 +114,7 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
     <h4>{current.prompt}</h4>
     {current.mode==='listen'?<div className="wcListenArea">
        <div className="wcListenVisual" aria-hidden="true"><Headphones size={39}/><span>♪</span></div>
-       <button className="wcPlay" type="button" onClick={()=>speak(current.audio)}>
+       <button className="wcPlay" type="button" onClick={()=>audio.replay()}>
         <Volume2 size={19}/> شنیدن سؤال</button>
        <small>پاسخ را فقط از روی صدا تشخیص بده؛ برای تکرار دوباره بزن.</small>
      </div>:
@@ -129,7 +138,7 @@ export default function WorkbookChallenge({section,speak=()=>{},memory={},onEven
      <div><b>{isRight?'Richtig! درست جواب دادی · +۱۰ XP':'Noch einmal! این مورد را مرور کن · +۲ XP'}</b>
       <strong dir="ltr">{current.answer}</strong>
       <small>{current.explanation}</small></div>
-     <button type="button" onClick={()=>speak(current.audio||current.answer)}
+     <button type="button" onClick={()=>audio.replay(current.audio||current.answer)}
        aria-label="شنیدن پاسخ درست"><Volume2 size={19}/></button>
     </div>}
    <button type="button" className="wcNext" disabled={chosen===null} onClick={advance}>
