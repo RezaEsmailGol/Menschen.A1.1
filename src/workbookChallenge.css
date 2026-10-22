@@ -1,0 +1,51 @@
+/* Shared four-choice learning game for first-class German workbook. */
+.wcGame{display:grid;gap:16px;background:#fff;border:1px solid #e4ebe9;padding:17px;border-radius:17px;color:#2e526c;max-width:100%}
+.wcGame button{font-family:inherit;cursor:pointer}.wcGame button:disabled{cursor:default}
+.wcHead{display:flex;align-items:start;gap:11px}
+.wcMascot{width:51px;height:51px;flex-shrink:0;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#e3f9ef,#e3edf9);font-size:26px}
+.wcHeadText{flex:1;min-width:0}.wcEyebrow{color:#54a68d;letter-spacing:.8px;font:800 10px Tahoma}
+.wcHeadText h3{font-size:18px;margin:5px 0;color:#244c67}
+.wcHeadText p{font-size:12px;color:#8399a2;line-height:1.8;margin:0}
+.wcSoundControls{display:flex;gap:5px}.wcSoundControls button{border:1px solid #e3e9ed;background:#f7fafb;color:#5f7893;border-radius:9px;min-width:35px;min-height:35px;display:grid;place-items:center}
+.wcSoundControls button[aria-pressed=true]{background:#e2f5ee;color:#26826e;border-color:#a5dfca}
+.wcSettings{background:#f8faf9;border:1px solid #e6efeb;border-radius:14px;padding:12px;display:grid;gap:10px}
+.wcSettings>span{font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;color:#6c8a93}
+.wcModeChoices{display:flex;gap:7px;flex-wrap:wrap}
+.wcModeChoices button{background:#fff;border:1px solid #dde8e7;border-radius:10px;padding:10px 12px;color:#6c8a92;font-size:12px;font-weight:750}
+.wcModeChoices button.active{background:#328979;color:#fff;border-color:#328979}
+.wcBoard{display:grid;gap:13px}
+.wcProgressLine{display:flex;align-items:center;justify-content:space-between;color:#667d91;font-size:12px;font-weight:800}
+.wcProgressLine span{display:inline-flex;align-items:center;gap:5px}
+.wcTrack{height:10px;background:#eaf0f0;border-radius:99px;overflow:hidden}
+.wcTrack>span{height:100%;display:block;background:linear-gradient(90deg,#40c6a2,#5689b2);transition:width .2s}
+.wcPrompt{border-radius:17px;background:radial-gradient(circle at 19% 7%,#fff9,transparent 39%),linear-gradient(120deg,#e7f5ed,#e8f0fa);padding:23px 15px;text-align:center;min-height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;border:1px solid #d4ece3}
+.wcTag{font:800 10px Tahoma;letter-spacing:1px;color:#4f91a1}
+.wcPrompt h4{font-size:clamp(15px,2vw,19px);line-height:1.85;color:#27546b;margin:0}
+.wcListenArea{display:grid;justify-items:center;gap:12px}
+.wcListenVisual{position:relative;background:#fff;color:#3d998c;border-radius:50%;width:75px;height:75px;display:grid;place-items:center;box-shadow:0 0 0 9px #ffffff70}
+.wcListenVisual>span{position:absolute;top:-5px;right:-10px;font-size:21px;color:#7d91cb}
+.wcPlay{display:inline-flex;gap:10px;align-items:center;justify-content:center;background:#258b78;border:0;border-radius:12px;color:#fff;font-weight:850;padding:13px 19px}
+.wcListenArea small{font-size:11px;line-height:1.8;color:#7b9b9b}
+.wcDisplay{display:grid;place-items:center;background:#ffffffbd;color:#295f79;border-radius:16px;padding:18px 24px;font:900 clamp(22px,3.6vw,33px)/1.6 Tahoma;max-width:100%;overflow-wrap:anywhere}
+.wcOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.wcOptions button{display:flex;gap:10px;align-items:center;min-height:65px;padding:13px;border:2px solid #dce8e4;border-bottom-width:4px;background:#fff;border-radius:13px;color:#345b77;text-align:left}
+.wcOptions button:hover:not(:disabled){border-color:#8bbaae;background:#f6fcf8}
+.wcOptions button>small{font:800 10px Tahoma;color:#8ca3b0;background:#f1f6f5;border-radius:7px;padding:5px 8px}
+.wcOptions button b{flex:1;font:850 16px/1.65 Tahoma;overflow-wrap:anywhere}
+.wcOptions button.right{background:#e1f9ee;border-color:#36bb8b;color:#198361;opacity:1}
+.wcOptions button.wrong{background:#fff0f1;border-color:#e88ca0;color:#bb5267;opacity:1}
+.wcOptions button:disabled:not(.right):not(.wrong){opacity:.58}
+.wcFeedback{display:flex;align-items:center;gap:10px;border-radius:13px;padding:12px}
+.wcFeedback.correct{color:#17815f;background:#e5f8ed}.wcFeedback.incorrect{color:#a95b4f;background:#fff0ea}
+.wcFeedback>div{flex:1;min-width:0;display:grid;gap:5px}
+.wcFeedback b{font-size:12px;line-height:1.7}
+.wcFeedback strong{font:800 16px Tahoma;overflow-wrap:anywhere}
+.wcFeedback small{font-size:11px;line-height:1.9;overflow-wrap:anywhere}
+.wcFeedback button{display:grid;place-items:center;border-radius:9px;border:0;background:#ffffffb8;padding:10px;color:inherit}
+.wcNext{width:100%;display:flex;gap:9px;align-items:center;justify-content:center;border:0;color:#fff;background:#287d73;border-radius:12px;padding:13px;font-weight:850}
+.wcFinish{display:grid;justify-items:center;gap:14px;text-align:center}.wcFinish .gcCelebration{width:100%}
+.wcFinish>p{font-size:12px;color:#7b95a1;line-height:1.9}
+.wcReminder{display:flex;gap:8px;align-items:center;font-size:11px;line-height:1.9;color:#71918d;background:#eff8f4;border-radius:11px;padding:11px}
+.wcReminder svg{flex-shrink:0}
+@media(max-width:620px){.wcGame{padding:11px}.wcHead{flex-wrap:wrap}.wcOptions{grid-template-columns:1fr}.wcOptions button{min-height:58px}.wcOptions button b{font-size:15px}.wcPrompt{padding:15px;min-height:200px}.wcHeadText h3{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.wcTrack>span{transition:none}}
