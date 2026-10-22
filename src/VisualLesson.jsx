@@ -6,6 +6,7 @@ import {makeVisualQuestions,shuffleItems,visualAnswerId} from './visualLessonUti
 import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,saveGameFeedbackPreference,
  giveGameFeedback,playGameSound} from './gameEffects.js';
 import GameCelebration from './GameCelebration.jsx';
+import QuizFocusShell from './QuizFocusShell.jsx';
 import {Smartphone,VolumeX} from 'lucide-react';
 import RouteLink from './RouteLink.jsx';
 import './visualLesson.css';
@@ -100,7 +101,7 @@ function PictureFlashcards({phrases,memory,speak,onEvent,preferences}){
   <p className="vLearningNote">هر کارت به حافظه بلندمدت متصل است؛ کارت‌های دشوار زودتر مرور می‌شوند.</p>
  </section>;
 }
-function PictureQuiz({phrases,memory,speak,onEvent,preferences}){
+function PictureQuiz({phrases,memory,speak,onEvent,preferences,onClose}){
  const [round,setRound]=useState(0);
  const questions=useMemo(()=>makeVisualQuestions(phrases,memory,Math.min(10,phrases.length)),[phrases,round]);
  const [pos,setPos]=useState(0),[picked,setPicked]=useState(null),[score,setScore]=useState(0);
@@ -116,7 +117,8 @@ function PictureQuiz({phrases,memory,speak,onEvent,preferences}){
  };
  const restart=()=>{setRound(x=>x+1);setPos(0);setPicked(null);setScore(0)};
  if(!questions.length)return <p>در این گروه فعلاً کارت موجود نیست.</p>;
- return <section className="vQuiz">
+ return <QuizFocusShell title="آزمون چهارگزینه‌ای تصویر" onClose={onClose}>
+ <section className="vQuiz">
   {finished?<div className="vQuizFinished">
    <GameCelebration correct={score} total={questions.length} caption="پایان آزمون تصویری"/>
    <p>اشتباه‌ها ذخیره شدند تا در نوبت بعدی دوباره تمرین کنی.</p>
@@ -146,7 +148,7 @@ function PictureQuiz({phrases,memory,speak,onEvent,preferences}){
     {pos+1===questions.length?'مشاهده نتیجه':'سؤال بعدی'} <ArrowLeft size={17}/>
    </button>
   </>}
- </section>;
+ </section></QuizFocusShell>;
 }
 function Dialogues({speak,onEvent,setTab,preferences}){
  const [scriptId,setScriptId]=useState(scripts[0].id),[position,setPosition]=useState(0),[selected,setSelected]=useState(null);
@@ -238,7 +240,8 @@ export default function VisualLesson({speak,memory,onPracticeEvent,setTab}){
   </div>}
   {mode==='study'&&<Vocabulary phrases={phrases} speak={speak} memory={memory} setMode={setMode}/>}
   {mode==='flash'&&<PictureFlashcards key={category} phrases={phrases} speak={speak} memory={memory} preferences={preferences} onEvent={onPracticeEvent}/>}
-  {mode==='quiz'&&<PictureQuiz key={category} phrases={phrases} speak={speak} memory={memory} preferences={preferences} onEvent={onPracticeEvent}/>}
+  {mode==='quiz'&&<PictureQuiz key={category} phrases={phrases} speak={speak} memory={memory}
+    preferences={preferences} onEvent={onPracticeEvent} onClose={()=>setMode('study')}/>}
   {mode==='dialog'&&<Dialogues speak={speak} onEvent={onPracticeEvent} setTab={setTab} preferences={preferences}/>}
   <p className="vDisclaimer">محتوا و تصویرسازی این بخش تألیفی و مکمل کلاس A1.1 است؛ ترتیب آن معادل صفحات رسمی کتاب ناشر نیست.</p>
  </div>;
