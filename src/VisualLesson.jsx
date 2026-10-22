@@ -110,7 +110,9 @@ function PictureQuiz({phrases,memory,speak,onEvent,preferences,onClose}){
   if(picked!==null||!current)return;
   const correct=choice.id===current.item.id;
   setPicked(choice.id);
-  if(correct){setScore(v=>v+1);if(preferences.sound)speak(current.item.de)}
+  if(correct)setScore(v=>v+1);
+  // Every selected option teaches its pronunciation, even on a wrong attempt.
+  if(preferences.sound)speak(choice.de);
   giveGameFeedback(correct?'correct':'wrong',preferences);
   onEvent?.({id:visualAnswerId(current.item),kind:'visual',
     label:current.item.de,lesson:1,correct,feedbackHandled:true});
