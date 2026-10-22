@@ -4,6 +4,7 @@ import { allStudyCards, getLessonCards, lessons, pronouns, verbForms } from './c
 import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KEY, shuffleArray, safeParse, todayKey } from './studyEngine.js';
 import { activityItemKey } from './learningMemory.js';
 import RouteLink from './RouteLink';
+import QuizFocusShell from './QuizFocusShell.jsx';
 import './phaseOne.css';
 
 function useSaved(key, initial) {
@@ -234,6 +235,7 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEve
   const [answer,setAnswer]=useState(null);
   const [score,setScore]=useState(0);
   const [finished,setFinished]=useState(false);
+  const [focusOpen,setFocusOpen]=useState(false);
   const q=exam[index];
   function reset(){setRound(x=>x+1);setIndex(0);setAnswer(null);setScore(0);setFinished(false);}
   function changeLesson(id){select(id);reset();}
@@ -252,7 +254,13 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEve
   const percent=Math.round(score/exam.length*100);
   return <section className="examPanel">
     <div className="studyPanelHead"><div><span className="eyebrow">FINAL LESSON CHECK</span><h3>آزمون پایان درس</h3><p>۱۰ سؤال ترکیبی از لغت، صرف فعل و درک جمله. حداقل نمره قبولی ۸۰٪ است.</p></div><LessonPicker selected={selected} select={changeLesson}/></div>
-    {!finished ? <>
+    {!focusOpen&&<button type="button" className="courseStart examLaunch" onClick={()=>setFocusOpen(true)}>
+      <GraduationCap size={19}/> {finished?'دیدن نتیجه آزمون':'شروع آزمون در حالت تمرکز'}
+      <ArrowLeft size={18}/>
+    </button>}
+    {focusOpen&&<QuizFocusShell title={'آزمون پایان درس '+lesson.id} onClose={()=>setFocusOpen(false)}>
+      <div className="examFocusBody">
+      {!finished ? <>
       <div className="examHeader"><span>سؤال {index+1} از {exam.length}</span><strong>امتیاز {score}</strong></div>
       <div className="examTrack"><span style={{width:(index/exam.length*100)+'%'}}/></div>
       <div className="examPrompt"><span>{q.kind==='vocab'?'واژگان':q.kind==='grammar'?'صرف فعل':'خواندن و معنی'}</span><h3>{q.label}</h3>{q.audio && <button onClick={()=>speak(q.audio)} aria-label="شنیدن آلمانی"><Volume2 size={17}/> پخش آلمانی</button>}</div>
@@ -264,8 +272,10 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEve
       </button>)}</div>
       {answer!==null && <div className={'examExplanation '+(answer===q.answer?'success':'failure')}>
         <b>{answer===q.answer?'درست انتخاب کردی!':'پاسخ درست را مرور کن.'}</b><span>{q.answer}</span>
-        <button onClick={next}>{index===exam.length-1?'مشاهده نتیجه نهایی':'سؤال بعدی'} <ArrowLeft size={16}/></button>
       </div>}
+      <button type="button" className="examFocusNext" disabled={answer===null} onClick={next}>
+       {answer===null?'یک پاسخ انتخاب کن':index===exam.length-1?'مشاهده نتیجه نهایی':'سؤال بعدی'}
+       <ArrowLeft size={16}/></button>
     </> : <div className="examResultCard">
       <div className={'examMedal '+(percent>=80?'pass':'tryagain')}>{percent>=80?<Trophy size={39}/>:<Target size={39}/>}</div>
       <h3>{percent>=80?'تبریک! این درس را گذراندی.':'یک بار دیگر تمرین کن.'}</h3>
@@ -274,5 +284,6 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEve
       <button className="courseStart" onClick={reset}><RotateCcw size={18}/> آزمون تصادفی جدید</button>
       {progress[lesson.id]?.best && <small>بهترین نمره ذخیره‌شده: {progress[lesson.id].best}٪</small>}
     </div>}
+    </div></QuizFocusShell>}
   </section>;
 }
