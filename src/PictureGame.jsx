@@ -9,6 +9,7 @@ import {PICTURE_LEVELS,eligiblePicturePhrases,generatePictureRound,checkGermanAn
  pictureMemoryId,answerFromTiles} from './pictureGameLogic.js';
 import RouteLink from './RouteLink.jsx';
 import QuizFocusShell from './QuizFocusShell.jsx';
+import {germanChoiceAudio} from './useQuizQuestionAudio.js';
 import './pictureGame.css';
 
 const LABELS={choice:'۴ گزینه',type:'تایپ',build:'جمله‌سازی'};
@@ -71,7 +72,10 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
     label:current.item.de,lesson:1,correct,feedbackHandled:true
   });
   giveGameFeedback(correct?'correct':'wrong',preferences);
-  if(sound&&correct)speak(current.item.de);
+  // Listen to exactly the tapped word/phrase, including incorrect alternatives.
+  if(sound){const selectedAudio=germanChoiceAudio(text);if(selectedAudio)speak(selectedAudio);
+   else if(correct)speak(current.item.de);
+  }
  }
  function next(){
   if(response===null)return;
