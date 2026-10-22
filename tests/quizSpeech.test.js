@@ -44,3 +44,18 @@ test('existing per-answer XP and optional feedback preferences are retained',()=
   assert.match(s,/\.sound/);
  }
 });
+
+test('new rounds retain a distinct audio identity even when their first question repeats',()=>{
+ for(const file of ['WorkbookChallenge.jsx','NumberRecallGame.jsx']){
+  const code=src(file);
+  assert.match(code,/roundVersion/);
+  assert.match(code,/setRoundVersion\(n=>n\+1\)/);
+  assert.match(code,/playUpcoming\(/);
+ }
+});
+test('speech is cancelled only when leaving focus mode, not on each rerender',()=>{
+ const shell=src('QuizFocusShell.jsx');
+ assert.match(shell,/speechSynthesis\?\.cancel\(\)/);
+ assert.match(shell,/closeRef\.current=onClose/);
+ assert.match(shell,/\},\[\]\)/);
+});
