@@ -5,6 +5,8 @@ import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KE
 import { activityItemKey } from './learningMemory.js';
 import RouteLink from './RouteLink';
 import QuizFocusShell from './QuizFocusShell.jsx';
+import {germanChoiceAudio,useQuizQuestionAudio} from './useQuizQuestionAudio.js';
+import {readGameFeedbackPreferences} from './gameEffects.js';
 import './phaseOne.css';
 
 function useSaved(key, initial) {
@@ -237,6 +239,8 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEve
   const [finished,setFinished]=useState(false);
   const [focusOpen,setFocusOpen]=useState(false);
   const q=exam[index];
+  const questionSound=useQuizQuestionAudio({questionKey:focusOpen&&!finished?lesson.id+':'+round+':'+index:null,
+   mode:q?.kind==='listening'?'listen':'read',audio:q?.audio,sound:readGameFeedbackPreferences().sound,speak});
   function reset(){setRound(x=>x+1);setIndex(0);setAnswer(null);setScore(0);setFinished(false);}
   function changeLesson(id){select(id);reset();}
   function respond(choice){
@@ -249,8 +253,12 @@ function ExamPanel({lesson,selected,select,progress,examDone,speak,onPracticeEve
       ? (allStudyCards.find(c=>c.lesson===lesson.id&&c.back===q.answer)?.id || activityItemKey('vocab',lesson.id,q.answer))
       : activityItemKey(kind,lesson.id,q.audio);
     onPracticeEvent?.({id,kind,lesson:lesson.id,label:q.audio||q.answer,correct});
+    if(readGameFeedbackPreferences().sound)questionSound.playChoice(choice);
   }
-  function next(){if(index===exam.length-1){setFinished(true);examDone(lesson.id,score,exam.length);}else{setIndex(i=>i+1);setAnswer(null);}}
+  function next(){if(index===exam.length-1){setFinished(true);examDone(lesson.id,score,exam.length);}else{
+   const upcoming=exam[index+1];questionSound.playUpcoming(lesson.id+':'+round+':'+(index+1),upcoming.audio,
+    upcoming.kind==='listening'?'listen':'read');
+   setIndex(i=>i+1);setAnswer(null);}}
   const percent=Math.round(score/exam.length*100);
   return <section className="examPanel">
     <div className="studyPanelHead"><div><span className="eyebrow">FINAL LESSON CHECK</span><h3>آزمون پایان درس</h3><p>۱۰ سؤال ترکیبی از لغت، صرف فعل و درک جمله. حداقل نمره قبولی ۸۰٪ است.</p></div><LessonPicker selected={selected} select={changeLesson}/></div>
