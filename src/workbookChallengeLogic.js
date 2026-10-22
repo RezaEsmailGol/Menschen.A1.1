@@ -27,8 +27,6 @@ const soundConcepts=[
  {id:'w',prompt:'کدام واژه با W به صدای /v/ آغاز می‌شود؟',answer:'Wasser',wrong:['Vater','Sport','Sonne']}
 ];
 const findSoundRule=id=>workbookSounds.find(x=>x.id===id||x.cluster===id);
-const modeOf=(requested,index,random)=>requested==='mixed'?
- shuffleWorkbook(['listen','read'],random)[index%2]:requested;
 function masteryRecord(memory,key){
  const record=memory?.items?.[key];
  return record&&Number(record.attempts)>0?record:null;
@@ -68,7 +66,7 @@ function alphabetQuestions(mode,random){
    kind:'pronunciation',label:'حرف '+letter.letter,section:'alphabet',
    mode:presentation,audio,
    prompt:presentation==='listen'?'صدای نام کدام حرف را می‌شنوی؟':
-    'کدام حرف در ابتدای واژه زیر است؟',
+    letter.letter==='ß'?'کدام علامت ویژه در این واژه وجود دارد؟':'کدام حرف در ابتدای واژه زیر است؟',
    display:presentation==='read'?letter.word:null,
    explanation:letter.letter+' — '+letter.word+' ('+letter.translation+')'
   },letter.letter,choices,random);
@@ -113,7 +111,17 @@ function conjugationQuestions(mode,random,verb='mixed'){
 function sentenceQuestions(mode,random){
  const pool=[
  ...workbookDialog.map(line=>({id:'dialog-'+line.id,de:line.de,fa:line.fa})),
- ...workbookFillSentences.map(line=>({id:'sentence-'+line.id,de:line.sentence,fa:line.fa}))
+ ...workbookFillSentences.map(line=>({id:'sentence-'+line.id,de:line.sentence,fa:line.fa})),
+ {id:'morning',de:'Guten Morgen!',fa:'صبح بخیر!'},
+ {id:'afternoon',de:'Guten Tag!',fa:'روز بخیر!'},
+ {id:'goodbye',de:'Auf Wiedersehen!',fa:'خداحافظ (رسمی)!'},
+ {id:'bye',de:'Tschüss!',fa:'فعلاً!'},
+ {id:'how',de:'Wie geht es dir?',fa:'حالت چطور است؟'},
+ {id:'fine',de:'Mir geht es gut, danke.',fa:'خوبم، ممنون.'},
+ {id:'address',de:'Ich wohne in Qom.',fa:'من در قم زندگی می‌کنم.'},
+ {id:'job',de:'Ich arbeite als Softwareentwickler.',fa:'من به‌عنوان توسعه‌دهنده نرم‌افزار کار می‌کنم.'},
+ {id:'persian',de:'Ich spreche Persisch.',fa:'من فارسی صحبت می‌کنم.'},
+ {id:'formalName',de:'Wie heißen Sie?',fa:'اسم شما چیست؟ (رسمی)'}
  ];
  const unique=[...new Map(pool.map(x=>[x.de,x])).values()];
  if(unique.length<4)throw new Error('More dialogue expressions are needed');
