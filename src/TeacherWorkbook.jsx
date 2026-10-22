@@ -7,6 +7,8 @@ import {playWrongBeep} from './audioFeedback.js';
 import NumberRecallGame from './NumberRecallGame.jsx';
 import WorkbookChallenge from './WorkbookChallenge.jsx';
 import QuizFocusShell from './QuizFocusShell.jsx';
+import {useQuizQuestionAudio} from './useQuizQuestionAudio.js';
+import {readGameFeedbackPreferences} from './gameEffects.js';
 import {
   workbookSections,workbookAlphabet,workbookSounds,workbookNumbers,workbookPronouns,
   workbookDialog,workbookFillSentences,cleanWorkbookAnswer,shuffleWorkbook,makeWorkbookExam
@@ -66,6 +68,11 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
   const [round,setRound]=useState(0);
   const [currentQuestions,setCurrentQuestions]=useState(questions);
   const current=currentQuestions[position];
+  const quizAudio=useQuizQuestionAudio({
+   questionKey:showFinished?null:round+':'+position+':'+current?.id,
+   mode:current?.type==='choice'&&current?.kind==='pronunciation'?'listen':'read',
+   audio:current?.audio,sound:readGameFeedbackPreferences().sound,speak
+  });
   const tiles=useMemo(()=>current?.type==='arrange'
     ?shuffleWorkbook(current.answer.split(' ').map((word,id)=>({word,id})))
     : [],[current,round]);
@@ -80,10 +87,11 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
       let soundOn=true;
       try{soundOn=localStorage.getItem('dt_game_feedback_sound')!=='off';}catch{}
       if(soundOn){
-        if(correct)speak(current.audio||current.answer);
+        quizAudio.playChoice(value);
         else {
           try{window.speechSynthesis?.cancel();}catch{}
           playWrongBeep();
+          quizAudio.playChoice(value);
         }
       }
     }
@@ -97,7 +105,12 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
   }
   function next(){
     if(position===currentQuestions.length-1){setShowFinished(true);onEnd?.(score,currentQuestions.length);}
-    else {setPosition(n=>n+1);setAnswer(null);setText('');setSelected([]);setRound(n=>n+1);}
+    else {
+     const upcoming=currentQuestions[position+1];
+     quizAudio.playUpcoming((round+1)+':'+(position+1)+':'+upcoming?.id,upcoming?.audio,
+      upcoming?.type==='choice'&&upcoming?.kind==='pronunciation'?'listen':'read');
+     setPosition(n=>n+1);setAnswer(null);setText('');setSelected([]);setRound(n=>n+1);
+    }
   }
   function restart(){
     setCurrentQuestions(shuffleWorkbook(questions));setPosition(0);setAnswer(null);setScore(0);setText('');setSelected([]);setShowFinished(false);setRound(n=>n+1);
@@ -126,7 +139,8 @@ function ExamRunner({questions,onEvent,onEnd,speak,label='چالش این بخش
         :current.type==='arrange'
           ?<><div className="wbSentenceOutput" dir="ltr">{composed||'… جمله را اینجا بساز'}</div>
             <div className="wbWordTiles" dir="ltr">{tiles.map(tile=><button key={tile.id} disabled={selected.includes(tile.id)||answer!==null}
-              onClick={()=>setSelected(ids=>[...ids,tile.id])}>{tile.word}</button>)}</div>
+              onClick={()=>{setSelected(ids=>[...ids,tile.id]);
+               if(readGameFeedbackPreferences().sound)quizAudio.playChoice(tile.word)}}>{tile.word}</button>)}</div>
             <div className="wbQuizActions"><button className="wbGhost" disabled={answer!==null||selected.length===0} onClick={()=>setSelected(ids=>ids.slice(0,-1))}>حذف آخرین کلمه</button>
               <button className="wbPrimary" disabled={answer!==null||selected.length===0} onClick={()=>judge(composed)}>بررسی جمله</button></div></>
           :<div className="wbInputRow"><input value={text} dir="ltr" autoComplete="off" spellCheck={false} disabled={answer!==null}
