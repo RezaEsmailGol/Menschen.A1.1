@@ -8,6 +8,7 @@ import GameCelebration from './GameCelebration.jsx';
 import {PICTURE_LEVELS,eligiblePicturePhrases,generatePictureRound,checkGermanAnswer,
  pictureMemoryId,answerFromTiles} from './pictureGameLogic.js';
 import RouteLink from './RouteLink.jsx';
+import QuizFocusShell from './QuizFocusShell.jsx';
 import './pictureGame.css';
 
 const LABELS={choice:'۴ گزینه',type:'تایپ',build:'جمله‌سازی'};
@@ -136,7 +137,8 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
    </section>
   </>}
 
-  {playing&&!finished&&current&&<>
+  {playing&&!finished&&current&&<QuizFocusShell title={'مرحله '+step.number+' · '+step.name}
+    onClose={()=>setPlaying(false)} variant={level==='choice'?'choice':'writing'}>
    <section className="pgBoard" aria-live="off">
     <div className="pgBoardTop">
      <div><b>مرحله {step.number} · {step.name}</b><small>سؤال {position+1} از {round.length}</small></div>
@@ -225,12 +227,14 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
      </div>
      <button type="button" onClick={()=>speak(current.item.de)} title="شنیدن تلفظ آلمانی"><Volume2 size={20}/></button>
     </div>}
-    {response!==null&&<button type="button" className="pgPrimary pgNext"
-      onClick={next}>{position===round.length-1?'مشاهده نتیجه':'سؤال بعدی'} <ArrowLeft size={18}/></button>}
+    <button type="button" className="pgPrimary pgNext" disabled={response===null}
+      onClick={next}>{response===null?'پاسخ را بررسی کن':position===round.length-1?'مشاهده نتیجه':'سؤال بعدی'}
+      <ArrowLeft size={18}/></button>
    </section>
-  </>}
+   </QuizFocusShell>}
 
-  {finished&&<section className="pgFinish">
+  {finished&&<QuizFocusShell title="نتیجه بازی تصویری" onClose={()=>setPlaying(false)}>
+    <section className="pgFinish">
    <GameCelebration correct={correctCount} total={round.length}
       caption={'اتمام مرحله '+step.number+' · '+step.name}/>
    <p>هر پاسخ در XP و حافظه مرور ذخیره شد. عبارت‌هایی که اشتباه کردی در دورهای بعدی اولویت خواهند داشت.</p>
@@ -243,7 +247,7 @@ export default function PictureGame({speak,onPracticeEvent,memory,setTab}){
      سطح بعدی <ArrowLeft size={17}/></button>}
     <button type="button" className="pgSecondary" onClick={()=>setPlaying(false)}>انتخاب موضوع</button>
    </div>
-  </section>}
+  </section></QuizFocusShell>}
 
   <div className="pgFooterCTA"><BookOpen size={19}/><span>می‌خواهی جمله‌های بیشتری ببینی؟</span>
    <RouteLink to="visual" navigate={setTab}>کتابخانه تصویری درس اول <ChevronLeft size={16}/></RouteLink></div>
