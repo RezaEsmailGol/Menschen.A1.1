@@ -167,7 +167,7 @@ function App() {
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}
       {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
-      {tab==='workbook' && <TeacherWorkbook speak={speak} onPracticeEvent={onPracticeEvent}
+      {tab==='workbook' && <TeacherWorkbook speak={speak} memory={memory} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
         onPageNavigate={id=>setTab('workbook/'+id)} goBack={()=>setTab('course')} navigate={setTab} />}
       {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} dailyGoal={dailyGoal} />}
