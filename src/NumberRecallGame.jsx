@@ -19,12 +19,13 @@ const NUMBER_MODE_DETAILS={
 };
 export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,onClose=()=>{}}){
  const [mode,setMode]=useState('mixed'),[maximum,setMaximum]=useState(12);
+ const [roundVersion,setRoundVersion]=useState(0);
  const [round,setRound]=useState(()=>createNumberMemoryRound({maximum:12,mode:'mixed',memory}));
  const [position,setPosition]=useState(0),[selection,setSelection]=useState(null);
  const [correctCount,setCorrectCount]=useState(0),[finished,setFinished]=useState(false);
  const [preferences,setPreferences]=useState(readGameFeedbackPreferences);
  const current=round[position];
- const audio=useQuizQuestionAudio({questionKey:finished?null:mode+':'+maximum+':'+position+':'+current?.id,
+ const audio=useQuizQuestionAudio({questionKey:finished?null:mode+':'+maximum+':'+roundVersion+':'+position+':'+current?.id,
   mode:finished?null:current?.mode==='listenWord'?'listen':'read',audio:current?.word,
   sound:preferences.sound,speak});
  const correct=selection!==null&&numberMemoryCorrect(current,selection);
@@ -32,7 +33,7 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
  const progress=Math.round((position+Number(selection!==null))/Math.max(1,round.length)*100);
  function start(nextMode=mode,nextMaximum=maximum){
   const questions=createNumberMemoryRound({maximum:nextMaximum,mode:nextMode,memory});
-  setMode(nextMode);setMaximum(nextMaximum);setRound(questions);
+  setMode(nextMode);setMaximum(nextMaximum);setRound(questions);setRoundVersion(n=>n+1);
   setPosition(0);setSelection(null);setCorrectCount(0);setFinished(false);
  }
  function toggle(key){
@@ -65,7 +66,7 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
    return;
   }
   const upcoming=round[position+1];
-  audio.playUpcoming(mode+':'+maximum+':'+(position+1)+':'+upcoming.id,upcoming.word,
+  audio.playUpcoming(mode+':'+maximum+':'+roundVersion+':'+(position+1)+':'+upcoming.id,upcoming.word,
    upcoming.mode==='listenWord'?'listen':'read');
   setPosition(n=>n+1);
   setSelection(null);
@@ -115,7 +116,7 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
      {current.mode==='listenWord'?<div className="nrListenOnly">
       <div className="nrEarArt" aria-hidden="true"><Headphones size={42}/><span>♪</span></div>
       <button type="button" className="nrListenButton" onClick={()=>audio.replay()}>
-       <Volume2 size={21}/> پخش تلفظ عدد</button>
+       <Volume2 size={21}/> شنیدن دوباره</button>
       <small>عدد و معنی تا زمان پاسخ دادن مخفی‌اند. برای تکرار صدا دوباره بزن.</small>
      </div>:<div className={'nrBigPrompt '+(current.mode==='digitWord'?'nrDigit':'nrWord')}
        dir="ltr">{current.mode==='digitWord'?current.number:current.word}</div>}
