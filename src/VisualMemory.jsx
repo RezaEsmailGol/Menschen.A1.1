@@ -15,10 +15,19 @@ function buildLibrary({memory,schedule,progress,personalCards}) {
    number:n,lesson:1,note:'عدد را با دهگان و یکان تصویرسازی کن.'
  }));
  const seen=new Set();
- return [...nums,...baseline].filter(x=>{
-   if(seen.has(x.id))return false;
-   seen.add(x.id);return true;
- });
+ const numberItems=[...baseline.filter(x=>x.group==='numbers'),...nums];
+ const wordItems=baseline.filter(x=>x.group!=='numbers');
+ const combined=[];
+ const push=item=>{
+   if(item && !seen.has(item.id)){combined.push(item);seen.add(item.id);}
+ };
+ // Two word associations followed by one number: users won't face 101
+ // uninterrupted digits before ever reaching useful everyday vocabulary.
+ const longest=Math.max(wordItems.length/2,numberItems.length);
+ for(let i=0;i<longest+1;i++){
+   push(wordItems[i*2]);push(wordItems[i*2+1]);push(numberItems[i]);
+ }
+ return combined;
 }
 export function visualStatus(item,memory,now=Date.now()) {
  const record=memory?.items?.[item.id];
@@ -44,7 +53,7 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
     const state=visualStatus(x,memory);
     const inGroup=filter==='all' || filter===state ||
       (filter==='numbers'&&x.group==='numbers') ||
-      (filter==='vocab'&&x.kind==='vocab') ||
+      (filter==='vocab'&&x.group!=='numbers'&&x.group!=='verbs') ||
       (filter==='verbs'&&x.group==='verbs');
     return inGroup && (!text || [x.prompt,x.answer,x.note].join(' ').toLocaleLowerCase('de').includes(text));
   });
@@ -61,7 +70,9 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
   if(!current)return;
   onPracticeEvent({id:current.id,kind:current.kind,correct,
     label:current.answer,lesson:current.lesson,quiet:true});
-  next();
+  if(filter==='new' || (filter==='weak'&&correct))setIndex(i=>i);
+  else next();
+  setReveal(false);
  }
  return <main className="vmPage">
    <header className="vmHero">
@@ -81,7 +92,7 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
    {current?<section className="vmTrainer">
      <div className="vmHeader"><span>{(index%filtered.length+1).toLocaleString('fa-IR')} از {filtered.length.toLocaleString('fa-IR')}</span><span className={'vmState '+visualStatus(current,memory)}>{({weak:'نیاز به تمرین',new:'جدید',mastered:'مسلط',learning:'در حال یادگیری'})[visualStatus(current,memory)]}</span></div>
      <div className="vmCard">
-       <div className="vmIllustration"><MnemonicArt number={current.group==='numbers'?current.number:current.source==='class'&&current.group==='numbers'?Number(current.prompt.replace(/\D/g,'')):null}
+       <div className="vmIllustration"><MnemonicArt number={current.group==='numbers'?(Number.isInteger(current.number)?current.number:Number(current.prompt.match(/\d+/)?.[0])):null}
          word={current.answer} showLabel={reveal} /></div>
        <div className="vmContent">
          <span className="vmQuestionType">یادآوری فعال • Active Recall</span>
