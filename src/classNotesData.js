@@ -111,8 +111,15 @@ export const classNotesBySet=Object.fromEntries(classSets.map(s=>[s.id,classNote
 export const classKey=(item)=>item.key;
 
 export function noteTask(item,all=classNotes,random=Math.random){
- const meaningfulPool=all.filter(q=>q.set===item.set && q.id!==item.id && q.de!==item.de && q.type!=='type');
- const options= item.type==='choice' ? shuffleArray([item.de,...shuffleArray([...new Set(meaningfulPool.map(q=>q.de))],random).slice(0,3)],random) : null;
+ const seen=new Set([item.de]);
+ const candidates=[...all.filter(q=>q.set===item.set),...classNotes.filter(q=>q.set===item.set),...classNotes];
+ const meaningfulPool=candidates.filter(q=>{
+   if(q.id===item.id||seen.has(q.de))return false;
+   seen.add(q.de);return true;
+ });
+ const options=(item.type==='choice'||item.type==='listen')
+   ? shuffleArray([item.de,...shuffleArray(meaningfulPool.map(q=>q.de),random).slice(0,3)],random)
+   : null;
  return {...item,choices:options};
 }
 export function isNoteCorrect(item,submitted) {
