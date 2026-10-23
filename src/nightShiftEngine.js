@@ -62,11 +62,11 @@ export function buildNightReview(options={},count=6,random=Math.random,now=Date.
  // and a vocabulary card without crowding out overdue material.
  // Prefer overdue/weak material even when filling diverse groups.
  for(const source of ['srs','class']){
-   const due=ranked.find(q=>q.source===source&&q.priority>=590);
+   const due=ranked.find(q=>q.source===source);
    if(due)add(due);
  }
  for(const group of ['verbs','numbers','greetings']){
-   const item=ranked.find(q=>q.group===group&&q.priority>=590);
+   const item=ranked.find(q=>q.group===group);
    if(item && selection.length<target)add(item);
  }
  for(const item of ranked){
