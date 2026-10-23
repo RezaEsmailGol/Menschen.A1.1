@@ -6,6 +6,9 @@ import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
+import NightShift from './NightShift.jsx';
+import VisualMemory from './VisualMemory.jsx';
+import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
 import PictureGame from './PictureGame';
@@ -102,7 +105,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',classNotes:'تمرین‌های جدید کلاس',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
@@ -127,15 +130,16 @@ function App() {
   const [schedule, setSchedule] = useLocalStorage(REVIEW_KEY, {});
   const [memory, setMemory] = useLocalStorage(MEMORY_KEY, {version:1,items:{},days:{},totalXP:0,history:[]});
   const [dailyGoal, setDailyGoal] = useLocalStorage(DAILY_GOAL_KEY, 10);
+ const [nightState,setNightState]=useLocalStorage(NIGHT_KEY,createNightState());
   const updateDailyGoal=value=>setDailyGoal(safeDailyGoal(value));
   const [feedback,setFeedback]=useState(null);
   const onPracticeEvent = event => {
     setMemory(previous => recordActivity(previous,event));
-    setFeedback({xp:event.correct?10:2,correct:event.correct,key:Date.now()+Math.random()});
-    // Game-specific feedback already handled the tap. Other practice screens
-    // share the same optional haptic setting without double vibration.
-    if(!event.feedbackHandled)vibrateGame(event.correct?'correct':'wrong',
-      readGameFeedbackPreferences().haptics);
+    if (!event.quiet) {
+      setFeedback({xp:event.correct?10:2,correct:event.correct,key:Date.now()+Math.random()});
+      if(!event.feedbackHandled)vibrateGame(event.correct?'correct':'wrong',
+        readGameFeedbackPreferences().haptics);
+    }
   };
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
@@ -168,6 +172,10 @@ function App() {
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}
       {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
+      {tab==='night' && <NightShift speak={speak} memory={memory} schedule={schedule} progress={progress}
+         personalCards={cards} nightState={nightState} setNightState={setNightState} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>}
+      {tab==='visualMemory' && <VisualMemory speak={speak} memory={memory} schedule={schedule} progress={progress}
+         personalCards={cards} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
       {tab==='classNotes' && <ClassNotes speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
       {tab==='workbook' && <TeacherWorkbook speak={speak} memory={memory} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
