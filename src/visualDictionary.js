@@ -54,6 +54,8 @@ const sceneClusters={
  apple:'apfel äpfel obst früchte',
  house:'haus dach fenster wohnung zimmer wohnort adresse straße straße hausnummer postleitzahl miete',
  kitchen:'küche essen brot milch kasse obst geschäft einkaufen',
+ city:'stadt ort wien',bathroom:'bad dusche',camera:'foto',eye:'sehen',basket:'sammeln',insect:'wespe',compass:'westen',
+ mind:'fähigkeit wissen',
  clock:'uhr zeit termin stunde wochenende montag dienstag mittwoch donnerstag freitag samstag sonntag',
  sun:'sonne tag heute morgen gut',
  moon:'nacht abend',
@@ -153,6 +155,65 @@ const supplemental=[
 ];
 for(const [de,fa,scene] of supplemental){register(de,fa,'supplement');allEntries.set(normalizeGerman(de),{...allEntries.get(normalizeGerman(de)),scene});}
 
+
+// Override ambiguous function words and spelling/phonetics examples with a
+// recognisable teaching metaphor rather than pretending a random letter is art.
+const sceneOverrides={
+ stadt:'city',nummer:'abacus',bad:'bathroom',fehler:'computer',fähigkeit:'mind',
+ erst:'clock',kurz:'clock',noch:'clock',mein:'hands',mai:'sun',liebe:'heart',
+ wichtig:'star',tschüss:'walk',physik:'book',verb:'speech',job:'briefcase',
+ sechs:'eggs',fünf:'hand',sieben:'star',dreizehn:'calendar',vierzehn:'calendar',
+ fünfzehn:'calendar',sechzehn:'eggs',siebzehn:'star',achtzehn:'calendar',
+ neunzehn:'calendar',zwanzig:'abacus',yoga:'person',xylophon:'music',
+ wachsen:'tree',wespe:'insect',westen:'compass',foto:'camera',sehen:'eye',
+ sammeln:'basket',häuser:'house',zwei:'shoes',sammeln:'basket',
+ 'wer sind sie':'person','ich bin reza':'person',
+ 'woher kommen sie':'globe','woher stammst du':'globe',
+ 'wie geht es ihnen':'smile','wie geht’s ihnen':'smile',
+ 'und ihnen':'speech','und dir':'speech','und du':'speech'
+};
+const sceneHints={
+ name:'کارت شناسایی و نام را به یاد بیاور.',
+ computer:'برنامه‌نویسی روی نمایشگر با نماد کد.',
+ briefcase:'کیف اداری و کار؛ فضای شغلی.',
+ person:'یک آدمک؛ نقش یا هویت شخص در جمله.',
+ house:'خانه و محل زندگی با سقف و در.',
+ book:'کتاب باز و مطالعه.',
+ globe:'کره زمین، کشور و مبدأ حرکت.',
+ money:'اسکناس و نشانه قیمت.',
+ speech:'حباب گفت‌وگو و کلمات گفته‌شده.',
+ clock:'ساعت و زمان.',
+ phone:'تماس و پیام.',
+ heart:'قلب و احساس یا سلامتی.',
+ walk:'قدم زدن و حرکت شخص.',
+ pencil:'نوشتن با قلم یا انجام تکلیف.',
+ calendar:'روزها و قرار روی تقویم.',
+ sun:'روشنایی روز و خورشید.',
+ music:'نت موسیقی و صدا.',
+ smile:'چهره خندان و حال خوب.',
+ sad:'چهره ناراحت یا وضعیت بد.',
+ question:'علامت سؤال و پرسیدن.',
+ tree:'رشد و طبیعت.',
+ abacus:'دسته‌های ده‌تایی و مهره‌های شمارشی.',
+ city:'آسمان‌خراش‌ها و شهر.',
+ bathroom:'دوش و قطره‌های آب.',
+ mind:'لامپ ایده و توانایی ذهنی.',
+ eye:'چشم در حال دیدن.',
+ camera:'عکس و دوربین.',
+ compass:'جهت‌های جغرافیایی.',
+ insect:'زنبور با بال و بدن راه‌راه.',
+ basket:'سبد و جمع‌آوری وسایل.'
+};
+for(const [key,entry] of allEntries){
+ let scene=sceneOverrides[key]||entry.scene;
+ if(scene==='context'){
+   const words=key.split(' ').filter(w=>!['ich','du','er','sie','es','wir','ihr','mein','meine','ist','sind','bin','das','die','der','und','aus','dem','mit','zu','den','einen','eine'].includes(w));
+   scene=words.map(w=>sceneOverrides[w]||sceneIndex.get(w)||verbVisuals[w]||allEntries.get(w)?.scene)
+     .find(v=>v&&v!=='context')||farsiScenes.find(([re])=>re.test(entry.fa))?.[1]||'speech';
+ }
+ allEntries.set(key,{...entry,scene,cue:`${sceneHints[scene]||'نماد تصویری موضوع را با کلمه مرتبط کن.'} معنی: ${entry.fa||entry.german}`});
+}
+
 export const WORD_DICTIONARY=Object.freeze(Object.fromEntries(allEntries));
 export const DICTIONARY_STATS={alphabet:ALPHABET_CARDS.length,numbers:NUMBER_CARDS.length,words:allEntries.size,verbs:Object.keys(verbVisuals).length};
 
@@ -179,6 +240,8 @@ export function getVisualEntry(word='',options={}){
     pronoun:conj.person,fa:'صرف فعل',cue:`تصویر ${root} + ضمیر ${conj.person} را به شکل صحیح فعل وصل کن.`};
  }
  const key=normalizeGerman(word);
+ const spellingNumber=NUMBER_CARDS.find(card=>card.word===key);
+ if(spellingNumber)return spellingNumber;
  const direct=WORD_DICTIONARY[key];
  if(direct) return {...direct,kind:'word'};
  // Phrases: use the most specific known action or concrete noun;
