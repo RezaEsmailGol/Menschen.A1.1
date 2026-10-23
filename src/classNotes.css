@@ -119,3 +119,78 @@
 @media(max-width:390px){.cnGroups{grid-template-columns:1fr 1fr}.cnGroupCopy small{font-size:9px}.cnGroupCopy b{font-size:11px}.cnPanelCounts span{font-size:9px}}
 
 .cnChoices button.wrongOption{border-color:#ed8d86;background:#fff1f0;color:#ae514a}
+
+/* Phase 1 completion: real review states and accessible focus-mode quizzes */
+.cnReviewStrip{display:flex;align-items:center;gap:12px;border:1px solid #dbe5f7;
+ background:linear-gradient(115deg,#ebf9f5,#f2f0ff);border-radius:17px;padding:13px 15px}
+.cnReviewStripIcon{background:#fff;color:#665ad3;width:46px;height:46px;border-radius:13px;
+ display:grid;place-items:center;flex-shrink:0}
+.cnReviewStrip>span:nth-child(2){flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.cnReviewStrip b{font-size:13px}.cnReviewStrip small{font-size:11px;color:#8188a3;line-height:1.7}
+.cnReviewStrip button{border:0;border-radius:12px;background:#5c57d2;color:#fff;padding:10px 13px;
+ white-space:nowrap;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px}
+.cnReviewStrip button:disabled{background:#d7d8e5;color:#80859b;cursor:default}
+.cnModesTitle{font-size:12px;font-weight:800;color:#555b82;margin-bottom:10px}
+.cnPracticeModes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.cnPracticeModes button{border:1px solid #e4e7f2;border-radius:13px;padding:12px;min-width:0;
+ background:#f9faff;color:#737d9e;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;
+ flex-wrap:wrap;gap:7px;text-align:right}
+.cnPracticeModes button.active{border-color:#746be4;background:#eeecff;color:#4b47b2}
+.cnPracticeModes b{font-size:12px}
+.cnPracticeModes small{font-size:10px;color:#9095aa;line-height:1.65;width:100%}
+.cnPracticeModes button.active small{color:#716bc1}
+.cnNothing{border:1px dashed #bfdcda;color:#489c8e;background:#f0fdf8;border-radius:16px;padding:28px 12px;
+ display:flex;align-items:center;flex-direction:column;gap:10px;text-align:center}
+.cnNothing b{color:#32686a}.cnNothing p{margin:0;color:#798f98;font-size:12px}
+.cnNothing button{background:#5662cd;color:white;border:0;border-radius:10px;padding:10px 14px;cursor:pointer}
+.cnExamMode{font-size:12px;color:#8b92a8;display:flex;align-items:center}
+.cnQuizFocus{width:min(100%,700px)!important;max-height:100%;height:100%;min-height:0!important;
+ display:flex!important;flex-direction:column;justify-content:center;overflow-y:auto;gap:clamp(7px,1.2dvh,13px);
+ margin-inline:auto;overscroll-behavior:contain}
+.cnQuizFocus>.cnQuizTop{flex-shrink:0}
+.cnQuizFocus>.cnProgress{flex-shrink:0;margin:3px 0}
+.cnQuizFocus>.cnPrompt{flex:0 1 auto;min-height:120px;padding:clamp(11px,2dvh,22px);margin:0}
+.cnQuizFocus .cnChoices{margin:0;gap:8px;flex:0 1 auto}
+.cnQuizFocus .cnChoices button{min-height:52px;padding:10px 12px}
+.cnQuizFocus .cnTyping{margin:0;flex-shrink:0}
+.cnQuizFocus .cnResult{margin:0;flex-shrink:0}
+.cnQuizFocus .cnQuizActions{margin-top:0;flex-shrink:0;min-height:43px;align-items:center}
+.cnQuizFocus.cnFinished{align-items:center;justify-content:center}
+.cnQuizFocus.cnFinished>div{flex-wrap:wrap;justify-content:center}
+.cnQuizFocus.cnFinished h3{font-size:clamp(19px,3vw,25px)}
+.cnQuizFocus.cnFinished p{margin:0}
+.cnQuizFocus .cnQuestionType{font-size:10px}
+.cnQuizFocus .cnPrompt h3{font-size:clamp(14px,2.8vw,20px);line-height:1.7}
+.cnQuizFocus .cnHugeNumber{font-size:clamp(48px,9vw,78px)}
+.cnQuizFocus .cnAudioIcon{width:58px;height:58px}
+.cnQuizFocus .cnAudioIcon svg{width:28px}
+.cnQuizFocus .cnResult small{display:block;line-height:1.55}
+.cnQuizFocus .cnResult span{font-size:16px}
+.cnQuizFocus.cnFinished>strong{font-size:clamp(37px,8vw,57px)}
+@media(max-width:700px){
+ .cnPracticeModes{gap:7px}
+ .cnPracticeModes button{padding:10px 9px}
+ .cnPracticeModes b{font-size:11px}
+ .cnPracticeModes small{font-size:9px}
+ .cnReviewStrip{padding:10px}
+ .cnReviewStrip button{font-size:10px;padding:9px}
+ .cnQuizFocus .cnChoices{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .cnQuizFocus .cnChoices button{font-size:clamp(11px,2.9vw,15px);text-align:left;min-height:58px}
+ .cnQuizFocus .cnPrompt{min-height:104px}
+}
+@media(max-width:385px){
+ .cnQuizFocus .cnChoices{grid-template-columns:1fr}
+ .cnQuizFocus .cnChoices button{min-height:39px;padding:6px 9px}
+ .cnPracticeModes{grid-template-columns:1fr}
+ .cnPracticeModes button{flex-wrap:nowrap}.cnPracticeModes small{width:auto;flex:1}
+ .cnReviewStripIcon{display:none}
+}
+@media(max-height:670px){
+ .cnQuizFocus .cnPrompt{min-height:80px;padding:9px}
+ .cnQuizFocus .cnChoices button{min-height:39px;padding:7px}
+ .cnQuizFocus .cnAudioIcon{width:40px;height:40px}
+ .cnQuizFocus .cnAudioIcon svg{width:22px}
+ .cnQuizFocus .cnHugeNumber{font-size:47px}
+ .cnQuizFocus .cnResult{padding:9px}
+}
+@media(prefers-reduced-motion:reduce){.cnGroupBar i,.cnProgress i{transition:none}}
