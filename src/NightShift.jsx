@@ -2,6 +2,7 @@ import React,{useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,BookOpen,Check,CheckCircle2,Clock3,Headphones,Moon,Pause,Play,RotateCcw,Sparkles,Sunrise,Volume2,VolumeX,Wind} from 'lucide-react';
 import {buildNightReview,createNightState,nightSessionStart,nightSessionAdvance,saveNightSession,nightSummary} from './nightShiftEngine.js';
 import {nextReview} from './studyEngine.js';
+import {localDay} from './learningMemory.js';
 import './nightShift.css';
 
 function prettyGroup(group){
@@ -11,9 +12,8 @@ function prettyGroup(group){
 export default function NightShift({memory,schedule,progress,personalCards,nightState,setNightState,setSchedule,onPracticeEvent,speak}){
  const [revealed,setRevealed]=useState(false);
  const [message,setMessage]=useState('');
- const [volume,setVolume]=useState(false);
- const summary=nightSummary(nightState);
- const active=nightState?.active;
+  const summary=nightSummary(nightState);
+ const active=nightState?.active?.day===localDay() ? nightState.active : null;
  const card=active?.items?.[active.index];
  const isFinished=Boolean(active && active.completedAt);
  const [count,setCount]=useState(()=>nightState?.preferredCount||6);
@@ -99,7 +99,7 @@ export default function NightShift({memory,schedule,progress,personalCards,night
        <h2>Gute Nacht! 🌙</h2>
        <p>شیفت شب به پایان رسید؛ حالا می‌توانی با خیال راحت استراحت کنی.</p>
        <strong>{active.correct.toLocaleString('fa-IR')} از {active.items.length.toLocaleString('fa-IR')} پاسخ یادآوری‌شده</strong>
-       <button onClick={()=>setNightState(s=>saveNightSession(s,active))}>پایان مرور امشب <CheckCircle2 size={18}/></button>
+       <button onClick={()=>setNightState(s=>({...s,active:null}))}>پایان مرور امشب <CheckCircle2 size={18}/></button>
      </div>}
    </section>
    <div className="nightAfter"><span><Wind size={18}/> بی‌صدا و بدون تایمر</span><span><Sparkles size={18}/> مبتنی بر اشتباه‌ها</span><span><Moon size={18}/> مناسب قبل از خواب</span></div>
