@@ -70,9 +70,7 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
   if(!current)return;
   onPracticeEvent({id:current.id,kind:current.kind,correct,
     label:current.answer,lesson:current.lesson,quiet:true});
-  if(filter==='new' || (filter==='weak'&&correct))setIndex(i=>i);
-  else next();
-  setReveal(false);
+  next();
  }
  return <main className="vmPage">
    <header className="vmHero">
