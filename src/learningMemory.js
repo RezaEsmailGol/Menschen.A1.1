@@ -111,6 +111,9 @@ export function chooseAdaptiveNumbers(maximum, memory={}, size=10, random=Math.r
 export function learningItemDestination(item) {
  const id=String(item?.id||'');
  if(id.includes(':class:')||id.startsWith('notes:'))return 'classNotes';
+ // Teacher's six conjugation tables use the historical stable grammar IDs.
+ // Keep their old mastery entries and route mistakes to the exact class workbook.
+ if(/^grammar:(hei%C3%9Fen|arbeiten|haben|sein|machen|wohnen):/.test(id))return 'classNotes';
  const routes={
    number:'numbers',grammar:'verbs',sentence:'builder',reading:'exam',
    pronunciation:'pronunciation',dialogue:'dialogues',dictation:'listen',
