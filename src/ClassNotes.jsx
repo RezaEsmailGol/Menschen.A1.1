@@ -17,9 +17,9 @@ function relativeStatus(item,memory){
  if(m.nextAt<=Date.now())return {label:'موعد مرور',cls:'due'};
  return {label:'در حال یادگیری',cls:'learning'};
 }
-function TaskChoices({question,disabled,onAnswer}){
+function TaskChoices({question,disabled,selected,onAnswer}){
  return <div className="cnChoices">{question.choices.map((word,i)=><button key={word}
-    disabled={disabled} className={disabled?(word===question.de?'rightOption':''):''}
+    disabled={disabled} className={disabled?(word===question.de?'rightOption':word===selected?'wrongOption':''):''}
     onClick={()=>onAnswer(word)}><span className="cnOptionIndex">{String.fromCharCode(65+i)}</span><span dir="ltr">{word}</span></button>)}</div>;
 }
 
@@ -59,11 +59,11 @@ export default function ClassNotes({speak,memory={},onPracticeEvent=()=>{},setTa
    setAt(i=>i+1);setAnswer('');setResult(null);
  }
  useEffect(()=>{
-   if(view==='quiz' && question && audioMode && question.set==='numbers'){
-     // The initial sound is initiated from the quiz start control. Replay button remains available.
-     // Other modes do not reveal the answer before a typing challenge.
-   }
- },[view,at,question,audioMode]);
+   if(view!=='quiz' || !question || !audioMode || question.set!=='numbers') return;
+   // On a learner-triggered round, read the audio question once on entry;
+   // the manual replay control remains available for restricted browsers.
+   speak(question.de);
+ },[view,at,question?.id,audioMode]);
  const list=items;
  return <main className="cnRoot">
    <section className="cnHero">
@@ -131,7 +131,7 @@ export default function ClassNotes({speak,memory={},onPracticeEvent=()=>{},setTa
           </>}
       </div>
       {question.type==='choice'
-        ? <TaskChoices question={question} disabled={result!==null} onAnswer={choice=>{setAnswer(choice);judge(choice)}}/>
+        ? <TaskChoices question={question} disabled={result!==null} selected={answer} onAnswer={choice=>{setAnswer(choice);judge(choice)}}/>
         : <div className="cnTyping"><input aria-label="پاسخ آلمانی" dir="ltr" autoComplete="off" spellCheck={false}
             value={answer} disabled={result!==null} placeholder="جواب را اینجا بنویس..."
             onChange={e=>setAnswer(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();result!==null?next():judge()}}}/>
