@@ -1,0 +1,105 @@
+import React,{useEffect,useMemo,useState} from 'react';
+import {ArrowLeft,BookOpen,Brain,Check,CheckCircle2,Eye,Hash,Headphones,Image as ImageIcon,Pause,Play,RotateCcw,Search,Volume2} from 'lucide-react';
+import {nightCandidates} from './nightShiftEngine.js';
+import {germanNumber} from './learningData.js';
+import {activityItemKey} from './learningMemory.js';
+import {shuffleArray} from './studyEngine.js';
+import MnemonicArt from './MnemonicArt.jsx';
+import './visualMemory.css';
+
+function buildLibrary({memory,schedule,progress,personalCards}) {
+ const baseline=nightCandidates({memory,schedule,progress,personalCards});
+ const nums=Array.from({length:101},(_,n)=>({
+   id:activityItemKey('number',n),source:'numbers',kind:'number',group:'numbers',
+   prompt:`عدد ${n}`,answer:germanNumber(n),audio:germanNumber(n),
+   number:n,lesson:1,note:'عدد را با دهگان و یکان تصویرسازی کن.'
+ }));
+ const seen=new Set();
+ return [...nums,...baseline].filter(x=>{
+   if(seen.has(x.id))return false;
+   seen.add(x.id);return true;
+ });
+}
+export function visualStatus(item,memory,now=Date.now()) {
+ const record=memory?.items?.[item.id];
+ if(!record)return 'new';
+ if(record.mastery>=80 && record.correct>=3 && record.reviewedDays>=2)return 'mastered';
+ if(record.lastCorrect===false || record.mastery<55 || (record.nextAt||Infinity)<=now)return 'weak';
+ return 'learning';
+}
+const filters=[
+ ['all','همه'],['weak','نیاز به تمرین'],['new','جدید'],['mastered','مسلط'],
+ ['numbers','اعداد'],['vocab','واژه‌ها'],['verbs','صرف فعل']
+];
+export default function VisualMemory({speak,memory,schedule,progress,personalCards,onPracticeEvent,setTab}){
+ const [filter,setFilter]=useState('all');
+ const [search,setSearch]=useState('');
+ const [index,setIndex]=useState(0);
+ const [reveal,setReveal]=useState(false);
+ const [mode,setMode]=useState('learn');
+ const library=useMemo(()=>buildLibrary({memory,schedule,progress,personalCards}),[memory,schedule,progress,personalCards]);
+ const filtered=useMemo(()=>{
+  const text=search.trim().toLocaleLowerCase('de');
+  return library.filter(x=>{
+    const state=visualStatus(x,memory);
+    const inGroup=filter==='all' || filter===state ||
+      (filter==='numbers'&&x.group==='numbers') ||
+      (filter==='vocab'&&x.kind==='vocab') ||
+      (filter==='verbs'&&x.group==='verbs');
+    return inGroup && (!text || [x.prompt,x.answer,x.note].join(' ').toLocaleLowerCase('de').includes(text));
+  });
+ },[library,filter,search,memory]);
+ const current=filtered[index%filtered.length];
+ useEffect(()=>{setIndex(0);setReveal(false);},[filter,search]);
+ const stats=useMemo(()=>({
+   known:library.filter(x=>visualStatus(x,memory)==='mastered').length,
+   weak:library.filter(x=>visualStatus(x,memory)==='weak').length,
+   unseen:library.filter(x=>visualStatus(x,memory)==='new').length
+ }),[library,memory]);
+ function next(){setIndex(i=>(i+1)%filtered.length);setReveal(false);}
+ function rate(correct){
+  if(!current)return;
+  onPracticeEvent({id:current.id,kind:current.kind,correct,
+    label:current.answer,lesson:current.lesson,quiet:true});
+  next();
+ }
+ return <main className="vmPage">
+   <header className="vmHero">
+      <span className="vmEyebrow"><ImageIcon size={17}/> VISUAL MEMORY STUDIO</span>
+      <h1>یادسپاری با <em>صدا + تصویر + واژه</em></h1>
+      <p>تصویرهای SVG سبک برای ساختن نشانه‌های ذهنی؛ دیدن تصویر و بازیابی آلمانی، سپس بازخورد برای مرور بعدی.</p>
+      <div className="vmStats"><span><b>{stats.unseen}</b>جدید</span><span><b>{stats.weak}</b>نیازمند مرور</span><span><b>{stats.known}</b>مسلط</span></div>
+   </header>
+   <div className="vmToolbar">
+     <div className="vmFilters" role="group" aria-label="دسته‌بندی کلمات">
+       {filters.map(([id,title])=><button aria-pressed={filter===id} className={filter===id?'active':''}
+         onClick={()=>setFilter(id)} key={id}>{title}</button>)}
+     </div>
+     <label className="vmSearch"><Search size={17}/><input placeholder="جست‌وجوی کلمه..." value={search}
+       onChange={e=>setSearch(e.target.value)}/></label>
+   </div>
+   {current?<section className="vmTrainer">
+     <div className="vmHeader"><span>{(index%filtered.length+1).toLocaleString('fa-IR')} از {filtered.length.toLocaleString('fa-IR')}</span><span className={'vmState '+visualStatus(current,memory)}>{({weak:'نیاز به تمرین',new:'جدید',mastered:'مسلط',learning:'در حال یادگیری'})[visualStatus(current,memory)]}</span></div>
+     <div className="vmCard">
+       <div className="vmIllustration"><MnemonicArt number={current.group==='numbers'?current.number:current.source==='class'&&current.group==='numbers'?Number(current.prompt.replace(/\D/g,'')):null}
+         word={current.answer} showLabel={reveal} /></div>
+       <div className="vmContent">
+         <span className="vmQuestionType">یادآوری فعال • Active Recall</span>
+         <h2>{reveal?<span dir="ltr">{current.answer}</span>:current.prompt}</h2>
+         {reveal?<><p>{current.note||'تصویر را با واژه آلمانی در ذهن پیوند بده.'}</p>
+           <button className="vmListen" onClick={()=>speak(current.audio||current.answer)}><Volume2 size={19}/> تلفظ آلمانی</button>
+           <div className="vmRatings"><button onClick={()=>rate(false)}><RotateCcw size={18}/> نیاز به تمرین</button>
+             <button onClick={()=>rate(true)}><Check size={18}/> بلد بودم</button></div>
+         </>:<>
+           <p>از تصویر و معنی کمک بگیر و کلمه آلمانی را قبل از دیدن جواب بلند بگو.</p>
+           <button className="vmReveal" onClick={()=>setReveal(true)}><Eye size={19}/> نمایش پاسخ</button>
+         </>}
+       </div>
+     </div>
+     <div className="vmFooter"><span>هر جواب، حافظه مرور تو را بهتر تنظیم می‌کند.</span>
+       <button onClick={next}>رد کردن / بعدی <ArrowLeft size={16}/></button></div>
+   </section>:<div className="vmEmpty"><CheckCircle2 size={34}/><p>در این گروه هنوز کارتی وجود ندارد.</p><button onClick={()=>setFilter('all')}>نمایش همه کارت‌ها</button></div>}
+   <div className="vmNightLink"><span>🌙</span><div><b>مرور تصویری پیش از خواب</b><p>شب‌ها تصاویر و تلفظ‌ها را آرام و پشت‌سرهم مرور کن.</p></div><button onClick={()=>setTab('night')}>شیفت شب <ArrowLeft size={17}/></button></div>
+   <p className="vmDisclaimer">برای بعضی واژه‌های انتزاعی تصویر نمادین یا کارت حروف به‌کار می‌رود؛ همه تصاویر، عکس واقعی یا نمایش دقیق معنای واژه نیستند.</p>
+ </main>;
+}
