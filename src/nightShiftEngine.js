@@ -93,7 +93,7 @@ export function saveNightSession(state,session){
  }};
  const days=Object.keys(history).sort();
  for(const day of days.slice(0,Math.max(0,days.length-90))) delete history[day];
- return {...base,active:null,history};
+ return {...base,active:session,history};
 }
 export function nightSummary(state,now=Date.now()){
  const history=state?.history||{};
