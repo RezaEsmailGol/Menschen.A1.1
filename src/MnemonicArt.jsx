@@ -1,5 +1,5 @@
 import React, {useId} from 'react';
-import {getVisualEntry, mnemonicCategory as unused} from './visualDictionary.js';
+import {getVisualEntry} from './visualDictionary.js';
 
 // Every artwork is a local, scalable and offline-capable SVG.
 // Meanings are resolved in the dictionary, not guessed from the first letter.
@@ -38,6 +38,9 @@ function PersonShape({x=160,y=110,scale=1,color='#746FCD'}){return <g transform=
 function Scene({scene}){
  switch(scene){
  case 'apple':return <><path d="M160 86 Q133 49 99 74 Q50 108 85 177 Q110 239 158 222 Q214 248 243 177 Q274 99 219 76 Q196 64 160 86Z" fill="#ED786B"/><path d="M160 87 Q161 51 181 36" stroke="#78644F" strokeWidth="10" fill="none" strokeLinecap="round"/><path d="M164 62 Q211 27 232 55 Q205 88 164 62Z" fill="#80B986"/></>;
+ case 'empty':return <><circle cx="160" cy="135" r="88" fill="none" stroke="#9E9ACD" strokeWidth="17"/><circle cx="160" cy="135" r="52" fill="#FFFFFF96"/></>;
+ case 'football':return <><circle cx="160" cy="140" r="91" fill="#F9FBFF" stroke="#A7B4CF" strokeWidth="5"/><path d="M160 95 l41 29 -16 47 h-50 l-16-47Z" fill="#55688F"/>{[0,1,2,3,4].map(i=><path key={i} d="M160 95 L160 53 M119 124 L85 111 M135 171 L113 207 M185 171 L210 207 M201 124 L242 113" transform={`rotate(${i*7} 160 140)`} stroke="#55688F" strokeWidth="5"/>)}</>;
+ case 'abacus':return <><rect x="53" y="55" width="214" height="181" rx="16" fill="#A4B8D9"/>{[0,1,2,3].map(i=><g key={i}><path d={`M75 ${91+i*40} H245`} stroke="#647DA8" strokeWidth="7"/>{Array.from({length:5},(_,j)=><circle key={j} cx={98+j*32} cy={91+i*40} r="13" fill={i%2?'#ECC078':'#9C91D7'}/>)}</g>)}</>;
  case 'candle':return <><rect x="127" y="110" width="66" height="113" rx="14" fill="#FFF2CB"/><path d="M160 102 Q121 83 158 35 Q193 78 160 102Z" fill="#F4B24E"/><path d="M157 95 Q147 79 159 61 Q168 83 157 95Z" fill="#FFE5A8"/><path d="M132 137 H187 M132 176 H187" stroke="#EBCB9B" strokeWidth="6"/></>;
  case 'shoes':return <><path d="M50 186 Q91 187 111 142 L142 143 Q145 178 165 184 L167 213 H47Z" fill="#6B86CD"/><path d="M173 182 Q211 183 225 141 L254 145 Q258 175 282 181 V214 H170Z" fill="#EC9B81"/><path d="M57 200 H154 M182 200 H273" stroke="#FFF" strokeWidth="6"/></>;
  case 'balloon':return <>{[[96,102,'#E78B95'],[157,80,'#93C6EB'],[220,106,'#9CCFAC']].map(([x,y,c],i)=><g key={i}><ellipse cx={x} cy={y} rx="38" ry="52" fill={c}/><path d={`M${x} ${y+52} Q${x+17} ${y+110} 158 244`} stroke="#ACA8BD" strokeWidth="3" fill="none"/></g>)}</>;
