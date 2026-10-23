@@ -80,3 +80,47 @@ test('exact answer checks allow punctuation but not wrong accents',()=>{
  assert.equal(isNoteCorrect(v,'heißt'),true);
  assert.equal(isNoteCorrect(v,'heisst'),false);
 });
+
+test('mixed and listening rounds are 10-item unique adaptive sets and keep stable memory keys',async()=>{
+ const {buildClassRound}=await import('../src/classNotesData.js');
+ for(const mode of ['mixed','listen','write']){
+   const selected=buildClassRound(classNotesBySet.numbers,{},mode,10,()=>0.35);
+   assert.equal(selected.length,8);
+   assert.equal(new Set(selected.map(q=>q.key)).size,8);
+   assert.ok(selected.every(q=>q.de&&q.key));
+   for(const q of selected){
+     if(mode==='listen'){
+       assert.equal(q.type,'listen');
+       assert.equal(q.choices.length,4);
+       assert.equal(new Set(q.choices).size,4);
+       assert.equal(q.choices.filter(x=>x===q.de).length,1);
+     }
+   }
+ }
+ const verbs=buildClassRound(classNotesBySet.verbs,{},'listen',10,()=>0.3);
+ assert.ok(verbs.every(q=>q.type==='type'));
+ const phrases=buildClassRound(classNotesBySet.greetings,{},'mixed',10,()=>0.5);
+ assert.ok(phrases.some(q=>q.type==='choice')&&phrases.some(q=>q.type==='type'));
+});
+
+test('review-only sets generate four distinct options even from one weak item',async()=>{
+ const {buildClassRound,weakClassNotes,dueClassSummary,masteredClassNotes}=await import('../src/classNotesData.js');
+ const time=Date.now();
+ const first=classNotesBySet.greetings[0];
+ const mastered=classNotesBySet.greetings[1];
+ const memory={items:{
+   [first.key]:{mastery:0,lastCorrect:false,nextAt:time-1,correct:0,reviewedDays:1},
+   [mastered.key]:{mastery:95,lastCorrect:true,nextAt:time+86400000,correct:3,reviewedDays:2}
+ }};
+ const weak=weakClassNotes(classNotesBySet.greetings,memory,time);
+ assert.deepEqual(weak.map(x=>x.key),[first.key]);
+ const round=buildClassRound(weak,memory,'listen',10,()=>0.7);
+ assert.equal(round.length,1);
+ assert.equal(round[0].choices.length,4);
+ assert.equal(round[0].choices.filter(x=>x===first.de).length,1);
+ assert.equal(masteredClassNotes(classNotesBySet.greetings,memory).length,1);
+ const stats=dueClassSummary(classNotesBySet.greetings,memory,time);
+ assert.equal(stats.weak,1);
+ assert.equal(stats.mastered,1);
+ assert.equal(stats.practiced,2);
+});
