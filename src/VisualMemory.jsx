@@ -5,10 +5,12 @@ import {germanNumber} from './learningData.js';
 import {activityItemKey} from './learningMemory.js';
 import {shuffleArray} from './studyEngine.js';
 import MnemonicArt from './MnemonicArt.jsx';
+import {ALPHABET_CARDS,DICTIONARY_STATS,getVisualEntry} from './visualDictionary.js';
 import './visualMemory.css';
 
 function buildLibrary({memory,schedule,progress,personalCards}) {
  const baseline=nightCandidates({memory,schedule,progress,personalCards});
+ const alphabet=ALPHABET_CARDS.map(x=>({id:'alphabet:'+x.letter,source:'alphabet',kind:'alphabet',group:'alphabet',letter:x.letter,prompt:'حرف «'+x.letter+'»؛ واژه نمونه آلمانی را به خاطر بیاور.',answer:x.example,audio:x.example,note:x.cue,scene:x.scene,lesson:1}));
  const nums=Array.from({length:101},(_,n)=>({
    id:activityItemKey('number',n),source:'numbers',kind:'number',group:'numbers',
    prompt:`عدد ${n}`,answer:germanNumber(n),audio:germanNumber(n),
@@ -26,6 +28,7 @@ function buildLibrary({memory,schedule,progress,personalCards}) {
  const longest=Math.max(wordItems.length/2,numberItems.length);
  for(let i=0;i<longest+1;i++){
    push(wordItems[i*2]);push(wordItems[i*2+1]);push(numberItems[i]);
+   if(i<alphabet.length)push(alphabet[i]);
  }
  return combined;
 }
@@ -38,7 +41,7 @@ export function visualStatus(item,memory,now=Date.now()) {
 }
 const filters=[
  ['all','همه'],['weak','نیاز به تمرین'],['new','جدید'],['mastered','مسلط'],
- ['numbers','اعداد'],['vocab','واژه‌ها'],['verbs','صرف فعل']
+ ['numbers','اعداد'],['alphabet','الفبا'],['vocab','واژه‌ها'],['verbs','صرف فعل']
 ];
 export default function VisualMemory({speak,memory,schedule,progress,personalCards,onPracticeEvent,setTab}){
  const [filter,setFilter]=useState('all');
@@ -53,12 +56,14 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
     const state=visualStatus(x,memory);
     const inGroup=filter==='all' || filter===state ||
       (filter==='numbers'&&x.group==='numbers') ||
-      (filter==='vocab'&&x.group!=='numbers'&&x.group!=='verbs') ||
+      (filter==='alphabet'&&x.group==='alphabet') ||
+      (filter==='vocab'&&x.group!=='numbers'&&x.group!=='verbs'&&x.group!=='alphabet') ||
       (filter==='verbs'&&x.group==='verbs');
     return inGroup && (!text || [x.prompt,x.answer,x.note].join(' ').toLocaleLowerCase('de').includes(text));
   });
  },[library,filter,search,memory]);
  const current=filtered[index%filtered.length];
+ const entry=current?getVisualEntry(current.answer,{number:current.group==='numbers'?current.number:null,letter:current.letter,prompt:current.prompt,meaning:current.prompt}):null;
  useEffect(()=>{setIndex(0);setReveal(false);},[filter,search]);
  const stats=useMemo(()=>({
    known:library.filter(x=>visualStatus(x,memory)==='mastered').length,
@@ -76,7 +81,7 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
    <header className="vmHero">
       <span className="vmEyebrow"><ImageIcon size={17}/> VISUAL MEMORY STUDIO</span>
       <h1>یادسپاری با <em>صدا + تصویر + واژه</em></h1>
-      <p>تصویرهای SVG سبک برای ساختن نشانه‌های ذهنی؛ دیدن تصویر و بازیابی آلمانی، سپس بازخورد برای مرور بعدی.</p>
+      <p>دیکشنری تصویری معناگرا برای حروف، اعداد و کلمات؛ تصویر را ببین، پاسخ را به یاد بیاور، تلفظ را بشنو و میزان تسلطت را ثبت کن.</p>
       <div className="vmStats"><span><b>{stats.unseen}</b>جدید</span><span><b>{stats.weak}</b>نیازمند مرور</span><span><b>{stats.known}</b>مسلط</span></div>
    </header>
    <div className="vmToolbar">
@@ -91,16 +96,16 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
      <div className="vmHeader"><span>{(index%filtered.length+1).toLocaleString('fa-IR')} از {filtered.length.toLocaleString('fa-IR')}</span><span className={'vmState '+visualStatus(current,memory)}>{({weak:'نیاز به تمرین',new:'جدید',mastered:'مسلط',learning:'در حال یادگیری'})[visualStatus(current,memory)]}</span></div>
      <div className="vmCard">
        <div className="vmIllustration"><MnemonicArt number={current.group==='numbers'?(Number.isInteger(current.number)?current.number:Number(current.prompt.match(/\d+/)?.[0])):null}
-         word={current.answer} showLabel={reveal} /></div>
+         word={current.answer} prompt={current.prompt} meaning={current.prompt} letter={current.letter} showLabel={reveal} /></div>
        <div className="vmContent">
          <span className="vmQuestionType">یادآوری فعال • Active Recall</span>
          <h2>{reveal?<span dir="ltr">{current.answer}</span>:current.prompt}</h2>
-         {reveal?<><p>{current.note||'تصویر را با واژه آلمانی در ذهن پیوند بده.'}</p>
+         {reveal?<><p>{current.note||entry?.cue||'معنی این تصویر را با واژه آلمانی پیوند بده.'}</p>
            <button className="vmListen" onClick={()=>speak(current.audio||current.answer)}><Volume2 size={19}/> تلفظ آلمانی</button>
            <div className="vmRatings"><button onClick={()=>rate(false)}><RotateCcw size={18}/> نیاز به تمرین</button>
              <button onClick={()=>rate(true)}><Check size={18}/> بلد بودم</button></div>
          </>:<>
-           <p>از تصویر و معنی کمک بگیر و کلمه آلمانی را قبل از دیدن جواب بلند بگو.</p>
+           <p>{entry?.kind==='conjugation'?'تصویر فعل و نشان ضمیر را ببین و شکل صرف‌شده را حدس بزن.':'تصویر و معنی را به هم وصل کن و قبل از دیدن پاسخ، آلمانی آن را بلند بگو.'}</p>
            <button className="vmReveal" onClick={()=>setReveal(true)}><Eye size={19}/> نمایش پاسخ</button>
          </>}
        </div>
@@ -109,6 +114,6 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
        <button onClick={next}>رد کردن / بعدی <ArrowLeft size={16}/></button></div>
    </section>:<div className="vmEmpty"><CheckCircle2 size={34}/><p>در این گروه هنوز کارتی وجود ندارد.</p><button onClick={()=>setFilter('all')}>نمایش همه کارت‌ها</button></div>}
    <div className="vmNightLink"><span>🌙</span><div><b>مرور تصویری پیش از خواب</b><p>شب‌ها تصاویر و تلفظ‌ها را آرام و پشت‌سرهم مرور کن.</p></div><button onClick={()=>setTab('night')}>شیفت شب <ArrowLeft size={17}/></button></div>
-   <p className="vmDisclaimer">برای بعضی واژه‌های انتزاعی تصویر نمادین یا کارت حروف به‌کار می‌رود؛ همه تصاویر، عکس واقعی یا نمایش دقیق معنای واژه نیستند.</p>
+   <p className="vmDisclaimer">دیکشنری شامل {DICTIONARY_STATS.alphabet} حرف و نماد، {DICTIONARY_STATS.numbers} عدد و {DICTIONARY_STATS.words} مدخل واژگانی و جمله است. نشانه‌های معناییِ واژه‌های انتزاعی، بازنمایی نمادین‌اند و جایگزین فهم کاربرد جمله نمی‌شوند.</p>
  </main>;
 }
