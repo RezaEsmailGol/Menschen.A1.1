@@ -123,8 +123,11 @@ export function noteTask(item,all=classNotes,random=Math.random){
  return {...item,choices:options};
 }
 export function isNoteCorrect(item,submitted) {
- const actual=String(submitted||'').normalize('NFC').trim().toLocaleLowerCase('de').replace(/[.!?،؟]/g,'').replace(/\s+/g,' ');
- const expected=String(item.de||'').normalize('NFC').trim().toLocaleLowerCase('de').replace(/[.!?،؟]/g,'').replace(/\s+/g,' ');
+ const normalize=value=>String(value||'').normalize('NFC').trim()
+   .toLocaleLowerCase('de').replace(/[’‘`´]/g,"'").replace(/[.!?،؟]/g,'')
+   .replace(/\s+/g,' ');
+ const actual=normalize(submitted);
+ const expected=normalize(item.de);
  return actual===expected;
 }
 export function chooseNotes(items, memory={}, count=10, random=Math.random){
