@@ -2,6 +2,7 @@ import { classNotes } from './classNotesData.js';
 import { allStudyCards, lessons } from './courseData.js';
 import { activityItemKey, localDay } from './learningMemory.js';
 import { shuffleArray } from './studyEngine.js';
+import {ALPHABET_CARDS} from './visualDictionary.js';
 
 export const NIGHT_KEY = 'dt_night_shift_v1';
 
@@ -42,9 +43,15 @@ export function nightCandidates({memory={},schedule={},progress={},personalCards
       lesson:card.lesson,
       priority:normalizeScore(memory.items?.[card.id],schedule[card.id]?.dueAt ?? Infinity,now)
     }));
+  const alphabet=ALPHABET_CARDS.map(letter=>({
+    id:activityItemKey('alphabet',letter.letter),source:'alphabet',kind:'alphabet',group:'alphabet',
+    prompt:'حرف '+letter.letter+'؛ کلمه نمونه را به آلمانی بگو.',answer:letter.example,
+    letter:letter.letter,audio:letter.example,lesson:1,note:letter.cue,
+    priority:normalizeScore(memory.items?.[activityItemKey('alphabet',letter.letter)],Infinity,now)
+  }));
   // Only one copy of a concept with a stable original key; no new IDs
   // are created for the same existing flashcard or classroom question.
-  return [...classItems,...vocab];
+  return [...classItems,...vocab,...alphabet];
 }
 
 export function buildNightReview(options={},count=6,random=Math.random,now=Date.now()) {
@@ -65,7 +72,7 @@ export function buildNightReview(options={},count=6,random=Math.random,now=Date.
    const due=ranked.find(q=>q.source===source);
    if(due)add(due);
  }
- for(const group of ['verbs','numbers','greetings']){
+ for(const group of ['verbs','numbers','greetings','alphabet']){
    const item=ranked.find(q=>q.group===group);
    if(item && selection.length<target)add(item);
  }
