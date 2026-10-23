@@ -1,4 +1,3 @@
-import { germanNumber } from './learningData.js';
 import { activityItemKey } from './learningMemory.js';
 import { shuffleArray } from './studyEngine.js';
 
@@ -56,12 +55,16 @@ export const originNotes=pairs('origin',[
  ['Ich bin Reza.','من رضا هستم.','برای معرفی می‌توان از sein هم استفاده کرد.'],
  ['Woher kommen Sie?','شما اهل کجا هستید؟ (رسمی)','woher = از کجا؛ خطاب رسمی: kommen Sie.'],
  ['Woher kommst du?','تو اهل کجا هستی؟ (دوستانه)','du kommst و نه du kommen.'],
+ ['Woher stammen Sie?','اصل شما اهل کجاست؟ (رسمی)','stammen = اصالت داشتن / اهل جایی بودن.'],
+ ['Woher stammst du?','تو اصالتاً اهل کجایی؟','du stammst و نه du stammen.'],
+ ['Ich stamme aus dem Iran.','من اصالتاً اهل ایران هستم.','stammen aus + کشور برای بیان خاستگاه.'],
  ['Ich komme aus dem Iran.','من اهل ایران هستم.','در این کاربرد: aus dem Iran.'],
  ['Ich komme aus der Türkei.','من اهل ترکیه هستم.','برای Türkei از aus der استفاده می‌کنیم.'],
  ['Ich komme aus der Schweiz.','من اهل سوئیس هستم.','برای Schweiz از aus der استفاده می‌کنیم.'],
  ['Ich komme aus den USA.','من اهل آمریکا هستم.','USA در این کاربرد جمع است: aus den USA.'],
  ['der Vorname','نام کوچک','der Name / der Vorname / der Nachname'],
  ['der Nachname','نام خانوادگی','Familienname نیز یعنی نام خانوادگی.'],
+ ['der Familienname','نام خانوادگی','هم‌معنی Nachname.'],
  ['die Herkunft','اصل و خاستگاه','herkommen و stammen برای بیان مبدأ کاربرد دارند.']
 ]);
 
@@ -81,11 +84,13 @@ export const greetingNotes=pairs('greetings',[
  ['So lala.','معمولی / نه خوب نه بد.','در گفتار محاوره‌ای، so lala هم رایج است.'],
  ['Nicht so gut.','نه‌چندان خوب.','برای حال ناخوشایند.'],
  ['Schlecht.','بد.','صفت / پاسخ کوتاه.'],
+ ['Schlimm.','خیلی بد / وخیم.','به معنی شدید یا بد بودن وضعیت است؛ همیشه جای schlecht استفاده نمی‌شود.'],
+ ['Auch.','همچنین / هم.','برای گفتن «من هم» در بافت مناسب استفاده می‌شود.'],
  ['Und du?','و تو؟','در پاسخ می‌توان سؤال را برگرداند.']
 ]);
 
 export const classroomNotes=pairs('classroom',[
- ['die Stunde','ساعت / جلسه درسی'],['der Kurs','دوره / کلاس'],['zuerst','اول از همه'],
+ ['die Stunde','ساعت / جلسه درسی'],['der Kurs','دوره / کلاس'],['erst','اول / تازه / فقط (بسته به جمله)'],['zuerst','اول از همه'],
  ['kurz','کوتاه'],['sagen','گفتن'],['hören','شنیدن'],['das Lied','آهنگ / ترانه'],
  ['welche','کدام (برای اسم مؤنث یا جمع)'],['kennen','شناختن'],['noch','هنوز / دیگر'],
  ['und','و'],['ankreuzen','علامت زدن گزینه'],['die Kette','زنجیر'],
