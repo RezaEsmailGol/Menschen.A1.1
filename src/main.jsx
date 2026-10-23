@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import AppErrorBoundary from './AppErrorBoundary.jsx';
 import { createRoot } from 'react-dom/client';
 import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, Languages, Play, Shuffle, Trophy, Upload, Download, Plus, Trash2 } from 'lucide-react';
 import PronunciationLab from './PronunciationLab';
@@ -321,4 +322,4 @@ function VerbPractice({verb,forms,onPracticeEvent}){const pronouns=Object.keys(f
   onPracticeEvent?.({id:activityItemKey('grammar',verb,p),kind:'grammar',label:verb+' / '+p,lesson:1,correct});
 }}>بررسی</button>{s===true&&<span className="green">درست ✓</span>}{s===false&&<span className="red">{forms[p]}</span>}<button className="secondary" onClick={next}>بعدی</button></div>}
 
-createRoot(document.getElementById('root')).render(<App/>);
+createRoot(document.getElementById('root')).render(<AppErrorBoundary><App/></AppErrorBoundary>);
