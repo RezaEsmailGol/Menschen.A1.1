@@ -87,10 +87,10 @@ export default function VisualMemory({speak,memory,schedule,progress,personalCar
    <div className="vmToolbar">
      <div className="vmFilters" role="group" aria-label="دسته‌بندی کلمات">
        {filters.map(([id,title])=><button aria-pressed={filter===id} className={filter===id?'active':''}
-         onClick={()=>setFilter(id)} key={id}>{title}</button>)}
+         onClick={()=>{setFilter(id);setIndex(0);setReveal(false)}} key={id}>{title}</button>)}
      </div>
      <label className="vmSearch"><Search size={17}/><input placeholder="جست‌وجوی کلمه..." value={search}
-       onChange={e=>setSearch(e.target.value)}/></label>
+       onChange={e=>{setSearch(e.target.value);setIndex(0);setReveal(false)}}/></label>
    </div>
    {current?<section className="vmTrainer">
      <div className="vmHeader"><span>{(index%filtered.length+1).toLocaleString('fa-IR')} از {filtered.length.toLocaleString('fa-IR')}</span><span className={'vmState '+visualStatus(current,memory)}>{({weak:'نیاز به تمرین',new:'جدید',mastered:'مسلط',learning:'در حال یادگیری'})[visualStatus(current,memory)]}</span></div>
