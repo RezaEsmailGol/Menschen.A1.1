@@ -6,8 +6,8 @@ import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
-import NightShift from './NightShift.jsx';
-import VisualMemory from './VisualMemory.jsx';
+const NightShift = React.lazy(() => import('./NightShift.jsx'));
+const VisualMemory = React.lazy(() => import('./VisualMemory.jsx'));
 import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
@@ -172,10 +172,14 @@ function App() {
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}
       {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
-      {tab==='night' && <NightShift speak={speak} memory={memory} schedule={schedule} progress={progress}
-         personalCards={cards} nightState={nightState} setNightState={setNightState} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>}
-      {tab==='visualMemory' && <VisualMemory speak={speak} memory={memory} schedule={schedule} progress={progress}
-         personalCards={cards} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
+      {tab==='night' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی شیفت شب...</p>}>
+         <NightShift speak={speak} memory={memory} schedule={schedule} progress={progress}
+         personalCards={cards} nightState={nightState} setNightState={setNightState} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>
+       </React.Suspense>}
+      {tab==='visualMemory' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تصاویر آموزشی...</p>}>
+         <VisualMemory speak={speak} memory={memory} schedule={schedule} progress={progress}
+         personalCards={cards} onPracticeEvent={onPracticeEvent} setTab={setTab}/>
+       </React.Suspense>}
       {tab==='classNotes' && <ClassNotes speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
       {tab==='workbook' && <TeacherWorkbook speak={speak} memory={memory} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
