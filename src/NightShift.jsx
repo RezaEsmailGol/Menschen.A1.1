@@ -132,6 +132,9 @@ export default function NightShift({memory,schedule,progress,personalCards,night
        </section>}
      {active && !isFinished && card && <section className="nightExercise" aria-live="polite">
        <div className="nightExerciseTop"><span>{prettyGroup(card.group)}</span><span>{(active.index+1).toLocaleString('fa-IR')} از {display.toLocaleString('fa-IR')}</span></div>
+       <button className="nightSwitchMode" type="button" onClick={()=>{setNightState(state=>({...state,active:null}));setRevealed(false);}}>
+         تغییر به نمایش تصویری یا انتخاب تمرین دیگر
+       </button>
        <div className="nightTrack"><i style={{width:(100*active.index/display)+'%'}}/></div>
        <div className="nightQuestion">
          <small>{revealed?'پاسخ آلمانی':'ابتدا در ذهن خودت پاسخ بده'}</small>
