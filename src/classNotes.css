@@ -194,3 +194,11 @@
  .cnQuizFocus .cnResult{padding:9px}
 }
 @media(prefers-reduced-motion:reduce){.cnGroupBar i,.cnProgress i{transition:none}}
+
+.cnTypeWrap{display:grid;gap:7px}
+.cnTypeWrap .cnTyping{margin:0}
+.cnGermanKeys{display:flex;flex-wrap:wrap;gap:6px}
+.cnGermanKeys button{font:750 15px Tahoma,sans-serif;border:1px solid #d9d9f4;background:#f1efff;
+ border-radius:9px;color:#524ab6;min-width:37px;min-height:31px;cursor:pointer}
+.cnGermanKeys button:focus-visible{outline:2px solid #8276eb}
+@media(max-height:670px){.cnGermanKeys button{min-height:29px;padding:3px 6px}}
