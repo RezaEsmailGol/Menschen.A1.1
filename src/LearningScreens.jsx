@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ArrowLeft, BookOpen, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap } from 'lucide-react';
+import { ArrowLeft, BookOpen, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap, Moon, ImageIcon } from 'lucide-react';
 import { lessons } from './courseData.js';
 import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
@@ -9,6 +9,8 @@ import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
+  {id:'night',label:'شیفت شب',hint:'مرور کوتاه و نمایش آرام تصویری پیش از خواب',Icon:Moon,theme:'purple'},
+  {id:'visualMemory',label:'یادسپاری با تصویر SVG',hint:'کلمات و اعداد با تصویر، تلفظ و فیلترِ جدید/مسلط/ضعیف',Icon:ImageIcon,theme:'green'},
   {id:'classNotes',label:'تمرین‌های جدید کلاس',hint:'اعداد ۱۳–۲۰، فعل‌ها، معرفی، احوال‌پرسی و لغات استاد',Icon:BookOpenCheck,theme:'green'},
     {id:'pictureGame',label:'تصویر را ببین، آلمانی بگو',hint:'۳ سطح: چهارگزینه‌ای، تایپ و جمله‌سازی تصویری',Icon:Gamepad2,theme:'green'},
   {id:'visual',label:'جملات و فلش‌کارت تصویری',hint:'۵۰ عبارت مصور، بازی انتخاب جمله و ۱۰ مکالمه',Icon:BookOpen,theme:'sky'},
@@ -29,7 +31,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_night_shift_v1','dt_current_lesson','dt_audio_speed'];
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}) {
   const report=learningInsights(memory);
@@ -41,6 +43,8 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
   const learningStages=[
+    {id:'night',title:'شیفت شب · مرور پیش از خواب',subtitle:'مرور فعال یا نمایش پشت‌سرهم SVG و صدا',Icon:Moon,color:'purple'},
+    {id:'visualMemory',title:'یادسپاری تصویری',subtitle:'اعداد و واژه‌ها با نشانه‌های SVG، تلفظ و حافظه',Icon:ImageIcon,color:'green'},
     {id:'pictureGame',title:'بازی تصویر به آلمانی',subtitle:'۳ مرحله، XP و مرور هوشمند',Icon:Gamepad2,color:'green'},
     {id:'visual',title:'کلمات تصویری جلسه اول',subtitle:'۵۰ عبارت + ۱۰ مکالمه',Icon:BookOpen,color:'green'},
     {id:'dialogues',title:'مکالمه‌های تصویری',subtitle:'پنج داستان شاخه‌دار و روزمره',Icon:MessageCircle,color:'purple'},
@@ -71,6 +75,10 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
       <div className="gameGoalHeader"><div><span className="gameEyebrow">DAILY MISSION</span><h2>ماموریت کوچک امروز</h2></div><span className="gameGoalNumber">{Math.min(report.today.attempts,dailyGoal)} / {dailyGoal} تمرین</span></div>
       <div className="gameProgress"><span style={{width:dailyDone+'%'}} /></div>
       <div className="gameGoalDetail"><span><Target size={16}/> هدف قابل‌تنظیم در مربی روزانه؛ بدون جریمه</span><b>{report.today.xp||0} XP امروز</b></div>
+    </div>
+    <div className="nightHomeShortcut">
+       <RouteLink to="night" navigate={setTab}><Moon size={21}/><span><b>🌙 شیفت شب</b><small>قبل از خواب، ۴ تا ۸ کارت با تصویر و صدا</small></span><ArrowLeft size={18}/></RouteLink>
+       <RouteLink to="visualMemory" navigate={setTab}><ImageIcon size={21}/><span><b>یادسپاری تصویری</b><small>عددها، واژه‌های جدید و کارت‌های ضعیف</small></span><ArrowLeft size={18}/></RouteLink>
     </div>
     <RouteLink to="coach" navigate={setTab} className="dailyCoachShortcut">
       <span className="dailyCoachShortcutIcon"><Brain size={25}/></span>
