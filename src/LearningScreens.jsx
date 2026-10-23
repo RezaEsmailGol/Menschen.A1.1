@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ArrowLeft, BookOpen, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap, Moon, ImageIcon } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookOpenCheck, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap, Moon, ImageIcon } from 'lucide-react';
 import { lessons } from './courseData.js';
 import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
