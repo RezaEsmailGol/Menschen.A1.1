@@ -117,3 +117,5 @@
 @media(max-width:1000px){.cnGroups{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:670px){.cnRoot{gap:12px}.cnHero{padding:22px 19px;min-height:0}.cnHero h1{font-size:23px}.cnHeroArt{display:none}.cnHeroBadges span{font-size:9px}.cnGroups{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.cnGroup{padding:9px 10px}.cnGroupEmoji{width:32px;height:32px;font-size:20px}.cnPanel{padding:14px}.cnPanelHeader{align-items:flex-start;flex-direction:column}.cnPanelHeader h2{font-size:20px}.cnItems,.cnVerbTables{grid-template-columns:1fr}.cnStart{flex-wrap:wrap}.cnSectionHead h2{font-size:16px}.cnSectionHead .cnOldLesson{font-size:10px}.cnChoices{grid-template-columns:1fr}.cnChoices button{min-height:50px}.cnTyping input{font-size:16px}.cnHugeNumber{font-size:56px}.cnPrompt{min-height:150px;padding:16px}.cnQuizActions{min-height:46px}}
 @media(max-width:390px){.cnGroups{grid-template-columns:1fr 1fr}.cnGroupCopy small{font-size:9px}.cnGroupCopy b{font-size:11px}.cnPanelCounts span{font-size:9px}}
+
+.cnChoices button.wrongOption{border-color:#ed8d86;background:#fff1f0;color:#ae514a}
