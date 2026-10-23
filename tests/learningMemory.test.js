@@ -83,3 +83,13 @@ test('due grammar routes to verbs instead of unrelated SRS and class-note errors
  assert.equal(recommendedRoute({...base,dueItems:[],weakItems:[lessonNote]},0).page,'classNotes');
  assert.equal(recommendedRoute({...base,dueItems:[],weakItems:[]},0).page,'exam');
 });
+
+test('class note verbs route to the actual class workbook without changing stable IDs',async()=>{
+ const {learningItemDestination}=await import('../src/learningMemory.js');
+ const teacherVerb={id:activityItemKey('grammar','heißen','du'),kind:'grammar'};
+ assert.equal(learningItemDestination(teacherVerb),'classNotes');
+ assert.equal(learningItemDestination({id:activityItemKey('grammar','arbeiten','ihr'),kind:'grammar'}),'classNotes');
+ assert.equal(learningItemDestination({id:activityItemKey('dialogue','class','greetings',1),kind:'dialogue'}),'classNotes');
+ assert.equal(learningItemDestination({id:activityItemKey('number',17),kind:'number'}),'numbers');
+ assert.equal(learningItemDestination({id:'vocab:abc',kind:'vocab'}),'srs');
+});
