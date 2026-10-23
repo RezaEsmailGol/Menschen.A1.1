@@ -108,9 +108,33 @@ export function chooseAdaptiveNumbers(maximum, memory={}, size=10, random=Math.r
   return [...prioritized,...shuffle(numbers.filter(n=>!chosen.has(n))).slice(0,Math.min(size,numbers.length)-chosen.size)];
 }
 
+export function learningItemDestination(item) {
+ const id=String(item?.id||'');
+ if(id.includes(':class:')||id.startsWith('notes:'))return 'classNotes';
+ const routes={
+   number:'numbers',grammar:'verbs',sentence:'builder',reading:'exam',
+   pronunciation:'pronunciation',dialogue:'dialogues',dictation:'listen',
+   visual:'visual',vocab:'srs'
+ };
+ return routes[item?.kind]||'practice';
+}
+
 export function recommendedRoute(insights, scheduleDue=0) {
-  if (scheduleDue>0 || insights.due>0) return {page:'srs',label:'مرور کلمات فراموش‌شده',why:'اول مرورهای موعددار را انجام بده'};
-  if (insights.today.attempts<3) return {page:'course',label:'ادامه درس امروز',why:'با چند دقیقه درس جدید شروع کن'};
-  if (insights.weak>0) return {page:'practice',label:'تمرین بخش‌های ضعیف',why:'اشتباه‌ها مشخص می‌کنند چه چیزی باید تکرار شود'};
-  return {page:'exam',label:'آزمون درس امروز',why:'وقت سنجش مطالبی است که یاد گرفته‌ای'};
+ // Explicit spaced-repetition cards always belong to the SRS review screen.
+ if(scheduleDue>0)return {page:'srs',label:'مرور فلش‌کارت‌های موعددار',why:'واژه‌های موعددار آماده مرور هستند'};
+ const today=insights?.today?.attempts||0;
+ const overdue=insights?.dueItems?.[0];
+ if(overdue){
+   const page=learningItemDestination(overdue);
+   return {page,label:'مرور '+(overdue.label||'مطلب فراموش‌شده'),
+     why:'زمان مرور این مهارت رسیده است'};
+ }
+ const weak=insights?.weakItems?.[0];
+ if(weak && today>=3) {
+   const page=learningItemDestination(weak);
+   return {page,label:'تقویت '+(weak.label||'مهارت ضعیف'),
+     why:'این مورد در پاسخ‌های قبلی نیازمند تمرین بیشتر بوده است'};
+ }
+ if(today<3)return {page:'course',label:'ادامه درس امروز',why:'با چند دقیقه درس جدید شروع کن'};
+ return {page:'exam',label:'آزمون درس امروز',why:'وقت سنجش مطالبی است که یاد گرفته‌ای'};
 }
