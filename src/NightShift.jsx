@@ -119,7 +119,7 @@ export default function NightShift({memory,schedule,progress,personalCards,night
            <div className="nightExerciseTop"><span>تصویر و تلفظ · {prettyGroup(slideCard.group)}</span>
              <span>{(slideIndex+1).toLocaleString('fa-IR')} از {slides.length.toLocaleString('fa-IR')}</span></div>
            <div className="nightTrack"><i style={{width:((slideIndex+1)/slides.length*100)+'%'}}/></div>
-           <div className="nightVisual"><MnemonicArt word={slideCard.answer} number={getArtNumber(slideCard)} showLabel/></div>
+           <div className="nightVisual"><MnemonicArt word={slideCard.answer} number={getArtNumber(slideCard)} prompt={slideCard.prompt} letter={slideCard.letter} showLabel/></div>
            <h2 dir="ltr">{slideCard.answer}</h2>
            <p>{slideCard.prompt}</p>
            <div className="nightSlideshowControls">
@@ -138,7 +138,7 @@ export default function NightShift({memory,schedule,progress,personalCards,night
        <div className="nightTrack"><i style={{width:(100*active.index/display)+'%'}}/></div>
        <div className="nightQuestion">
          <small>{revealed?'پاسخ آلمانی':'ابتدا در ذهن خودت پاسخ بده'}</small>
-         <div className="nightVisual"><MnemonicArt word={card.answer} number={getArtNumber(card)} showLabel={revealed}/></div>
+         <div className="nightVisual"><MnemonicArt word={card.answer} number={getArtNumber(card)} prompt={card.prompt} letter={card.letter} showLabel={revealed}/></div>
          <h2 dir={revealed?'ltr':'auto'}>{revealed?card.answer:card.prompt}</h2>
          {revealed && <>
            <button className="nightSpeak" onClick={()=>speak(card.audio||card.answer)}><Volume2 size={20}/> شنیدن تلفظ</button>
