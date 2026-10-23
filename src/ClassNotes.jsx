@@ -66,7 +66,7 @@ function LessonCards({group,items,memory,speak,expanded,setExpanded}){
 }
 
 export default function ClassNotes({speak,memory={},onPracticeEvent=()=>{},setTab}){
- const [group,setGroup]=useState('numbers');
+ const [group,setGroup]=useState(()=>weakClassNotes(classNotes,memory).length?'review':'numbers');
  const [mode,setMode]=useState('mixed');
  const [view,setView]=useState('study');
  const [round,setRound]=useState(null);
