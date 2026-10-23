@@ -22,3 +22,6 @@
 .nightSlideshowControls button.active{background:#426f67;border-color:#7cc6ab}
 @media(max-width:600px){.nightShell{border-radius:21px;padding:17px;min-height:0}.nightHeading{gap:10px;margin:20px 0}.nightMoon{width:61px;height:61px;border-radius:18px}.nightMoon svg{width:31px}.nightHeading h1{font-size:21px}.nightHeading p{font-size:11px}.nightPrepare{padding:15px}.nightOverview strong{font-size:18px}.nightQuestion{min-height:190px;padding:14px}.nightAfter{gap:9px}}
 @media(prefers-reduced-motion:reduce){.nightTrack i{transition:none!important}}
+
+.nightSwitchMode{align-self:flex-start;border:1px solid #ffffff45;border-radius:10px;background:#ffffff0c;color:#c6d3ef;padding:8px 12px;font-size:11px;cursor:pointer}
+.nightSwitchMode:hover{background:#ffffff1f}
