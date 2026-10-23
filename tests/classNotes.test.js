@@ -124,3 +124,11 @@ test('review-only sets generate four distinct options even from one weak item',a
  assert.equal(stats.mastered,1);
  assert.equal(stats.practiced,2);
 });
+
+test('typing an ASCII apostrophe for everyday greetings is accepted',()=>{
+ const greeting=greetingNotes.find(x=>x.de==='Wie geht’s dir?');
+ const greeting2=greetingNotes.find(x=>x.de==='Mir geht’s gut.');
+ assert.equal(isNoteCorrect(greeting,"Wie geht's dir?"),true);
+ assert.equal(isNoteCorrect(greeting2,"Mir geht's gut."),true);
+ assert.equal(isNoteCorrect(greeting,"Wie geht dir?"),false);
+});
