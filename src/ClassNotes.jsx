@@ -1,4 +1,4 @@
-import React,{useEffect,useMemo,useState} from 'react';
+import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft,BookOpenCheck,Brain,Check,CheckCircle2,ChevronLeft,Headphones,Keyboard,RotateCcw,Sparkles,Target,Trophy,Volume2,X} from 'lucide-react';
 import {
   classSets,classNotes,classNotesBySet,verbTables,personalPronouns,
@@ -76,6 +76,7 @@ export default function ClassNotes({speak,memory={},onPracticeEvent=()=>{},setTa
  const [score,setScore]=useState(0);
  const [errors,setErrors]=useState([]);
  const [expanded,setExpanded]=useState(null);
+ const answerField=useRef(null);
  const now=Date.now();
  const weak=useMemo(()=>weakClassNotes(classNotes,memory,now),[memory,now]);
  const items=group==='review'?weak:classNotesBySet[group];
@@ -106,6 +107,17 @@ export default function ClassNotes({speak,memory={},onPracticeEvent=()=>{},setTa
  }
  function next(){
    setPosition(x=>x+1);setInput('');setJudged(null);
+ }
+ function addGermanLetter(letter){
+   if(judged!==null)return;
+   const field=answerField.current;
+   const start=field?.selectionStart??input.length;
+   const end=field?.selectionEnd??input.length;
+   setInput(current=>current.slice(0,start)+letter+current.slice(end));
+   requestAnimationFrame(()=>{
+     field?.focus();
+     field?.setSelectionRange(start+letter.length,start+letter.length);
+   });
  }
  function close(){
    setView('study');setRound(null);setInput('');setJudged(null);
@@ -201,12 +213,18 @@ export default function ClassNotes({speak,memory={},onPracticeEvent=()=>{},setTa
        {question.type==='choice'||question.type==='listen'
          ? <AnswerChoices question={question} answer={input} judged={judged} speak={speak}
               onChoose={choice=>{setInput(choice);check(choice)}}/>
-         : <div className="cnTyping"><input aria-label="پاسخ آلمانی" dir="ltr" autoComplete="off"
-              spellCheck={false} value={input} disabled={judged!==null} placeholder="به آلمانی بنویس..."
-              onChange={e=>setInput(e.target.value)}
-              onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();judged!==null?next():check()}}}/>
-             {judged===null&&<button type="button" disabled={!input.trim()} onClick={()=>check()}>
-                 بررسی <Check size={17}/></button>}
+         : <div className="cnTypeWrap">
+            <div className="cnTyping"><input ref={answerField} aria-label="پاسخ آلمانی" dir="ltr" autoComplete="off"
+                spellCheck={false} value={input} disabled={judged!==null} placeholder="به آلمانی بنویس..."
+                onChange={e=>setInput(e.target.value)}
+                onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();judged!==null?next():check()}}}/>
+               {judged===null&&<button type="button" disabled={!input.trim()} onClick={()=>check()}>
+                   بررسی <Check size={17}/></button>}
+            </div>
+            {judged===null&&<div className="cnGermanKeys" dir="ltr" aria-label="حروف ویژه آلمانی">
+              {['ä','ö','ü','ß','Ä','Ö','Ü'].map(letter=><button key={letter} type="button"
+                aria-label={'افزودن حرف '+letter} onClick={()=>addGermanLetter(letter)}>{letter}</button>)}
+            </div>}
             </div>}
        {judged!==null&&<div className={'cnResult '+(judged?'correct':'incorrect')} role="status">
           {judged?<CheckCircle2 size={22}/>:<RotateCcw size={22}/>}
