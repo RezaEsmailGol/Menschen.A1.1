@@ -3,6 +3,7 @@ import { ArrowLeft, BookOpen, Brain, CalendarDays, CheckCircle2, ChevronLeft, Ci
 import { lessons } from './courseData.js';
 import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
+import {classSets,classNotesBySet,dueClassSummary} from './classNotesData.js';
 import { learningInsights, recommendedRoute } from './learningMemory.js';
 import RouteLink from './RouteLink';
 import './mobileGame.css';
@@ -175,6 +176,22 @@ export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10}) {
         <RouteLink className="progressPractice" to="practice" navigate={setTab}>رفتن به تمرین <ArrowLeft size={16}/></RouteLink>
       </section>
     </div>
+    <section className="progressPanel classMasteryPanel">
+      <div className="classMasteryHeading"><div><span className="gameEyebrow">CLASS NOTES</span>
+        <h3><BookOpenCheck size={20}/> پیشرفت در جزوه‌های استاد</h3>
+        <p>هر موضوع به‌صورت جداگانه ارزیابی می‌شود؛ تسلط یعنی پاسخ‌های صحیح در چند روز متفاوت.</p></div>
+        <RouteLink to="classNotes" navigate={setTab}>تمرین جزوه <ArrowLeft size={16}/></RouteLink></div>
+      <div className="classMasteryGrid">{classSets.map(set=>{
+        const summary=dueClassSummary(classNotesBySet[set.id],memory);
+        const pct=Math.round(summary.mastered/summary.total*100);
+        return <RouteLink to="classNotes" navigate={setTab} key={set.id} className="classMasteryCard">
+          <div className="classMasteryTitle"><span>{set.icon}</span><b>{set.title}</b><small>{pct}٪</small></div>
+          <div className="classMasteryTrack"><span style={{width:pct+'%'}}/></div>
+          <div className="classMasteryDetails"><span>{summary.practiced} تمرین‌شده</span>
+            <span>{summary.weak} نیازمند مرور</span><span>{summary.mastered} مسلط</span></div>
+        </RouteLink>;
+      })}</div>
+    </section>
     <div className="gameBackup"><div><ShieldCheck size={23}/><span><b>حافظه‌ات را حفظ کن</b><small>اطلاعات فعلاً فقط روی همین گوشی و مرورگر ذخیره می‌شود. برای انتقال به دستگاه دیگر بکاپ بگیر.</small></span></div>
       <div className="backupActions"><button onClick={saveBackup}><Download size={17}/> دریافت بکاپ</button><button onClick={()=>upload.current?.click()}><Upload size={17}/> بازیابی بکاپ</button><input ref={upload} hidden type="file" accept=".json,application/json" onChange={restoreBackup}/></div>
     </div>
