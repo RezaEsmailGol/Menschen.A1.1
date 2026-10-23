@@ -8,7 +8,8 @@ import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
-  {id:'pictureGame',label:'تصویر را ببین، آلمانی بگو',hint:'۳ سطح: چهارگزینه‌ای، تایپ و جمله‌سازی تصویری',Icon:Gamepad2,theme:'green'},
+  {id:'classNotes',label:'تمرین‌های جدید کلاس',hint:'اعداد ۱۳–۲۰، فعل‌ها، معرفی، احوال‌پرسی و لغات استاد',Icon:BookOpenCheck,theme:'green'},
+    {id:'pictureGame',label:'تصویر را ببین، آلمانی بگو',hint:'۳ سطح: چهارگزینه‌ای، تایپ و جمله‌سازی تصویری',Icon:Gamepad2,theme:'green'},
   {id:'visual',label:'جملات و فلش‌کارت تصویری',hint:'۵۰ عبارت مصور، بازی انتخاب جمله و ۱۰ مکالمه',Icon:BookOpen,theme:'sky'},
   {id:'dialogues',label:'گفت‌وگوی تعاملی هوشمند',hint:'۵ داستان مصور، پاسخ انتخابی و مربی AI اختیاری',Icon:MessageCircle,theme:'purple'},
   {id:'workbook',label:'دفتر جلسه اول استاد',hint:'الفبا، استثناها، اعداد، صرف فعل و آزمون',Icon:BookOpen,theme:'green'},
@@ -43,6 +44,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
     {id:'visual',title:'کلمات تصویری جلسه اول',subtitle:'۵۰ عبارت + ۱۰ مکالمه',Icon:BookOpen,color:'green'},
     {id:'dialogues',title:'مکالمه‌های تصویری',subtitle:'پنج داستان شاخه‌دار و روزمره',Icon:MessageCircle,color:'purple'},
     {id:'workbook',title:'جلسه اول استاد',subtitle:'دفتر مصور + تمرین و آزمون',Icon:BookOpen,color:'purple'},
+    {id:'classNotes',title:'جزوه‌های جدید استاد',subtitle:'اعداد ۱۳–۲۰ و فعل‌ها و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
     {id:'srs',title:'تمرین کلمات',subtitle:scheduleDue ? scheduleDue+' کارت موعددار' : 'مرور واژه‌ها',Icon:Brain,color:'green'},
     {id:'builder',title:'چالش جمله‌سازی',subtitle:'۴ جمله از درس انتخابی',Icon:Gamepad2,color:'amber'},
     {id:'exam',title:'آزمون دانش',subtitle:'نمره پایانی را ثبت کن',Icon:GraduationCap,color:'sky'}
@@ -53,7 +55,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
         <h1>آلمانی را <span>بازی کن!</span></h1>
         <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
         <div className="gameHeroActions">
-          <RouteLink className="gamePrimary" to="workbook" navigate={setTab}><BookOpen size={17}/> دفتر جلسه اول استاد <ArrowLeft size={18}/></RouteLink>
+          <RouteLink className="gamePrimary" to="classNotes" navigate={setTab}><BookOpenCheck size={17}/> تمرین جزوه‌های جدید استاد <ArrowLeft size={18}/></RouteLink>
           <RouteLink className="gameHeroSecondary" to="dialogues" navigate={setTab}>گفت‌وگوهای جدید</RouteLink>
         </div>
       </div>
@@ -95,7 +97,7 @@ export function PracticeHub({setTab,memory}) {
   const report=learningInsights(memory);
   const firstWeak=report.weakItems[0];
   const destination=firstWeak ? ({
-    visual:'visual',number:'numbers',pronunciation:'pronunciation',sentence:'builder',grammar:'verbs',
+    visual:'visual',number:'numbers',pronunciation:'pronunciation',sentence:'builder',grammar:'verbs',dialogue:'classNotes',
     reading:'exam',dictation:'listen',vocab:'srs'
   }[firstWeak.kind] || 'srs') : 'srs';
   const focusText=firstWeak ? 'اول این مورد را تقویت کن: '+(firstWeak.label||skillLabels[firstWeak.kind]) : 'چند تمرین انجام بده تا پیشنهاد دقیق دریافت کنی.';
