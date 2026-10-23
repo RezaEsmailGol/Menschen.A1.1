@@ -1,6 +1,7 @@
 // Browser routes: distinct shareable URLs for every screen and individual lesson.
 export const ROUTES=Object.freeze({
   home:'/', course:'/lessons', practice:'/practice', progress:'/progress', coach:'/coach',
+  classNotes:'/class-notes',
   workbook:'/workbook', dialogues:'/dialogues',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
   numbers:'/numbers',pronunciation:'/pronunciation',flash:'/flashcards',
   listen:'/dictation',words:'/first-words',alphabet:'/alphabet',verbs:'/verbs'
