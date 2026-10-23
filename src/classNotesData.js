@@ -137,3 +137,43 @@ export function chooseNotes(items, memory={}, count=10, random=Math.random){
  }
  return selected.map(item=>noteTask(item,items,random));
 }
+
+/**
+ * A round can alternate recall styles without changing a question's stable
+ * memory key. Hearing before spelling is possible for numbers and vocabulary;
+ * verb practice keeps a visible pronoun so the answer is never spoken aloud.
+ */
+export function buildClassRound(items, memory={}, mode='mixed', size=10, random=Math.random) {
+ const source=chooseNotes(items,memory,size,random);
+ return source.map((item,index)=>{
+   const isVerb=item.set==='verbs';
+   const type= mode==='write' ? 'type'
+    : mode==='listen' ? (isVerb?'type':'listen')
+    : isVerb||item.set==='numbers'||index%2===1 ? 'type' : 'choice';
+   return {...item,type,audio:type==='listen',choices:
+     type==='choice'||type==='listen' ? noteTask({...item,type:'choice'},items,random).choices : null};
+ });
+}
+
+export function weakClassNotes(items=classNotes,memory={},now=Date.now()) {
+ return items.filter(item=>{
+  const record=memory.items?.[item.key];
+  return record && (record.mastery<55 || record.lastCorrect===false || record.nextAt<=now);
+ });
+}
+
+export function masteredClassNotes(items=classNotes,memory={}) {
+ return items.filter(item=>{
+  const m=memory.items?.[item.key];
+  return m && m.mastery>=80 && m.correct>=3 && m.reviewedDays>=2;
+ });
+}
+
+/** Group is shared by different question types: retaining its ID ensures
+ *  answering the same concept in a different mode still trains that concept. */
+export function dueClassSummary(items=classNotes,memory={},now=Date.now()) {
+ const practiced=items.filter(x=>memory.items?.[x.key]);
+ const weak=weakClassNotes(items,memory,now);
+ return {total:items.length,practiced:practiced.length,weak:weak.length,
+   mastered:masteredClassNotes(items,memory).length,unseen:items.length-practiced.length};
+}
