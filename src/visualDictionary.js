@@ -246,7 +246,7 @@ export function getVisualEntry(word='',options={}){
  if(direct) return {...direct,kind:'word'};
  // Phrases: use the most specific known action or concrete noun;
  // never use a random first-letter icon as an allegedly meaningful picture.
- const pieces=key.split(' ');
+ const pieces=key.split(' ').filter(p=>!['ich','du','wir','ihr','er','sie','es','bin','bist','ist','sind','seid','das','die','der','den','dem','in','aus','mit','als','und','ein','eine','einen','meine','mein'].includes(p));
  const meaningful=pieces.map(p=>sceneIndex.get(p)||verbVisuals[p]||WORD_DICTIONARY[p]?.scene)
    .filter(scene=>scene && scene!=='context');
  const scene=meaningful[0]||farsiScenes.find(([r])=>r.test(String(options.meaning||options.prompt||'')))?.[1]||'context';
