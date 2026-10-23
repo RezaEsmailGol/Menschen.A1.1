@@ -10,7 +10,7 @@ import './visualMemory.css';
 
 function buildLibrary({memory,schedule,progress,personalCards}) {
  const baseline=nightCandidates({memory,schedule,progress,personalCards});
- const alphabet=ALPHABET_CARDS.map(x=>({id:'alphabet:'+x.letter,source:'alphabet',kind:'alphabet',group:'alphabet',letter:x.letter,prompt:'حرف «'+x.letter+'»؛ واژه نمونه آلمانی را به خاطر بیاور.',answer:x.example,audio:x.example,note:x.cue,scene:x.scene,lesson:1}));
+ const alphabet=ALPHABET_CARDS.map(x=>({id:activityItemKey('alphabet',x.letter),source:'alphabet',kind:'alphabet',group:'alphabet',letter:x.letter,prompt:'حرف «'+x.letter+'»؛ واژه نمونه آلمانی را به خاطر بیاور.',answer:x.example,audio:x.example,note:x.cue,scene:x.scene,lesson:1}));
  const nums=Array.from({length:101},(_,n)=>({
    id:activityItemKey('number',n),source:'numbers',kind:'number',group:'numbers',
    prompt:`عدد ${n}`,answer:germanNumber(n),audio:germanNumber(n),
