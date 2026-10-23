@@ -149,3 +149,24 @@
 @media(max-width:480px){.dailyCoachShortcut{gap:9px;padding:11px}
  .dailyCoachShortcutIcon{width:40px;height:40px}.dailyCoachShortcut b{font-size:12px}
  .dailyCoachShortcut small{font-size:10px}.dailyCoachShortcutCTA{padding:8px 9px;font-size:10px}}
+
+/* Mastery by classroom topic — accessible, responsive and mobile-first. */
+.classMasteryPanel{display:grid;gap:15px}
+.classMasteryHeading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.classMasteryHeading h3{margin:6px 0;display:flex;align-items:center;gap:7px}
+.classMasteryHeading p{font-size:12px;color:#8b93a6;margin:0;line-height:1.8}
+.classMasteryHeading>a{display:flex;align-items:center;gap:5px;border:1px solid #d9d6f6;
+ background:#f0efff;color:#5c53ce;padding:9px 13px;border-radius:12px;text-decoration:none;
+ font-size:12px;font-weight:800;white-space:nowrap}
+.classMasteryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.classMasteryCard{min-width:0;background:#fafbff;border:1px solid #e8eaf5;text-decoration:none;
+ border-radius:13px;padding:15px;color:#31395c;display:grid;gap:11px;transition:box-shadow .18s,border-color .18s}
+.classMasteryCard:hover{border-color:#b9b3ef;box-shadow:0 9px 22px #38387a0c}
+.classMasteryTitle{display:flex;align-items:center;gap:8px}
+.classMasteryTitle>span{font-size:23px}
+.classMasteryTitle>b{font-size:13px;flex:1}
+.classMasteryTitle>small{font:700 12px Tahoma;color:#625acb}
+.classMasteryTrack{height:8px;border-radius:99px;background:#e8e9f5;overflow:hidden}
+.classMasteryTrack span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#36c39d,#7061df)}
+.classMasteryDetails{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;color:#8891a7;font-size:10px}
+@media(max-width:600px){.classMasteryGrid{grid-template-columns:1fr}}
