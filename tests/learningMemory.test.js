@@ -73,11 +73,11 @@ test('replaying a single card immediately cannot fake long-term mastery',()=>{
  assert.equal(state.items['vocab:repeat'].reviewedDays,2);
 });
 
-test('due grammar routes to verbs instead of unrelated SRS and class-note errors route to class notes',()=>{
+test('due classroom grammar routes to class-notes review rather than generic flashcards',()=>{
  const base={today:{attempts:7},due:1,weak:1};
  const grammar={id:activityItemKey('grammar','haben','du'),kind:'grammar',label:'haben / du'};
  const lessonNote={id:activityItemKey('dialogue','class','origin',4),kind:'dialogue',label:'Wie heißt du?'};
- assert.equal(recommendedRoute({...base,dueItems:[grammar],weakItems:[grammar]},0).page,'verbs');
+ assert.equal(recommendedRoute({...base,dueItems:[grammar],weakItems:[grammar]},0).page,'classNotes');
  assert.equal(recommendedRoute({...base,dueItems:[lessonNote],weakItems:[lessonNote]},0).page,'classNotes');
  assert.equal(recommendedRoute({...base,dueItems:[grammar],weakItems:[grammar]},2).page,'srs');
  assert.equal(recommendedRoute({...base,dueItems:[],weakItems:[lessonNote]},0).page,'classNotes');
