@@ -4,6 +4,7 @@ import {ArrowLeft,Brain,CheckCircle2,ChevronLeft,Ear,Headphones,Hash,RotateCcw,
 import {createNumberMemoryRound,NUMBER_RECALL_MODES,NUMBER_RECALL_RANGES,
  numberMemoryCorrect} from './numberRecallLogic.js';
 import {activityItemKey} from './learningMemory.js';
+import {numberSection} from './numberSections.js';
 import {GAME_SOUND_KEY,GAME_HAPTIC_KEY,readGameFeedbackPreferences,
  saveGameFeedbackPreference,giveGameFeedback} from './gameEffects.js';
 import GameCelebration from './GameCelebration.jsx';
@@ -18,22 +19,22 @@ const NUMBER_MODE_DETAILS={
  wordDigit:'کلمه آلمانی را بخوان و رقم درست را انتخاب کن.'
 };
 export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,onClose=()=>{}}){
- const [mode,setMode]=useState('mixed'),[maximum,setMaximum]=useState(12);
+ const [mode,setMode]=useState('mixed'),[rangeId,setRangeId]=useState('0-12');
  const [roundVersion,setRoundVersion]=useState(0);
- const [round,setRound]=useState(()=>createNumberMemoryRound({maximum:12,mode:'mixed',memory}));
+ const [round,setRound]=useState(()=>createNumberMemoryRound({rangeId:'0-12',mode:'mixed',memory}));
  const [position,setPosition]=useState(0),[selection,setSelection]=useState(null);
  const [correctCount,setCorrectCount]=useState(0),[finished,setFinished]=useState(false);
  const [preferences,setPreferences]=useState(readGameFeedbackPreferences);
  const current=round[position];
- const audio=useQuizQuestionAudio({questionKey:finished?null:mode+':'+maximum+':'+roundVersion+':'+position+':'+current?.id,
+ const audio=useQuizQuestionAudio({questionKey:finished?null:mode+':'+rangeId+':'+roundVersion+':'+position+':'+current?.id,
   mode:finished?null:current?.mode==='listenWord'?'listen':'read',audio:current?.word,
   sound:preferences.sound,speak});
  const correct=selection!==null&&numberMemoryCorrect(current,selection);
  const wrong=selection!==null&&!correct;
  const progress=Math.round((position+Number(selection!==null))/Math.max(1,round.length)*100);
- function start(nextMode=mode,nextMaximum=maximum){
-  const questions=createNumberMemoryRound({maximum:nextMaximum,mode:nextMode,memory});
-  setMode(nextMode);setMaximum(nextMaximum);setRound(questions);setRoundVersion(n=>n+1);
+ function start(nextMode=mode,nextRange=rangeId){
+  const questions=createNumberMemoryRound({rangeId:nextRange,mode:nextMode,memory});
+  setMode(nextMode);setRangeId(nextRange);setRound(questions);setRoundVersion(n=>n+1);
   setPosition(0);setSelection(null);setCorrectCount(0);setFinished(false);
  }
  function toggle(key){
@@ -66,7 +67,7 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
    return;
   }
   const upcoming=round[position+1];
-  audio.playUpcoming(mode+':'+maximum+':'+roundVersion+':'+(position+1)+':'+upcoming.id,upcoming.word,
+  audio.playUpcoming(mode+':'+rangeId+':'+roundVersion+':'+(position+1)+':'+upcoming.id,upcoming.word,
    upcoming.mode==='listenWord'?'listen':'read');
   setPosition(n=>n+1);
   setSelection(null);
@@ -87,16 +88,16 @@ export default function NumberRecallGame({speak=()=>{},memory={},onEvent,onEnd,o
   </div>
   <details className="nrSettings">
    <summary><Settings2 size={17}/> نوع و محدوده آزمون
-     <span>{NUMBER_RECALL_MODES.find(item=>item.id===mode)?.title} · ۰ تا {maximum}</span>
+     <span>{NUMBER_RECALL_MODES.find(item=>item.id===mode)?.title} · {numberSection(rangeId).label}</span>
    </summary>
    <div className="nrSettingTitle"><Settings2 size={17}/> نوع آزمون</div>
    <div className="nrModes">{NUMBER_RECALL_MODES.map(item=><button type="button" key={item.id}
     aria-pressed={mode===item.id} className={mode===item.id?'active':''}
-    onClick={()=>start(item.id,maximum)}>{item.title}</button>)}</div>
+    onClick={()=>start(item.id,rangeId)}>{item.title}</button>)}</div>
    <div className="nrSettingTitle"><Hash size={17}/> محدوده اعداد</div>
    <div className="nrRanges">{NUMBER_RECALL_RANGES.map(value=><button type="button" key={value}
-    aria-pressed={maximum===value} className={maximum===value?'active':''} onClick={()=>start(mode,value)}>
-     ۰ تا {value.toLocaleString('fa-IR')}</button>)}</div>
+    aria-pressed={rangeId===value} className={rangeId===value?'active':''} onClick={()=>start(mode,value)}>
+     {numberSection(value).label}</button>)}</div>
    <small>تغییر حالت یا محدوده، یک آزمون جدید با سؤال‌های تصادفی می‌سازد.</small>
   </details>
   {finished?<div className="nrFinished">
