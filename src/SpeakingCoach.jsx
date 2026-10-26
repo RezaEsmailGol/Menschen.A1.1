@@ -132,8 +132,10 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    try{instance.start();setListening(true)}
    catch(e){recognitionRef.current=null;setListening(false);setError('شروع ضبط ممکن نشد. از اتصال امن HTTPS و مجوز میکروفون مطمئن شو.');}
  }
- const recent=Object.values(state?.items||{}).filter(x=>x.category===category)
-  .sort((a,b)=>(a.avgScore||0)-(b.avgScore||0)).slice(0,5);
+ const recent=Object.values(state?.items||{}).filter(x=>x.category===category &&
+    (speakingStatus(x)==='weak'||x.avgScore<85))
+  .sort((a,b)=>(speakingStatus(a)==='weak'?0:1)-(speakingStatus(b)==='weak'?0:1)||
+    (a.avgScore||0)-(b.avgScore||0)).slice(0,5);
  return <div className="scPage">
   <header className="scHero">
    <div><span className="scEyebrow"><Mic size={17}/> SPRECHEN · A1.1</span>
