@@ -9,6 +9,7 @@ import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
+ {id:'speaking',label:'مربی تلفظ من',hint:'با میکروفون آلمانی بگو؛ همخوانی گفتار و پیشرفت را بسنج',Icon:Mic2,theme:'purple'},
   {id:'night',label:'شیفت شب',hint:'مرور کوتاه و نمایش آرام تصویری پیش از خواب',Icon:Moon,theme:'purple'},
   {id:'visualMemory',label:'یادسپاری با تصویر SVG',hint:'کلمات و اعداد با تصویر، تلفظ و فیلترِ جدید/مسلط/ضعیف',Icon:ImageIcon,theme:'green'},
   {id:'classNotes',label:'تمرین‌های جدید کلاس',hint:'اعداد ۱۳–۲۰، فعل‌ها، معرفی، احوال‌پرسی و لغات استاد',Icon:BookOpenCheck,theme:'green'},
@@ -31,7 +32,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_night_shift_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}) {
   const report=learningInsights(memory);
@@ -43,6 +44,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
   const learningStages=[
+    {id:'speaking',title:'مربی تلفظ شخصی',subtitle:'اعداد، حروف، واژه و جمله با میکروفون و حافظه',Icon:Mic2,color:'purple'},
     {id:'night',title:'شیفت شب · مرور پیش از خواب',subtitle:'مرور فعال یا نمایش پشت‌سرهم SVG و صدا',Icon:Moon,color:'purple'},
     {id:'visualMemory',title:'یادسپاری تصویری',subtitle:'اعداد و واژه‌ها با نشانه‌های SVG، تلفظ و حافظه',Icon:ImageIcon,color:'green'},
     {id:'pictureGame',title:'بازی تصویر به آلمانی',subtitle:'۳ مرحله، XP و مرور هوشمند',Icon:Gamepad2,color:'green'},
@@ -77,6 +79,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
       <div className="gameGoalDetail"><span><Target size={16}/> هدف قابل‌تنظیم در مربی روزانه؛ بدون جریمه</span><b>{report.today.xp||0} XP امروز</b></div>
     </div>
     <div className="nightHomeShortcut">
+      <RouteLink to="speaking" navigate={setTab}><Mic2 size={21}/><span><b>مربی تلفظ من</b><small>بگو، صدایت را بسنج و پیشرفتت را دنبال کن</small></span><ArrowLeft size={18}/></RouteLink>
        <RouteLink to="night" navigate={setTab}><Moon size={21}/><span><b>🌙 شیفت شب</b><small>قبل از خواب، ۴ تا ۸ کارت با تصویر و صدا</small></span><ArrowLeft size={18}/></RouteLink>
        <RouteLink to="visualMemory" navigate={setTab}><ImageIcon size={21}/><span><b>یادسپاری تصویری</b><small>عددها، واژه‌های جدید و کارت‌های ضعیف</small></span><ArrowLeft size={18}/></RouteLink>
     </div>
