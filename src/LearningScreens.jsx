@@ -5,6 +5,7 @@ import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
 import {classSets,classNotesBySet,dueClassSummary} from './classNotesData.js';
 import { learningInsights, recommendedRoute } from './learningMemory.js';
+import {speakingStats} from './speakingEngine.js';
 import RouteLink from './RouteLink';
 import './mobileGame.css';
 
@@ -29,7 +30,7 @@ const practiceCategories=[
   {id:'flash',label:'فلش‌کارت شخصی',hint:'افزودن و ورود و خروجی کارت',Icon:RotateCcw,theme:'pink'}
 ];
 const skillLabels={
-  vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',reading:'درک جمله',
+  vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',speaking:'تمرین گفتار',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
 const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
@@ -124,9 +125,10 @@ export function PracticeHub({setTab,memory}) {
   </div>;
 }
 
-export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10}) {
+export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10,speakingState={}}) {
   const insights=learningInsights(memory);
   const masteredCourses=lessons.filter(x=>progress[x.id]?.passed).length;
+  const speechReport=speakingStats(speakingState);
   const upload=useRef(null);
   const saveBackup=()=>{
     const data={kind:'deutsch-trainer-backup',version:1,exportedAt:new Date().toISOString(),data:{}};
@@ -168,6 +170,11 @@ export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10}) {
         [insights.due,'موعد مرور',Clock3],
         [masteredCourses,'درس قبول شده',BookOpen]
       ].map(([value,name,Icon])=><div key={name}><Icon size={21}/><b>{value}</b><span>{name}</span></div>)}</div>
+    </div>
+    <div className="scProgressLink">
+      <div><Mic2 size={23}/><span><b>حافظه و پیشرفت تلفظ من</b><small>امتیازها از تطبیق متن تشخیص گفتار به‌دست می‌آیند؛ نه نمره تخصصی لهجه.</small></span></div>
+      <div className="scProgressNumbers"><strong>{speechReport.average===null?'—':speechReport.average+'٪'}</strong><small>میانگین گفتار</small><strong>{speechReport.weak}</strong><small>نیازمند تمرین</small></div>
+      <RouteLink to="speaking" navigate={setTab}>تمرین با میکروفون <ArrowLeft size={16}/></RouteLink>
     </div>
     <div className="gameGoals"><div className="gameGoalHeader"><div><span className="gameEyebrow">TODAY</span><h2>تمرین امروز</h2></div><strong>{insights.today.attempts} پاسخ</strong></div>
       <div className="gameProgress"><span style={{width:Math.min(100,insights.today.attempts/Math.max(dailyGoal,1)*100)+'%'}}/></div>
