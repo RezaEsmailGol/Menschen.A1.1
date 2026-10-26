@@ -7,13 +7,15 @@ import {germanNumber} from '../src/learningData.js';
 
 test('mixed workbook number game includes numeric-to-written, listening and written-to-numeric prompts',()=>{
  assert.deepEqual(NUMBER_RECALL_MODES.map(m=>m.id),['mixed','digitWord','listenWord','wordDigit']);
- assert.deepEqual(NUMBER_RECALL_RANGES,[12,20,100]);
+ assert.deepEqual(NUMBER_RECALL_RANGES,['0-12','13-20','20-30']);
  for(const limit of NUMBER_RECALL_RANGES){
-  const rounds=createNumberMemoryRound({maximum:limit});
-  assert.equal(rounds.length,10);
-  assert.equal(new Set(rounds.map(q=>q.number)).size,10);
+  const rounds=createNumberMemoryRound({rangeId:limit});
+  const expected=limit==='13-20'?8:10;
+  assert.equal(rounds.length,expected);
+  assert.equal(new Set(rounds.map(q=>q.number)).size,expected);
   assert.deepEqual(new Set(rounds.map(q=>q.mode)),new Set(['digitWord','listenWord','wordDigit']));
   for(const q of rounds){
+   assert.ok(q.number>=Number(limit.split('-')[0]) && q.number<=Number(limit.split('-')[1]));
    assert.equal(q.word,germanNumber(q.number));
    assert.equal(q.options.length,4);
    assert.equal(new Set(q.options.map(x=>x.value)).size,4);
