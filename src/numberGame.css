@@ -74,3 +74,40 @@
 @keyframes duoFeedbackArrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:400px){.duoSoundToggle span{display:none}.duoSoundToggle{padding:10px}}
 @media(prefers-reduced-motion:reduce){.duoChoices button.duoCorrectPop,.duoChoices button.duoWrongShake,.duoFeedback.success,.duoFeedback.failure{animation:none}}
+
+/* Three deliberate A1.1 stages: 0–12, 13–20, 20–30. */
+.numberStageGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:7px}
+.numberStageCard{min-width:0;display:flex;flex-direction:column;gap:8px;align-items:flex-start;text-align:right;
+ background:#fbfbff;border:2px solid #e2e6f5;border-radius:17px;padding:14px 12px;cursor:pointer;
+ color:#394365;transition:background .16s,border-color .16s,transform .16s}
+.numberStageCard.active{background:#edeaff;border-color:#6a61d7;box-shadow:0 6px 20px #6a61d71c}
+.numberStageCard:focus-visible{outline:3px solid #9a92f1;outline-offset:2px}
+.numberStageIcon{font-size:24px;display:block}.numberStageCard strong{font-size:21px}
+.numberStageCard small{font-size:11px;color:#858ba7;line-height:1.8;min-height:33px}
+.numberStageProgress{height:7px;border-radius:99px;background:#e0e4f1;width:100%;overflow:hidden}
+.numberStageProgress i{display:block;background:linear-gradient(90deg,#4dd5a8,#6b64db);height:100%;border-radius:99px}
+.numberStageMeta{font-size:10px;color:#767f99}
+.duoNumberScene{width:96px;height:81px;overflow:hidden;border-radius:13px;flex-shrink:0}
+.duoNumberScene svg{width:96px!important;height:auto!important;max-width:none!important;transform:translateY(-3px)}
+.duoQuestion:has(.duoNumberScene){min-height:200px;gap:5px;padding:10px}
+.duoQuestion:has(.duoNumberScene) .duoHugeNumber{font-size:clamp(51px,8vw,76px)}
+.duoTypeAnswer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:16px;border:1px solid #e6e8f6;
+ background:#f9faff;border-radius:17px}
+.duoTypeAnswer label{font-size:12px;color:#64688b;width:100%;font-weight:800}
+.duoTypeAnswer input{width:100%;direction:ltr;text-align:left;font:800 20px Tahoma,Arial,sans-serif;
+ background:#fff;border:2px solid #d8def1;border-radius:12px;color:#3b4774;padding:13px 15px}
+.duoTypeAnswer input:focus{outline:3px solid #d8d3ff;border-color:#7970d7}
+.duoTypeAnswer .duoUmlautKeys{display:flex;gap:7px;flex:1}
+.duoUmlautKeys button{min-width:38px;min-height:42px;border:1px solid #cbc9ed;background:#efeeff;color:#514ab8;
+ border-radius:10px;font:bold 18px Tahoma;cursor:pointer}
+.duoTypeAnswer .primaryCTA{font-size:13px;min-height:45px}
+.duoTypeAnswer button:disabled{opacity:.52;cursor:default}
+.duoFeedback small{color:inherit;font-size:11px;line-height:1.8}
+.numberFinishActions{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:center}
+@media(max-width:640px){.numberStageGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .numberStageCard{padding:11px 8px;border-radius:13px;gap:7px}.numberStageCard strong{font-size:17px}
+ .numberStageCard small{font-size:9px;min-height:46px}
+ .numberStageIcon{font-size:22px}.numberStageMeta{font-size:9px}
+ .duoTypeAnswer{padding:11px}.duoTypeAnswer input{font-size:17px}
+}
+@media(max-width:355px){.numberStageGrid{grid-template-columns:1fr}.numberStageCard small{min-height:0}}
