@@ -76,7 +76,7 @@ export default function NumberLab({speak,onAttempt,memory}){
       <span className="sectionKicker"><Gamepad2 size={17}/> Zahlen Challenge · A1.1</span>
       <h2>اعداد آلمانی، <em>با بازی یاد بگیر!</em></h2>
       <p>سه مرحله مستقل از صفر تا سی. در هر مرحله هم انتخابی، هم شنیداری و هم دیکته تایپی تمرین می‌کنی؛ عددهای اشتباه برای مرور برمی‌گردند.</p>
-      <div className="numberFeatures"><span><Star size={16}/> ده چالش در هر دور</span><span><Headphones size={16}/> شنیدن و انتخاب</span><span><Trophy size={16}/> ثبت پیشرفت</span></div>
+      <div className="numberFeatures"><span><Star size={16}/> تا ده چالش در هر دور</span><span><Headphones size={16}/> شنیدن و انتخاب</span><span><Trophy size={16}/> ثبت پیشرفت</span></div>
     </div>
     <div className="numberHeroDecoration" aria-hidden="true"><span>7</span><span>12</span><span>20</span><span>99</span></div>
   </div>
@@ -157,7 +157,7 @@ export default function NumberLab({speak,onAttempt,memory}){
         </div>}
         {choice!==null&&<div className={'duoFeedback '+(correct?'success':'failure')} role="status">
           {correct?<CheckCircle2 size={25}/>:<XCircle size={25}/>}
-          <div><b>{correct?'آفرین! تلفظ آلمانی پخش شد.':'اشتباه شد! یک بیپ کوتاه و مرور دوباره.'}</b>
+          <div><b>{correct?'آفرین! پاسخ درست است.':'اشتباه شد! این عدد دوباره مرور می‌شود.'}</b>
             <span dir="ltr">{item.number} = {germanNumber(item.number)}</span>
             {numberTip(item.number)&&<small>{numberTip(item.number)}</small>}</div>
           <button onClick={()=>speak(germanNumber(item.number))} aria-label="شنیدن جواب درست"><Volume2 size={19}/></button>
@@ -177,7 +177,7 @@ export default function NumberLab({speak,onAttempt,memory}){
       <div className="guideExample" dir="ltr">{rangeId==='20-30'?<><span>21</span><strong>ein + und + zwanzig</strong><small>einundzwanzig</small></>:rangeId==='13-20'?<><span>17</span><strong>sieb + zehn</strong><small>siebzehn</small></>:<><span>12</span><strong>zwölf</strong><small>تلفظ را بشنو و تکرار کن</small></>}</div>
       <p>{rangeId==='20-30'?'از ۲۱ تا ۲۹، ابتدا یکان، سپس und و بعد zwanzig می‌آید.':rangeId==='13-20'?'۱۶ و ۱۷ استثنای املایی دارند: sechzehn و siebzehn.':'اعداد پایه را یک‌به‌یک بخوان، گوش بده و سپس بدون نگاه‌کردن تکرار کن.'}</p>
       <div className="guideDivider"/><strong>استثناهای مهم</strong>
-      {[['16','sechzehn'],['17','siebzehn'],['30','dreißig'],['60','sechzig'],['70','siebzig']].map(([n,w])=><button className="guideException" key={n} onClick={()=>speak(w)}><b dir="ltr">{n}</b><span dir="ltr">{w}</span><Volume2 size={16}/></button>)}
+      {(rangeId==='0-12'?[['1','eins'],['6','sechs'],['11','elf'],['12','zwölf']]:rangeId==='13-20'?[['16','sechzehn'],['17','siebzehn'],['20','zwanzig']]:[['20','zwanzig'],['21','einundzwanzig'],['30','dreißig']]).map(([n,w])=><button className="guideException" key={n} onClick={()=>speak(w)}><b dir="ltr">{n}</b><span dir="ltr">{w}</span><Volume2 size={16}/></button>)}
     </aside>
   </div>
   <div className="numberReference">
