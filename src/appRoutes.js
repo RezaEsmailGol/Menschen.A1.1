@@ -3,7 +3,7 @@ export const ROUTES=Object.freeze({
   home:'/', course:'/lessons', practice:'/practice', progress:'/progress', coach:'/coach',
   classNotes:'/class-notes', night:'/night-shift', visualMemory:'/visual-memory',
   workbook:'/workbook', dialogues:'/dialogues',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
-  numbers:'/numbers',pronunciation:'/pronunciation',flash:'/flashcards',
+  numbers:'/numbers',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
   listen:'/dictation',words:'/first-words',alphabet:'/alphabet',verbs:'/verbs'
 });
 export const DIALOGUE_IDS=Object.freeze(['greetings','origin','cafe','office','interview']);
