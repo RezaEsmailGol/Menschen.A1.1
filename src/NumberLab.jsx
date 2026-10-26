@@ -154,8 +154,8 @@ export default function NumberLab({speak,onAttempt,memory}){
               {wrong&&<XCircle size={22}/>}
             </button>;
           })}
-        </div>
-                {choice!==null&&<div className={'duoFeedback '+(correct?'success':'failure')} role="status">
+        </div>}
+        {choice!==null&&<div className={'duoFeedback '+(correct?'success':'failure')} role="status">
           {correct?<CheckCircle2 size={25}/>:<XCircle size={25}/>}
           <div><b>{correct?'آفرین! تلفظ آلمانی پخش شد.':'اشتباه شد! یک بیپ کوتاه و مرور دوباره.'}</b>
             <span dir="ltr">{item.number} = {germanNumber(item.number)}</span>
