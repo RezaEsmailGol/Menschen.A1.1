@@ -59,8 +59,8 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
  function startRound(){
    stopListening();
    setError('');
-   const chosen=available.length?available:cards;
-   if(!chosen.length){setError('در این دسته فعلاً تمرینی وجود ندارد؛ گزینه «همه» را انتخاب کن.');return;}
+   const chosen=available;
+   if(!chosen.length){setError('در این فیلتر هنوز موردی برای تمرین وجود ندارد؛ گزینه «همه» را انتخاب کن.');return;}
    setQueue(speakingReview(chosen,state,Math.min(8,chosen.length)));setIndex(0);
    setResult(null);setReady(true);
  }
