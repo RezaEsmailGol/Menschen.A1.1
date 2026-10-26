@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AppErrorBoundary from './AppErrorBoundary.jsx';
+import {SPEAKING_KEY,makeSpeakingState} from './speakingEngine.js';
 import { createRoot } from 'react-dom/client';
 import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, Languages, Play, Shuffle, Trophy, Upload, Download, Plus, Trash2 } from 'lucide-react';
 import PronunciationLab from './PronunciationLab';
@@ -9,6 +10,7 @@ import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
 const NightShift = React.lazy(() => import('./NightShift.jsx'));
 const VisualMemory = React.lazy(() => import('./VisualMemory.jsx'));
+const SpeakingCoach = React.lazy(() => import('./SpeakingCoach.jsx'));
 import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
@@ -107,7 +109,7 @@ const routes = [
 ];
 const secondaryTitles = {
   coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
-  numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',
+  numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
 };
@@ -132,6 +134,7 @@ function App() {
   const [memory, setMemory] = useLocalStorage(MEMORY_KEY, {version:1,items:{},days:{},totalXP:0,history:[]});
   const [dailyGoal, setDailyGoal] = useLocalStorage(DAILY_GOAL_KEY, 10);
  const [nightState,setNightState]=useLocalStorage(NIGHT_KEY,createNightState());
+  const [speakingState,setSpeakingState]=useLocalStorage(SPEAKING_KEY,makeSpeakingState());
   const updateDailyGoal=value=>setDailyGoal(safeDailyGoal(value));
   const [feedback,setFeedback]=useState(null);
   const onPracticeEvent = event => {
@@ -180,6 +183,9 @@ function App() {
       {tab==='visualMemory' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تصاویر آموزشی...</p>}>
          <VisualMemory speak={speak} memory={memory} schedule={schedule} progress={progress}
          personalCards={cards} onPracticeEvent={onPracticeEvent} setTab={setTab}/>
+       </React.Suspense>}
+      {tab==='speaking' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی مربی تلفظ...</p>}>
+        <SpeakingCoach speak={speak} state={speakingState} setState={setSpeakingState} progress={progress} onPracticeEvent={onPracticeEvent}/>
        </React.Suspense>}
       {tab==='classNotes' && <ClassNotes speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
       {tab==='workbook' && <TeacherWorkbook speak={speak} memory={memory} onPracticeEvent={onPracticeEvent}
