@@ -181,3 +181,17 @@
 .nightHomeShortcut b{font-size:13px}.nightHomeShortcut small{font-size:11px;color:#9298ac;line-height:1.7}
 .nightHomeShortcut>a:first-child small{color:#c7c5dd}
 @media(max-width:650px){.nightHomeShortcut{grid-template-columns:1fr}.nightHomeShortcut>a{padding:12px 14px}}
+
+/* Speaking coach snapshot integrated into the global progress screen. */
+.scProgressLink{border:1px solid #dcdbee;background:linear-gradient(105deg,#f7f5ff,#ecf8f6);
+ border-radius:17px;padding:15px;display:flex;align-items:center;justify-content:space-between;
+ flex-wrap:wrap;gap:14px;margin:13px 0}
+.scProgressLink>div:first-child{display:flex;align-items:center;gap:9px;color:#635bc0;flex:1 1 200px}
+.scProgressLink>div:first-child>span{display:flex;flex-direction:column;gap:5px}
+.scProgressLink b{font-size:13px;color:#47456d}
+.scProgressLink small{font-size:11px;color:#8d91ac;line-height:1.6}
+.scProgressNumbers{display:grid;grid-template-columns:50px 85px;align-items:center;gap:5px}
+.scProgressNumbers strong{font:900 18px Tahoma;color:#6157ba}
+.scProgressLink>a{background:#5d55c6;color:white;border-radius:11px;padding:10px 13px;
+ display:flex;align-items:center;gap:7px;font-size:12px;text-decoration:none}
+@media(max-width:520px){.scProgressLink{align-items:stretch}.scProgressLink>a{justify-content:center}}
