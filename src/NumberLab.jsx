@@ -2,17 +2,20 @@ import React,{useState} from 'react';
 import {ArrowLeft,CheckCircle2,Gamepad2,Headphones,Hash,Heart,RotateCcw,Sparkles,Star,Trophy,Volume2,VolumeX,XCircle} from 'lucide-react';
 import {germanNumber} from './learningData.js';
 import {createNumberRound,optionLabel} from './numberGameLogic.js';
+import {NUMBER_SECTIONS,numbersInSection,numberSection,numberSectionStats,correctNumberSpelling,numberTip} from './numberSections.js';
+import MnemonicArt from './MnemonicArt.jsx';
 import {playWrongBeep} from './audioFeedback.js';
 import './numberGame.css';
 
 const format=n=>n.toLocaleString('fa-IR');
 export default function NumberLab({speak,onAttempt,memory}){
- const [maximum,setMaximum]=useState(12);
+ const [rangeId,setRangeId]=useState('0-12');
  const [mode,setMode]=useState('read');
  const [active,setActive]=useState(false);
  const [queue,setQueue]=useState([]);
  const [position,setPosition]=useState(0);
  const [choice,setChoice]=useState(null);
+ const [typed,setTyped]=useState('');
  const [firstPassScore,setFirstPassScore]=useState(0);
  const [attempts,setAttempts]=useState(0);
  const [wrongCount,setWrongCount]=useState(0);
@@ -31,14 +34,14 @@ export default function NumberLab({speak,onAttempt,memory}){
  };
  const item=queue[position];
  const finished=active&&position>=queue.length;
- const correct=choice!==null && choice===item?.number;
+ const correct=choice!==null && (mode==='type'?correctNumberSpelling(choice,item?.number):choice===item?.number);
  const start=()=>{
-   setQueue(createNumberRound(maximum,memory).map(q=>({...q,retry:false})));
-   setPosition(0);setChoice(null);setFirstPassScore(0);setAttempts(0);setWrongCount(0);setReviewCorrect(0);setActive(true);
+   setQueue(createNumberRound(rangeId,memory).map(q=>({...q,retry:false})));
+   setPosition(0);setChoice(null);setTyped('');setFirstPassScore(0);setAttempts(0);setWrongCount(0);setReviewCorrect(0);setActive(true);
  };
  const pick=value=>{
    if(choice!==null || finished)return;
-   const ok=value===item.number;
+   const ok=mode==='type'?correctNumberSpelling(value,item.number):value===item.number;
    // Run feedback inside the actual click handler so mobile browsers allow sound.
    if(feedbackSound){
      if(ok){
@@ -63,15 +66,16 @@ export default function NumberLab({speak,onAttempt,memory}){
      try{navigator.vibrate(ok ? 25 : [25,45,25]);}catch{}
    }
  };
- const next=()=>{if(choice===null)return;setPosition(n=>n+1);setChoice(null);};
- const initialTotal=Math.min(10,maximum+1);
- const count=studyAll?101:21;
+ const next=()=>{if(choice===null)return;setPosition(n=>n+1);setChoice(null);setTyped('');};
+ const initialTotal=Math.min(10,numbersInSection(rangeId).length);
+ const referenceNumbers=studyAll?Array.from({length:101},(_,n)=>n):numbersInSection(rangeId);
+ const range=numberSection(rangeId);
  return <section className="labPage">
   <div className="numbersHero numberDuoHero">
     <div>
       <span className="sectionKicker"><Gamepad2 size={17}/> Zahlen Challenge · A1.1</span>
       <h2>اعداد آلمانی، <em>با بازی یاد بگیر!</em></h2>
-      <p>چهار گزینه، یک پاسخ درست! سؤال‌ها هر دور تصادفی‌اند و عددهایی که اشتباه کرده‌ای برای مرور دوباره برمی‌گردند.</p>
+      <p>سه مرحله مستقل از صفر تا سی. در هر مرحله هم انتخابی، هم شنیداری و هم دیکته تایپی تمرین می‌کنی؛ عددهای اشتباه برای مرور برمی‌گردند.</p>
       <div className="numberFeatures"><span><Star size={16}/> ده چالش در هر دور</span><span><Headphones size={16}/> شنیدن و انتخاب</span><span><Trophy size={16}/> ثبت پیشرفت</span></div>
     </div>
     <div className="numberHeroDecoration" aria-hidden="true"><span>7</span><span>12</span><span>20</span><span>99</span></div>
@@ -92,30 +96,53 @@ export default function NumberLab({speak,onAttempt,memory}){
         </div>
       </div>
       {!active && <div className="numberChallengeSetup">
-        <div><b>از چه اعدادی سؤال بپرسم؟</b><div className="segmentedTabs">
-          {[12,20,100].map(n=><button key={n} type="button" className={maximum===n?'active':''} onClick={()=>setMaximum(n)}>۰ تا {format(n)}</button>)}
+        <div><b>مرحله تمرین اعداد</b><div className="numberStageGrid">
+          {NUMBER_SECTIONS.map(stage=>{
+            const stats=numberSectionStats(stage.id,memory);
+            return <button key={stage.id} type="button" aria-pressed={rangeId===stage.id}
+              className={'numberStageCard '+(rangeId===stage.id?'active':'')} onClick={()=>setRangeId(stage.id)}>
+                <span className="numberStageIcon">{stage.icon}</span>
+                <strong>{stage.label}</strong><small>{stage.subtitle}</small>
+                <span className="numberStageProgress"><i style={{width:(100*stats.mastered/stats.total)+'%'}}/></span>
+                <span className="numberStageMeta">{format(stats.mastered)} مسلط از {format(stats.total)}</span>
+            </button>})}
         </div></div>
         <div><b>نوع بازی</b><div className="segmentedTabs">
           <button type="button" className={mode==='read'?'active':''} onClick={()=>setMode('read')}><Hash size={15}/> ببین و انتخاب کن</button>
           <button type="button" className={mode==='hear'?'active':''} onClick={()=>setMode('hear')}><Headphones size={15}/> بشنو و انتخاب کن</button>
+          <button type="button" className={mode==='type'?'active':''} onClick={()=>setMode('type')}><Hash size={15}/> دیکته تایپی</button>
         </div></div>
       </div>}
       {!active && <div className="numberStart numberGameStart">
         <div className="numberMascot" aria-hidden="true">🎯</div>
         <h3>آمادهٔ چالش هستی؟</h3>
-        <p>در هر سؤال چهار کارت داری. پاسخ را انتخاب کن، بازخورد فوری بگیر و برای سؤال بعدی برو. عددهای اشتباه یک‌بار دیگر تمرین می‌شوند.</p>
+        <p>در مرحله «{range.label}» هر دور {format(initialTotal)} سؤال تصادفی داری. گزینه‌ها یا پاسخ تایپی را انتخاب کن؛ اشتباه‌ها دوباره تمرین می‌شوند.</p>
         <button className="primaryCTA" onClick={start}><Sparkles size={18}/> شروع بازی <ArrowLeft size={18}/></button>
       </div>}
       {active&&!finished&&item&&<div className="duoPlay">
         <div className="duoStatus"><span><Trophy size={16}/> {format(firstPassScore)} از {format(initialTotal)} امتیاز</span><span><Heart size={17}/> بدون محدودیت تلاش</span></div>
         <div className="examTrack duoTrack"><span style={{width:((position+1)/queue.length*100)+'%'}}/></div>
-        <div className="duoQuestionHead"><b>سؤال {format(position+1)} از {format(queue.length)}</b>{item.retry&&<span className="reviewBadge">مرور اشتباه قبلی</span>}</div>
+        <div className="duoQuestionHead"><b>{range.label} · سؤال {format(position+1)} از {format(queue.length)}</b>{item.retry&&<span className="reviewBadge">مرور اشتباه قبلی</span>}</div>
         <div className="duoQuestion">
-          {mode==='read'
-            ?<><span>کدام گزینه نوشتار درست این عدد است؟</span><strong className="duoHugeNumber">{item.number}</strong></>
-            :<><span>گوش بده؛ کدام عدد را شنیدی؟</span><span className="duoHeadphones"><Headphones size={49}/></span><button className="duoHear" onClick={()=>speak(germanNumber(item.number))}><Volume2 size={19}/> پخش عدد آلمانی</button></>}
+          {mode!=='hear'
+            ?<><span>{mode==='type'?'این عدد را به آلمانی تایپ کن.':'کدام گزینه نوشتار درست این عدد است؟'}</span>
+                <strong className="duoHugeNumber">{item.number}</strong>
+                <div className="duoNumberScene"><MnemonicArt number={item.number}/></div></>
+            :<><span>گوش بده؛ کدام عدد را شنیدی؟</span><span className="duoHeadphones"><Headphones size={49}/></span>
+                <button type="button" className="duoHear" onClick={()=>speak(germanNumber(item.number))}>
+                  <Volume2 size={19}/> پخش عدد آلمانی</button></>}
         </div>
-        <div className="duoChoices" dir="ltr" role="group" aria-label="چهار گزینه آزمون">
+        {mode==='type'?
+          <form className="duoTypeAnswer" onSubmit={e=>{e.preventDefault();if(choice===null&&typed.trim())pick(typed)}}>
+            <label htmlFor="number-spelling">املای آلمانی عدد</label>
+            <input id="number-spelling" dir="ltr" lang="de" autoComplete="off" autoCapitalize="off" spellCheck={false}
+              placeholder="z. B. siebzehn" value={typed} disabled={choice!==null}
+              onChange={e=>setTyped(e.target.value)}/>
+            <div className="duoUmlautKeys">{['ä','ö','ü','ß'].map(ch=><button type="button" key={ch}
+              disabled={choice!==null} onClick={()=>setTyped(x=>x+ch)}>{ch}</button>)}</div>
+            <button type="submit" className="primaryCTA" disabled={choice!==null||!typed.trim()}>بررسی پاسخ</button>
+          </form>:
+          <div className="duoChoices" dir="ltr" role="group" aria-label="چهار گزینه آزمون">
           {item.options.map((number,i)=>{
             const right=choice!==null && number===item.number;
             const wrong=choice!==null && number===choice && choice!==item.number;
@@ -128,10 +155,11 @@ export default function NumberLab({speak,onAttempt,memory}){
             </button>;
           })}
         </div>
-        {choice!==null&&<div className={'duoFeedback '+(correct?'success':'failure')} role="status">
+                {choice!==null&&<div className={'duoFeedback '+(correct?'success':'failure')} role="status">
           {correct?<CheckCircle2 size={25}/>:<XCircle size={25}/>}
           <div><b>{correct?'آفرین! تلفظ آلمانی پخش شد.':'اشتباه شد! یک بیپ کوتاه و مرور دوباره.'}</b>
-            <span dir="ltr">{item.number} = {germanNumber(item.number)}</span></div>
+            <span dir="ltr">{item.number} = {germanNumber(item.number)}</span>
+            {numberTip(item.number)&&<small>{numberTip(item.number)}</small>}</div>
           <button onClick={()=>speak(germanNumber(item.number))} aria-label="شنیدن جواب درست"><Volume2 size={19}/></button>
         </div>}
         <button className="primaryCTA fullCTA duoNext" disabled={choice===null} onClick={next}>{position===queue.length-1?'مشاهده نتیجه':'ادامه بازی'} <ArrowLeft size={18}/></button>
@@ -141,20 +169,20 @@ export default function NumberLab({speak,onAttempt,memory}){
         <strong dir="ltr">{firstPassScore} / {initialTotal}</strong>
         <p>{firstPassScore>=8?'عالی بود! مرحله بعدی هم منتظرت است.':'دفعه بعد بهتر می‌شود؛ هر اشتباه فرصتی برای یادگرفتن است.'}</p>
         <div className="duoFinalStats"><div><b>{format(attempts)}</b><span>کل پاسخ‌ها</span></div><div><b>{format(wrongCount)}</b><span>پاسخ اشتباه</span></div><div><b>{format(reviewCorrect)}</b><span>مرور درست</span></div></div>
-        <button className="primaryCTA" onClick={start}><RotateCcw size={18}/> دور تصادفی جدید</button>
+        <div className="numberFinishActions"><button className="primaryCTA" onClick={start}><RotateCcw size={18}/> دور تصادفی جدید</button><button className="softButton" onClick={()=>setActive(false)}>انتخاب مرحله دیگر</button></div>
       </div>}
     </div>
     <aside className="numbersGuide">
-      <div className="guideTitle"><span>🧠</span><div><h3>میان‌بُر ذهنی</h3><p>قانون عددهای بالای ۲۰</p></div></div>
-      <div className="guideExample" dir="ltr"><span>21</span><strong>ein + und + zwanzig</strong><small>einundzwanzig</small></div>
-      <p>از ۲۱ تا ۹۹، ابتدا یکان، سپس <b>und</b> و بعد دهگان گفته می‌شود.</p>
+      <div className="guideTitle"><span>🧠</span><div><h3>میان‌بُر ذهنی</h3><p>{range.subtitle}</p></div></div>
+      <div className="guideExample" dir="ltr">{rangeId==='20-30'?<><span>21</span><strong>ein + und + zwanzig</strong><small>einundzwanzig</small></>:rangeId==='13-20'?<><span>17</span><strong>sieb + zehn</strong><small>siebzehn</small></>:<><span>12</span><strong>zwölf</strong><small>تلفظ را بشنو و تکرار کن</small></>}</div>
+      <p>{rangeId==='20-30'?'از ۲۱ تا ۲۹، ابتدا یکان، سپس und و بعد zwanzig می‌آید.':rangeId==='13-20'?'۱۶ و ۱۷ استثنای املایی دارند: sechzehn و siebzehn.':'اعداد پایه را یک‌به‌یک بخوان، گوش بده و سپس بدون نگاه‌کردن تکرار کن.'}</p>
       <div className="guideDivider"/><strong>استثناهای مهم</strong>
       {[['16','sechzehn'],['17','siebzehn'],['30','dreißig'],['60','sechzig'],['70','siebzig']].map(([n,w])=><button className="guideException" key={n} onClick={()=>speak(w)}><b dir="ltr">{n}</b><span dir="ltr">{w}</span><Volume2 size={16}/></button>)}
     </aside>
   </div>
   <div className="numberReference">
-    <div className="panelTitleRow"><div><small className="eyebrow">LEARN & LISTEN</small><h3>جدول اعداد با تلفظ</h3><p>برای شنیدن هر عدد روی آن بزن.</p></div><button className="softButton" onClick={()=>setStudyAll(v=>!v)}>{studyAll?'نمایش فقط ۰ تا ۲۰':'نمایش تا ۱۰۰'}</button></div>
-    <div className="newNumberGrid">{Array.from({length:count},(_,n)=><button key={n} onClick={()=>speak(germanNumber(n))}><strong>{n}</strong><span dir="ltr">{germanNumber(n)}</span><Volume2 size={16}/></button>)}</div>
+    <div className="panelTitleRow"><div><small className="eyebrow">LEARN & LISTEN</small><h3>واژه‌نامه اعداد {range.label}</h3><p>برای شنیدن هر عدد روی آن بزن.</p></div><button className="softButton" onClick={()=>setStudyAll(v=>!v)}>{studyAll?'نمایش فقط مرحله':'نمایش همه تا ۱۰۰'}</button></div>
+    <div className="newNumberGrid">{referenceNumbers.map(n=><button key={n} onClick={()=>speak(germanNumber(n))}><strong>{n}</strong><span dir="ltr">{germanNumber(n)}</span><Volume2 size={16}/></button>)}</div>
   </div>
  </section>;
 }
