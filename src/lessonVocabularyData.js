@@ -197,11 +197,11 @@ const raw = [
 export const VOCABULARY_DECKS=raw.map((lesson,index)=>{
  const seen=new Set();
  const cards=lesson.words.filter(([de])=>{
-   const key=de.normalize('NFC').toLocaleLowerCase('de').trim();
+   const key=de.normalize('NFC').trim();
    if(seen.has(key))return false;
    seen.add(key);return true;
  }).map(([de,fa,example],i)=>({
-   id:'vocab:'+String(index+1)+':'+encodeURIComponent(de.normalize('NFC').toLocaleLowerCase('de')),
+   id:'vocab:'+String(index+1)+':'+encodeURIComponent(de.normalize('NFC')),
    lesson:index+1, de,fa,example:example||'',position:i+1
  }));
  return {id:index+1,title:lesson.title,topic:lesson.topic,pages:lesson.pages,
