@@ -1,0 +1,60 @@
+.lvPage{--lv-bg:#f5f8fc;--lv-text:#14273b;--lv-muted:#5f7182;--lv-teal:#087d80;--lv-line:#d9e6eb;direction:rtl;color:var(--lv-text);max-width:1200px;margin:0 auto;padding:12px 8px 32px}
+.lvPage button,.lvPage input{font-family:inherit}.lvPage button{cursor:pointer}.lvPage button:focus-visible,.lvPage input:focus-visible{outline:3px solid #6ec6c3;outline-offset:2px}
+.lvHero{background:linear-gradient(120deg,#113a52,#15546a 58%,#186a70);border-radius:25px;padding:30px 32px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;overflow:hidden}
+.lvHero::before{content:"";position:absolute;width:270px;height:270px;border-radius:50%;background:#ffffff12;left:-55px;top:-125px;pointer-events:none}
+.lvHeroText{position:relative;max-width:700px}.lvEyebrow{display:flex;gap:8px;align-items:center;letter-spacing:.06em;font-size:12px;font-weight:800;color:#46b9ba}
+.lvHero .lvEyebrow{color:#9cedeb}.lvHero h1{font-size:clamp(23px,4vw,34px);line-height:1.45;margin:11px 0}.lvHero h1 em{color:#a9f6dd;font-style:normal}
+.lvHero p{font-size:14px;line-height:1.9;color:#e2eff5;margin:0 0 18px}
+.lvHeroMetrics{display:flex;gap:9px;flex-wrap:wrap}.lvHeroMetrics span{display:flex;align-items:center;gap:7px;border:1px solid #a8e4e73d;background:#ffffff14;border-radius:12px;padding:9px 12px;font-size:12px}.lvHeroMetrics strong{font-size:17px}
+.lvHeroMark{width:154px;height:154px;border-radius:40px;background:#ffffff21;border:1px solid #ffffff30;display:grid;place-content:center;gap:10px;text-align:center;flex-shrink:0;color:#d8fff3;transform:rotate(-7deg)}.lvHeroMark svg{margin:auto}.lvHeroMark span{font-size:18px;font-weight:900}
+.lvSourceNote{margin:15px 0;color:#50667b;display:flex;align-items:flex-start;gap:8px;background:#edf4fa;border-radius:13px;border:1px solid #d5e4ef;padding:11px 14px;font-size:13px;line-height:1.8}
+.lvSourceNote svg{flex-shrink:0;margin-top:3px}
+.lvLessonSelect,.lvWorkspace{border:1px solid var(--lv-line);border-radius:22px;background:#fff;padding:20px;margin:17px 0;box-shadow:0 6px 26px #182f4606}
+.lvSectionHeader{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 17px}.lvSectionHeader h2{margin:4px 0;font-size:20px}.lvSectionHeader>span,.lvSectionHeader p{color:var(--lv-muted);font-size:13px;margin:3px 0}
+.lvLessonGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.lvLessonGrid button{background:var(--lv-bg);border:1px solid var(--lv-line);border-radius:15px;padding:13px;text-align:right;display:flex;gap:11px;align-items:flex-start;color:#16334a;min-height:99px}
+.lvLessonGrid button.active{background:#e4f7f5;border-color:#087d80;box-shadow:inset 0 0 0 1px #087d80}.lvLessonNumber{background:#dbe8f0;color:#285064;border-radius:11px;width:37px;height:37px;display:grid;place-content:center;font-weight:900;flex-shrink:0}
+.lvLessonGrid button.active .lvLessonNumber{background:#087d80;color:#fff}
+.lvLessonGrid button>span:last-child{display:flex;flex-direction:column;gap:4px;min-width:0}.lvLessonGrid b{font-size:14px}.lvLessonGrid small{font-size:11px;color:#657b88;line-height:1.4;overflow-wrap:anywhere}.lvLessonGrid small[lang=de]{direction:ltr;text-align:right}
+.lvProgressBadge{text-align:center;background:#e7f5f3;border-radius:13px;padding:10px 15px;min-width:98px}
+.lvProgressBadge strong{display:block;font-size:23px;direction:ltr;color:#007d79}.lvProgressBadge span{font-size:11px;color:#456f6a}
+.lvProgressBar{height:9px;border-radius:20px;background:#e1ebec;overflow:hidden;margin:0 0 15px}.lvProgressBar>span{display:block;height:100%;background:linear-gradient(90deg,#2eaaa8,#6ace9a);border-radius:20px;transition:width .2s}
+.lvFilterRow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}
+.lvFilterRow button{padding:9px 12px;border:1px solid #d6e5e9;border-radius:11px;background:#f6fafb;color:#355768;font-size:13px}
+.lvFilterRow button.active{background:#087d80;border-color:#087d80;color:#fff}
+.lvFilterRow small{font-weight:800;display:inline-block;margin-right:5px;opacity:.82}
+.lvToolRow{display:flex;gap:9px;align-items:center;margin:12px 0 18px}
+.lvSearch{display:flex;align-items:center;gap:9px;border:1px solid #d4e1e7;padding:0 12px;border-radius:11px;flex:1;background:#fafcfd}
+.lvSearch input{width:100%;min-width:0;padding:12px 0;border:none;background:transparent;outline:none;font-size:14px;color:var(--lv-text)}
+.lvAddButton,.lvAddForm button{padding:12px 16px;border-radius:11px;background:#e7f5f3;color:#087d80;border:1px solid #b1d7d4;display:flex;align-items:center;gap:8px;justify-content:center;font-weight:700;font-size:13px}
+.lvAddForm{display:flex;align-items:end;gap:9px;flex-wrap:wrap;border:1px solid #cee3e5;padding:12px;border-radius:13px;background:#f7fcfc;margin-bottom:17px}
+.lvAddForm label{display:flex;flex:1;min-width:175px;flex-direction:column;gap:6px;font-size:12px;color:#507284}
+.lvAddForm input{border:1px solid #c5d6df;border-radius:9px;padding:10px;font-size:14px;background:#fff;color:#20364a;width:100%}
+.lvCardArea{border:1px solid #d6e6e8;border-radius:20px;padding:15px;background:linear-gradient(150deg,#f8fbff,#f0faf8)}
+.lvCardHeader{display:flex;justify-content:space-between;align-items:center;gap:9px;font-size:12px;color:#57707b;margin-bottom:12px}
+.lvCardHeader>span:first-child{display:flex;gap:7px;align-items:center}
+.lvStatus{border-radius:20px;background:#edf2f9;padding:6px 11px;font-size:11px;font-weight:800}
+.lvStatus.lv-new{color:#306394;background:#e0edfb}.lvStatus.lv-learning{color:#6b5790;background:#eee7fc}
+.lvStatus.lv-mastered{color:#167854;background:#def4e7}.lvStatus.lv-weak{color:#a45030;background:#fff0e2}
+.lvFlashcard{background:#fff;border:1px solid #dce8ec;display:grid;grid-template-columns:minmax(210px,.8fr) minmax(0,1.2fr);border-radius:19px;overflow:hidden;box-shadow:0 6px 20px #163d4f0b;min-height:340px}
+.lvArt{background:#f4f9fb;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;padding:19px}
+.lvArt svg{max-height:295px;width:100%}.lvArt small{font-size:11px;color:#73899b}
+.lvCardText{display:flex;align-items:stretch;flex-direction:column;justify-content:center;padding:22px;gap:9px;min-width:0}
+.lvWordType{display:flex;align-items:center;gap:7px;color:#728b96;font-size:12px;direction:ltr;justify-content:flex-start}
+.lvArticle{padding:2px 10px;border-radius:8px;font-weight:900;font-size:13px}
+.lvArticle.der{background:#dce9ff;color:#2354a3}.lvArticle.die{background:#ffe2eb;color:#a92e67}.lvArticle.das{background:#e4f4dc;color:#347a31}
+.lvCardText h3{text-align:left;font-size:clamp(25px,4.3vw,43px);line-height:1.5;margin:0;overflow-wrap:anywhere}
+.lvListen{background:#e3f5f4;color:#08787c;border:1px solid #b9dfdc;border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:8px;align-self:flex-start;font-weight:800}
+.lvAnswer{border:1px dashed #b5d4d5;background:#f5fbfa;border-radius:14px;min-height:94px;padding:14px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px}
+.lvAnswer>button{display:flex;align-items:center;gap:8px;color:#086f75;border:none;background:transparent;font-weight:900;font-size:15px}
+.lvAnswer>span{color:#4b7880;font-size:12px}.lvAnswer strong{font-size:23px;text-align:center}.lvAnswer small{font-size:11px;color:#6b8588}
+.lvMemoryHint{font-size:12px;color:#73818b;margin:0}
+.lvRateButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.lvRateButtons button{border:1px solid #d4e2e8;background:#f4f9fa;border-radius:10px;padding:10px 7px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:700;color:#28516c}
+.lvRateButtons .lvAgain{background:#fff0ed;border-color:#f0c1b5;color:#ae4d3b}.lvRateButtons .lvEasy{background:#e3f5e8;border-color:#b6e0c4;color:#187b56}
+.lvCardFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 3px 0;font-size:11px;color:#697f8b}
+.lvCardFooter button,.lvFinished button{border:1px solid #c9dfe2;background:#fff;color:#167b7e;border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.lvFinished{text-align:center;padding:35px 20px;background:#f5fafc;border:1px solid #d4e9e9;border-radius:17px;display:flex;align-items:center;flex-direction:column;gap:8px;color:#2a7380}
+.lvFinished h3{margin:7px 0}.lvFinished p{color:#526e7c;line-height:1.8}.lvEndNote{color:#687b87;font-size:12px;line-height:1.8}
+@media(max-width:800px){.lvHeroMark{display:none}.lvLessonGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.lvFlashcard{grid-template-columns:1fr}.lvArt svg{max-height:210px}.lvArt{padding:9px}.lvCardText{padding:18px}.lvHero{padding:24px 19px}}
+@media(max-width:550px){.lvPage{padding:4px 0 20px}.lvLessonSelect,.lvWorkspace{padding:13px;border-radius:17px}.lvHero{border-radius:16px}.lvHero h1{font-size:24px}.lvLessonGrid{gap:7px}.lvLessonGrid button{padding:10px;gap:7px;min-height:97px}.lvLessonNumber{width:30px;height:30px}.lvLessonGrid b{font-size:12px}.lvSectionHeader{align-items:flex-start}.lvSectionHeader>span{display:none}.lvProgressBadge{min-width:81px;padding:8px}.lvProgressBadge strong{font-size:18px}.lvArt svg{max-height:185px}.lvCardText h3{font-size:30px}.lvToolRow{flex-wrap:wrap}.lvSearch{min-width:100%}.lvAddButton{width:100%}.lvCardFooter{align-items:flex-start;flex-direction:column}.lvRateButtons button{font-size:12px}.lvFilterRow{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px}.lvFilterRow button{white-space:nowrap}.lvCardArea{padding:9px}}
