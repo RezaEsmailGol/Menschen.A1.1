@@ -10,6 +10,7 @@ import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
 const NightShift = React.lazy(() => import('./NightShift.jsx'));
 const VisualMemory = React.lazy(() => import('./VisualMemory.jsx'));
+const LessonVocabulary = React.lazy(() => import('./LessonVocabulary.jsx'));
 const SpeakingCoach = React.lazy(() => import('./SpeakingCoach.jsx'));
 import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
@@ -179,6 +180,10 @@ function App() {
       {tab==='night' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی شیفت شب...</p>}>
          <NightShift speak={speak} memory={memory} schedule={schedule} progress={progress}
          personalCards={cards} nightState={nightState} setNightState={setNightState} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>
+       </React.Suspense>}
+      {tab==='vocabulary' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی فلش‌کارت‌های تصویری...</p>}>
+        <LessonVocabulary selectedLesson={route.startsWith('vocabulary/')?Number(route.slice('vocabulary/'.length)):Number(localStorage.getItem('dt_current_vocab_lesson'))||1}
+          onNavigate={setTab} speak={speak} memory={memory} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>
        </React.Suspense>}
       {tab==='visualMemory' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تصاویر آموزشی...</p>}>
          <VisualMemory speak={speak} memory={memory} schedule={schedule} progress={progress}
