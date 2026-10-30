@@ -1,0 +1,59 @@
+.bookLessonRoot{--book-ink:#14283b;--book-accent:#087b80;margin:22px 0;padding:22px;border-radius:24px;background:linear-gradient(150deg,#f8fcfd,#f3f6fc);color:var(--book-ink);border:1px solid #d9e5ea;direction:rtl;box-shadow:0 12px 36px rgba(20,40,59,.045)}
+.bookLessonTop{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.bookLessonTop h3{font-size:clamp(21px,3vw,27px);margin:5px 0}
+.bookLessonTop p,.bookSectionInfo p{color:#526574;font-size:14px;margin:7px 0}
+.bookLessonEyebrow{font-size:11px;font-weight:800;letter-spacing:.06em;color:#087b80}
+.bookMastery{min-width:105px;padding:12px;border-radius:17px;background:#fff;text-align:center;border:1px solid #dce9ed}
+.bookMastery b{display:block;font-size:22px;direction:ltr}.bookMastery small{font-size:11px;color:#567080}
+.bookProgress{height:9px;border-radius:99px;background:#d9e8eb;margin:18px 0;overflow:hidden}
+.bookProgress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#26a6b0,#65cda9);transition:width .3s}
+.bookLessonTabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:thin}
+.bookLessonTabs button{white-space:nowrap;background:white;border:1px solid #d5e0e8;border-radius:12px;color:#415569;padding:10px 12px;cursor:pointer;font-size:13px}
+.bookLessonTabs button.active{background:#087b80;border-color:#087b80;color:#fff;font-weight:700}
+.bookLessonTabs small{margin-inline-start:8px;opacity:.78}
+.bookSectionInfo{margin:14px 0}.bookSectionInfo h4{margin:7px 0 5px;font-size:19px}
+.bookPictureGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(134px,1fr));gap:10px}
+.bookPictureCard{border:1px solid #dce5eb;background:#fff;border-radius:16px;display:flex;align-items:center;flex-direction:column;gap:8px;padding:13px 9px;min-height:136px;cursor:pointer;transition:transform .15s,border-color .15s}
+.bookPictureCard:hover{border-color:#10999c;transform:translateY(-2px)}.bookPictureCard>span{font-size:30px}.bookPictureCard b{font-size:14px;text-align:center;overflow-wrap:anywhere}.bookPictureCard small{font-size:12px;color:#657789;text-align:center}.bookPictureCard svg{color:#087b80}
+.bookReading{background:#fff;border:1px solid #cbdde6;padding:15px;margin-top:18px;border-radius:16px}
+.bookReading>span{display:flex;align-items:center;gap:8px;color:#617786;font-size:13px;font-weight:600}
+.bookReading p{font-size:17px;line-height:1.8;text-align:left}
+.bookReading button,.bookLessonFooter button,.bookAudioPrompt,.bookActions button,.bookNumberPrompt button{border:1px solid #bdd6db;border-radius:10px;background:#fff;color:#087b80;font-weight:700;padding:10px 13px;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}
+.bookExercise{background:#fff;border:1px solid #d6e3eb;border-radius:20px;padding:19px;margin-top:18px}
+.bookExerciseHead{display:flex;gap:12px;justify-content:space-between;color:#607487;font-size:12px}
+.bookExerciseHead span{font-weight:800;color:#087b80}.bookExercise h5{font-size:18px;margin:15px 0 18px;line-height:1.6}
+.bookOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.bookOptions button,.bookWordOptions button{font:inherit;background:#f6f9fb;border:1px solid #cadce6;border-radius:12px;padding:13px;cursor:pointer;color:var(--book-ink);min-height:48px;text-align:center;overflow-wrap:anywhere}
+.bookOptions button:not(:disabled):hover,.bookWordOptions button:not(:disabled):hover{background:#e4f6f4;border-color:#087b80}
+.bookOptions button.right,.bookOptions button.right:disabled{background:#ddf6e9;border-color:#31aa7c;color:#116748;opacity:1}
+.bookOptions button.wrong,.bookOptions button.wrong:disabled{background:#fff1ee;border-color:#e88d78;color:#9d4037;opacity:1}
+.bookOptions button:disabled,.bookWordOptions button:disabled{cursor:default;opacity:.67}
+.bookAnswerForm,.bookNumberChallenge form{display:flex;gap:9px;flex-wrap:wrap}
+.bookAnswerForm input,.bookNumberChallenge input{min-width:160px;flex:1;border:1px solid #bfd3dd;background:#fff;border-radius:11px;padding:12px 13px;font:inherit;font-size:15px;max-width:100%;color:#172d41}
+.bookAnswerForm button,.bookNumberChallenge form button{background:#087b80;color:white;border:none;border-radius:11px;padding:11px 16px;font:inherit;font-weight:800;cursor:pointer}
+.bookAnswerForm button:disabled,.bookNumberChallenge form button:disabled,.bookActions button:disabled{opacity:.45;cursor:default}
+.bookAudioPrompt{margin-bottom:13px;background:#e8f7f5!important}
+.bookBuiltAnswer{direction:ltr;text-align:left;min-height:55px;border:1px dashed #87b6bb;border-radius:12px;padding:14px;margin-bottom:12px;background:#f6fbfc;color:#355769}
+.bookWordOptions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.bookWordOptions button{padding:9px 13px;min-height:38px}
+.bookFeedback{border-radius:14px;padding:14px;margin-top:18px}.bookFeedback>span{display:flex;align-items:center;gap:7px;font-weight:800}.bookFeedback>b{display:block;font-size:17px;margin:8px 0}.bookFeedback small{display:block;margin-top:8px}
+.bookCorrect{background:#e0f5e9;color:#126b4b}.bookWrong{background:#fff0e9;color:#9b442d}
+.bookActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.bookActions button:last-child{background:#087b80;color:#fff;border-color:#087b80}
+.bookActions button:disabled{background:#ddd}
+.bookHint{font-size:12px;color:#5c7688;margin-top:12px}
+.bookNumberChallenge{border:1px solid #d4dfea;padding:17px;border-radius:17px;background:#fff;margin-top:18px}
+.bookNumberChallenge>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.bookNumberChallenge small{color:#567281}
+.bookNumberPrompt{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:12px 0}
+.bookNumberPrompt strong{font-size:42px;font-variant-numeric:tabular-nums}
+.bookNumberChallenge>p.bookCorrect,.bookNumberChallenge>p.bookWrong{padding:10px;border-radius:11px}
+.bookSubtleButton{background:transparent!important;border-color:#bcd5d7!important;color:#087b80!important}
+.bookSummary{padding:30px 16px;background:#fff;border-radius:17px;text-align:center;border:1px solid #d2e3e8}
+.bookSummary>svg{color:#0e978f}.bookSummary h4{font-size:23px;margin:10px 0}.bookSummary p{color:#4c697b}
+.bookSummary .bookActions{justify-content:center}
+.bookLessonFooter{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 0 6px}
+.bookLessonFooter span{display:flex;align-items:center;gap:7px;font-size:13px;color:#526b7a}
+.bookCopyright{font-size:11px;color:#728495;line-height:1.8}
+@media(max-width:720px){.bookLessonRoot{padding:13px;margin:14px -7px;border-radius:18px}.bookLessonTop{align-items:flex-start}.bookMastery{min-width:87px;padding:9px}.bookMastery b{font-size:17px}.bookPictureGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bookPictureCard{min-height:129px}.bookExercise{padding:13px}.bookOptions{grid-template-columns:1fr}.bookLessonTabs button{font-size:12px}.bookAnswerForm button,.bookNumberChallenge form button{width:100%}.bookLessonFooter button{width:100%}.bookLessonTop p{font-size:12px}}
+@media(prefers-color-scheme:dark){.bookLessonRoot{background:linear-gradient(160deg,#1b2e3c,#1c2837);color:#f2f5fb;border-color:#314557;--book-ink:#e9f2fb}.bookLessonRoot p,.bookLessonTop p,.bookSectionInfo p,.bookLessonRoot small{color:#b9ccd9}.bookMastery,.bookPictureCard,.bookExercise,.bookNumberChallenge,.bookReading,.bookSummary,.bookLessonTabs button,.bookOptions button,.bookWordOptions button{background:#243849;color:#eaf2f8;border-color:#3b5365}.bookLessonTabs button.active,.bookActions button:last-child{background:#087b80;color:#fff}.bookOptions button.right,.bookOptions button.right:disabled{background:#184f43;color:#c9f2df}.bookOptions button.wrong,.bookOptions button.wrong:disabled{background:#613329;color:#ffe0d2}.bookAnswerForm input,.bookNumberChallenge input{background:#152938;color:#fff;border-color:#516b7b}.bookBuiltAnswer{background:#152938;color:#eef6ff}.bookCorrect{background:#174936;color:#d7fbe9}.bookWrong{background:#64372c;color:#ffe2d8}}

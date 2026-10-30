@@ -26,20 +26,49 @@ export const verbForms = {
 
 export const lessons = [
   {
-    id:1, label:'آشنایی و معرفی', german:'Sich vorstellen', goal:'نام، کشور، زبان و شغلت را معرفی کن.',
-    grammar:'ضمیرهای شخصی و جایگاه دوم فعل در جمله خبری',
-    tip:'در جمله خبری معمولاً فعل صرف‌شده جایگاه دوم قرار می‌گیرد: Ich komme aus Iran.',
-    verbs:['kommen','heißen','sein'],
-    words:[['der Name','نام'],['der Vorname','نام کوچک'],['der Nachname','نام خانوادگی'],['das Land','کشور'],['die Sprache','زبان'],['die Stadt','شهر'],['Deutsch','آلمانی'],['der Beruf','شغل']],
-    sentences:[['Ich heiße Reza.','اسم من رضا است.'],['Ich komme aus dem Iran.','من اهل ایران هستم.'],['Ich lerne Deutsch.','من آلمانی یاد می‌گیرم.'],['Mein Beruf ist Softwareentwickler.','شغل من توسعه‌دهنده نرم‌افزار است.']],
+    id:1, label:'سلام، احوال‌پرسی و معرفی', german:'Hallo! Ich bin Nicole ...',
+    goal:'سلام کن، نام و کشور خودت و دیگران را بگو، احوال‌پرسی کن و خداحافظی کن. (کتاب: صفحه ۹–۱۲)',
+    grammar:'صرف مفرد heißen / kommen / sein و پرسش‌های Wer? Wie? Woher?؛ خطاب du و Sie',
+    tip:'Ich heiße Reza. · Woher kommst du? · Ich komme aus dem Iran. در خطاب رسمی بگو: Wie heißen Sie?',
+    verbs:['heißen','kommen','sein'],
+    words:[
+      ['Hallo','سلام'],['Guten Morgen','صبح بخیر'],['Guten Tag','روز بخیر'],['Guten Abend','عصر بخیر'],
+      ['Auf Wiedersehen','خداحافظ رسمی'],['Tschüs','خداحافظ دوستانه'],['der Name','نام'],
+      ['Deutschland','آلمان'],['Österreich','اتریش'],['die Schweiz','سوئیس'],
+      ['Spanien','اسپانیا'],['Mexiko','مکزیک'],['das Alphabet','الفبا'],['gut','خوب']
+    ],
+    sentences:[
+      ['Hallo! Ich heiße Reza.','سلام! اسم من رضا است.'],
+      ['Wie heißt du?','اسم تو چیست؟'],
+      ['Woher kommst du?','اهل کجا هستی؟'],
+      ['Ich komme aus dem Iran.','من اهل ایران هستم.'],
+      ['Wie geht es Ihnen?','حال شما چطور است؟ (رسمی)'],
+      ['Gut, danke. Und dir?','خوبم، ممنون. تو چطوری؟']
+    ],
   },
   {
-    id:2, label:'شهر و اطلاعات تماس', german:'Wohnort und Kontakt',goal:'محل زندگی و اطلاعات تماس را بگو.',
-    grammar:'سؤال‌سازی با Wo / Wie و صرف wohnen',
-    tip:'در پرسش با کلمه سؤالی، فعل معمولاً بلافاصله بعد از کلمه پرسشی می‌آید: Wo wohnst du?',
-    verbs:['wohnen','sprechen'],
-    words:[['die Adresse','آدرس'],['die Straße','خیابان'],['die Hausnummer','پلاک خانه'],['die Postleitzahl','کد پستی'],['die Telefonnummer','شماره تلفن'],['die E-Mail','ایمیل'],['die Wohnung','آپارتمان'],['die Nummer','شماره']],
-    sentences:[['Ich wohne in Qom.','من در قم زندگی می‌کنم.'],['Wie ist deine Telefonnummer?','شماره تلفنت چیست؟'],['Meine Adresse ist in Qom.','آدرس من در قم است.'],['Ich spreche Persisch und Englisch.','من فارسی و انگلیسی صحبت می‌کنم.']],
+    id:2, label:'شغل و اطلاعات شخصی', german:'Ich bin Journalistin.',
+    goal:'درباره شغل و وضعیت تأهل بگو، مشخصات کوتاه بخوان و بنویس و اعداد ۱ تا ۱۰۰ را تمرین کن. (کتاب: صفحه ۱۳–۱۶)',
+    grammar:'صرف مفرد و جمع arbeiten / sein / haben، منفی‌سازی nicht و مؤنث شغل‌ها با -in',
+    tip:'Ich arbeite als Softwareentwickler. · Sie ist Journalistin. · Ich bin nicht verheiratet. · Wir arbeiten.',
+    verbs:['arbeiten','sein','haben'],
+    words:[
+      ['der Beruf','شغل'],['der Journalist','روزنامه‌نگار مرد'],['die Journalistin','روزنامه‌نگار زن'],
+      ['der Lehrer','معلم مرد'],['die Lehrerin','معلم زن'],['der Arzt','پزشک مرد'],
+      ['die Ärztin','پزشک زن'],['der Softwareentwickler','توسعه‌دهنده نرم‌افزار مرد'],
+      ['die Softwareentwicklerin','توسعه‌دهنده نرم‌افزار زن'],['arbeiten','کار کردن'],
+      ['ledig','مجرد'],['verheiratet','متأهل'],['geschieden','طلاق‌گرفته'],
+      ['der Familienstand','وضعیت تأهل'],['die Visitenkarte','کارت ویزیت'],
+      ['die Telefonnummer','شماره تلفن'],['hundert','صد']
+    ],
+    sentences:[
+      ['Was sind Sie von Beruf?','شغل شما چیست؟ (رسمی)'],
+      ['Ich bin Softwareentwickler.','من توسعه‌دهنده نرم‌افزار هستم.'],
+      ['Sie ist Journalistin.','او روزنامه‌نگار است.'],
+      ['Wir arbeiten in einer Firma.','ما در یک شرکت کار می‌کنیم.'],
+      ['Ich bin verheiratet.','من متأهل هستم.'],
+      ['Ich bin nicht ledig.','من مجرد نیستم.']
+    ],
   },
   {
     id:3, label:'خانواده و دوستان',german:'Familie und Freunde',goal:'درباره اعضای خانواده و داشتن/نداشتن چیزی حرف بزن.',
