@@ -123,6 +123,11 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         <span><b>جمله‌ها و فلش‌کارت‌های تصویری درس اول</b><small>۵۰ عبارت با تصویر و تلفظ، بازی چهارگزینه‌ای و ۱۰ گفت‌وگو</small></span>
         <ChevronLeft size={20}/>
       </RouteLink>}
+      <RouteLink className="wbCourseBanner" to={'vocabulary/'+lesson.id} navigate={setTab}>
+        <span className="wbCourseBannerIcon"><BookOpen size={23}/></span>
+        <span><b>فلش‌کارت تصویری لغات این درس</b><small>آلمانی + صدای تلفظ + SVG + فارسی و مرور هوشمند</small></span>
+        <ChevronLeft size={20}/>
+      </RouteLink>
       <RouteLink className="wbCourseBanner dialogueLessonBanner"
         to={lesson.id===7?'dialogues/cafe':lesson.id===4?'dialogues/office':lesson.id===12?'dialogues/interview':lesson.id===2?'dialogues/origin':'dialogues/greetings'} navigate={setTab}>
         <span className="wbCourseBannerIcon"><Headphones size={23}/></span>
