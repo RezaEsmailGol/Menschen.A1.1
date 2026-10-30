@@ -1,7 +1,7 @@
 // Browser routes: distinct shareable URLs for every screen and individual lesson.
 export const ROUTES=Object.freeze({
   home:'/', course:'/lessons', practice:'/practice', progress:'/progress', coach:'/coach',
-  classNotes:'/class-notes', night:'/night-shift', visualMemory:'/visual-memory',
+  classNotes:'/class-notes', vocabulary:'/vocabulary', night:'/night-shift', visualMemory:'/visual-memory',
   workbook:'/workbook', dialogues:'/dialogues',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
   numbers:'/numbers',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
   listen:'/dictation',words:'/first-words',alphabet:'/alphabet',verbs:'/verbs'
@@ -19,6 +19,10 @@ export function normalizeRoute(route){
    const id=sanitized.slice('dialogues/'.length);
    return DIALOGUE_IDS.includes(id)?'dialogues/'+id:'dialogues';
  }
+ if(sanitized.startsWith('vocabulary/')){
+   const lesson=sanitized.slice('vocabulary/'.length);
+   return validLesson(lesson)?'vocabulary/'+lesson:'vocabulary';
+ }
  if(sanitized.startsWith('course/')){
    const lesson=sanitized.slice('course/'.length);
    return validLesson(lesson)?'course/'+lesson:'course';
@@ -34,6 +38,7 @@ export function pathForRoute(route){
  if(id.startsWith('dialogues/'))return '/dialogues/'+id.slice('dialogues/'.length);
  if(id.startsWith('workbook/'))return '/workbook/'+id.slice('workbook/'.length);
  if(id.startsWith('course/'))return '/lessons/'+id.slice('course/'.length);
+ if(id.startsWith('vocabulary/'))return '/vocabulary/'+id.slice('vocabulary/'.length);
  return ROUTES[id]||'/';
 }
 export function routeFromPath(pathname){
@@ -41,6 +46,10 @@ export function routeFromPath(pathname){
  if(path.startsWith('/dialogues/')){
    const id=path.slice('/dialogues/'.length);
    return DIALOGUE_IDS.includes(id)?'dialogues/'+id:'home';
+ }
+ if(path.startsWith('/vocabulary/')){
+   const lesson=path.slice('/vocabulary/'.length);
+   return validLesson(lesson)?'vocabulary/'+lesson:'home';
  }
  if(path.startsWith('/lessons/')){
    const lesson=path.slice('/lessons/'.length);

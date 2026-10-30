@@ -10,6 +10,7 @@ import RouteLink from './RouteLink';
 import './mobileGame.css';
 
 const practiceCategories=[
+  {id:'vocabulary',label:'لغات تصویری هر درس',hint:'۱۲ درس؛ متن آلمانی، صدای تلفظ، تصویر SVG، ترجمه فارسی و مرور هوشمند',Icon:ImageIcon,theme:'green'},
  {id:'speaking',label:'مربی تلفظ من',hint:'با میکروفون آلمانی بگو؛ همخوانی گفتار و پیشرفت را بسنج',Icon:Mic2,theme:'purple'},
   {id:'night',label:'شیفت شب',hint:'مرور کوتاه و نمایش آرام تصویری پیش از خواب',Icon:Moon,theme:'purple'},
   {id:'visualMemory',label:'یادسپاری با تصویر SVG',hint:'کلمات و اعداد با تصویر، تلفظ و فیلترِ جدید/مسلط/ضعیف',Icon:ImageIcon,theme:'green'},
@@ -33,7 +34,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',speaking:'تمرین گفتار',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_vocab_custom_v1','dt_current_vocab_lesson','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}) {
   const report=learningInsights(memory);
@@ -45,6 +46,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
   const learningStages=[
+    {id:'vocabulary',title:'واژگان تصویری ۱۲ درس',subtitle:'فلش‌کارت‌های آلمانی + تصویر + صدا + ترجمه فارسی',Icon:ImageIcon,color:'green'},
     {id:'course/1',title:'درس ۱ کتاب · سلام و معرفی',subtitle:'۱۸ تمرین · نام، کشور، الفبا و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
     {id:'course/2',title:'درس ۲ کتاب · شغل و مشخصات',subtitle:'۲۰ تمرین + بازی اعداد ۱ تا ۱۰۰',Icon:BookOpenCheck,color:'amber'},
     {id:'speaking',title:'مربی تلفظ شخصی',subtitle:'اعداد، حروف، واژه و جمله با میکروفون و حافظه',Icon:Mic2,color:'purple'},
@@ -65,6 +67,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
         <h1>آلمانی را <span>بازی کن!</span></h1>
         <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
         <div className="gameHeroActions">
+          <RouteLink className="gamePrimary" to="vocabulary/1" navigate={setTab}><ImageIcon size={17}/> واژگان تصویری درس ۱ <ArrowLeft size={18}/></RouteLink>
           <RouteLink className="gamePrimary" to="course/1" navigate={setTab}><BookOpenCheck size={17}/> درس ۱ مطابق کتاب <ArrowLeft size={18}/></RouteLink>
           <RouteLink className="gameHeroSecondary" to="course/2" navigate={setTab}>درس ۲ و اعداد ۱ تا ۱۰۰</RouteLink>
           <RouteLink className="gamePrimary" to="classNotes" navigate={setTab}><BookOpenCheck size={17}/> تمرین جزوه‌های جدید استاد <ArrowLeft size={18}/></RouteLink>
