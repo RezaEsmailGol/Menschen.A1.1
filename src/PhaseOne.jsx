@@ -5,6 +5,7 @@ import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KE
 import { activityItemKey } from './learningMemory.js';
 import RouteLink from './RouteLink';
 import QuizFocusShell from './QuizFocusShell.jsx';
+import BookLessonPractice from './BookLessonPractice.jsx';
 import {germanChoiceAudio,useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import {readGameFeedbackPreferences} from './gameEffects.js';
 import './phaseOne.css';
@@ -87,11 +88,11 @@ export default function PhaseOne({mode,routeLesson,setTab,speak,progress,setProg
       <div className="phaseIndicators"><div><strong>{completed}<small> / 12</small></strong><span>درس قبول‌شده</span></div><div><strong>{due.length}</strong><span>کارت آماده مرور</span></div><div><strong>{learned}</strong><span>کارت مرورشده</span></div></div>
     </header>
 
-    {mode==='course' && <CoursePanel lesson={lesson} selected={selected} select={select} progress={progress} startLesson={startLesson} speak={speak} setTab={setTab}/>}
+    {mode==='course' && <CoursePanel lesson={lesson} selected={selected} select={select} progress={progress} startLesson={startLesson} speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent}/>}
     {mode==='srs' && <ReviewPanel available={available} schedule={schedule} due={due} rate={rate} speak={speak} setTab={setTab}/>}
     {mode==='builder' && <BuilderPanel lesson={lesson} selected={selected} select={select} speak={speak} onPracticeEvent={onPracticeEvent}/>}
     {mode==='exam' && <ExamPanel lesson={lesson} selected={selected} select={select} progress={progress} examDone={examDone} speak={speak} onPracticeEvent={onPracticeEvent}/>}
-    <div className="phaseFoot"><CircleHelp size={17}/><span>تمرین‌ها تألیفی و همراه سطح A1.1 هستند. موضوع دقیق هر درس کتاب را مطابق برنامه استاد خودت تنظیم می‌کنیم.</span></div>
+    <div className="phaseFoot"><CircleHelp size={17}/><span>تمرین‌های درس‌های ۱ و ۲ با سرفصل کتاب هماهنگ شده‌اند و به‌صورت مستقل تألیف شده‌اند.</span></div>
   </div>;
 }
 
@@ -101,7 +102,7 @@ function LessonPicker({selected,select}) {
   </select></label>;
 }
 
-function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab}) {
+function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,onPracticeEvent}) {
   const [showAll,setShowAll]=useState(false);
   const selectAndClose=id=>{select(id);setShowAll(false);};
   const status = id => progress[id]?.passed ? 'passed' : progress[id]?.started||id===1?'started':'not-started';
@@ -128,11 +129,11 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab})
         <span><b>گفت‌وگوی تعاملی این درس</b><small>مکالمه تصویری با انتخاب مسیر و تمرین موقعیت واقعی</small></span>
         <ChevronLeft size={20}/>
       </RouteLink>
-      <RouteLink className="wbCourseBanner" to="workbook" navigate={setTab}>
+      {lesson.id===1&&<RouteLink className="wbCourseBanner" to="workbook" navigate={setTab}>
         <span className="wbCourseBannerIcon"><BookOpenCheck size={23}/></span>
         <span><b>دفتر تمرین جلسه اول استاد</b><small>الفبا، تلفظ و استثناها، ۰ تا ۱۲، ضمیر و صرف kommen — با آزمون تعاملی</small></span>
         <ChevronLeft size={20}/>
-      </RouteLink>
+      </RouteLink>}
       <article className="courseIntro">
         <span className="courseTopline">LEKTION {String(lesson.id).padStart(2,'0')} · A1.1</span>
         <h3>{lesson.label}</h3>
@@ -142,6 +143,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab})
         {progress[lesson.id]?.passed ? <span className="lessonPassed"><CheckCircle2 size={17}/> این درس را با حداقل ۸۰٪ گذرانده‌ای</span>
           : <button className="courseStart" onClick={()=>startLesson(lesson.id)}>{progress[lesson.id]?.started || lesson.id===1?'ثبت این درس برای مرور روزانه':'شروع مطالعه و فعال‌سازی مرور'} <ArrowLeft size={17}/></button>}
       </article>
+      {[1,2].includes(lesson.id)&&<BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
       <section className="courseContentBlock">
         <div className="courseTitle"><div><small>VOCABULARY</small><h3>کلمات درس</h3></div><span>{lesson.words.length} کلمه</span></div>
         <div className="vocabGrid">{lesson.words.map(([de,fa],index)=><button className="vocabTile" key={de} onClick={()=>speak(de)}><span className="vocabOrdinal">{String(index+1).padStart(2,'0')}</span><span><b dir="ltr">{de}</b><small>{fa}</small></span><Volume2 size={17}/></button>)}</div>
