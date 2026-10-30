@@ -83,7 +83,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       const oldItem=answers[task.id]||{};
       return {...old,[lessonId]:{...before,answers:{...answers,
         [task.id]:{correct:correct||Boolean(oldItem.correct),attempts:(oldItem.attempts||0)+1}
-      }}}};
+      }}};
     });
     onPracticeEvent?.({id:activityItemKey('book-exercise',lessonId,task.id),lesson:lessonId,
       kind:taskKind(task),label:task.answer,correct});
