@@ -33,7 +33,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',speaking:'تمرین گفتار',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}) {
   const report=learningInsights(memory);
