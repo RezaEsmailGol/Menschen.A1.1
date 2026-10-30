@@ -10,6 +10,7 @@ import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
 const NightShift = React.lazy(() => import('./NightShift.jsx'));
 const VisualMemory = React.lazy(() => import('./VisualMemory.jsx'));
+const LessonVocabulary = React.lazy(() => import('./LessonVocabulary.jsx'));
 const SpeakingCoach = React.lazy(() => import('./SpeakingCoach.jsx'));
 import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
@@ -109,7 +110,7 @@ const routes = [
 ];
 const secondaryTitles = {
   coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
-  numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
+  vocabulary:'واژگان تصویری هر درس',numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
 };
@@ -126,7 +127,7 @@ function BottomNav({tab,setTab}) {
 
 function App() {
   const [route, setTab] = usePageRoute();
-  const tab=route.startsWith('dialogues/')?'dialogues':route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route;
+  const tab=route.startsWith('dialogues/')?'dialogues':route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route.startsWith('vocabulary/')?'vocabulary':route;
   const [audioSpeed, setAudioSpeed] = useLocalStorage('dt_audio_speed', 0.82);
   const [cards, setCards] = useLocalStorage('dt_cards', defaultCards);
   const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
@@ -179,6 +180,10 @@ function App() {
       {tab==='night' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی شیفت شب...</p>}>
          <NightShift speak={speak} memory={memory} schedule={schedule} progress={progress}
          personalCards={cards} nightState={nightState} setNightState={setNightState} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>
+       </React.Suspense>}
+      {tab==='vocabulary' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی فلش‌کارت‌های تصویری...</p>}>
+        <LessonVocabulary selectedLesson={route.startsWith('vocabulary/')?Number(route.slice('vocabulary/'.length)):Number(localStorage.getItem('dt_current_vocab_lesson'))||1}
+          onNavigate={setTab} speak={speak} memory={memory} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>
        </React.Suspense>}
       {tab==='visualMemory' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تصاویر آموزشی...</p>}>
          <VisualMemory speak={speak} memory={memory} schedule={schedule} progress={progress}
