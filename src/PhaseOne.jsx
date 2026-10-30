@@ -6,6 +6,7 @@ import { activityItemKey } from './learningMemory.js';
 import RouteLink from './RouteLink';
 import QuizFocusShell from './QuizFocusShell.jsx';
 import BookLessonPractice from './BookLessonPractice.jsx';
+import {VOCABULARY_DECKS} from './lessonVocabularyData.js';
 import {germanChoiceAudio,useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import {readGameFeedbackPreferences} from './gameEffects.js';
 import './phaseOne.css';
@@ -59,7 +60,13 @@ export default function PhaseOne({mode,routeLesson,setTab,speak,progress,setProg
     }));
   const lesson=lessons[selected-1];
   const available=lessons.filter(l=>l.id===1 || progress[l.id]?.started).map(l=>l.id);
-  const due = dueCards([...allStudyCards,...customCards],schedule,[...available,0]);
+  // Import only already-reviewed picture-word cards into the main SRS queue.
+  // Unseen vocabulary remains in its own lesson, avoiding a 400-card flood.
+  const learnedVocabulary=VOCABULARY_DECKS.flatMap(deck=>deck.cards
+    .filter(card=>schedule[card.id])
+    .map(card=>({id:card.id,lesson:card.lesson,front:card.fa,back:card.de,speak:card.de})));
+  const learnedLessons=[...new Set(learnedVocabulary.map(card=>card.lesson))];
+  const due = dueCards([...allStudyCards,...learnedVocabulary,...customCards],schedule,[...available,0,...learnedLessons]);
   const learned=Object.keys(schedule).length;
   const completed=lessons.filter(l=>progress[l.id]?.passed).length;
 
