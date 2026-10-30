@@ -45,6 +45,8 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
   const done=lessons.filter(l=>progress[l.id]?.passed).length;
   const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
   const learningStages=[
+    {id:'course/1',title:'درس ۱ کتاب · سلام و معرفی',subtitle:'۱۸ تمرین · نام، کشور، الفبا و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
+    {id:'course/2',title:'درس ۲ کتاب · شغل و مشخصات',subtitle:'۲۰ تمرین + بازی اعداد ۱ تا ۱۰۰',Icon:BookOpenCheck,color:'amber'},
     {id:'speaking',title:'مربی تلفظ شخصی',subtitle:'اعداد، حروف، واژه و جمله با میکروفون و حافظه',Icon:Mic2,color:'purple'},
     {id:'night',title:'شیفت شب · مرور پیش از خواب',subtitle:'مرور فعال یا نمایش پشت‌سرهم SVG و صدا',Icon:Moon,color:'purple'},
     {id:'visualMemory',title:'یادسپاری تصویری',subtitle:'اعداد و واژه‌ها با نشانه‌های SVG، تلفظ و حافظه',Icon:ImageIcon,color:'green'},
@@ -63,6 +65,8 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
         <h1>آلمانی را <span>بازی کن!</span></h1>
         <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
         <div className="gameHeroActions">
+          <RouteLink className="gamePrimary" to="course/1" navigate={setTab}><BookOpenCheck size={17}/> درس ۱ مطابق کتاب <ArrowLeft size={18}/></RouteLink>
+          <RouteLink className="gameHeroSecondary" to="course/2" navigate={setTab}>درس ۲ و اعداد ۱ تا ۱۰۰</RouteLink>
           <RouteLink className="gamePrimary" to="classNotes" navigate={setTab}><BookOpenCheck size={17}/> تمرین جزوه‌های جدید استاد <ArrowLeft size={18}/></RouteLink>
           <RouteLink className="gameHeroSecondary" to="dialogues" navigate={setTab}>گفت‌وگوهای جدید</RouteLink>
         </div>
