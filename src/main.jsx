@@ -109,7 +109,7 @@ const routes = [
 ];
 const secondaryTitles = {
   coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
-  numbers:'بازی اعداد',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
+  numbers:'بازی اعداد ۰ تا ۱۰۰',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
 };
