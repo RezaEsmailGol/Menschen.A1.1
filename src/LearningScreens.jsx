@@ -20,7 +20,7 @@ const practiceCategories=[
   {id:'workbook',label:'دفتر جلسه اول استاد',hint:'الفبا، استثناها، اعداد، صرف فعل و آزمون',Icon:BookOpen,theme:'green'},
   {id:'srs',label:'مرور هوشمند',hint:'کلمه‌هایی که زمان مرورشان رسیده',Icon:Layers,theme:'purple'},
   {id:'builder',label:'بازی جمله‌سازی',hint:'کلمات را به جمله صحیح تبدیل کن',Icon:Gamepad2,theme:'green'},
-  {id:'numbers',label:'بازی اعداد',hint:'رندوم، دیکته و اعداد دشوار',Icon:Hash,theme:'amber'},
+  {id:'numbers',label:'بازی اعداد ۰ تا ۱۰۰',hint:'چهار بازی: صدا، تشخیص کلمه، چهارگزینه‌ای، دیکته و مرور اشتباه‌ها',Icon:Hash,theme:'amber'},
   {id:'pronunciation',label:'تلفظ و استثناها',hint:'از Ich-Laut تا Ach-Laut',Icon:Volume2,theme:'sky'},
   {id:'listen',label:'دیکته شنیداری',hint:'گوش بده و کلمه درست را تایپ کن',Icon:Headphones,theme:'pink'},
   {id:'exam',label:'آزمون پایان درس',hint:'۱۰ سؤال و ثبت نتیجه',Icon:GraduationCap,theme:'purple'},
@@ -46,7 +46,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
   const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
   const learningStages=[
     {id:'course/1',title:'درس ۱ کتاب · سلام و معرفی',subtitle:'۱۸ تمرین · نام، کشور، الفبا و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
-    {id:'course/2',title:'درس ۲ کتاب · شغل و مشخصات',subtitle:'۲۰ تمرین + بازی اعداد ۱ تا ۱۰۰',Icon:BookOpenCheck,color:'amber'},
+    {id:'course/2',title:'درس ۲ کتاب · شغل و مشخصات',subtitle:'۲۰ تمرین + بازی هوشمند اعداد ۰ تا ۱۰۰',Icon:BookOpenCheck,color:'amber'},
     {id:'speaking',title:'مربی تلفظ شخصی',subtitle:'اعداد، حروف، واژه و جمله با میکروفون و حافظه',Icon:Mic2,color:'purple'},
     {id:'night',title:'شیفت شب · مرور پیش از خواب',subtitle:'مرور فعال یا نمایش پشت‌سرهم SVG و صدا',Icon:Moon,color:'purple'},
     {id:'visualMemory',title:'یادسپاری تصویری',subtitle:'اعداد و واژه‌ها با نشانه‌های SVG، تلفظ و حافظه',Icon:ImageIcon,color:'green'},
