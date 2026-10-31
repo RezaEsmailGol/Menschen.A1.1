@@ -1,16 +1,26 @@
 import React,{useState} from 'react';
 import {ArrowLeft,CheckCircle2,Gamepad2,Headphones,Hash,Heart,RotateCcw,Sparkles,Star,Trophy,Volume2,VolumeX,XCircle} from 'lucide-react';
 import {germanNumber} from './learningData.js';
-import {createNumberRound,optionLabel} from './numberGameLogic.js';
-import {NUMBER_SECTIONS,numbersInSection,numberSection,numberSectionStats,correctNumberSpelling,numberTip} from './numberSections.js';
+import {createNumberGameRound,correctNumberGameAnswer,optionLabel} from './numberGameLogic.js';
+import {NUMBER_SECTIONS,numbersInSection,numberSection,numberSectionStats,numberTip} from './numberSections.js';
 import MnemonicArt from './MnemonicArt.jsx';
 import {playWrongBeep} from './audioFeedback.js';
 import './numberGame.css';
 
 const format=n=>n.toLocaleString('fa-IR');
+const NUMBER_GUIDES={
+ '0-12':{number:12,expression:'zwölf',tip:'فرق zwei (۲) و zwölf (۱۲) را با پخش صوت چندبار گوش بده.',notable:[2,11,12]},
+ '13-20':{number:17,expression:'sieb + zehn = siebzehn',tip:'در sechzehn حرف s و در siebzehn حروف en حذف می‌شوند.',notable:[16,17,20]},
+ '20-30':{number:21,expression:'ein + und + zwanzig',tip:'در اعداد ۲۱ تا ۲۹، یکان پیش از دهگان است؛ eins به ein تبدیل می‌شود.',notable:[20,21,30]},
+ '31-50':{number:42,expression:'zwei + und + vierzig',tip:'عدد ۴۲ به آلمانی zweiundvierzig است: اول ۲، بعد «und»، بعد ۴۰.',notable:[30,40,42,50]},
+ '51-70':{number:67,expression:'sieben + und + sechzig',tip:'۶۰ sechzig و ۷۰ siebzig هستند. به کوتاه‌شدن sechs و sieben دقت کن.',notable:[60,61,67,70]},
+ '71-100':{number:98,expression:'acht + und + neunzig',tip:'عدد ۹۸ به آلمانی achtundneunzig است. صد را hundert می‌گوییم.',notable:[70,80,90,100]},
+ '0-100':{number:84,expression:'vier + und + achtzig',tip:'هر عدد از ۰ تا ۱۰۰ ممکن است بیاید. بعد از اشتباه، در همان دور دوباره مرور می‌کنی.',notable:[12,20,30,60,70,100]},
+ 'confusing':{number:12,expression:'zwei ≠ zwölf ≠ zwanzig',tip:'۲ = zwei، ۱۲ = zwölf، ۲۰ = zwanzig. همچنین ۱۶ و ۱۷، ۶۰ و ۷۰ را مقایسه کن.',notable:[2,12,20,16,17,60,70]}
+};
 export default function NumberLab({speak,onAttempt,memory}){
  const [rangeId,setRangeId]=useState('0-12');
- const [mode,setMode]=useState('read');
+ const [mode,setMode]=useState('mixed');
  const [active,setActive]=useState(false);
  const [queue,setQueue]=useState([]);
  const [position,setPosition]=useState(0);
@@ -34,14 +44,16 @@ export default function NumberLab({speak,onAttempt,memory}){
  };
  const item=queue[position];
  const finished=active&&position>=queue.length;
- const correct=choice!==null && (mode==='type'?correctNumberSpelling(choice,item?.number):choice===item?.number);
+ const correct=choice!==null && correctNumberGameAnswer(choice,item);
+ const questionMode=item?.questionMode||mode;
+ const guide=NUMBER_GUIDES[rangeId]||NUMBER_GUIDES['0-100'];
  const start=()=>{
-   setQueue(createNumberRound(rangeId,memory).map(q=>({...q,retry:false})));
+   setQueue(createNumberGameRound({rangeId,mode,memory}));
    setPosition(0);setChoice(null);setTyped('');setFirstPassScore(0);setAttempts(0);setWrongCount(0);setReviewCorrect(0);setActive(true);
  };
  const pick=value=>{
    if(choice!==null || finished)return;
-   const ok=mode==='type'?correctNumberSpelling(value,item.number):value===item.number;
+   const ok=correctNumberGameAnswer(value,item);
    // Run feedback inside the actual click handler so mobile browsers allow sound.
    if(feedbackSound){
      if(ok){
@@ -75,8 +87,8 @@ export default function NumberLab({speak,onAttempt,memory}){
     <div>
       <span className="sectionKicker"><Gamepad2 size={17}/> Zahlen Challenge · A1.1</span>
       <h2>اعداد آلمانی، <em>با بازی یاد بگیر!</em></h2>
-      <p>سه مرحله مستقل از صفر تا سی. در هر مرحله هم انتخابی، هم شنیداری و هم دیکته تایپی تمرین می‌کنی؛ عددهای اشتباه برای مرور برمی‌گردند.</p>
-      <div className="numberFeatures"><span><Star size={16}/> تا ده چالش در هر دور</span><span><Headphones size={16}/> شنیدن و انتخاب</span><span><Trophy size={16}/> ثبت پیشرفت</span></div>
+      <p>از صفر تا صد، مرحله‌ای و ترکیبی بازی کن: عدد را ببین، تلفظ را بشنو، نوشته را به رقم تبدیل کن یا املای آلمانی آن را بنویس. اشتباه‌ها دوباره برمی‌گردند.</p>
+      <div className="numberFeatures"><span><Star size={16}/> ۰ تا ۱۰۰ · ده سؤال در هر دور</span><span><Headphones size={16}/> شنیدن و انتخاب</span><span><Trophy size={16}/> ثبت پیشرفت</span></div>
     </div>
     <div className="numberHeroDecoration" aria-hidden="true"><span>7</span><span>12</span><span>20</span><span>99</span></div>
   </div>
@@ -110,7 +122,9 @@ export default function NumberLab({speak,onAttempt,memory}){
         <div><b>نوع بازی</b><div className="segmentedTabs">
           <button type="button" className={mode==='read'?'active':''} onClick={()=>setMode('read')}><Hash size={15}/> ببین و انتخاب کن</button>
           <button type="button" className={mode==='hear'?'active':''} onClick={()=>setMode('hear')}><Headphones size={15}/> بشنو و انتخاب کن</button>
-          <button type="button" className={mode==='type'?'active':''} onClick={()=>setMode('type')}><Hash size={15}/> دیکته تایپی</button>
+          <button type="button" className={mode==='recognize'?'active':''} onClick={()=>setMode('recognize')}><Gamepad2 size={15}/> کلمه ← عدد</button>
+          <button type="button" className={questionMode==='type'?'active':''} onClick={()=>setMode('type')}><Hash size={15}/> دیکته تایپی</button>
+          <button type="button" className={mode==='mixed'?'active':''} onClick={()=>setMode('mixed')}><Sparkles size={15}/> ترکیبی (۴ بازی)</button>
         </div></div>
       </div>}
       {!active && <div className="numberStart numberGameStart">
@@ -124,13 +138,17 @@ export default function NumberLab({speak,onAttempt,memory}){
         <div className="examTrack duoTrack"><span style={{width:((position+1)/queue.length*100)+'%'}}/></div>
         <div className="duoQuestionHead"><b>{range.label} · سؤال {format(position+1)} از {format(queue.length)}</b>{item.retry&&<span className="reviewBadge">مرور اشتباه قبلی</span>}</div>
         <div className="duoQuestion">
-          {mode!=='hear'
-            ?<><span>{mode==='type'?'این عدد را به آلمانی تایپ کن.':'کدام گزینه نوشتار درست این عدد است؟'}</span>
-                <strong className="duoHugeNumber">{item.number}</strong>
-                <div className="duoNumberScene"><MnemonicArt number={item.number}/></div></>
-            :<><span>گوش بده؛ کدام عدد را شنیدی؟</span><span className="duoHeadphones"><Headphones size={49}/></span>
+          {questionMode==='hear'
+            ?<><span>گوش بده؛ کدام عدد را شنیدی؟</span><span className="duoHeadphones"><Headphones size={49}/></span>
                 <button type="button" className="duoHear" onClick={()=>speak(germanNumber(item.number))}>
-                  <Volume2 size={19}/> پخش عدد آلمانی</button></>}
+                  <Volume2 size={19}/> پخش عدد آلمانی</button></>
+            :questionMode==='recognize'
+              ?<><span>این کلمه آلمانی کدام عدد است؟</span>
+                <strong className="duoHugeWord" dir="ltr" lang="de">{germanNumber(item.number)}</strong>
+                <button type="button" className="duoHear" onClick={()=>speak(germanNumber(item.number))}><Volume2 size={19}/> تلفظ کلمه</button></>
+              :<><span>{questionMode==='type'?'این عدد را به آلمانی تایپ کن.':'کدام گزینه نوشتار درست این عدد است؟'}</span>
+                <strong className="duoHugeNumber">{item.number}</strong>
+                <div className="duoNumberScene"><MnemonicArt number={item.number}/></div></>}
         </div>
         {mode==='type'?
           <form className="duoTypeAnswer" onSubmit={e=>{e.preventDefault();if(choice===null&&typed.trim())pick(typed)}}>
@@ -149,7 +167,7 @@ export default function NumberLab({speak,onAttempt,memory}){
             return <button key={number} type="button" disabled={choice!==null}
               className={(right?'isCorrect duoCorrectPop':wrong?'isWrong duoWrongShake':'')+(choice!==null?' locked':'')}
               onClick={()=>pick(number)}>
-              <span className="duoLetter">{'ABCD'[i]}</span><span className="duoAnswer" dir="ltr">{optionLabel(number,mode)}</span>
+              <span className="duoLetter">{'ABCD'[i]}</span><span className="duoAnswer" dir="ltr">{optionLabel(number,questionMode)}</span>
               {right&&<CheckCircle2 size={22}/>}
               {wrong&&<XCircle size={22}/>}
             </button>;
@@ -174,10 +192,10 @@ export default function NumberLab({speak,onAttempt,memory}){
     </div>
     <aside className="numbersGuide">
       <div className="guideTitle"><span>🧠</span><div><h3>میان‌بُر ذهنی</h3><p>{range.subtitle}</p></div></div>
-      <div className="guideExample" dir="ltr">{rangeId==='20-30'?<><span>21</span><strong>ein + und + zwanzig</strong><small>einundzwanzig</small></>:rangeId==='13-20'?<><span>17</span><strong>sieb + zehn</strong><small>siebzehn</small></>:<><span>12</span><strong>zwölf</strong><small>تلفظ را بشنو و تکرار کن</small></>}</div>
-      <p>{rangeId==='20-30'?'از ۲۱ تا ۲۹، ابتدا یکان، سپس und و بعد zwanzig می‌آید.':rangeId==='13-20'?'۱۶ و ۱۷ استثنای املایی دارند: sechzehn و siebzehn.':'اعداد پایه را یک‌به‌یک بخوان، گوش بده و سپس بدون نگاه‌کردن تکرار کن.'}</p>
-      <div className="guideDivider"/><strong>استثناهای مهم</strong>
-      {(rangeId==='0-12'?[['1','eins'],['6','sechs'],['11','elf'],['12','zwölf']]:rangeId==='13-20'?[['16','sechzehn'],['17','siebzehn'],['20','zwanzig']]:[['20','zwanzig'],['21','einundzwanzig'],['30','dreißig']]).map(([n,w])=><button className="guideException" key={n} onClick={()=>speak(w)}><b dir="ltr">{n}</b><span dir="ltr">{w}</span><Volume2 size={16}/></button>)}
+      <div className="guideExample" dir="ltr"><span>{guide.number}</span><strong>{guide.expression}</strong><small>{germanNumber(guide.number)}</small></div>
+      <p>{guide.tip}</p>
+      <div className="guideDivider"/><strong>اعداد مهم و پرتکرار</strong>
+      {guide.notable.map(n=><button className="guideException" key={n} type="button" onClick={()=>speak(germanNumber(n))}><b dir="ltr">{n}</b><span dir="ltr">{germanNumber(n)}</span><Volume2 size={16}/></button>)}
     </aside>
   </div>
   <div className="numberReference">
