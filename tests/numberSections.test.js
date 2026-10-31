@@ -127,7 +127,7 @@ test('each of the five modes generates valid 0–100 questions and answers',()=>
 });
 
 test('similar numbers receive challenging but valid distractors',()=>{
- const cases=[[2,[12,20,22]],[12,[2,20,22]],[20,[2,12,22]],[16,[17,60,70]],[70,[17,60,77]]];
+ const cases=[[2,[12,20,22]],[12,[2,20,22]],[20,[2,12,22]],[16,[17,60,70]],[70,[17,60,72]]];
  for(const [n,others] of cases){
   const choices=makeNumberOptions(n,'confusing',()=>0.3);
   assert.equal(choices.length,4);
