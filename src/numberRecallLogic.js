@@ -8,7 +8,8 @@ export const NUMBER_RECALL_MODES=Object.freeze([
  {id:'listenWord',title:'صدا ← کلمه'},
  {id:'wordDigit',title:'کلمه ← عدد'}
 ]);
-export const NUMBER_RECALL_RANGES=Object.freeze(NUMBER_SECTIONS.map(s=>s.id));
+// Keep the existing teacher workbook's three stages stable; NumberLab offers all eight ranges.
+export const NUMBER_RECALL_RANGES=Object.freeze(['0-12','13-20','20-30']);
 const three=['digitWord','listenWord','wordDigit'];
 
 export function createNumberMemoryRound({rangeId=null,maximum=12,mode='mixed',memory={},size=10,random=Math.random}={}){

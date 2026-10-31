@@ -111,3 +111,15 @@
  .duoTypeAnswer{padding:11px}.duoTypeAnswer input{font-size:17px}
 }
 @media(max-width:355px){.numberStageGrid{grid-template-columns:1fr}.numberStageCard small{min-height:0}}
+
+/* 0–100 recognition: many stages plus a German-word-to-digit mode. */
+.numberStageGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.numberStageCard strong{font-size:clamp(14px,1.5vw,20px)}
+.numberChallengeSetup .segmentedTabs{flex-wrap:wrap;gap:7px}
+.numberChallengeSetup .segmentedTabs button{flex:1 1 155px;white-space:normal;min-height:45px}
+.duoHugeWord{font-size:clamp(25px,5vw,50px);color:#5049b6;line-height:1.45;overflow-wrap:anywhere;max-width:100%;font-weight:900}
+.duoQuestion:has(.duoHugeWord){min-height:220px}
+.guideExample strong{overflow-wrap:anywhere}
+@media(max-width:850px){.numberStageGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:550px){.numberStageGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.numberStageCard small{min-height:30px}.duoHugeWord{font-size:clamp(23px,8vw,38px)}.duoQuestion:has(.duoHugeWord){min-height:175px}}
+@media(max-width:330px){.numberStageGrid{grid-template-columns:1fr}}
