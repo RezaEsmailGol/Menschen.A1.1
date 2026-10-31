@@ -1,12 +1,18 @@
 import {activityItemKey} from './learningMemory.js';
 import {germanNumber} from './learningData.js';
 
-// The shared number syllabus. 20 deliberately bridges the last two lessons.
+// Number stages through 100. Preserve overlapping 20 and stable number:n mastery IDs.
 // Never change number mastery IDs when moving between sections.
 export const NUMBER_SECTIONS=Object.freeze([
   {id:'0-12',min:0,max:12,label:'۰ تا ۱۲',subtitle:'پایه · null تا zwölf',icon:'🌱'},
   {id:'13-20',min:13,max:20,label:'۱۳ تا ۲۰',subtitle:'اعداد نوجوان · استثناهای ۱۶ و ۱۷',icon:'⭐'},
-  {id:'20-30',min:20,max:30,label:'۲۰ تا ۳۰',subtitle:'ساخت عدد · einundzwanzig تا dreißig',icon:'🚀'}
+  {id:'20-30',min:20,max:30,label:'۲۰ تا ۳۰',subtitle:'یکان + und + دهگان',icon:'🚀'},
+  {id:'31-50',min:31,max:50,label:'۳۱ تا ۵۰',subtitle:'dreißig و vierzig و fünfzig',icon:'🎲'},
+  {id:'51-70',min:51,max:70,label:'۵۱ تا ۷۰',subtitle:'توجه به sechzig و siebzig',icon:'🎧'},
+  {id:'71-100',min:71,max:100,label:'۷۱ تا ۱۰۰',subtitle:'هفتاد تا hundert',icon:'🏆'},
+  {id:'0-100',min:0,max:100,label:'همه ۰ تا ۱۰۰',subtitle:'چالش تصادفی کل اعداد',icon:'🌍'},
+  {id:'confusing',min:2,max:92,label:'اعداد گیج‌کننده',subtitle:'zwei / zwölf / zwanzig و استثناها',icon:'🧠',
+    numbers:[2,12,20,22,32,42,52,62,72,82,92,16,17,30,60,70,13,14,15,19]}
 ]);
 export function numberSection(id='0-12'){
  const section=NUMBER_SECTIONS.find(s=>s.id===id);
@@ -20,8 +26,8 @@ export function resolveNumberSection(range='0-12'){
  throw new Error('Unsupported number range');
 }
 export function numbersInSection(range='0-12'){
- const {min,max}=resolveNumberSection(range);
- return Array.from({length:max-min+1},(_,i)=>min+i);
+ const {min,max,numbers}=resolveNumberSection(range);
+ return numbers?[...numbers]:Array.from({length:max-min+1},(_,i)=>min+i);
 }
 export function shuffleNumberItems(items,random=Math.random){
  const out=[...items];
@@ -66,6 +72,10 @@ export function numberTip(number){
  if(number===20)return 'zwanzig؛ شکل بیست را به‌صورت یک کلمه حفظ کن.';
  if(number===30)return 'dreißig؛ با ß نوشته می‌شود، نه dreizig.';
  if(number===21)return 'ein + und + zwanzig → einundzwanzig؛ eins به ein تبدیل می‌شود.';
- if(number>=22 && number<=29)return 'در آلمانی یکان + und + دهگان گفته می‌شود.';
+ if(number===60)return 'sechzig؛ از sechs حرف s آخر حذف می‌شود.';
+ if(number===70)return 'siebzig؛ از sieben بخش en حذف می‌شود.';
+ if(number===100)return 'hundert؛ ۱۰۰ را به شکل مستقل به خاطر بسپار.';
+ if(number===2||number===12)return 'zwei یعنی ۲، zwölf یعنی ۱۲ و zwanzig یعنی ۲۰؛ هر سه را جدا بشنو.';
+ if(number>=21 && number<=99 && number%10!==0)return 'در آلمانی ابتدا یکان، سپس und و بعد دهگان گفته می‌شود؛ مثل zweiundvierzig = ۴۲.';
  return '';
 }
