@@ -123,7 +123,7 @@ export default function NumberLab({speak,onAttempt,memory}){
           <button type="button" className={mode==='read'?'active':''} onClick={()=>setMode('read')}><Hash size={15}/> ببین و انتخاب کن</button>
           <button type="button" className={mode==='hear'?'active':''} onClick={()=>setMode('hear')}><Headphones size={15}/> بشنو و انتخاب کن</button>
           <button type="button" className={mode==='recognize'?'active':''} onClick={()=>setMode('recognize')}><Gamepad2 size={15}/> کلمه ← عدد</button>
-          <button type="button" className={questionMode==='type'?'active':''} onClick={()=>setMode('type')}><Hash size={15}/> دیکته تایپی</button>
+          <button type="button" className={mode==='type'?'active':''} onClick={()=>setMode('type')}><Hash size={15}/> دیکته تایپی</button>
           <button type="button" className={mode==='mixed'?'active':''} onClick={()=>setMode('mixed')}><Sparkles size={15}/> ترکیبی (۴ بازی)</button>
         </div></div>
       </div>}
@@ -150,7 +150,7 @@ export default function NumberLab({speak,onAttempt,memory}){
                 <strong className="duoHugeNumber">{item.number}</strong>
                 <div className="duoNumberScene"><MnemonicArt number={item.number}/></div></>}
         </div>
-        {mode==='type'?
+        {questionMode==='type'?
           <form className="duoTypeAnswer" onSubmit={e=>{e.preventDefault();if(choice===null&&typed.trim())pick(typed)}}>
             <label htmlFor="number-spelling">املای آلمانی عدد</label>
             <input id="number-spelling" dir="ltr" lang="de" autoComplete="off" autoCapitalize="off" spellCheck={false}
