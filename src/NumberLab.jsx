@@ -19,7 +19,7 @@ const NUMBER_GUIDES={
  'confusing':{number:12,expression:'zwei ≠ zwölf ≠ zwanzig',tip:'۲ = zwei، ۱۲ = zwölf، ۲۰ = zwanzig. همچنین ۱۶ و ۱۷، ۶۰ و ۷۰ را مقایسه کن.',notable:[2,12,20,16,17,60,70]}
 };
 export default function NumberLab({speak,onAttempt,memory}){
- const [rangeId,setRangeId]=useState('0-12');
+ const [rangeId,setRangeId]=useState('0-100');
  const [mode,setMode]=useState('mixed');
  const [active,setActive]=useState(false);
  const [queue,setQueue]=useState([]);
