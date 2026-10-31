@@ -20,7 +20,7 @@ export function makeNumberOptions(number,range='0-12',random=Math.random){
  const confusable={
    2:[12,20,22],12:[2,20,22],20:[2,12,22],22:[2,12,20,32],
    16:[17,60,70],17:[16,70,60],30:[13,20,40],
-   60:[16,70,66],70:[17,60,77],100:[90,99,10]
+   60:[16,70,66],70:[17,60,72],100:[90,99,10]
  };
  const priority=(confusable[number]||[]).filter(n=>all.includes(n));
  const nearby=shuffled(all.filter(n=>Math.abs(n-number)<=5&&!priority.includes(n)),random);
