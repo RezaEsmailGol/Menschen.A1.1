@@ -97,7 +97,7 @@ export function makePictureQuestion(item,lesson,mode,random=Math.random){
    const no=negativeArticle(item.word),other=no==='kein'?'keine':'kein';
    answer='Das ist '+no+' '+name+'.';
    options=[answer,'Das ist '+other+' '+name+'.','Das ist nicht '+name+'.','Das ist '+indefiniteArticle(item.word)+' '+name+'.'];
-   prompt='«این '+item.fa+' نیست» را با kein یا keine بساز.';
+   prompt='تمرین گرامر: جمله فرضی «این '+item.fa+' نیست» را با kein یا keine بساز.';
    why='der/das → kein و die → keine. برای نفی نام یک شیء از kein/keine استفاده کن.';
    audio=answer;
  } else throw new Error('Unsupported image game mode');
