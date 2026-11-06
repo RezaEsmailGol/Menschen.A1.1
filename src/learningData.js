@@ -52,6 +52,7 @@ export function germanNumber(number) {
   function upTo999(value){
     if(value<100)return upTo99(value);
     const h=Math.floor(value/100),rest=value%100;
+    if(value===100)return 'hundert'; // Maintain previous 0–100 curriculum spelling.
     return (h===1?'ein':baseNumbers[h])+'hundert'+(rest?upTo99(rest):'');
   }
   function upTo999999(value){
