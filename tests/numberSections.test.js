@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {NUMBER_SECTIONS,numbersInSection,numberSectionStats,adaptiveNumberSelection,
- correctNumberSpelling,numberTip} from '../src/numberSections.js';
+ correctNumberSpelling,numberTip,numberRangeCount,numberReferenceNumbers,NUMBER_MAX} from '../src/numberSections.js';
 import {createNumberRound,makeNumberOptions,createNumberGameRound,correctNumberGameAnswer,optionLabel,NUMBER_GAME_MODES} from '../src/numberGameLogic.js';
 import {createNumberMemoryRound} from '../src/numberRecallLogic.js';
 import {recordActivity,activityItemKey} from '../src/learningMemory.js';
 import {germanNumber} from '../src/learningData.js';
 
-test('classroom sections preserved; eight practice ranges cover 0–100',()=>{
+test('classroom sections preserved; additional stages extend to 100 million',()=>{
  assert.deepEqual(NUMBER_SECTIONS.slice(0,3).map(s=>[s.min,s.max]),[[0,12],[13,20],[20,30]]);
- assert.equal(NUMBER_SECTIONS.length,8);
+ assert.equal(NUMBER_SECTIONS.length,15);
  assert.deepEqual(numbersInSection('0-12'),Array.from({length:13},(_,i)=>i));
  assert.deepEqual(numbersInSection('13-20'),Array.from({length:8},(_,i)=>i+13));
  assert.deepEqual(numbersInSection('20-30'),Array.from({length:11},(_,i)=>i+20));
@@ -22,8 +22,13 @@ test('classroom sections preserved; eight practice ranges cover 0–100',()=>{
  assert.ok(numbersInSection('confusing').includes(2));
  assert.ok(numbersInSection('confusing').includes(12));
  assert.ok(numbersInSection('confusing').includes(20));
- const allStages=new Set(NUMBER_SECTIONS.flatMap(s=>numbersInSection(s.id)));
+ const allStages=new Set(NUMBER_SECTIONS.slice(0,8).flatMap(s=>numbersInSection(s.id)));
  assert.equal(allStages.size,101);
+ assert.equal(NUMBER_MAX,100000000);
+ assert.equal(numberRangeCount('0-100000000'),100000001);
+ assert.equal(numberRangeCount('10000001-100000000'),90000000);
+ assert.throws(()=>numbersInSection('0-100000000'),RangeError);
+ assert.ok(numberReferenceNumbers('0-100000000').length<=55);
 });
 
 test('random stage quizzes never leak values from another section',()=>{
