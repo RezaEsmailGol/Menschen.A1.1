@@ -129,3 +129,21 @@ test('number explorer accepts 100 million on a narrow phone',async ({browser})=>
  expect(audit.documentWidth,JSON.stringify(audit)).toBeLessThanOrEqual(362);
  await context.close();
 });
+
+
+test('lesson 2 SVG occupations render without any React runtime error',async ({browser})=>{
+ for(const width of [320,390,768]){
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+   viewport:{width,height:850},isMobile:width<600,hasTouch:width<600});
+  const page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(String(e)));
+  await page.goto('/lessons/2');
+  await expect(page.locator('.courseIntro')).toBeVisible();
+  await expect(page.locator('.lpGalleryCard svg').first()).toBeVisible();
+  await expect(page.locator('.lpGalleryCard')).toHaveCount(8);
+  expect(errors).toEqual([]);
+  const audit=await page.evaluate(viewportAudit);
+  expect(audit.documentWidth).toBeLessThanOrEqual(width+2);
+  await context.close();
+ }
+});
