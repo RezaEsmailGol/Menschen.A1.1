@@ -22,3 +22,12 @@ test('unfinished bedtime review has accessible route to switch to slideshow',()=
   assert.match(night,/تغییر به نمایش تصویری/);
   assert.match(night,/active:null/);
 });
+
+
+test('SVG profession scenes import their shared German-word normalizer',()=>{
+ const art=src('LessonSceneArt.jsx');
+ const mapping=src('lessonSceneCatalog.js');
+ assert.match(mapping,/export function wordKey\(/);
+ assert.match(art,/import\s*\{[^}]*\bwordKey\b[^}]*\}\s*from\s*['"]\.\/lessonSceneCatalog\.js['"]/);
+ assert.match(art,/\bwordKey\(word\)/);
+});
