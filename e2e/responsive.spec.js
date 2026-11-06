@@ -60,9 +60,18 @@ for(const width of widths){
     reducedMotion:'reduce'
   });
   const page=await context.newPage();
+  const browserErrors=[];
+  page.on('pageerror',error=>browserErrors.push(String(error)));
   for(const path of ROUTE_PATHS){
+   browserErrors.length=0;
    await page.goto(path,{waitUntil:'domcontentloaded',timeout:25_000});
-   await expect(page.locator('.app > main')).toBeVisible();
+   const main=page.locator('.app > main');
+   if(!await main.isVisible()){
+     const content=(await page.locator('body').innerText()).slice(0,1000);
+     console.log('QA_ROUTE_FAILURE',JSON.stringify({width,path,content,errors:browserErrors}));
+     expect.soft(false,JSON.stringify({width,path,content,errors:browserErrors})).toBe(true);
+     continue;
+   }
    await expect(page.locator('.bottomNav')).toBeVisible();
    const report=await page.evaluate(viewportAudit);
    expect.soft(report.documentWidth,JSON.stringify({path,report})).toBeLessThanOrEqual(width+2);
