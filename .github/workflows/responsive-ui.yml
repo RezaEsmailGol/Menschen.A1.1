@@ -1,0 +1,51 @@
+name: Responsive UI QA
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'index.html'
+      - 'e2e/**'
+      - 'playwright.config.mjs'
+      - '.github/workflows/responsive-ui.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: responsive-ui-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromium:
+    name: Mobile, tablet and desktop layouts
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install app dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install browser test runner
+        run: npm install --no-save --no-audit --no-fund @playwright/test
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run unit tests and production build
+        run: npm run build
+      - name: Audit all routes at eight viewports
+        run: npx playwright test --config=playwright.config.mjs
+      - name: Save failing screenshots and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-qa-failures
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
