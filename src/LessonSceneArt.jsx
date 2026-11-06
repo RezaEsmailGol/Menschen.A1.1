@@ -1,39 +1,8 @@
 import React,{useId} from 'react';
-
-// Purpose-drawn SVG scenes, with no remote images or external assets.
-export const SCENE_WORDS=Object.freeze({
- journalist:'job-journalist',journalistin:'job-journalist',
- lehrer:'job-teacher',lehrerin:'job-teacher',
- arzt:'job-doctor','ärztin':'job-doctor',
- ingenieur:'job-engineer',ingenieurin:'job-engineer',
- softwareentwickler:'job-developer',softwareentwicklerin:'job-developer',
- entwickler:'job-developer',entwicklerin:'job-developer',
- 'verkäufer':'job-seller','verkäuferin':'job-seller',
- student:'job-student',studentin:'job-student',
- musiker:'job-musician',musikerin:'job-musician',
- mutter:'family-mother',vater:'family-father',schwester:'family-sister',
- bruder:'family-brother',oma:'family-grandma',opa:'family-grandpa',
- 'großmutter':'family-grandma','großvater':'family-grandpa',
- sohn:'family-brother',tochter:'family-sister',eltern:'family-parents',
- 'großeltern':'family-parents',familie:'family-parents',kind:'family-child',
- tisch:'furniture-table',stuhl:'furniture-chair',lampe:'furniture-lamp',
- sofa:'furniture-sofa',couch:'furniture-sofa',bett:'furniture-bed',
- schrank:'furniture-wardrobe',regal:'furniture-shelf',
- teppich:'furniture-rug',sessel:'furniture-armchair',
- spiegel:'furniture-mirror',bild:'furniture-painting',
- 'schlüssel':'object-key',kugelschreiber:'object-pen',bleistift:'object-pencil',
- flasche:'object-bottle',brille:'object-glasses',tasche:'object-bag',
- fotoapparat:'object-camera',kamera:'object-camera',
- feuerzeug:'object-lighter',kette:'object-necklace',buch:'object-book',uhr:'object-watch'
-});
+import {sceneForWord} from './lessonSceneCatalog.js';
+export {sceneForWord,hasLessonScene} from './lessonSceneCatalog.js';
+// All art is original SVG: no remote media or runtime fetching.
 const COLORS={der:'#4a84bb',die:'#d26a9d',das:'#58a584'};
-function wordKey(word=''){
- return String(word).normalize('NFC').toLocaleLowerCase('de').split(/\s+\/\s+/)[0]
-  .replace(/^(der|die|das|ein|eine|kein|keine|mein|meine|dein|deine)\s+/,'')
-  .replace(/[.!?,]/g,'').trim();
-}
-export function sceneForWord(word=''){return SCENE_WORDS[wordKey(word)]||null;}
-export function hasLessonScene(word=''){return Boolean(sceneForWord(word));}
 function Human({x=160,y=65,scale=1,female=false,senior=false,color='#729cc0'}){
  return <g transform={'translate('+x+' '+y+') scale('+scale+')'}>
   {female&&<ellipse cy="-3" ry="35" rx="29" fill={senior?'#b5b8c5':'#6b637e'}/>}
