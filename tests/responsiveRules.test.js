@@ -12,7 +12,7 @@ test('responsive stylesheet is installed at app root after base styles',()=>{
  assert.match(main,/import ['"]\.\/responsive\.css['"]/);
  assert.ok(main.indexOf("import './responsive.css'")>main.indexOf("import './routeLinks.css'"));
  assert.match(html,/name="viewport" content="width=device-width, initial-scale=1\.0"/);
- assert.match(css,/\.app main\{/);
+ assert.match(css,/\.app > main\{/);
  assert.match(css,/\.bottomNav\{/);
  assert.match(css,/safe-area-inset-bottom/);
 });
