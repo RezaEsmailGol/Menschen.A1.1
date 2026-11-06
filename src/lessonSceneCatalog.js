@@ -24,7 +24,7 @@ export const SCENE_WORDS=Object.freeze({
  fotoapparat:'object-camera',kamera:'object-camera',
  feuerzeug:'object-lighter',kette:'object-necklace',buch:'object-book',uhr:'object-watch'
 });
-function wordKey(word=''){
+export function wordKey(word=''){
  return String(word).normalize('NFC').toLocaleLowerCase('de').split(/\s+\/\s+/)[0]
   .replace(/^(der|die|das|ein|eine|kein|keine|mein|meine|dein|deine)\s+/,'')
   .replace(/[.!?,]/g,'').trim();
