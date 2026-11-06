@@ -7,6 +7,7 @@ import RouteLink from './RouteLink';
 import QuizFocusShell from './QuizFocusShell.jsx';
 import BookLessonPractice from './BookLessonPractice.jsx';
 import LessonPictureGame from './LessonPictureGame.jsx';
+import LessonDirectory from './LessonDirectory.jsx';
 import {germanChoiceAudio,useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import {readGameFeedbackPreferences} from './gameEffects.js';
 import './phaseOne.css';
@@ -89,7 +90,9 @@ export default function PhaseOne({mode,routeLesson,setTab,speak,progress,setProg
       <div className="phaseIndicators"><div><strong>{completed}<small> / 12</small></strong><span>درس قبول‌شده</span></div><div><strong>{due.length}</strong><span>کارت آماده مرور</span></div><div><strong>{learned}</strong><span>کارت مرورشده</span></div></div>
     </header>
 
-    {mode==='course' && <CoursePanel lesson={lesson} selected={selected} select={select} progress={progress} startLesson={startLesson} speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent} memory={memory}/>}
+    {mode==='course' && (routeLesson?
+       <CoursePanel lesson={lesson} selected={selected} select={select} progress={progress} startLesson={startLesson} speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent} memory={memory}/>:
+       <LessonDirectory navigate={setTab} progress={progress}/>)}
     {mode==='srs' && <ReviewPanel available={available} schedule={schedule} due={due} rate={rate} speak={speak} setTab={setTab}/>}
     {mode==='builder' && <BuilderPanel lesson={lesson} selected={selected} select={select} speak={speak} onPracticeEvent={onPracticeEvent}/>}
     {mode==='exam' && <ExamPanel lesson={lesson} selected={selected} select={select} progress={progress} examDone={examDone} speak={speak} onPracticeEvent={onPracticeEvent}/>}
@@ -119,6 +122,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
       </RouteLink>)}</div>
     </aside>
     <div className="courseLessonBody">
+      <RouteLink className="courseBackIndex" to="course" navigate={setTab}><BookOpen size={17}/> فهرست همه درس‌ها و زیرشاخه‌ها <ChevronLeft size={17}/></RouteLink>
       {lesson.id===1&&<RouteLink className="wbCourseBanner" to="visual" navigate={setTab}>
         <span className="wbCourseBannerIcon"><BookOpen size={23}/></span>
         <span><b>جمله‌ها و فلش‌کارت‌های تصویری درس اول</b><small>۵۰ عبارت با تصویر و تلفظ، بازی چهارگزینه‌ای و ۱۰ گفت‌وگو</small></span>
