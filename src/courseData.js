@@ -9,6 +9,7 @@ export const verbForms = {
   sprechen: ['spreche','sprichst','spricht','sprechen','sprecht','sprechen'],
   haben: ['habe','hast','hat','haben','habt','haben'],
   arbeiten: ['arbeite','arbeitest','arbeitet','arbeiten','arbeitet','arbeiten'],
+  kosten: ['koste','kostest','kostet','kosten','kostet','kosten'],
   machen: ['mache','machst','macht','machen','macht','machen'],
   spielen: ['spiele','spielst','spielt','spielen','spielt','spielen'],
   lesen: ['lese','liest','liest','lesen','lest','lesen'],
@@ -71,28 +72,83 @@ export const lessons = [
     ],
   },
   {
-    id:3, label:'خانواده و دوستان',german:'Familie und Freunde',goal:'درباره اعضای خانواده و داشتن/نداشتن چیزی حرف بزن.',
-    grammar:'حروف ملکی mein / meine و فعل haben',
-    tip:'mein Bruder ولی meine Schwester؛ شکل صفت ملکی به اسم وابسته است.',
-    verbs:['haben','sein'],
-    words:[['die Familie','خانواده'],['der Vater','پدر'],['die Mutter','مادر'],['das Kind','فرزند'],['die Schwester','خواهر'],['der Bruder','برادر'],['der Freund','دوست مذکر'],['die Freundin','دوست مؤنث']],
-    sentences:[['Das ist meine Familie.','این خانواده من است.'],['Ich habe ein Kind.','من یک فرزند دارم.'],['Mein Bruder wohnt in Wien.','برادرم در وین زندگی می‌کند.'],['Meine Mutter ist zu Hause.','مادرم در خانه است.']],
+    id:3,label:'خانواده، صفات ملکی و زبان‌ها',german:'Das ist meine Mutter.',
+    goal:'خانواده را معرفی کن، در مورد اعضا سؤال بپرس، mein/dein و پاسخ Ja/Nein/Doch را تمرین کن. (کتاب: صفحه ۱۷–۲۰)',
+    grammar:'صفات ملکی mein/meine و dein/deine؛ سؤال بله/خیر با فعل در آغاز؛ Ja/Nein/Doch؛ sprechen و تغییر واکه',
+    tip:'Das ist mein Vater. اما Das ist meine Mutter. / Ist das nicht deine Mutter? – Doch!',
+    verbs:['sein','haben','sprechen'],
+    words:[
+      ['die Familie','خانواده'],['die Mutter','مادر'],['der Vater','پدر'],
+      ['die Eltern','پدر و مادر'],['die Schwester','خواهر'],['der Bruder','برادر'],
+      ['der Sohn','پسر'],['die Tochter','دختر'],['das Kind','فرزند'],['die Kinder','فرزندان'],
+      ['die Oma','مادربزرگ'],['der Opa','پدربزرگ'],['meine','مال من (مؤنث/جمع)'],
+      ['mein','مال من (مذکر/خنثی)'],['dein','مال تو (مذکر/خنثی)'],
+      ['deine','مال تو (مؤنث/جمع)'],['Deutsch','آلمانی'],['Persisch','فارسی'],
+      ['Englisch','انگلیسی'],['sprechen','صحبت کردن']
+    ],
+    sentences:[
+      ['Das ist meine Mutter.','این مادر من است.'],
+      ['Das ist mein Vater.','این پدر من است.'],
+      ['Das sind meine Eltern.','این‌ها پدر و مادر من هستند.'],
+      ['Ist das deine Schwester?','آیا این خواهر تو است؟'],
+      ['Nein, das ist mein Bruder.','نه، این برادر من است.'],
+      ['Welche Sprachen sprichst du?','چه زبان‌هایی صحبت می‌کنی؟'],
+      ['Ich spreche Persisch und ein bisschen Deutsch.','من فارسی و کمی آلمانی صحبت می‌کنم.']
+    ]
   },
   {
-    id:4, label:'کار و شغل',german:'Beruf und Arbeit',goal:'شغل، شرکت و کار روزانه را توضیح بده.',
-    grammar:'صرف فعل‌های منظم arbeiten و machen',
-    tip:'ریشه فعل arbeiten به t ختم می‌شود، پس du arbeitest و er arbeitet می‌گوییم.',
-    verbs:['arbeiten','machen'],
-    words:[['die Arbeit','کار'],['die Firma','شرکت'],['das Büro','دفتر کار'],['der Kollege','همکار مذکر'],['die Kollegin','همکار مؤنث'],['der Computer','کامپیوتر'],['der Entwickler','توسعه‌دهنده مذکر'],['das Projekt','پروژه']],
-    sentences:[['Ich arbeite als Entwickler.','من به‌عنوان توسعه‌دهنده کار می‌کنم.'],['Wir arbeiten im Büro.','ما در دفتر کار می‌کنیم.'],['Ich mache ein Projekt.','من روی یک پروژه کار می‌کنم.'],['Der Computer ist neu.','این کامپیوتر جدید است.']],
+    id:4,label:'مبلمان و وسایل خانه، قیمت و توصیف',german:'Der Tisch ist schön!',
+    goal:'میز، صندلی، تخت، کمد و سایر مبلمان را بشناس، جنسیت اسم را تشخیص بده، قیمت بپرس و وسایل را توصیف کن. (کتاب: صفحه ۲۵–۲۸)',
+    grammar:'حرف تعریف معین der/die/das؛ ضمایر er/sie/es برای اشیا؛ صفت در جمله خبری؛ فعل kosten',
+    tip:'der Tisch → er؛ die Lampe → sie؛ das Sofa → es. مثال: Die Lampe ist schön. Sie kostet 30 Euro.',
+    verbs:['sein','kaufen','kosten'],
+    words:[
+      ['der Tisch','میز'],['der Stuhl','صندلی'],['die Lampe','چراغ'],['das Sofa','مبل'],
+      ['das Bett','تخت'],['der Schrank','کمد'],['das Regal','قفسه'],
+      ['der Teppich','فرش'],['die Couch','کاناپه'],['der Sessel','مبل تک‌نفره'],
+      ['der Spiegel','آینه'],['das Bild','تابلو'],['die Möbel','مبلمان'],
+      ['schön','زیبا'],['hässlich','زشت'],['klein','کوچک'],['groß','بزرگ'],
+      ['neu','جدید'],['alt','قدیمی'],['teuer','گران'],['günstig','مناسب قیمت'],
+      ['der Preis','قیمت'],['der Euro','یورو'],['kosten','قیمت داشتن']
+    ],
+    sentences:[
+      ['Der Tisch ist schön.','میز زیبا است.'],
+      ['Die Lampe ist neu.','چراغ جدید است.'],
+      ['Das Sofa ist groß.','مبل بزرگ است.'],
+      ['Das ist ein Tisch.','این یک میز است.'],
+      ['Das ist eine Lampe.','این یک چراغ است.'],
+      ['Was kostet der Stuhl?','صندلی چند قیمت دارد؟'],
+      ['Der Stuhl kostet 50 Euro.','صندلی ۵۰ یورو است.'],
+      ['Sie ist günstig.','آن مؤنث (مثلاً چراغ) ارزان است.']
+    ]
   },
   {
-    id:5, label:'سرگرمی و اوقات آزاد',german:'Freizeit und Hobbys',goal:'بگو اوقات فراغت چه کاری دوست داری انجام بدهی.',
-    grammar:'جایگاه فعل و قید gern',
-    tip:'gern معمولاً پس از فعل یا مفعول در جمله می‌آید: Ich lese gern.',
-    verbs:['spielen','lesen'],
-    words:[['das Hobby','سرگرمی'],['die Musik','موسیقی'],['das Buch','کتاب'],['der Film','فیلم'],['der Sport','ورزش'],['das Spiel','بازی'],['die Freizeit','اوقات فراغت'],['das Wochenende','آخر هفته']],
-    sentences:[['Ich lese gern Bücher.','من خواندن کتاب را دوست دارم.'],['Wir spielen am Wochenende.','ما آخر هفته بازی می‌کنیم.'],['Meine Freundin hört Musik.','دوست من موسیقی گوش می‌دهد.'],['Ich sehe einen Film.','من فیلم می‌بینم.']],
+    id:5,label:'معرفی اشیا، جنسیت و نفی اسم‌ها',german:'Was ist das? – Das ist ein F.',
+    goal:'نام اشیای روزمره را بگو، ein/eine/kein/keine را درست انتخاب کن و جنس محصول را توصیف کن. (کتاب: صفحه ۲۹–۳۲)',
+    grammar:'حرف تعریف نامعین ein/eine و منفی kein/keine در حالت Nominativ؛ اسم‌های der/die/das؛ جنس aus + Material',
+    tip:'Das ist ein Schlüssel (der). Das ist eine Brille (die). Das ist ein Buch (das). Das ist keine Tasche.',
+    verbs:['sein','heißen','haben'],
+    words:[
+      ['der Schlüssel','کلید'],['der Kugelschreiber','خودکار'],
+      ['der Bleistift','مداد'],['der Fotoapparat','دوربین'],
+      ['das Buch','کتاب'],['die Flasche','بطری'],['die Brille','عینک'],
+      ['die Tasche','کیف'],['die Kette','گردنبند'],['das Feuerzeug','فندک'],
+      ['die Uhr','ساعت'],['die Farbe','رنگ'],['das Material','جنس / ماده'],
+      ['das Holz','چوب'],['das Glas','شیشه'],['das Papier','کاغذ'],
+      ['das Metall','فلز'],['ein','یک (مذکر/خنثی)'],['eine','یک (مؤنث)'],
+      ['kein','هیچ / نیست (مذکر/خنثی)'],['keine','هیچ / نیست (مؤنث/جمع)']
+    ],
+    sentences:[
+      ['Was ist das?','این چیست؟'],
+      ['Das ist ein Schlüssel.','این یک کلید است.'],
+      ['Das ist eine Flasche.','این یک بطری است.'],
+      ['Das ist ein Buch.','این یک کتاب است.'],
+      ['Das ist keine Tasche.','این کیف نیست.'],
+      ['Das ist kein Tisch.','این میز نیست.'],
+      ['Der Schlüssel ist aus Metall.','کلید از فلز است.'],
+      ['Wie heißt das auf Deutsch?','این به آلمانی چه نام دارد؟'],
+      ['Noch einmal, bitte!','یک بار دیگر، لطفاً!']
+    ]
   },
   {
     id:6, label:'روزها، ساعت و قرار',german:'Uhrzeit und Termine',goal:'ساعت قرار و روز هفته را بیان کن.',
@@ -153,7 +209,7 @@ export const lessons = [
 ];
 
 export function lessonCardId(lessonId, index) {
-  return `a11:${lessonId}:${index}`;
+  return lessonId>=3&&lessonId<=5 ? `a11:book-${lessonId}:${index}` : `a11:${lessonId}:${index}`;
 }
 export function getLessonCards(lesson) {
   return lesson.words.map(([de,fa],index) => ({

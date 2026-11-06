@@ -123,3 +123,25 @@
 @media(max-width:850px){.numberStageGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:550px){.numberStageGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.numberStageCard small{min-height:30px}.duoHugeWord{font-size:clamp(23px,8vw,38px)}.duoQuestion:has(.duoHugeWord){min-height:175px}}
 @media(max-width:330px){.numberStageGrid{grid-template-columns:1fr}}
+
+
+/* Scalable ranges and listen-back explorer (0–100,000,000). */
+.numberStageGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.bigNumberTile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#eaf6ff,#d7f2ed);border:1px solid #bddddd;border-radius:20px;padding:15px;min-height:150px;width:100%}
+.bigNumberTile strong{font-size:clamp(24px,4.8vw,51px);color:#267e8d;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.bigNumberTile span{color:#528b98;letter-spacing:.08em;font-size:11px}
+.numberExplorer{display:flex;flex-direction:column;gap:12px;margin-top:20px;border-radius:20px;border:1px solid #d0e6e7;background:linear-gradient(135deg,#f5fbfe,#edf7f3);padding:21px;direction:rtl}
+.numberExplorer h3{font-size:22px;margin:7px 0}.numberExplorer p{margin:4px 0;color:#577488;font-size:13px;line-height:1.9}
+.numberExplorer label{color:#4d7382;font-size:13px;font-weight:750}
+.numberExploreControls{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.numberExploreControls input{flex:1 1 210px;min-width:0;border:1px solid #aecdd4;border-radius:13px;font-size:22px;padding:12px 15px;color:#1f4051;background:#fff;font-variant-numeric:tabular-nums}
+.numberExploreControls button{display:flex;align-items:center;justify-content:center;gap:9px;border:none;border-radius:13px;padding:13px 17px;background:#168d91;color:#fff;font-weight:800;min-height:52px;cursor:pointer}
+.numberExploreControls button:disabled{opacity:.5;cursor:not-allowed}
+.numberExploreResult{border:1px solid #c0deda;background:#fff;border-radius:13px;padding:14px;display:flex;flex-direction:column;align-items:start;gap:8px;overflow-wrap:anywhere}
+.numberExploreResult strong{font-size:20px;font-variant-numeric:tabular-nums;color:#1e6c86}
+.numberExploreResult span{font-size:17px;line-height:1.8;color:#24636f;max-width:100%;overflow-wrap:anywhere}
+.numberExplorer .numberExploreError{color:#b44c3d;background:#ffece8;padding:10px;border-radius:10px}
+@media(max-width:950px){.numberStageGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.numberStageGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.numberExplorer{padding:14px}.numberExploreControls button{width:100%}.bigNumberTile{min-height:115px}}
+@media(max-width:340px){.numberStageGrid{grid-template-columns:1fr}}
+@media(prefers-color-scheme:dark){.numberExplorer{background:#1c3340;border-color:#3c5968;color:#eff8fb}.numberExplorer p,.numberExplorer label{color:#cad9de}.numberExploreResult{background:#233c4b;border-color:#3e6472}.numberExploreResult span,.numberExploreResult strong{color:#d9f9f2}.numberExploreControls input{background:#2b4452;color:#fff;border-color:#466477}.bigNumberTile{background:#223c50;border-color:#3f6072}.bigNumberTile strong{color:#c5edf1}}

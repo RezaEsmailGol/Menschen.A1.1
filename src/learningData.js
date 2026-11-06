@@ -37,15 +37,35 @@ export const pronunciationRules = [
 const baseNumbers = ['null','eins','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','dreizehn','vierzehn','fünfzehn','sechzehn','siebzehn','achtzehn','neunzehn','zwanzig'];
 const tens = { 20:'zwanzig', 30:'dreißig', 40:'vierzig', 50:'fünfzig', 60:'sechzig', 70:'siebzig', 80:'achtzig', 90:'neunzig' };
 
+// Standard orthographic cardinal numbers through 100,000,000.
+// Large number groups use a space before Million / Millionen (nouns in German).
+// Existing 0..100 output stays byte-for-byte compatible with saved practice.
 export function germanNumber(number) {
-  const n = Number(number);
-  if (!Number.isInteger(n) || n < 0 || n > 100) return '';
-  if (n <= 20) return baseNumbers[n];
-  if (n === 100) return 'hundert';
-  const ten = Math.floor(n / 10) * 10;
-  const unit = n % 10;
-  if (!unit) return tens[ten];
-  return (unit === 1 ? 'ein' : baseNumbers[unit]) + 'und' + tens[ten];
+  const n=Number(number);
+  if(!Number.isSafeInteger(n)||n<0||n>100000000)return '';
+  function upTo99(value){
+    if(value<=20)return baseNumbers[value];
+    const t=Math.floor(value/10)*10,u=value%10;
+    if(!u)return tens[t];
+    return (u===1?'ein':baseNumbers[u])+'und'+tens[t];
+  }
+  function upTo999(value){
+    if(value<100)return upTo99(value);
+    const h=Math.floor(value/100),rest=value%100;
+    if(value===100)return 'hundert'; // Maintain previous 0–100 curriculum spelling.
+    return (h===1?'ein':baseNumbers[h])+'hundert'+(rest?upTo99(rest):'');
+  }
+  function upTo999999(value){
+    if(value<1000)return upTo999(value);
+    const thousands=Math.floor(value/1000),rest=value%1000;
+    const head=(thousands===1?'ein':upTo999(thousands))+'tausend';
+    return head+(rest?upTo999(rest):'');
+  }
+  if(n<100)return upTo99(n);
+  if(n<1000000)return upTo999999(n);
+  const millions=Math.floor(n/1000000),rest=n%1000000;
+  const prefix=millions===1?'eine Million':upTo999(millions)+' Millionen';
+  return prefix+(rest?' '+upTo999999(rest):'');
 }
 
 export function shuffle(items) {

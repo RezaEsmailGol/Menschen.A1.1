@@ -193,7 +193,7 @@ function App() {
         onPageNavigate={id=>setTab('workbook/'+id)} goBack={()=>setTab('course')} navigate={setTab} />}
       {tab==='progress' && <ProgressPage setTab={setTab} memory={memory} progress={progress} schedule={schedule} dailyGoal={dailyGoal} speakingState={speakingState} />}
       {['course','srs','builder','exam'].includes(tab) && <PhaseOne mode={tab} routeLesson={route.startsWith('course/')?Number(route.slice(7)):null}
-        setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} />}
+        setTab={setTab} speak={speak} progress={progress} setProgress={setProgress} schedule={schedule} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent} memory={memory} />}
       {tab==='pronunciation' && <PronunciationLab speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} />}
       {tab==='flash' && <Flashcards cards={cards} setCards={setCards} stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}
       {tab==='listen' && <ListenType stats={stats} setStats={setStats} onPracticeEvent={onPracticeEvent} />}

@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {ArrowLeft,CheckCircle2,Gamepad2,Headphones,Hash,Heart,RotateCcw,Sparkles,Star,Trophy,Volume2,VolumeX,XCircle} from 'lucide-react';
 import {germanNumber} from './learningData.js';
 import {createNumberGameRound,correctNumberGameAnswer,optionLabel} from './numberGameLogic.js';
-import {NUMBER_SECTIONS,numbersInSection,numberSection,numberSectionStats,numberTip} from './numberSections.js';
+import {NUMBER_SECTIONS,numberRangeCount,numberReferenceNumbers,numberSection,numberSectionStats,numberTip} from './numberSections.js';
 import MnemonicArt from './MnemonicArt.jsx';
 import {playWrongBeep} from './audioFeedback.js';
 import './numberGame.css';
@@ -16,11 +16,19 @@ const NUMBER_GUIDES={
  '51-70':{number:67,expression:'sieben + und + sechzig',tip:'۶۰ sechzig و ۷۰ siebzig هستند. به کوتاه‌شدن sechs و sieben دقت کن.',notable:[60,61,67,70]},
  '71-100':{number:98,expression:'acht + und + neunzig',tip:'عدد ۹۸ به آلمانی achtundneunzig است. صد را hundert می‌گوییم.',notable:[70,80,90,100]},
  '0-100':{number:84,expression:'vier + und + achtzig',tip:'هر عدد از ۰ تا ۱۰۰ ممکن است بیاید. بعد از اشتباه، در همان دور دوباره مرور می‌کنی.',notable:[12,20,30,60,70,100]},
- 'confusing':{number:12,expression:'zwei ≠ zwölf ≠ zwanzig',tip:'۲ = zwei، ۱۲ = zwölf، ۲۰ = zwanzig. همچنین ۱۶ و ۱۷، ۶۰ و ۷۰ را مقایسه کن.',notable:[2,12,20,16,17,60,70]}
+ 'confusing':{number:12,expression:'zwei ≠ zwölf ≠ zwanzig',tip:'۲ = zwei، ۱۲ = zwölf، ۲۰ = zwanzig. همچنین ۱۶ و ۱۷، ۶۰ و ۷۰ را مقایسه کن.',notable:[2,12,20,16,17,60,70]},
+ '101-1000':{number:125,expression:'einhundertfünfundzwanzig',tip:'صدگان با hundert ساخته می‌شود.',notable:[101,125,500,999,1000]},
+ '1001-10000':{number:2345,expression:'zweitausenddreihundertfünfundvierzig',tip:'برای هزارگان، tausend را ترکیب کن.',notable:[1001,1200,2345,9999,10000]},
+ '10001-100000':{number:25000,expression:'fünfundzwanzigtausend',tip:'عددهای چندبخشی را در کنار هم بخوان.',notable:[10001,25000,50000,99999,100000]},
+ '100001-1000000':{number:250000,expression:'zweihundertfünfzigtausend',tip:'یک میلیون را eine Million می‌گویند.',notable:[100001,250000,500000,999999,1000000]},
+ '1000001-10000000':{number:2000000,expression:'zwei Millionen',tip:'یک میلیون: eine Million. بیشتر: Millionen.',notable:[1000001,1234567,2000000,5000000,10000000]},
+ '10000001-100000000':{number:21000000,expression:'einundzwanzig Millionen',tip:'تا صد میلیون: hundert Millionen.',notable:[10000001,21000000,50000000,100000000]},
+ '0-100000000':{number:12345678,expression:'zwölf Millionen ...',tip:'چالش ترکیبی صفر تا صد میلیون.',notable:[12,100,1000,100000,1000000,12345678,100000000]}
 };
 export default function NumberLab({speak,onAttempt,memory}){
  const [rangeId,setRangeId]=useState('0-100');
  const [mode,setMode]=useState('mixed');
+ const [exploreInput,setExploreInput]=useState('1234567');
  const [active,setActive]=useState(false);
  const [queue,setQueue]=useState([]);
  const [position,setPosition]=useState(0);
@@ -79,9 +87,13 @@ export default function NumberLab({speak,onAttempt,memory}){
    }
  };
  const next=()=>{if(choice===null)return;setPosition(n=>n+1);setChoice(null);setTyped('');};
- const initialTotal=Math.min(10,numbersInSection(rangeId).length);
- const referenceNumbers=studyAll?Array.from({length:101},(_,n)=>n):numbersInSection(rangeId);
+ const initialTotal=Math.min(10,numberRangeCount(rangeId));
+ const referenceNumbers=studyAll?Array.from({length:101},(_,n)=>n):numberReferenceNumbers(rangeId);
  const range=numberSection(rangeId);
+ const normalizedExplore=exploreInput.replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776))
+  .replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).replace(/[\s,٬،_]/g,'');
+ const exploreNumber=/^\d+$/.test(normalizedExplore)?Number(normalizedExplore):NaN;
+ const exploreValid=Number.isSafeInteger(exploreNumber)&&exploreNumber>=0&&exploreNumber<=100000000;
  return <section className="labPage">
   <div className="numbersHero numberDuoHero">
     <div>
@@ -148,7 +160,8 @@ export default function NumberLab({speak,onAttempt,memory}){
                 <button type="button" className="duoHear" onClick={()=>speak(germanNumber(item.number))}><Volume2 size={19}/> تلفظ کلمه</button></>
               :<><span>{questionMode==='type'?'این عدد را به آلمانی تایپ کن.':'کدام گزینه نوشتار درست این عدد است؟'}</span>
                 <strong className="duoHugeNumber">{item.number}</strong>
-                <div className="duoNumberScene"><MnemonicArt number={item.number}/></div></>}
+                <div className="duoNumberScene">{item.number<=100?<MnemonicArt number={item.number}/>:
+ <div className="bigNumberTile"><strong>{format(item.number)}</strong><span>ZAHLEN · 0–100.000.000</span></div>}</div></>}
         </div>
         {questionMode==='type'?
           <form className="duoTypeAnswer" onSubmit={e=>{e.preventDefault();if(choice===null&&typed.trim())pick(typed)}}>
@@ -198,8 +211,22 @@ export default function NumberLab({speak,onAttempt,memory}){
       {guide.notable.map(n=><button className="guideException" key={n} type="button" onClick={()=>speak(germanNumber(n))}><b dir="ltr">{n}</b><span dir="ltr">{germanNumber(n)}</span><Volume2 size={16}/></button>)}
     </aside>
   </div>
+  <section className="numberExplorer" aria-label="تمرین عدد دلخواه">
+    <div><span className="sectionKicker">ZAHLEN EXPLORER</span><h3>هر عددی تا ۱۰۰ میلیون بنویس و بشنو</h3>
+      <p>عدد فارسی یا انگلیسی وارد کن؛ نوشتار و تلفظ آلمانی آن را یاد بگیر.</p></div>
+    <label htmlFor="number-explore">عدد دلخواه (۰ تا ۱۰۰٬۰۰۰٬۰۰۰)</label>
+    <div className="numberExploreControls">
+      <input id="number-explore" type="text" inputMode="numeric" dir="ltr" value={exploreInput}
+        onChange={e=>setExploreInput(e.target.value.slice(0,22))} placeholder="1234567"/>
+      <button type="button" disabled={!exploreValid} onClick={()=>speak(germanNumber(exploreNumber))}>
+        <Volume2 size={19}/> تلفظ آلمانی</button>
+    </div>
+    {exploreValid?<div className="numberExploreResult"><strong>{format(exploreNumber)}</strong>
+      <span dir="ltr" lang="de">{germanNumber(exploreNumber)}</span></div>:
+      <p className="numberExploreError" role="status">عدد صحیح بین ۰ تا ۱۰۰ میلیون وارد کن.</p>}
+   </section>
   <div className="numberReference">
-    <div className="panelTitleRow"><div><small className="eyebrow">LEARN & LISTEN</small><h3>واژه‌نامه اعداد {range.label}</h3><p>برای شنیدن هر عدد روی آن بزن.</p></div><button className="softButton" onClick={()=>setStudyAll(v=>!v)}>{studyAll?'نمایش فقط مرحله':'نمایش همه تا ۱۰۰'}</button></div>
+    <div className="panelTitleRow"><div><small className="eyebrow">LEARN & LISTEN</small><h3>نمونه‌ها و واژه‌نامه اعداد {range.label}</h3><p>برای شنیدن هر عدد روی آن بزن. بازه‌های بزرگ تنها با چند نمونه نمایش داده می‌شوند تا موبایل کند نشود.</p></div><button className="softButton" onClick={()=>setStudyAll(v=>!v)}>{studyAll?'نمایش فقط مرحله':'نمایش همه تا ۱۰۰'}</button></div>
     <div className="newNumberGrid">{referenceNumbers.map(n=><button key={n} onClick={()=>speak(germanNumber(n))}><strong>{n}</strong><span dir="ltr">{germanNumber(n)}</span><Volume2 size={16}/></button>)}</div>
   </div>
  </section>;
