@@ -1,6 +1,7 @@
 import React, {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,Headphones,Mic2,RotateCcw,Volume2,XCircle} from 'lucide-react';
 import {activityItemKey} from './learningMemory.js';
+import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
 import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeBookAnswer} from './bookLessonData.js';
 import './bookLessonPractice.css';
 
@@ -121,7 +122,8 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       </div>
       <div className="bookPictureGrid">
         {section.cards.map(([emoji,de,fa])=><button className="bookPictureCard" key={de} type="button" onClick={()=>speak(de.includes(' / ')?de.split(' / ')[0]:de)}>
-          <span aria-hidden="true">{emoji}</span><b lang="de" dir="ltr">{de}</b><small>{fa}</small><Volume2 size={15} aria-hidden="true"/></button>)}
+          {hasLessonScene(de)?<span className="bookPictureSvg"><LessonSceneArt word={de} size={190}/></span>
+            :<span aria-hidden="true">{emoji}</span>}<b lang="de" dir="ltr">{de}</b><small>{fa}</small><Volume2 size={15} aria-hidden="true"/></button>)}
       </div>
       {section.reading&&<div className="bookReading"><span><BookOpen size={16}/> متن خواندنی اختصاصی</span><p dir="ltr" lang="de">{section.reading}</p><button type="button" onClick={()=>speak(section.reading)}><Volume2 size={17}/> پخش متن</button></div>}
       <div className="bookExercise" key={task.id}>
