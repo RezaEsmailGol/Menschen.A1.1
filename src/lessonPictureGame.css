@@ -1,0 +1,48 @@
+.lpGame{--lp-ink:#16364d;--lp-teal:#118c94;margin:24px 0;padding:22px;border-radius:24px;border:1px solid #d6e6ec;background:linear-gradient(145deg,#f6fbfe,#f1f7fa);direction:rtl;color:var(--lp-ink)}
+.lpGame button{font:inherit;cursor:pointer}.lpGame button:focus-visible{outline:3px solid #80ccca;outline-offset:3px}
+.lpHero{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:14px}
+.lpHero h3{font-size:clamp(20px,2.7vw,27px);margin:7px 0}.lpHero p{font-size:13px;color:#586f7f;margin:8px 0;line-height:1.9}
+.lpEyebrow{display:flex;align-items:center;gap:7px;letter-spacing:.035em;font-size:11px;font-weight:800;color:var(--lp-teal)}
+.lpCount{text-align:center;background:#e7f5f4;border:1px solid #c3e5e1;border-radius:14px;padding:12px;min-width:94px;font-size:11px;white-space:nowrap;color:#33797b}
+.lpCount b{display:block;font-size:24px;line-height:1.25}
+.lpModeRow{display:flex;gap:9px;margin:12px 0 17px;flex-wrap:wrap}
+.lpModeRow button{border-radius:12px;border:1px solid #b8dbe0;background:#fff;color:#386775;padding:11px 15px;font-weight:800}
+.lpModeRow button.active{background:#15848d;color:#fff;border-color:#15848d}
+.lpGallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.lpGalleryCard{display:flex;align-items:center;flex-direction:column;gap:7px;padding:11px 8px;background:#fff;border-radius:17px;border:1px solid #d5e4ee;color:var(--lp-ink);min-width:0}
+.lpGalleryCard:hover{border-color:#1b9e9e;background:#f9fffd}
+.lpGalleryCard svg{border-radius:13px;max-height:151px}
+.lpGalleryCard strong{font-size:13px;line-height:1.6;text-align:center;overflow-wrap:anywhere}
+.lpGalleryCard small{font-size:12px;color:#647786}
+.lpGalleryCard span{display:flex;align-items:center;gap:6px;color:#168a8b;font-size:11px;font-weight:800}
+.lpStart,.lpNext{border:0;background:#137f8c;color:#fff;border-radius:13px;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:9px;min-height:50px;font-weight:800;margin-top:15px;width:100%}
+.lpStart:hover,.lpNext:not(:disabled):hover{background:#116c7b}.lpNext:disabled{opacity:.5;cursor:not-allowed}
+.lpMore{display:flex;align-items:center;gap:6px;background:transparent;color:#147e8d;border:0;padding:13px 6px;font-weight:800}
+.lpPlay{background:#fff;border:1px solid #d8e5ed;border-radius:20px;padding:16px}
+.lpQuestionHead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#657c8c}
+.lpQuestionHead b{color:#1a838d;font-size:15px}.lpQuestionHead em{font-style:normal;color:#a26d25;background:#fff5df;padding:6px;border-radius:9px}
+.lpTrack{height:9px;background:#e3edef;border-radius:20px;overflow:hidden;margin:12px 0}.lpTrack>span{display:block;height:100%;background:linear-gradient(90deg,#4caaa8,#73c9aa);border-radius:20px}
+.lpQuestionView{display:grid;grid-template-columns:minmax(190px,1fr) minmax(0,1fr);gap:14px;align-items:center;padding:13px;background:#f7fbfc;border:1px solid #e0ecf1;border-radius:17px}
+.lpArt svg{max-height:225px}.lpPrompt small{color:#71929b;font-size:11px}.lpPrompt h4{font-size:clamp(17px,2.2vw,23px);line-height:1.65;margin:10px 0}.lpPrompt p{color:#698090;font-size:14px}.lpPrompt button{border:1px solid #c2e1df;background:#e5f6f2;color:#11787b;padding:11px 14px;border-radius:12px;display:flex;align-items:center;gap:7px}
+.lpChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px}
+.lpChoices button{display:flex;align-items:center;gap:11px;justify-content:center;position:relative;background:#fff;border:2px solid #dbe7ed;border-radius:14px;min-height:65px;padding:12px;color:#3a5668;overflow-wrap:anywhere}
+.lpChoices button b{font-size:clamp(13px,1.7vw,18px);line-height:1.7}
+.lpChoices button:hover:not(:disabled){border-color:#258a96}.lpChoices button:disabled{cursor:default}
+.lpChoices button.right,.lpChoices button.right:disabled{background:#e4f8ec;border-color:#49ae7e;color:#136e4a;opacity:1}
+.lpChoices button.wrong,.lpChoices button.wrong:disabled{background:#fff0ed;border-color:#de8479;color:#98453b;opacity:1}
+.lpChoices button:disabled:not(.right):not(.wrong){opacity:.65}
+.lpLetter{position:absolute;left:10px;top:9px;color:#99a7b3;font-size:10px;font-weight:800}
+.lpFeedback{display:flex;align-items:flex-start;gap:10px;padding:13px;margin-top:13px;border-radius:13px}
+.lpFeedback.correct{color:#176c49;background:#e3f7ec}.lpFeedback.incorrect{color:#9a4a3c;background:#fff0e8}
+.lpFeedback>div{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.lpFeedback strong{font-size:13px}.lpFeedback b{font-size:16px;overflow-wrap:anywhere}
+.lpFeedback p{font-size:12px;display:flex;align-items:center;gap:6px;line-height:1.8;margin:0}
+.lpFeedback button{border:0;background:#fff9;border-radius:9px;padding:9px;color:inherit;display:grid;place-items:center}
+.lpFinish{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;background:#fff;border:1px solid #dce9ed;border-radius:18px;padding:27px 15px;color:#267d84}
+.lpFinish h4{font-size:21px;margin:8px 0}.lpFinish>strong{font-size:32px}.lpFinish p{font-size:13px;line-height:2;color:#5b7585}
+.lpFinish>div{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.lpFinish button{border:1px solid #bad7da;background:#e5f4f3;color:#13787e;padding:11px 14px;border-radius:11px;display:flex;gap:7px;align-items:center}
+@media(max-width:960px){.lpGallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:690px){.lpGame{padding:14px;margin:16px -5px;border-radius:17px}.lpGallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.lpQuestionView{grid-template-columns:1fr}.lpArt svg{max-height:200px}.lpPrompt{display:grid;justify-items:center;text-align:center}.lpChoices{grid-template-columns:1fr}.lpHero{align-items:flex-start}.lpCount{min-width:72px;padding:8px;font-size:10px}.lpCount b{font-size:19px}.lpGame .lpPlay{padding:11px}}
+@media(prefers-color-scheme:dark){.lpGame{background:#1c2b3a;color:#edf6f7;border-color:#344c59;--lp-ink:#e8f3f6}.lpHero p,.lpPrompt p,.lpGalleryCard small{color:#c1d3db}.lpGalleryCard,.lpPlay,.lpFinish,.lpChoices button,.lpQuestionView{background:#263949;color:#e7f4f7;border-color:#3e5262}.lpModeRow button:not(.active){background:#2c4354;color:#e7f4f7}.lpGalleryCard:hover{background:#324b5b}.lpCount,.lpPrompt button{background:#2e5459;color:#b7e9dc;border-color:#436d70}.lpFeedback.correct{color:#c7f8df;background:#244a3c}.lpFeedback.incorrect{color:#ffd4cd;background:#513c38}}
+@media(prefers-reduced-motion:reduce){.lpGalleryCard,.lpGame button{transition:none}}
