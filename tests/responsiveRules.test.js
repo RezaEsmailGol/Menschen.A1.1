@@ -26,7 +26,7 @@ test('mobile breakpoints and narrow-phone lesson 4 safeguards exist',()=>{
   assert.ok(css.includes(selector+'{')||css.includes(selector+','),selector);
  }
  assert.match(css,/\.bookLessonTabs\{[^}]*overflow-x:auto/);
- assert.match(css,/\.courseSplit\{grid-template-columns:minmax\(0,1fr\)/);
+ assert.match(css,/\.courseSplit,\.reviewLayout\{grid-template-columns:minmax\(0,1fr\)/);
  assert.match(css,/\.bookPictureGrid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
  assert.match(css,/\.lpChoices\{grid-template-columns:minmax\(0,1fr\)/);
 });
