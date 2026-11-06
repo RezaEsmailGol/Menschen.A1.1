@@ -1,5 +1,5 @@
 import React,{useId} from 'react';
-import {sceneForWord} from './lessonSceneCatalog.js';
+import {sceneForWord,wordKey} from './lessonSceneCatalog.js';
 export {sceneForWord,hasLessonScene} from './lessonSceneCatalog.js';
 // All art is original SVG: no remote media or runtime fetching.
 const COLORS={der:'#4a84bb',die:'#d26a9d',das:'#58a584'};

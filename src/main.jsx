@@ -29,6 +29,8 @@ import './mobileGame.css';
 import './styles.css';
 import './upgrade.css';
 import './routeLinks.css';
+// Final viewport-safe overrides apply to every in-app route and modal.
+import './responsive.css';
 
 const lessonOneWords = [
   { de: 'Sonne', fa: 'خورشید', hint: 'S در ابتدای واژه معمولاً /z/ شنیده می‌شود.' },
