@@ -13,7 +13,7 @@ const widths=[320,360,375,390,414,768,1024,1440];
 function viewportAudit(){
  const pageWidth=window.innerWidth;
  const html=document.documentElement;
- const main=document.querySelector('main');
+ const main=document.querySelector('.app > main');
  const root=document.querySelector('#root');
  const isScrollableAncestor=element=>{
   for(let p=element.parentElement;p&&p!==document.body;p=p.parentElement){
@@ -62,7 +62,7 @@ for(const width of widths){
   const page=await context.newPage();
   for(const path of ROUTE_PATHS){
    await page.goto(path,{waitUntil:'domcontentloaded',timeout:25_000});
-   await expect(page.locator('main')).toBeVisible();
+   await expect(page.locator('.app > main')).toBeVisible();
    await expect(page.locator('.bottomNav')).toBeVisible();
    const report=await page.evaluate(viewportAudit);
    expect.soft(report.documentWidth,JSON.stringify({path,report})).toBeLessThanOrEqual(width+2);
@@ -79,7 +79,8 @@ test('lesson 4: SVG gallery, mobile tabs and game buttons remain usable',async (
   const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width,height:850},isMobile:width<600,hasTouch:width<600,reducedMotion:'reduce'});
   const page=await context.newPage();
   await page.goto('/lessons/4');
-  await expect(page.getByText('Der Tisch ist schön!',{exact:true}).first()).toBeVisible();
+  await expect(page.locator('.courseIntro')).toBeVisible();
+  await expect(page.locator('.courseIntro > p')).toContainText('Der Tisch ist schön!');
   await expect(page.locator('.lpGalleryCard svg').first()).toBeVisible();
   await page.locator('.bookLessonTabs button').filter({hasText:'Artikel'}).click();
   await expect(page.locator('.bookSectionInfo')).toContainText('Artikel');
