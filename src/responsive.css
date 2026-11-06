@@ -11,7 +11,7 @@ html{width:100%;min-width:0;overflow-x:clip;-webkit-text-size-adjust:100%;text-s
 body,#root{width:100%;min-width:0;max-width:100%;overflow-x:clip}
 .app{width:100%;max-width:1260px;min-width:0;margin-inline:auto;padding-inline:clamp(8px,2.1vw,24px);padding-bottom:calc(112px + var(--safe-bottom))}
 .app main,.app main>*,.app section,.app article,.app aside,.app header,.app footer{min-width:0}
-.app main{display:block;width:100%;min-width:0;max-width:100%}
+.app > main{display:block;width:100%;min-width:0;max-width:100%}
 .app img,.app video,.app canvas,.app svg{max-width:100%}
 .app img,.app video,.app canvas{height:auto}
 .app :where(h1,h2,h3,h4,h5,h6,p,small,strong,b,span,a,label){overflow-wrap:break-word}
