@@ -47,6 +47,9 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
   const learningStages=[
     {id:'course/1',title:'درس ۱ کتاب · سلام و معرفی',subtitle:'۱۸ تمرین · نام، کشور، الفبا و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
     {id:'course/2',title:'درس ۲ کتاب · شغل و مشخصات',subtitle:'۲۰ تمرین + بازی هوشمند اعداد ۰ تا ۱۰۰',Icon:BookOpenCheck,color:'amber'},
+    {id:'course/3',title:'درس ۳ کتاب · خانواده و زبان‌ها',subtitle:'۲۸ تمرین · mein/meine، dein/deine و سؤال‌های خانواده',Icon:BookOpenCheck,color:'green'},
+    {id:'course/4',title:'درس ۴ کتاب · وسایل خانه',subtitle:'۳۰ تمرین + بازی تصویری der/die/das، میز و صندلی',Icon:BookOpenCheck,color:'amber'},
+    {id:'course/5',title:'درس ۵ کتاب · معرفی اشیا',subtitle:'۳۲ تمرین + بازی تصویری ein/eine و kein/keine',Icon:BookOpenCheck,color:'green'},
     {id:'speaking',title:'مربی تلفظ شخصی',subtitle:'اعداد، حروف، واژه و جمله با میکروفون و حافظه',Icon:Mic2,color:'purple'},
     {id:'night',title:'شیفت شب · مرور پیش از خواب',subtitle:'مرور فعال یا نمایش پشت‌سرهم SVG و صدا',Icon:Moon,color:'purple'},
     {id:'visualMemory',title:'یادسپاری تصویری',subtitle:'اعداد و واژه‌ها با نشانه‌های SVG، تلفظ و حافظه',Icon:ImageIcon,color:'green'},
