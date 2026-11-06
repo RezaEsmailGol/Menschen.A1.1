@@ -186,3 +186,27 @@
  .qfOverlay .examOptions button{min-height:44px}
  .qfOverlay .examExplanation{max-height:55px}
 }
+
+
+/* Course overview is now a nested list, while each lesson keeps its content route. */
+.courseBackIndex{display:flex;align-items:center;gap:9px;justify-content:flex-start;border:1px solid #cde1e6;border-radius:12px;background:#edf8f7;color:#117480;text-decoration:none;padding:12px 15px;font-size:13px;font-weight:800}
+.courseBackIndex svg:last-child{margin-right:auto}
+.courseLessonList .lessonNames{overflow:hidden}
+.courseLessonList .lessonNames b,.courseLessonList .lessonNames small{overflow-wrap:anywhere}
+@media(max-width:750px){
+ .courseSplit{grid-template-columns:minmax(0,1fr)}
+ .courseSyllabus{position:static;width:100%}
+ .courseSideHeader{padding:13px}
+ .courseLessonList:not(.open){display:flex;flex-direction:column;max-height:none;overflow:visible}
+ .courseLessonList:not(.open) .courseLesson:not(.chosen){display:none}
+ .courseLessonList.open{display:flex;flex-direction:column;gap:3px;max-height:52vh;overflow-y:auto;overscroll-behavior:contain}
+ .courseLesson{padding:10px}
+ .courseLessonBody{min-width:0}
+ .phasePage{min-width:0;overflow-wrap:anywhere}
+}
+@media(max-width:500px){
+ .courseIntro{padding:14px}
+ .courseBackIndex{font-size:12px;padding:11px}
+ .courseSyllabus,.courseLessonBody,.phasePage{max-width:100%;min-width:0}
+}
+@media(prefers-color-scheme:dark){.courseBackIndex{background:#24404b;color:#b4efea;border-color:#3d5d64}}
