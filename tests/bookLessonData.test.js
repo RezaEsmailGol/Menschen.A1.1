@@ -13,11 +13,13 @@ test('the first two lessons follow the official Kursbuch syllabus',()=>{
   assert.ok(lessons[1].words.some(x=>x[0]==='der Familienstand'));
 });
 test('every book exercise has an answer and unique stable id',()=>{
-  const all=[...allBookTasks(1),...allBookTasks(2)];
+  const all=[1,2,3,4,5].flatMap(allBookTasks);
   assert.equal(allBookTasks(1).length,18);
   assert.equal(allBookTasks(2).length,20);
   assert.equal(new Set(all.map(q=>q.id)).size,all.length);
-  assert.deepEqual(Object.keys(bookLessonPlans),['1','2']);
+  assert.deepEqual(Object.keys(bookLessonPlans),['1','2','3','4','5']);
+  assert.deepEqual([3,4,5].map(allBookTasks).map(x=>x.length),[28,30,32]);
+  assert.equal(all.length,128);
   for(const q of all){
     assert.ok(q.id && q.type && q.prompt && q.answer);
     assert.ok(['choice','type','listen','build'].includes(q.type));
@@ -32,7 +34,7 @@ test('every book exercise has an answer and unique stable id',()=>{
   }
 });
 test('all book sections are nonempty, ordered and contain learning cards',()=>{
-  for(const id of [1,2]){
+  for(const id of [1,2,3,4,5]){
     const data=bookLessonPlans[id];
     assert.equal(data.sections.length,4);
     assert.ok(data.goals.length>=4);
