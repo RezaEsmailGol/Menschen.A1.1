@@ -1,0 +1,264 @@
+/*
+ * App-wide responsive guardrails.
+ * Audited layouts: home, lessons/1..12, SVG lessons, practice hub, workbook,
+ * numbers 0..100M, speaking, dialogues, picture games, quizzes and progress.
+ * Visual widths: 320, 360, 375, 390, 414, 768, 1024, 1440px.
+ * Overflow remains inside scrollable menus, not the document.
+ */
+
+:root{--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);--safe-right:env(safe-area-inset-right,0px)}
+html{width:100%;min-width:0;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body,#root{width:100%;min-width:0;max-width:100%;overflow-x:clip}
+.app{width:100%;max-width:1260px;min-width:0;margin-inline:auto;padding-inline:clamp(8px,2.1vw,24px);padding-bottom:calc(112px + var(--safe-bottom))}
+.app main,.app main>*,.app section,.app article,.app aside,.app header,.app footer{min-width:0}
+.app main{display:block;width:100%;min-width:0;max-width:100%}
+.app img,.app video,.app canvas,.app svg{max-width:100%}
+.app img,.app video,.app canvas{height:auto}
+.app :where(h1,h2,h3,h4,h5,h6,p,small,strong,b,span,a,label){overflow-wrap:break-word}
+.app :where([dir="ltr"],[lang="de"]){overflow-wrap:anywhere}
+.app :where(input,textarea,select){max-width:100%;min-width:0}
+.app :where(button,a,input,textarea,select):focus-visible{outline:3px solid #68adb3;outline-offset:3px}
+.app :where(.panel,.courseIntro,.courseContentBlock,.bookLessonRoot,.lpGame,.ldRoot,.phaseHero,.gameIntro,.gamePage,.gameHome){max-width:100%;min-width:0}
+.app :where(.grid,.hero,.upgradedGrid,.practiceTiles,.progressColumns,.progressOverview,.classMasteryGrid,.gameScorebar,.learningJourney){min-width:0}
+.app :where(.grid,.upgradedGrid,.practiceTiles,.progressColumns,.classMasteryGrid) > *{min-width:0}
+.app :where(.row,.actions,.panelHead,.homeSectionTitle,.heroButtons,.gameHeroActions){max-width:100%;min-width:0;flex-wrap:wrap}
+.app :where(.panelHead,.homeSectionTitle) > *{min-width:0}
+.app :where(.wordGrid,.numberGrid,.alphaGrid,.vocabGrid,.newNumberGrid,.bookPictureGrid,.lpGallery,.vPhraseGrid,.pgModes,.cnGroups,.wbNumberGrid,.wbLetterGrid,.wbSoundGrid){max-width:100%;min-width:0}
+.app :where(.wordGrid,.numberGrid,.alphaGrid,.vocabGrid,.newNumberGrid,.bookPictureGrid,.lpGallery,.vPhraseGrid,.pgModes,.cnGroups,.wbNumberGrid,.wbLetterGrid,.wbSoundGrid) > *{min-width:0}
+.app :where(.tabs,.bookLessonTabs,.phaseNav,.vModes,.vCategories,.cnModeBar,.cnPracticeModes,.nrModes,.nrRanges,.wbPracticeModes,.wbVerbTabs,.scFilters,.vmFilters){max-width:100%;scrollbar-width:thin;overscroll-behavior-inline:contain}
+.app :where(.tabs,.bookLessonTabs,.phaseNav,.vModes,.vCategories,.cnModeBar,.cnPracticeModes,.nrModes,.nrRanges,.wbPracticeModes,.wbVerbTabs,.scFilters,.vmFilters) > *{flex-shrink:0}
+
+/* Shared navigation: prevent header text or a fixed floating menu from expanding the viewport. */
+.topbar{width:100%;min-width:0;max-width:100%;gap:12px}
+.topbar>div:first-child{min-width:0;max-width:100%;flex:1 1 auto}
+.topbar h1,.topbar p{overflow-wrap:anywhere}
+.headerTools{flex:0 0 auto;min-width:0}
+.voiceControl{min-width:0}.voiceControl select{max-width:94px}
+.subpageReturn{min-width:0;max-width:100%;flex-wrap:wrap;gap:8px}
+.subpageReturn>span{min-width:0;overflow-wrap:anywhere}
+.bottomNav{max-width:calc(100vw - 20px - var(--safe-left) - var(--safe-right));left:50%;min-width:0}
+.bottomNav a{min-width:0;white-space:normal;text-align:center}
+.bottomNav a>span{min-width:0}
+.gameFeedbackToast{max-width:calc(100vw - 24px);white-space:normal}
+
+/* Lessons/4 and all other detail pages: the sidebar may never force a 300px layout.
+   Keep the book tabs horizontally scrollable, but not the entire screen. */
+.phasePage,.courseSplit,.courseLessonBody,.courseSyllabus,.courseIntro,.courseContentBlock{min-width:0;max-width:100%}
+.courseSplit{grid-template-columns:minmax(220px,280px) minmax(0,1fr)}
+.courseLessonBody{grid-template-columns:minmax(0,1fr)}
+.phaseHeroContent,.courseIntro>*,.courseMeta,.courseGoal,.courseTitle,.sampleSentences,.sampleSentences>div{min-width:0;max-width:100%}
+.courseLesson .lessonNames{min-width:0;overflow-wrap:anywhere}
+.vocabGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.vocabTile{min-width:0;max-width:100%}
+.vocabTile b,.vocabTile small,.sampleSentences b,.grammarTip{overflow-wrap:anywhere}
+.courseCTA,.courseMeta,.phaseIndicators{min-width:0;flex-wrap:wrap}
+.courseCTA>*{min-width:0}
+.reviewLayout,.reviewCardShell,.reviewSidebar,.builderPanel,.examPanel,.builderOutput,.examOptions{min-width:0;max-width:100%}
+.builderQuestion,.builderTokens,.builderActions{min-width:0;max-width:100%}
+.srsFlash strong{overflow-wrap:anywhere;max-width:100%}
+.bookLessonRoot{width:100%;min-width:0;max-width:100%;margin-inline:0}
+.bookLessonTop{min-width:0}
+.bookLessonTop>div:first-child{flex:1 1 0;min-width:0}
+.bookLessonEyebrow{overflow-wrap:anywhere}
+.bookMastery{flex:0 0 auto}
+.bookPictureGrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,144px),1fr))}
+.bookPictureCard{min-width:0;max-width:100%;height:auto}
+.bookPictureCard b,.bookPictureCard small{max-width:100%;overflow-wrap:anywhere}
+.bookPictureSvg,.bookPictureSvg svg{min-width:0;max-width:100%!important;height:auto}
+.bookLessonTabs{display:flex;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.bookLessonTabs button{flex:0 0 auto;scroll-snap-align:start}
+.bookExercise,.bookReading,.bookSummary,.bookSectionInfo,.bookFeedback{min-width:0;max-width:100%}
+.bookExercise h5,.bookFeedback b,.bookReading p{overflow-wrap:anywhere}
+.bookOptions,.bookWordOptions,.bookAnswerForm,.bookNumberChallenge form{min-width:0;max-width:100%}
+.bookOptions button,.bookWordOptions button{min-width:0;overflow-wrap:anywhere}
+.bookAnswerForm input,.bookNumberChallenge input{flex:1 1 160px;width:auto;max-width:100%}
+.bookNumberPrompt{flex-wrap:wrap;min-width:0}
+.bookBuiltAnswer{max-width:100%;overflow-wrap:anywhere}
+
+/* Picture challenges, SVG media and RTL options. */
+.lpGame,.lpHero,.lpPlay,.lpQuestionView,.lpPrompt,.lpGalleryCard,.lpChoices,.lpFinish{min-width:0;max-width:100%}
+.lpHero>div:first-child{min-width:0;flex:1 1 auto}
+.lpQuestionView{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.lpArt,.lpPrompt,.lpArt svg{max-width:100%;min-width:0}
+.lpGallery{grid-template-columns:repeat(4,minmax(0,1fr))}
+.lpChoices button{min-width:0;overflow-wrap:anywhere}
+.lpFeedback>div{min-width:0}
+
+/* Expandable curriculum index. */
+.ldRoot,.ldList,.ldLesson,.ldLessonHeader,.ldExpandedBody,.ldTopics,.ldTopics li,.ldModule{min-width:0;max-width:100%}
+.ldLessonHeading,.ldTopics li>div,.ldModule>div{min-width:0;overflow-wrap:anywhere}
+.ldLessonHeading>span{overflow-wrap:anywhere}
+.ldModules{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ldSearch{min-width:0}.ldSearch input{min-width:0}
+
+/* Workbook and game screens. Horizontal-only overflow is confined to category selectors. */
+.wbRoot,.wbPaper,.wbContent,.wbSectionPicker,.wbPageHeader,.wbDialogCards,.wbVerbTable,.wbQuizTop,.wbInputRow,.wbNumberGrid{min-width:0;max-width:100%}
+.wbSectionPicker{grid-template-columns:repeat(7,minmax(0,1fr))}
+.wbPracticeModes,.wbVerbTabs{overflow-x:auto;max-width:100%}
+.wbInputRow{flex-wrap:wrap}
+.wbNumberGrid button,.wbLetterGrid button{min-width:0}
+.wbTableHead,.wbVerbRow{min-width:0}
+.cnRoot,.cnPanel,.cnQuiz,.cnPrompt,.cnChoices,.cnItems,.cnGroup,.cnGroupCopy,.cnVerbTable,.cnVerbForms{max-width:100%;min-width:0}
+.cnHero,.cnPanelHeader,.cnHeroBadges,.cnModeBar{min-width:0;flex-wrap:wrap}
+.cnHugeNumber{overflow-wrap:anywhere;font-size:clamp(33px,9vw,68px)}
+.nrGame,.nrBoard,.nrQuestion,.nrAnswers,.nrModes,.nrRanges{min-width:0;max-width:100%}
+.nrBigPrompt,.nrWord{overflow-wrap:anywhere}
+.wcGame,.wcBoard,.wcPrompt,.wcOptions,.wcHead,.wcModeChoices{min-width:0;max-width:100%}
+.pgPage,.pgBoard,.pgImageBox,.pgPrompt,.pgOptions,.pgSetup,.pgModes,.pgHero{min-width:0;max-width:100%}
+.pgBoardTop,.pgFeedback{flex-wrap:wrap}
+.pgTypeForm,.pgSentenceBuilder,.pgDropZone{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.visualLesson,.vHero,.vVocabulary,.vPhraseGrid,.vPhraseCard,.vFlashView,.vQuiz,.vQuestion,.vQuizChoices,.vDialogueView{min-width:0;max-width:100%}
+.vPhraseCard strong,.vFlashCard strong,.vQuestion{overflow-wrap:anywhere}
+.vmPage,.vmHero,.vmCard,.vmContent,.vmFilters,.vmToolbar{min-width:0;max-width:100%}
+.vmIllustration,.vmIllustration svg{min-width:0;max-width:100%}
+.dialoguesPage,.dialogueAdventure,.dialogueStage,.dialogueStageTop,.dialogueChoices,.dialogueAIForm,.dialogueAIResult{min-width:0;max-width:100%}
+.dialogueChoiceText,.dialogueCardText{overflow-wrap:anywhere;min-width:0}
+.scPage,.scSection,.scPractice,.scHero,.scCategories,.scFilters,.scResult,.scHistory,.scPrompt{min-width:0;max-width:100%}
+.scCompare,.scHistoryItem{min-width:0;overflow-wrap:anywhere}
+.nightPage,.nightShell,.nightExercise,.nightOverview,.nightModes,.nightSlideshow{min-width:0;max-width:100%}
+.dcPage,.dcHero,.dcColumns,.dcCard,.dcTask,.dcTaskInfo,.dcGraph,.dcStatsGrid{min-width:0;max-width:100%}
+.dcGraph{overflow-x:auto;overscroll-behavior-x:contain}
+.numberDuoHero,.numberChallengeSetup,.numberStageGrid,.numberStageCard,.duoPlay,.duoQuestion,.duoChoices,.duoTypeAnswer,.numberReference,.numberExplorer,.newNumberGrid{min-width:0;max-width:100%}
+.duoHugeNumber{font-size:clamp(34px,8vw,104px);overflow-wrap:anywhere}
+.duoHugeWord,.numberExploreResult span,.newNumberGrid button span{overflow-wrap:anywhere;word-break:normal}
+.bigNumberTile strong{font-size:clamp(24px,5vw,48px);overflow-wrap:anywhere}
+.numberExploreControls input{width:100%;min-width:0;max-width:100%}
+.numberStageGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+/* Quiz focus mode: use the dynamic viewport and keep action buttons above safe areas. */
+.qfOverlay{max-width:100vw;min-width:0;max-height:100dvh;overscroll-behavior:contain}
+.qfContent,.qfOverlay :where(.qfContent,.qfTop,.examFocusBody,.wcGame,.nrGame,.pgBoard,.pgFinish,.vQuiz,.wbExamRunner){max-width:100%;min-width:0}
+.qfContent{padding-bottom:max(12px,var(--safe-bottom))}
+.qfTop{min-width:0}
+.qfOverlay :where(.examOptions,.wcOptions,.nrAnswers,.pgOptions,.vQuizChoices,.wbChoices){max-width:100%;min-width:0}
+
+@media(max-width:1050px){
+ .courseSplit{grid-template-columns:minmax(200px,240px) minmax(0,1fr)}
+ .lpGallery{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .numberStageGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:820px){
+ .app{padding-inline:12px}
+ .topbar{gap:10px}
+ .courseSplit,.reviewLayout{grid-template-columns:minmax(0,1fr)}
+ .courseSyllabus{position:static}
+ .courseLessonBody{grid-template-columns:minmax(0,1fr)}
+ .courseLessonList.open{display:flex;flex-direction:column;gap:3px;max-height:min(52dvh,430px);overflow-y:auto;overflow-x:hidden}
+ .courseLessonList:not(.open){display:flex;flex-direction:column;max-height:none;overflow:visible}
+ .courseLessonList:not(.open) .courseLesson:not(.chosen){display:none}
+ .phaseHero{padding:22px}
+ .phaseIndicators{width:100%;flex-wrap:wrap}
+ .vocabGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lpGallery{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .lpQuestionView{grid-template-columns:minmax(0,1fr)}
+ .lpPrompt{width:100%}
+ .ldModules{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .wbSectionPicker{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .miniQuiz{grid-template-columns:minmax(0,1fr) minmax(160px,1fr);gap:8px}
+ .miniQuiz>*{min-width:0}
+ .gameIntro,.gameHero{max-width:100%}
+}
+@media(max-width:620px){
+ .app{padding-inline:10px}
+ .topbar{padding:13px 12px;align-items:flex-start;gap:8px;flex-wrap:wrap}
+ .topbar h1{font-size:20px}
+ .topbar p{font-size:11px;max-width:100%}
+ .headerTools{justify-content:flex-start;flex-wrap:wrap;max-width:100%}
+ .streak{padding:8px 10px}
+ .voiceControl{padding:5px 8px}
+ .hero,.upgradedHero{grid-template-columns:minmax(0,1fr)}
+ .grid,.upgradedGrid,.practiceTiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .progressColumns,.progressOverview,.dcColumns{grid-template-columns:minmax(0,1fr)}
+ .phaseHero{padding:17px;border-radius:18px}
+ .phaseHero h2{font-size:clamp(20px,5.7vw,26px)}
+ .phaseIndicators{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .phaseIndicators>div{min-width:0;padding:9px 4px}
+ .phaseIndicators strong{font-size:clamp(16px,4.5vw,21px)}
+ .courseIntro,.courseContentBlock{padding:15px}
+ .courseCTA{flex-direction:column;align-items:stretch}
+ .courseCTA>*{width:100%;max-width:100%;justify-content:center}
+ .vocabGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .bookLessonRoot{padding:12px;margin:14px 0;border-radius:16px}
+ .bookPictureGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .bookPictureCard{padding:10px 6px}
+ .bookLessonTop{align-items:flex-start;gap:7px}
+ .bookMastery{min-width:70px;padding:7px}
+ .bookMastery b{font-size:16px}
+ .bookLessonTop h3{font-size:19px}
+ .bookLessonEyebrow{font-size:10px;letter-spacing:0}
+ .bookPictureSvg svg{max-height:135px}
+ .bookOptions{grid-template-columns:minmax(0,1fr)}
+ .bookAnswerForm button,.bookNumberChallenge form button{flex:1 1 100%;width:100%}
+ .lpGame{padding:12px;margin:16px 0;border-radius:16px}
+ .lpHero{gap:8px;flex-wrap:wrap}
+ .lpGallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .lpQuestionView{padding:9px}
+ .lpChoices{grid-template-columns:minmax(0,1fr)}
+ .lpModeRow button{flex:1 1 140px}
+ .ldModules{grid-template-columns:minmax(0,1fr)}
+ .ldLessonHeader{gap:7px;padding:11px}
+ .ldExpandedBody{padding:12px 10px}
+ .numberStageGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .numberExploreControls input{font-size:18px}
+ .duoQuestion,.nrQuestion{padding:12px;min-height:150px}
+ .duoChoices{grid-template-columns:minmax(0,1fr)}
+ .duoChoices button{min-height:56px}
+ .vmCard{grid-template-columns:minmax(0,1fr)}
+ .vmIllustration{width:100%}
+ .wbSectionPicker{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .qfContent{padding-inline:8px}
+ .app :where(input,textarea,select){font-size:max(16px,1rem)}
+}
+@media(max-width:400px){
+ .app{padding-inline:7px}
+ .topbar{padding:10px}
+ .topbar h1{font-size:18px}
+ .grid,.upgradedGrid,.practiceTiles{grid-template-columns:minmax(0,1fr)}
+ .gameScorebar{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .phaseIndicators{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .courseIntro,.courseContentBlock{padding:12px}
+ .courseMeta{gap:5px}
+ .vocabGrid{grid-template-columns:minmax(0,1fr)}
+ .bookLessonRoot{padding:9px}
+ .bookPictureGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .bookPictureCard b{font-size:12px}
+ .bookPictureCard small{font-size:11px}
+ .bookPictureSvg svg{max-height:112px}
+ .bookLessonEyebrow{font-size:9px}
+ .bookMastery{min-width:66px}
+ .bookLessonTop h3{font-size:17px}
+ .lpHero h3{font-size:20px}
+ .lpCount{min-width:65px}
+ .lpGallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ldLessonHeading strong{font-size:12px}
+ .ldNumber{width:32px;height:38px}
+ .ldToggleArrow{width:17px}
+ .ldTopicCount{white-space:normal;text-align:center}
+ .wbSectionPicker{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .miniQuiz{grid-template-columns:minmax(0,1fr)}
+ .miniQuiz>*{width:100%}
+ .numberStageGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .numberExplorer{padding:11px}
+ .numberExploreControls{flex-direction:column}
+ .numberExploreControls input,.numberExploreControls button{width:100%}
+ .qfOverlay :where(.examOptions,.wcOptions,.nrAnswers,.pgOptions,.vQuizChoices,.wbChoices){grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:340px){
+ .topbar{flex-direction:column;align-items:stretch}
+ .headerTools{justify-content:space-between}
+ .lpGallery,.bookPictureGrid,.numberStageGrid{grid-template-columns:minmax(0,1fr)}
+ .bookPictureSvg svg{max-height:150px}
+ .phaseIndicators{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .bottomNav{width:calc(100vw - 12px);padding:5px 3px;gap:1px}
+ .bottomNav a{font-size:10px;padding:5px 0}
+ .bottomNav .bottomNavIcon svg{width:19px;height:19px}
+}
+@media(max-height:600px) and (orientation:landscape){
+ .bottomNav{bottom:2px;padding:3px 6px}
+ .app{padding-bottom:calc(80px + var(--safe-bottom))}
+ .qfOverlay{height:100dvh}
+ .qfContent{max-height:calc(100dvh - 56px);overflow-y:auto}
+}
+@media(prefers-reduced-motion:reduce){
+ .app *,.app *::before,.app *::after{scroll-behavior:auto!important}
+}
