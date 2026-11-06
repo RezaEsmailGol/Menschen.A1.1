@@ -52,7 +52,7 @@ function viewportAudit(){
 
 for(const width of widths){
  test('all routes fit '+width+'px viewport without horizontal document scroll',async ({browser})=>{
-  const context=await browser.newContext({
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
     viewport:{width,height:width<=414?812:width===768?1024:900},
     deviceScaleFactor:width<=414?2:1,
     isMobile:width<=414,
@@ -76,7 +76,7 @@ for(const width of widths){
 
 test('lesson 4: SVG gallery, mobile tabs and game buttons remain usable',async ({browser})=>{
  for(const width of [320,375,390,768]){
-  const context=await browser.newContext({viewport:{width,height:850},isMobile:width<600,hasTouch:width<600,reducedMotion:'reduce'});
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width,height:850},isMobile:width<600,hasTouch:width<600,reducedMotion:'reduce'});
   const page=await context.newPage();
   await page.goto('/lessons/4');
   await expect(page.getByText('Der Tisch ist schön!',{exact:true}).first()).toBeVisible();
@@ -92,7 +92,7 @@ test('lesson 4: SVG gallery, mobile tabs and game buttons remain usable',async (
 });
 
 test('responsive lesson index opens nested modules and lesson details',async ({browser})=>{
- const context=await browser.newContext({viewport:{width:360,height:800},isMobile:true,hasTouch:true});
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true});
  const page=await context.newPage();
  await page.goto('/lessons');
  await expect(page.locator('.ldLesson')).toHaveCount(12);
@@ -107,7 +107,7 @@ test('responsive lesson index opens nested modules and lesson details',async ({b
 });
 
 test('number explorer accepts 100 million on a narrow phone',async ({browser})=>{
- const context=await browser.newContext({viewport:{width:360,height:800},isMobile:true,hasTouch:true});
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true});
  const page=await context.newPage();
  await page.goto('/numbers');
  const field=page.locator('#number-explore');
