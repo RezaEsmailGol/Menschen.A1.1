@@ -13,3 +13,153 @@
 .laPlay:focus-visible,.laExercisePlay:focus-visible{outline:3px solid #71bfc2;outline-offset:2px}
 @media(max-width:620px){.laStrip{padding:9px}.laHeading{gap:5px}.laHeading small{flex-basis:100%;margin-inline-start:0}.laExerciseAudio{width:100%}.laExercisePlay{width:100%;min-height:47px}}
 @media(prefers-color-scheme:dark){.laStrip{background:#26434a;border-color:#4c746c;color:#e8f4f2}.laHeading small{color:#b5d3d2}.laPlay{background:#30515b;color:#daf3f1;border-color:#4b7778}.laPlay small{color:#c1d5d8}.laPlay:hover,.laPlay.active{background:#345e5b}.laExercisePlay{background:#305b57;color:#d0f5e9;border-color:#4d8b7c}}
+
+
+/* Audio Learning Studio — original illustration-led, RTL, mobile-first UX. */
+.laExperience{--la-ink:#33245e;--la-purple:#6b4fd4;--la-mint:#53b7aa;--la-stroke:#e5e3f8;direction:rtl;max-width:100%;min-width:0;overflow:hidden;border:1px solid #ded9fb;border-radius:24px;background:linear-gradient(148deg,#f3efff 0%,#faf9ff 30%,#f7f5ff 100%);color:var(--la-ink);margin:19px 0 23px;padding:17px;box-shadow:0 16px 35px rgba(70,48,143,.075)}
+.laExperience *{box-sizing:border-box;min-width:0}
+.laExperience button{cursor:pointer;font:inherit}
+.laExperience button:focus-visible,.laExperience input:focus-visible{outline:3px solid #4bcbb4;outline-offset:3px}
+.laExperienceHeading{display:flex;align-items:center;gap:12px;padding:6px 3px 16px;flex-wrap:wrap}
+.laExperienceHeading>div{flex:1 1 220px}
+.laLargeIcon{display:grid;place-items:center;flex:0 0 52px;height:52px;background:linear-gradient(155deg,#bcaafc,#8065da);color:white;border-radius:17px;box-shadow:0 8px 19px rgba(113,75,206,.18)}
+.laEyebrow{font-size:10px;letter-spacing:.09em;direction:ltr;text-align:right;display:block;color:#8872ca;font-weight:900}
+.laExperienceHeading h3{font-size:clamp(19px,3vw,26px);line-height:1.55;color:#39246e;margin:4px 0}
+.laExperienceHeading p{font-size:13px;color:#80729e;margin:3px 0}
+.laStats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#eeeaff;border:1px solid #e0dcf9;border-radius:15px;gap:4px;padding:9px;margin-bottom:19px}
+.laStats span{display:flex;justify-content:center;align-items:center;gap:5px;color:#6c5c91;line-height:1.6;font-size:11px;white-space:normal;text-align:center;min-height:38px}
+.laStats span+span{border-right:1px solid #d5d0f3}
+.laStats svg{color:#7d61d5;flex-shrink:0}
+.laStats b{color:#4b338e;font-size:15px;white-space:nowrap}
+.laSectionHeading{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;margin:7px 1px 10px}
+.laSectionHeading h4{font-size:14px;color:#50388e;margin:0}
+.laSectionHeading>span{font-size:11px;color:#8e7da6}
+.laCardList{display:grid;gap:9px}
+.laAudioCard{display:flex;align-items:center;gap:12px;min-height:110px;border:1px solid #dedbf0;background:#fff;border-radius:17px;padding:8px 10px;box-shadow:0 5px 16px rgba(74,57,127,.045);max-width:100%;min-width:0;transition:border-color .18s,box-shadow .18s}
+.laAudioCard.active{border-color:#b5a5ed;box-shadow:0 8px 19px rgba(105,81,175,.09)}
+.alArt{width:130px;min-width:100px;flex:0 1 130px;display:block;line-height:0}
+.alArt svg{width:100%;height:auto;max-height:90px;display:block;border-radius:13px}
+.alExistingArt svg{max-height:92px;width:100%;height:auto}
+.laAudioCopy{display:flex;flex-direction:column;gap:5px;flex:1 1 110px;overflow-wrap:anywhere;align-items:flex-start;justify-content:center}
+.laAudioCopy strong{font-family:inherit;direction:ltr;text-align:left;color:#2e2553;font-size:clamp(13px,1.65vw,17px);font-weight:900}
+.laAudioCopy>span{color:#817397;font-size:12px}
+.laWave{display:flex;direction:ltr;align-items:center;justify-content:center;gap:3px;flex:0 1 100px;min-width:65px;height:36px}
+.laWave span{display:block;width:3px;flex-shrink:0;border-radius:6px;background:#ab96f1;opacity:.9}
+.laWave span:nth-child(3n){background:#6dcac1}
+.laWave.playing span{animation:laWaveBeat 1s ease-in-out infinite alternate}
+.laWave.playing span:nth-child(2n){animation-delay:.3s}
+.laCirclePlay{display:grid;place-items:center;width:43px;height:43px;flex:0 0 43px;border-radius:50%;border:0;background:linear-gradient(160deg,#8e72e8,#6544c7);color:white;box-shadow:0 4px 13px rgba(93,58,180,.18)}
+.laCirclePlay:hover{filter:brightness(1.09)}
+.laShowAll{margin-top:10px;display:flex;align-items:center;justify-content:center;gap:7px;width:100%;color:#6550bc;background:#ede8ff;border:1px solid #dad2fc;border-radius:10px;padding:10px;font-size:12px;font-weight:750}
+.laExperience>.laStrip{background:#fff;border-color:#ddd9f1;margin:14px 0;border-radius:15px}
+.laExperience>.laStrip .laHeading{color:#51448b}
+.laSpeakPanel{background:linear-gradient(145deg,#e2f6f2,#e8f9f6);border:1px solid #c5e7e1;border-radius:20px;margin-top:20px;padding:16px}
+.laLearningPanel{background:linear-gradient(150deg,#efeaff,#f9f8ff);border:1px solid #e3d9fb;border-radius:20px;margin-top:14px;padding:16px}
+.laPanelHeading{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.laPanelHeading>span{display:grid;place-items:center;flex:0 0 43px;height:43px;border-radius:13px;background:#b7e9de;color:#268b7f}
+.laLearningPanel .laPanelHeading>span{background:#ddd2ff;color:#805bd7}
+.laPanelHeading h4{font-size:clamp(16px,2vw,21px);font-weight:850;margin:0 0 5px;color:#33255e}
+.laPanelHeading p{font-size:12px;line-height:1.8;margin:0;color:#687c82}
+.laSpeakBody{background:#ffffffcf;border:1px solid #d1eae6;border-radius:16px;padding:15px}
+.laSteps{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:13px;color:#6b56a9}
+.laSteps>span{display:flex;flex:1 1 85px;align-items:center;justify-content:center;gap:7px;border:1px solid #e6e4f3;background:#fff;border-radius:12px;min-height:49px;padding:8px;color:#6851a1;font-size:11px;font-weight:800}
+.laSteps>svg{flex:0 0 15px;color:#91a9ae}
+.laSpeakTarget{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;padding:10px 12px;border-radius:12px;background:#f5fbfa;border:1px dashed #a4d6cc;margin-bottom:12px}
+.laSpeakTarget small{font-size:11px;color:#5e8b85}
+.laSpeakTarget b{font-size:18px;color:#2d3c6c}
+.laSpeakTarget span{font-size:11px;color:#5b848a}
+.laSpeakControls{display:flex;gap:9px;flex-wrap:wrap}
+.laSpeakControls button{border-radius:11px;min-height:45px;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;font-size:12px;font-weight:800}
+.laHear{flex:1 1 130px;background:#fff;color:#296f77;border:1px solid #addbd8}
+.laMicButton{flex:2 1 220px;background:linear-gradient(105deg,#6e50d8,#8c67e7);color:#fff;border:1px solid #744fd5;box-shadow:0 5px 12px rgba(106,78,184,.14)}
+.laRecording{font-size:12px;color:#0d8075;animation:laPulse 1.2s ease infinite alternate}
+.laMicNotice,.laSpeechPrivacy{font-size:10px;line-height:1.9;color:#718784;margin:12px 0 1px}
+.laSpeechResult{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:12px;background:white;border:1px solid #bbe4dc;border-radius:13px;padding:11px}
+.laScoreRing{display:grid;place-items:center;flex:0 0 75px;width:75px;height:75px;border-radius:50%;background:conic-gradient(#39b9a9 var(--la-score),#e4e7f3 0);position:relative}
+.laScoreRing:before{content:"";position:absolute;inset:8px;background:#fff;border-radius:50%}
+.laScoreRing strong{z-index:1;font-size:21px;font-weight:900;color:#268d80}
+.laSpeechResult>div:last-child{flex:1;display:flex;flex-direction:column;gap:6px}
+.laSpeechResult b{font-size:13px;color:#236e69}
+.laSpeechResult>div:last-child>span{font-size:13px;color:#424d6f}
+.laSpeechResult small{font-size:11px;color:#74938c}
+.laError{display:block;font-size:12px;color:#a33b44;margin:10px 0}
+.laLearningPanel .laModeTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:11px 0 13px}
+.laModeTabs button{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #e0d7f6;border-radius:11px;min-height:48px;padding:9px;background:#fff;color:#6751a1;font-size:12px;font-weight:750}
+.laModeTabs button.chosen{background:#e8deff;border:2px solid #875ee2;color:#5e37bd}
+.laQuiz{background:#fff;border:1px solid #e1ddf5;padding:15px;border-radius:14px}
+.laQuizMeta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:#826f9b}
+.laQuiz>p{font-size:13px;margin:9px 0 14px;color:#423568}
+.laQuizListen{display:flex;align-items:center;gap:11px;width:100%;min-height:52px;background:#f3f0ff;border:1px solid #e4ddf8;border-radius:11px;padding:8px 12px;color:#6648c1;font-size:12px;font-weight:800}
+.laQuizListen>svg{flex-shrink:0}
+.laQuizListen .laWave{margin-inline-start:auto}
+.laDictation{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.laDictation input{flex:1 1 185px;width:100%;min-height:46px;border:1px solid #cdc7df;border-radius:10px;padding:10px 13px;font-size:15px;color:#33255a;background:#fff}
+.laDictation button,.laRepeat>button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:45px;background:#6e50d4;color:white;padding:11px 18px;border:1px solid #7657d6;border-radius:10px;font-weight:800;font-size:12px}
+.laDictation button:disabled,.laRepeat button:disabled{opacity:.65;cursor:not-allowed}
+.laMeanings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.laMeanings button{background:#fff;border:1px solid #ded9ee;border-radius:11px;padding:12px 9px;min-height:46px;color:#533f76;font-size:12px}
+.laMeanings button.right{background:#e6f7ec;border-color:#9ed5b4;color:#217b5a}
+.laRepeat{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:12px}
+.laRepeat>b{flex:1;font-size:16px;color:#372d64}
+.laRepeat button{flex:1 1 170px}
+.laRepeat small{width:100%;font-size:11px;color:#916d79}
+.laQuizFeedback{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-radius:12px;padding:12px;margin-top:13px;border:1px solid #eed6da;background:#fff5f5;color:#8f4755}
+.laQuizFeedback.correct{background:#e9f9ef;border-color:#b2e3c3;color:#24754f}
+.laQuizFeedback>div{flex:1;display:flex;flex-direction:column;gap:4px}
+.laQuizFeedback strong{font-size:12px}
+.laQuizFeedback span{font-size:14px;font-weight:800}
+.laQuizFeedback small{font-size:11px}
+.laQuizFeedback button{display:flex;gap:5px;align-items:center;border:1px solid currentColor;background:#fff9;border-radius:9px;padding:9px 11px;font-size:11px;font-weight:800}
+@keyframes laWaveBeat{from{transform:scaleY(.65)}to{transform:scaleY(1.25)}}
+@keyframes laPulse{from{opacity:.55}to{opacity:1}}
+@media(max-width:800px){.laWave{flex-basis:70px}.alArt{flex-basis:110px;width:110px}.laAudioCard{gap:9px}}
+@media(max-width:620px){
+ .laExperience{padding:11px;margin:14px 0;border-radius:17px}
+ .laExperienceHeading{padding:4px 1px 11px;gap:9px}
+ .laLargeIcon{flex-basis:43px;height:43px}
+ .laExperienceHeading h3{font-size:19px}
+ .laStats{padding:6px 2px}
+ .laStats span{font-size:9px;gap:3px;flex-wrap:wrap;min-height:48px}
+ .laStats b{font-size:13px}
+ .laCardList{gap:7px}
+ .laAudioCard{padding:7px;min-height:85px;gap:7px;border-radius:13px}
+ .alArt{flex:0 0 85px;width:85px}
+ .alArt svg{max-height:66px}
+ .laAudioCopy strong{font-size:12px}
+ .laAudioCopy>span{font-size:10px}
+ .laWave{min-width:36px;flex:0 0 37px;gap:2px;overflow:hidden}
+ .laWave span{width:2px}
+ .laCirclePlay{width:36px;height:36px;flex-basis:36px}
+ .laSpeakPanel,.laLearningPanel{padding:10px;border-radius:14px}
+ .laSpeakBody{padding:10px}
+ .laSteps{gap:3px}
+ .laSteps>span{flex:1 1 68px;font-size:9px;gap:4px;padding:7px 3px;min-height:42px}
+ .laSteps>span svg{width:15px}
+ .laSteps>svg{flex:0 0 11px;width:11px}
+ .laModeTabs button{padding:8px 4px;gap:4px;font-size:10px;min-height:46px}
+ .laModeTabs button svg{width:15px}
+ .laQuiz{padding:10px}
+ .laQuizListen .laWave{flex-basis:73px;min-width:60px}
+ .laMeanings{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:370px){.laWave{display:none}.alArt{flex-basis:70px;width:70px}.laCirclePlay{width:34px;height:34px;flex-basis:34px}.laStats span svg{width:15px}.laRepeat>b{flex-basis:100%}}
+@media(prefers-color-scheme:dark){
+ .laExperience{background:linear-gradient(145deg,#262340,#1f3043);border-color:#4f496f;color:#e7e0fc}
+ .laExperienceHeading h3,.laSectionHeading h4,.laPanelHeading h4{color:#e8dfff}
+ .laExperienceHeading p,.laSectionHeading>span{color:#b3abcf}
+ .laStats{background:#323051;border-color:#514c72}
+ .laStats span{color:#d1c7ed}.laStats span+span{border-color:#545079}.laStats b{color:#e5d9ff}
+ .laAudioCard,.laSpeakBody,.laQuiz,.laSpeechResult{background:#2d354e;border-color:#4b5471}
+ .laAudioCopy strong,.laSpeakTarget b,.laQuiz>p,.laRepeat>b{color:#f1e9ff}
+ .laAudioCopy>span,.laSpeakTarget span,.laPanelHeading p,.laQuizMeta{color:#b3c7d8}
+ .laSpeakPanel{background:linear-gradient(145deg,#214b4c,#29424c);border-color:#416c68}
+ .laLearningPanel{background:linear-gradient(145deg,#323055,#2b2b4f);border-color:#514772}
+ .laSteps>span,.laSpeakTarget,.laModeTabs button,.laQuizListen,.laDictation input,.laMeanings button{background:#343e56;color:#d8ccff;border-color:#5c6180}
+ .laSpeakTarget small,.laSpeechPrivacy{color:#bad1cd}
+ .laModeTabs button.chosen{background:#493c7a;color:#ede1ff;border-color:#9979e3}
+ .laQuizFeedback{background:#493e52;color:#ffdbe2;border-color:#765e68}
+ .laQuizFeedback.correct{background:#285449;color:#d4f8e2;border-color:#4c8571}
+ .laScoreRing:before{background:#303b50}
+ .laDictation input{color:#f6edff}
+}
+@media(prefers-reduced-motion:reduce){.laWave.playing span,.laRecording{animation:none}}
