@@ -27,7 +27,7 @@ export default function LessonDirectory({navigate,progress={}}){
      <div><span className="ldEyebrow"><BookOpenCheck size={16}/> MEN﻿SCHEN A1.1 · COURSE MAP</span>
        <h2>فهرست درس‌ها و زیرشاخه‌های آموزشی</h2>
        <p>روی هر درس بزن، سپس هر زیرشاخه را باز کن و تمرین دلخواه را مستقیم اجرا کن؛ واژگان، گرامر و سایر بخش‌ها نیز لینک ورود دارند.</p>
-       <div className="ldPills"><span><b>۱۲</b> درس</span><span><b>۵</b> درس با تمرین اختصاصی کتاب</span><span><b>{completed}</b> درس قبول‌شده</span></div>
+       <div className="ldPills"><span><b>۱۲</b> درس</span><span><b>۱۲</b> درس با تمرین تعاملی</span><span><b>{completed}</b> درس قبول‌شده</span></div>
      </div>
      <span className="ldHeroBook" aria-hidden="true"><BookOpen size={45}/> A1.1</span>
    </header>
@@ -47,15 +47,15 @@ export default function LessonDirectory({navigate,progress={}}){
            <span className={'ldNumber '+(done?'done':'')}>{done?<CheckCircle2 size={22}/>:String(entry.id).padStart(2,'0')}</span>
            <span className="ldLessonHeading"><strong>درس {entry.id} · {entry.title}</strong>
              <span lang="de" dir="ltr">{entry.german}</span>
-             <small>{entry.bookAligned?entry.tasks+' تمرین کتاب · '+entry.sections.length+' زیرشاخه':'محتوای پایه: واژگان، گرامر و جمله‌سازی'}</small>
+             <small>{entry.tasks+' تمرین · '+entry.sections.length+' بخش'+(entry.supplemental?' · مکمل موضوعی':' · هم‌موضوع کتاب')}</small>
            </span>
-           <span className={'ldAvailability '+(entry.bookAligned?'complete':'basic')}>{entry.bookAligned?'تمرین‌های اختصاصی آماده':'محتوای پایه'}</span>
+           <span className={'ldAvailability '+(entry.hasExercises?'complete':'basic')}>{entry.hasExercises?'تمرین‌ها آماده‌اند':'محتوای پایه'}</span>
            <ChevronDown size={20} className="ldToggleArrow"/>
          </button>
          {isOpen&&<div className="ldExpandedBody" id={'ld-sections-'+entry.id}>
            <p className="ldGoal">{entry.goal}</p>
-           {entry.bookAligned?<div className="ldSectionGroup">
-             <h3><BookOpenCheck size={18}/> سرفصل‌ها و تمرین‌های کتاب <span>{entry.pages&&'صفحات '+entry.pages}</span></h3>
+           {entry.hasExercises?<div className="ldSectionGroup">
+             <h3><BookOpenCheck size={18}/> {entry.supplemental?'تمرین‌های تألیفی تکمیلی این درس':'سرفصل‌ها و تمرین‌های هم‌موضوع کتاب'} <span>{entry.pages&&'صفحات '+entry.pages}</span></h3>
              <ol className="ldTopics">
                {entry.sections.map((topic,i)=><li key={topic.id}>
                  <details className="ldTopicDisclosure">
