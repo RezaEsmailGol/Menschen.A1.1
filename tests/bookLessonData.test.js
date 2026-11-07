@@ -18,8 +18,8 @@ test('every book exercise has an answer and unique stable id',()=>{
   assert.equal(allBookTasks(2).length,20);
   assert.equal(new Set(all.map(q=>q.id)).size,all.length);
   assert.deepEqual(Object.keys(bookLessonPlans),['1','2','3','4','5']);
-  assert.deepEqual([3,4,5].map(allBookTasks).map(x=>x.length),[28,30,32]);
-  assert.equal(all.length,128);
+  assert.deepEqual([3,4,5].map(allBookTasks).map(x=>x.length),[28,30,40]);
+  assert.equal(all.length,136);
   for(const q of all){
     assert.ok(q.id && q.type && q.prompt && q.answer);
     assert.ok(['choice','type','listen','build'].includes(q.type));
