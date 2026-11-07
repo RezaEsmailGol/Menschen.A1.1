@@ -107,7 +107,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       <div className="bookMastery"><b>{correctCount} / {allTasks.length}</b><small>تمرین تسلط‌یافته</small></div>
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
-    <LessonAudioButtons lessonId={lessonId}/>
+    <LessonAudioButtons lessonId={lessonId} speak={speak} onPracticeEvent={onPracticeEvent}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
         className={index===sectionIndex&&!showSummary?'active':''} aria-current={index===sectionIndex&&!showSummary?'step':undefined}
