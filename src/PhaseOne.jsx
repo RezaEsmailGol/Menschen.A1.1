@@ -163,7 +163,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         <div className="courseTitle"><div><small>SAY IT OUT LOUD</small><h3>جمله‌های کاربردی</h3></div></div>
         <div className="sampleSentences">{lesson.sentences.map(([de,fa])=><div key={de}><button onClick={()=>speak(de)} aria-label={'تلفظ '+de}><Volume2 size={19}/></button><span><b dir="ltr">{de}</b><small>{fa}</small></span></div>)}</div>
       </section>
-      <div id="lesson-actions" className="courseCTA"><button onClick={()=>{startLesson(lesson.id);setTab('builder')}}><Shuffle size={18}/> تمرین جمله‌سازی</button><button onClick={()=>{startLesson(lesson.id);setTab('exam')}}><GraduationCap size={18}/> آزمون پایان درس</button></div>
+      <div id="lesson-actions" className="courseCTA"><RouteLink to="srs" navigate={setTab}><Layers size={18}/> مرور هوشمند</RouteLink><button onClick={()=>{startLesson(lesson.id);setTab('builder')}}><Shuffle size={18}/> تمرین جمله‌سازی</button><button onClick={()=>{startLesson(lesson.id);setTab('exam')}}><GraduationCap size={18}/> آزمون پایان درس</button></div>
     </div>
   </div>;
 }
