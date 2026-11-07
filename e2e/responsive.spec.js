@@ -273,3 +273,49 @@ test('lesson audio module is linked in all 12 lesson directories',async ({page})
   await expect(module).toHaveAttribute('href','/lessons/'+n+'#lesson-audio');
  }
 });
+
+
+test('cloud Kursbuch tracks open from lesson 4, and mapping survives reload without S3 credentials in browser',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+   viewport:{width:375,height:812},isMobile:true,hasTouch:true});
+ const page=await context.newPage();
+ await page.route('**/api/audio/catalog?**',async route=>{
+  const n=Number(new URL(route.request().url()).searchParams.get('lesson'));
+  const tracks=n===4?[
+   {book:'kursbuch',path:'Lektion 4, 2.mp3',filename:'Lektion 4, 2.mp3',lesson:4,bytes:14333},
+   {book:'arbeitsbuch',path:'Lektion 4, 3b.mp3',filename:'Lektion 4, 3b.mp3',lesson:4,bytes:12333}
+  ]:[];
+  await route.fulfill({status:200,contentType:'application/json',
+   body:JSON.stringify({configured:true,lesson:n,tracks,totals:{kursbuch:38,arbeitsbuch:25},uncategorized:0})});
+ });
+ await page.route('**/api/audio/play?**',async route=>{
+  const url=new URL(route.request().url());
+  const relative='/api/audio/stream?'+new URLSearchParams({
+   book:url.searchParams.get('book'),path:url.searchParams.get('path')
+  });
+  await route.fulfill({status:200,contentType:'application/json',
+    body:JSON.stringify({url:relative,expiresIn:0})});
+ });
+ await page.route('**/api/audio/stream?**',route=>route.fulfill({
+  status:200,contentType:'audio/wav',body:littleWav()
+ }));
+ await page.goto('/lessons/4?section=furniture&question=5#book-practice');
+ await expect(page.locator('.caRoot')).toBeVisible();
+ await expect(page.locator('.caEntry')).toHaveCount(1);
+ await expect(page.locator('.caEntry')).toContainText('Lektion 4, 2.mp3');
+ await page.locator('.caEntry>button').first().click();
+ await expect(page.locator('.caPlayer audio')).toHaveAttribute('src',/^\/api\/audio\/stream\?/);
+ await page.locator('.caAttach').click();
+ await expect(page.locator('.caAttach')).toContainText('متصل');
+ await expect(page.locator('.caTaskPlayer button')).toBeVisible();
+ await page.reload();
+ await expect(page.locator('.caTaskPlayer button')).toBeVisible();
+ await page.locator('.caTaskPlayer button').click();
+ await expect(page.locator('.caTaskPlayer audio')).toHaveAttribute('src',/^\/api\/audio\/stream\?/);
+ const body=await page.content();
+ expect(body).not.toContain('MENSCHEN_S3_SECRET_ACCESS_KEY');
+ expect(body).not.toContain('s3-pish.runflare.cloud');
+ const report=await page.evaluate(viewportAudit);
+ expect(report.documentWidth).toBeLessThanOrEqual(377);
+ await context.close();
+});
