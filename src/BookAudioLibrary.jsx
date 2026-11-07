@@ -61,6 +61,7 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudi
  },[currentTaskId,taskMap,tracks]);
  useEffect(()=>{
   if(!selectedId){setAudioUrl(null);return;}
+  setAudioUrl(null);
   let live=true,url=null;
   getBookAudio(selectedId).then(record=>{
    if(!live)return;
