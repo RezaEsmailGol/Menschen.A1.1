@@ -62,3 +62,9 @@
 }
 @media(max-width:360px){.pgTopics{grid-template-columns:1fr}.pgControls button{font-size:12px;padding:8px}}
 @media(prefers-reduced-motion:reduce){.pgProgress>span{transition:none}}
+
+.pgQuickLink{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0;padding:14px 17px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:13px;text-decoration:none;font-size:14px;font-weight:750;line-height:1.7}
+.pgQuickLink:hover{background:#dbeafe}
+.pgQuickLink svg{flex:0 0 auto}
+.pgQuickLink svg:last-child{margin-right:auto}
+.pgQuickLink:focus-visible{outline:3px solid #0d9488;outline-offset:2px}
