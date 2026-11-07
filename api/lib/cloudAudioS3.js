@@ -1,5 +1,4 @@
 import {S3Client,ListObjectsV2Command,GetObjectCommand} from '@aws-sdk/client-s3';
-import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import {AUDIO_S3_BOOKS,audioPrefix,mapS3Objects,safeBook,safeAudioRelativePath} from '../../src/cloudAudioCatalog.js';
 
 const CATALOG_TTL_MS=5*60*1000;
@@ -58,17 +57,23 @@ export async function getCloudCatalog(settings){
   return tracks;
  }finally{client.destroy();}
 }
-export async function signCloudTrack(settings,book,path,knownTracks){
+
+export async function getCloudAudioObject(settings,book,path,range){
  const safe=safeAudioRelativePath(path);
- if(!settings||!safeBook(book)||!safe)throw new Error('Invalid track');
- // Never sign arbitrary names: track must exist in the allowlisted course catalog.
- if(!knownTracks.some(t=>t.book===book&&t.path===safe))throw new Error('Not listed');
+ if(!settings||!safeBook(book)||!safe)throw new Error('Invalid audio object');
  const client=s3(settings);
- try{
-  const url=await getSignedUrl(client,new GetObjectCommand({
-   Bucket:settings.bucket,Key:settings.prefixes[book]+safe
-  }),{expiresIn:SIGNED_URL_SECONDS});
-  return {url,expiresIn:SIGNED_URL_SECONDS};
- }finally{client.destroy();}
+ // Keep the client alive while Vercel streams the response body.
+ const result=await client.send(new GetObjectCommand({
+  Bucket:settings.bucket,Key:settings.prefixes[book]+safe,
+  ...(range?{Range:range}:{})
+ }));
+ const body=result.Body?.transformToWebStream?.();
+ if(!body)throw new Error('Storage did not return a streaming body');
+ return {
+  body,
+  contentType:result.ContentType||'audio/mpeg',
+  contentLength:result.ContentLength,
+  contentRange:result.ContentRange||null
+ };
 }
-export const cloudAudioInternals={CATALOG_TTL_MS,SIGNED_URL_SECONDS};
+export const cloudAudioInternals={CATALOG_TTL_MS};
