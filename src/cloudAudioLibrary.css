@@ -1,0 +1,29 @@
+.caRoot{margin:10px 0 16px;border-radius:15px;background:#f5fbfa;border:1px solid #b5d9d9;padding:15px;direction:rtl;color:#1d4454;min-width:0}
+.caRoot *{box-sizing:border-box}.caHeading{display:flex;gap:10px;align-items:center;min-width:0}
+.caHeading>svg{flex-shrink:0;color:#188089}.caHeading>div{flex:1;min-width:0}.caHeading h4{font-size:16px;margin:0 0 5px}.caHeading p{margin:0;color:#577c85;font-size:12px;line-height:1.7}
+.caChoices{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px;min-width:0}
+.caChoices button{border:1px solid #b8d5d9;color:#28727a;background:#fff;padding:9px 10px;border-radius:9px;cursor:pointer;font-weight:700;font-size:12px;min-height:40px;display:flex;align-items:center;justify-content:center;gap:5px}
+.caChoices button.active{background:#147b83;border-color:#147b83;color:white}
+.caCount{font-size:11px;margin:11px 0;color:#587c85}
+.caList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:330px;overflow-y:auto;overscroll-behavior:contain}
+.caEntry{display:flex;min-width:0;align-items:center;gap:6px;background:white;border:1px solid #d3e5e7;border-radius:10px;padding:5px}
+.caEntry.selected{background:#e7f6ef;border-color:#5da99b}
+.caEntry>button{background:transparent;border:none;display:flex;align-items:center;min-width:0;gap:7px;padding:8px 6px;cursor:pointer;color:#315b6b}
+.caEntry>button:first-child{flex:1}
+.caEntry>button span:first-of-type{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start;font-size:12px}
+.caEntry svg{flex-shrink:0;color:#1e888e}
+.caEntry>button.caAttach{flex-shrink:0;color:#16776c;background:#eef8f2;border-radius:8px;font-size:10px}
+.caPlayWord{font-size:10px;color:#287f82}
+.caNotice{padding:13px;border:1px dashed #add0d1;border-radius:11px;margin:12px 0;background:white;line-height:1.8;font-size:12px;color:#45737e}
+.caPlayer{background:#fff;border:1px solid #cde3e4;padding:12px;border-radius:12px;margin-top:12px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.caPlayer b{overflow-wrap:anywhere;font-size:13px}.caPlayer audio{width:100%;max-width:100%;display:block}
+.caPlayer label{display:flex;gap:8px;align-items:center;font-size:12px;color:#4d7480}
+.caPlayer select{border:1px solid #adcdd5;background:#fff;color:#244d5b;border-radius:8px;padding:7px}
+.caError{padding:10px;border-radius:9px;background:#fff2ec;color:#8f4b3b;font-size:12px;overflow-wrap:anywhere}
+.caPrivacy{display:block;margin-top:12px;font-size:10px;line-height:1.9;color:#5f8290}
+.caTaskPlayer{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin:9px 0}
+.caTaskPlayer button{display:flex;align-items:center;justify-content:center;gap:8px;background:#e6f8f2;border:1px solid #abd4c7;color:#146f61;font-size:12px;min-height:44px;padding:10px;border-radius:9px;font-weight:800;cursor:pointer}
+.caTaskPlayer audio{width:100%;max-width:100%}.caTaskPlayer small{color:#99523f;font-size:12px}
+@media(max-width:730px){.caList{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:440px){.caRoot{padding:11px}.caChoices button{flex:1 1 120px;font-size:11px}.caEntry>button.caAttach{font-size:9px;padding:8px 5px}.caEntry>button span:first-of-type{font-size:11px}}
+@media(prefers-color-scheme:dark){.caRoot{background:#243c48;color:#e9f6f7;border-color:#456673}.caHeading p,.caCount,.caPrivacy{color:#b8d4dc}.caEntry,.caPlayer,.caNotice{background:#2d4b56;color:#d4edf0;border-color:#456a75}.caEntry>button,.caPlayWord{color:#d2e8ef}.caEntry.selected{background:#315d57}.caChoices button,.caPlayer select{background:#2d4b56;color:#d2e8ef;border-color:#527781}.caChoices button.active{background:#116f77;color:#fff}.caEntry>button.caAttach{background:#335e56;color:#caefe6}}
