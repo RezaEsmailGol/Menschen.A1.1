@@ -10,7 +10,7 @@ import './bookAudioLibrary.css';
 function sizeLabel(bytes=0){
  return (bytes/1024/1024).toLocaleString('fa-IR',{maximumFractionDigits:1})+' مگابایت';
 }
-export default function BookAudioLibrary({lessonId,currentTaskId=null}){
+export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudioChange}){
  const [book,setBook]=useState('kursbuch');
  const [tracks,setTracks]=useState([]);
  const [selectedId,setSelectedId]=useState(null);
@@ -102,7 +102,7 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null}){
    await removeBookAudio(selected.id);
    const next={...taskMap};
    for(const [id,track] of Object.entries(next))if(track===selected.id)delete next[id];
-   setTaskMap(next);saveAudioTaskMap(next);
+   setTaskMap(next);saveAudioTaskMap(next);onTaskAudioChange?.(next);
    setSelectedId(null);await refresh();
    setMessage('فایل صوتی از حافظه همین مرورگر حذف شد.');
   }catch(err){setMessage(err.message);}
@@ -111,13 +111,13 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null}){
   if(!selected||!currentTaskId)return;
   const next={...taskMap,[currentTaskId]:selected.id};
   if(!saveAudioTaskMap(next)){setMessage('اتصال به تمرین در حافظه مرورگر ذخیره نشد.');return;}
-  setTaskMap(next);
+  setTaskMap(next);onTaskAudioChange?.(next);
   setMessage('فایل '+selected.filename.split('/').pop()+' به تمرین شنیداری فعلی متصل شد.');
  }
  function clearTask(){
   if(!currentTaskId)return;
   const next={...taskMap};delete next[currentTaskId];
-  setTaskMap(next);saveAudioTaskMap(next);
+  setTaskMap(next);saveAudioTaskMap(next);onTaskAudioChange?.(next);
  }
  return <section id="lesson-audio" className="baRoot" aria-label={'کتابخانه فایل صوتی Menschen A1.1 درس '+lessonId}>
    <header className="baHeader">
@@ -169,7 +169,7 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null}){
        </div>}
      {selected&&<div className="baPlayer">
        <div className="baSelected"><FileAudio size={19}/><b dir="auto">{selected.filename.split('/').pop()}</b><small>{sizeLabel(selected.bytes)}</small></div>
-       {audioUrl?<audio ref={playerRef} controls preload="metadata" loop={loop} src={audioUrl} aria-label="پخش صدای اصلی انتخابی"/>:
+       {audioUrl?<audio id={'lesson-audio-player-'+lessonId} ref={playerRef} controls preload="metadata" loop={loop} src={audioUrl} aria-label="پخش صدای اصلی انتخابی"/>:
          <p className="baLoading">آماده‌سازی پخش...</p>}
        <div className="baPlayerSettings">
          <label>سرعت
