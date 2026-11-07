@@ -210,3 +210,8 @@
  .courseSyllabus,.courseLessonBody,.phasePage{max-width:100%;min-width:0}
 }
 @media(prefers-color-scheme:dark){.courseBackIndex{background:#24404b;color:#b4efea;border-color:#3d5d64}}
+
+/* Deep-linked exercise sections and lesson action shortcuts. */
+#book-practice,#lesson-vocabulary,#lesson-grammar,#lesson-sentences,#lesson-picture,#lesson-actions{scroll-margin-top:14px}
+.courseCTA>a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d9d6fb;border-radius:13px;background:#efeeff;color:#5a54cd;text-decoration:none;padding:15px 10px;font-size:13px;font-weight:800}
+@media(max-width:620px){.courseCTA{flex-direction:column}.courseCTA>*{width:100%;min-height:48px}}

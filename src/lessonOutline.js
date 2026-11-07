@@ -12,7 +12,9 @@ export function lessonOutline(lessonId){
  const tasks=plan?.sections.reduce((n,section)=>n+section.tasks.length,0)||0;
  const sections=plan?.sections.map(section=>({
    id:section.id,title:section.title.replace(/^\d+\.\s*/,''),description:section.caption||'',
-   count:section.tasks.length,kind:'practice',available:true
+   count:section.tasks.length,kind:'practice',available:true,
+   exercises:section.tasks.map((task,index)=>({id:task.id,number:index+1,
+     title:task.prompt,type:task.type}))
  }))||[];
  const modules=[
    {id:'vocabulary',title:'واژگان درس',description:lesson.words.length+' کلمه با معنی فارسی و تلفظ',count:lesson.words.length,kind:'vocabulary',available:true},

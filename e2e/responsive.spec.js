@@ -147,3 +147,62 @@ test('lesson 2 SVG occupations render without any React runtime error',async ({b
   await context.close();
  }
 });
+
+
+test('course lesson topics expand and open the exact chosen question',async ({browser})=>{
+ for(const width of [360,768]){
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+    viewport:{width,height:850},isMobile:width<600,hasTouch:width<600});
+  const page=await context.newPage();
+  for(const lesson of [1,2,3,4,5]){
+   await page.goto('/lessons');
+   const card=page.locator('.ldLesson').nth(lesson-1);
+   if(await card.locator('.ldLessonHeader').getAttribute('aria-expanded')!=='true')
+     await card.locator('.ldLessonHeader').click();
+   await expect(card.locator('.ldTopics > li')).toHaveCount(4);
+   const topic=card.locator('.ldTopics > li').nth(2);
+   await topic.locator('.ldTopicSummary').click();
+   await expect(topic.locator('.ldExerciseLink').first()).toBeVisible();
+   const links=topic.locator('.ldExerciseLink');
+   const chosen=links.nth(Math.min(2,(await links.count())-1));
+   const title=(await chosen.locator('.ldExerciseTitle').innerText()).trim();
+   const href=await chosen.getAttribute('href');
+   await chosen.click();
+   await expect(page).toHaveURL(new RegExp('/lessons/'+lesson+'\\?section=.+&question=\\d+#book-practice'));
+   await expect(page.locator('.bookLessonRoot')).toBeVisible();
+   await expect(page.locator('.bookExercise h5')).toHaveText(title);
+   const selectedSection=page.locator('.bookLessonTabs button.active');
+   await expect(selectedSection).toBeVisible();
+   expect(href).toContain('#book-practice');
+   const audit=await page.evaluate(viewportAudit);
+   expect.soft(audit.documentWidth,JSON.stringify({lesson,width,audit})).toBeLessThanOrEqual(width+2);
+  }
+  await context.close();
+ }
+});
+
+test('lesson module links navigate to actual lesson anchors on mobile',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+   viewport:{width:375,height:812},isMobile:true,hasTouch:true});
+ const page=await context.newPage();
+ for(const [kind,anchor] of [
+   ['grammar','lesson-grammar'],
+   ['vocabulary','lesson-vocabulary'],
+   ['sentence','lesson-sentences'],
+   ['picture','lesson-picture'],
+   ['exam','lesson-actions']
+ ]){
+  await page.goto('/lessons');
+  const lesson=page.locator('.ldLesson').nth(3);
+  await lesson.locator('.ldLessonHeader').click();
+  const item=lesson.locator('.ldModule[href$="#'+anchor+'"]').first();
+  await expect(item).toBeVisible();
+  await item.click();
+  await expect(page).toHaveURL(new RegExp('/lessons/4#'+anchor+'$'));
+  await expect(page.locator('#'+anchor)).toBeAttached();
+  // The application schedules hash scrolling after the React commit.
+  await expect.poll(()=>page.locator('#'+anchor).evaluate(node=>node.getBoundingClientRect().top),
+    {message:'Anchor should scroll into view after navigation',timeout:6000}).toBeLessThan(900);
+ }
+ await context.close();
+});
