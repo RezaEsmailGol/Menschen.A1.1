@@ -4,9 +4,9 @@ import {bookLessonPlans} from '../src/bookLessonData.js';
 import {courseLessonOutlines} from '../src/lessonOutline.js';
 import {lessonExerciseHref,lessonModuleHref,readExerciseTarget} from '../src/lessonExerciseLinks.js';
 
-test('every exercise in all five book lessons is exposed through a working target URL',()=>{
+test('every exercise in all 12 lesson practice plans is exposed through a working target URL',()=>{
  let count=0;
- for(const id of [1,2,3,4,5]){
+ for(const id of Array.from({length:12},(_,i)=>i+1)){
   const outline=courseLessonOutlines.find(x=>x.id===id);
   const plan=bookLessonPlans[id];
   assert.equal(outline.sections.length,plan.sections.length);
@@ -27,7 +27,7 @@ test('every exercise in all five book lessons is exposed through a working targe
    }
   }
  }
- assert.equal(count,136);
+ assert.equal(count,360);
 });
 
 test('exercise navigation rejects unrecognized and out-of-range targets',()=>{
@@ -39,6 +39,7 @@ test('exercise navigation rejects unrecognized and out-of-range targets',()=>{
  }
  assert.equal(readExerciseTarget(4,''),null);
  assert.equal(readExerciseTarget(12,'?section=anything&question=1'),null);
+ assert.equal(readExerciseTarget(12,'?section=listening-practice&question=2')?.taskIndex,1);
  assert.throws(()=>lessonExerciseHref(4,'missing',1),/Unknown/);
  assert.throws(()=>lessonExerciseHref(4,bookLessonPlans[4].sections[0].id,999),/Unknown/);
 });
@@ -48,10 +49,11 @@ test('every lesson module has an explicit reachable anchor on its lesson page',(
   const outline=courseLessonOutlines.find(x=>x.id===id);
   for(const module of outline.modules){
    const href=lessonModuleHref(id,module.kind);
-   assert.match(href,new RegExp('^/lessons/'+id+'#lesson-'));
+   assert.match(href,new RegExp('^/lessons/'+id+'#(?:lesson-|book-practice)'));
    assert.ok(['audio','vocabulary','grammar','sentence','picture','review','builder','exam'].includes(module.kind));
   }
  }
+ assert.equal(lessonModuleHref(4,'audio'),'/lessons/4#book-practice');
  assert.equal(lessonModuleHref(4,'picture'),'/lessons/4#lesson-picture');
  assert.equal(lessonModuleHref(4,'exam'),'/lessons/4#lesson-actions');
  assert.throws(()=>lessonModuleHref(13,'exam'),/Unknown/);
