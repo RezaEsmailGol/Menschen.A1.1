@@ -1,6 +1,7 @@
 import {lessons} from './courseData.js';
 import {bookLessonPlans} from './bookLessonData.js';
 import {pictureModes} from './lessonPictureGameData.js';
+import {grammarRuleCount} from './persianGrammarGuides.js';
 
 // One authoritative, testable tree for the course index and its nested sections.
 export function lessonOutline(lessonId){
@@ -19,7 +20,7 @@ export function lessonOutline(lessonId){
  const modules=[
    {id:'audio',title:'فایل‌های صوتی Kursbuch / Arbeitsbuch',description:'پخش فایل صوتی اصلی و کتاب کار با ZIP یا MP3 شخصی و اتصال به سؤال‌های شنیداری',kind:'audio',available:true},
    {id:'vocabulary',title:'واژگان درس',description:lesson.words.length+' کلمه با معنی فارسی و تلفظ',count:lesson.words.length,kind:'vocabulary',available:true},
-   {id:'grammar',title:'گرامر و قواعد',description:lesson.grammar,count:lesson.verbs.length,kind:'grammar',available:true},
+   {id:'grammar',title:'آموزش فارسی دستور زبان',description:lesson.grammar+' · مثال صوتی و آزمون کوتاه',count:grammarRuleCount(id),kind:'grammar',available:true},
    {id:'sentences',title:'جمله‌های کاربردی',description:lesson.sentences.length+' جمله همراه صدا و ترجمه',count:lesson.sentences.length,kind:'sentence',available:true},
    ...(picture.length?[{id:'picture',title:'بازی تصویری SVG',description:picture.map(m=>m.label).join(' · '),count:picture.length,kind:'picture',available:true}]:[]),
    {id:'review',title:'مرور هوشمند و فلش‌کارت',description:'ثبت حافظه و تمرین مجدد واژه‌های سخت',kind:'review',available:true},
