@@ -342,3 +342,27 @@ test('Persian grammar walkthrough on a narrow phone keeps answers after reload',
   await context.close();
  }
 });
+
+test('Android PWA files are served as real icons and manifest, not SPA HTML',async ({page})=>{
+ await page.goto('/lessons/5');
+ const manifestResponse=await page.request.get('/manifest.webmanifest');
+ expect(manifestResponse.ok()).toBeTruthy();
+ const manifest=await manifestResponse.json();
+ expect(manifest.display).toBe('standalone');
+ expect(manifest.start_url).toBe('/');
+ await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href','/manifest.webmanifest');
+ for(const size of [192,512]){
+  const response=await page.request.get('/icons/icon-'+size+'.png');
+  expect(response.ok()).toBeTruthy();
+  expect(response.headers()['content-type']).toMatch(/image\/png/i);
+  const bytes=await response.body();
+  expect(bytes.subarray(0,8).toString('hex')).toBe('89504e470d0a1a0a');
+  expect(bytes.readUInt32BE(16)).toBe(size);
+ }
+ const maskable=await page.request.get('/icons/icon-maskable-512.png');
+ expect(maskable.ok()).toBeTruthy();
+ expect((await maskable.body()).readUInt32BE(16)).toBe(512);
+ const serviceWorker=await page.request.get('/sw.js');
+ expect(serviceWorker.ok()).toBeTruthy();
+ expect(await serviceWorker.text()).toContain('CACHE_PREFIX');
+});
