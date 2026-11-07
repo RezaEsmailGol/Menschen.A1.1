@@ -29,6 +29,14 @@ import './mobileGame.css';
 import './styles.css';
 import './upgrade.css';
 import './routeLinks.css';
+// Register the PWA only in production, avoiding dev/HMR cache interference.
+if(import.meta.env.PROD&&typeof window!=='undefined'&&'serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js',{scope:'/'})
+      .catch(error=>console.warn('PWA service worker registration failed:',error));
+  },{once:true});
+}
+
 // Final viewport-safe overrides apply to every in-app route and modal.
 import './responsive.css';
 
