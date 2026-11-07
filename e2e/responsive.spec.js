@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import JSZip from 'jszip';
 import {ROUTES,DIALOGUE_IDS,WORKBOOK_PAGES} from '../src/appRoutes.js';
 
 const ROUTE_PATHS=[...new Set([
@@ -205,4 +206,70 @@ test('lesson module links navigate to actual lesson anchors on mobile',async ({b
     {message:'Anchor should scroll into view after navigation',timeout:6000}).toBeLessThan(900);
  }
  await context.close();
+});
+
+
+function littleWav(){
+ const samples=800;
+ const out=Buffer.alloc(44+samples*2);
+ out.write('RIFF',0);out.writeUInt32LE(out.length-8,4);
+ out.write('WAVEfmt ',8);out.writeUInt32LE(16,16);
+ out.writeUInt16LE(1,20);out.writeUInt16LE(1,22);
+ out.writeUInt32LE(8000,24);out.writeUInt32LE(16000,28);
+ out.writeUInt16LE(2,32);out.writeUInt16LE(16,34);
+ out.write('data',36);out.writeUInt32LE(samples*2,40);
+ return out;
+}
+
+test('copyright-safe local Kursbuch ZIP import, lesson grouping, playback and exercise attachment',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:375,height:812},isMobile:true,hasTouch:true});
+ const page=await context.newPage();
+ await page.goto('/lessons/4?section=furniture&question=5#book-practice');
+ await expect(page.locator('.bookExercise h5')).toHaveText('نام وسیله خانه را بشنو و بنویس.');
+ await expect(page.locator('#lesson-audio')).toBeVisible();
+ await expect(page.locator('.baResources a')).toHaveCount(2);
+
+ const zip=new JSZip();
+ zip.file('Lektion04_Tisch.wav',littleWav());
+ zip.file('Lektion05_Buch.wav',littleWav());
+ const file=await zip.generateAsync({type:'nodebuffer'});
+ await page.locator('#lesson-audio input[type=file]').setInputFiles({
+  name:'menschen-a11-user-owned.zip',mimeType:'application/zip',buffer:file
+ });
+ await expect(page.locator('.baMessage')).toContainText('قطعه صوتی فقط در همین مرورگر ذخیره شد.');
+ await expect(page.locator('.baTrack')).toHaveCount(1);
+ await expect(page.locator('.baTrack').first()).toContainText('Lektion04_Tisch.wav');
+ await page.locator('.baTrack').first().click();
+ await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
+ await expect(page.locator('.baTaskAttach button')).toContainText('اتصال این قطعه');
+ await page.locator('.baTaskAttach button').click();
+ await expect(page.locator('.bookOriginalAudioPrompt')).toBeVisible();
+ await page.reload();
+ await expect(page.locator('.bookOriginalAudioPrompt')).toBeVisible();
+ await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
+
+ // ZIP's explicit lesson label keeps lesson 5 tracks out of lesson 4.
+ await page.goto('/lessons/5');
+ await expect(page.locator('.baTrack')).toHaveCount(1);
+ await expect(page.locator('.baTrack').first()).toContainText('Lektion05_Buch.wav');
+
+ // Personal local audio is not bundled into production assets and never uploaded.
+ const networkRequests=[];
+ page.on('request',request=>{if(request.method()==='POST'||request.method()==='PUT')networkRequests.push(request.url());});
+ await page.locator('.baTrack').first().click();
+ await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
+ expect(networkRequests).toEqual([]);
+ await context.close();
+});
+
+test('lesson audio module is linked in all 12 lesson directories',async ({page})=>{
+ await page.goto('/lessons');
+ for(let n=1;n<=12;n++){
+  const card=page.locator('.ldLesson').nth(n-1);
+  const header=card.locator('.ldLessonHeader');
+  if(await header.getAttribute('aria-expanded')!=='true')await header.click();
+  const module=card.locator('.ldModule[href$="#lesson-audio"]');
+  await expect(module).toBeVisible();
+  await expect(module).toHaveAttribute('href','/lessons/'+n+'#lesson-audio');
+ }
 });

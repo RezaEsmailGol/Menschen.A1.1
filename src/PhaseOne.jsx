@@ -8,6 +8,7 @@ import QuizFocusShell from './QuizFocusShell.jsx';
 import BookLessonPractice from './BookLessonPractice.jsx';
 import LessonPictureGame from './LessonPictureGame.jsx';
 import LessonDirectory from './LessonDirectory.jsx';
+import BookAudioLibrary from './BookAudioLibrary.jsx';
 import {germanChoiceAudio,useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import {readGameFeedbackPreferences} from './gameEffects.js';
 import './phaseOne.css';
@@ -148,6 +149,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         {progress[lesson.id]?.passed ? <span className="lessonPassed"><CheckCircle2 size={17}/> این درس را با حداقل ۸۰٪ گذرانده‌ای</span>
           : <button className="courseStart" onClick={()=>startLesson(lesson.id)}>{progress[lesson.id]?.started || lesson.id===1?'ثبت این درس برای مرور روزانه':'شروع مطالعه و فعال‌سازی مرور'} <ArrowLeft size={17}/></button>}
       </article>
+      {lesson.id>5&&<BookAudioLibrary lessonId={lesson.id}/>}
       {[2,4,5].includes(lesson.id)&&<div id="lesson-picture"><LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/></div>}
       {[1,2,3,4,5].includes(lesson.id)&&<BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/>} 
       <section id="lesson-vocabulary" className="courseContentBlock">

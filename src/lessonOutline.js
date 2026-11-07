@@ -17,6 +17,7 @@ export function lessonOutline(lessonId){
      title:task.prompt,type:task.type}))
  }))||[];
  const modules=[
+   {id:'audio',title:'فایل‌های صوتی Kursbuch / Arbeitsbuch',description:'پخش فایل صوتی اصلی و کتاب کار با ZIP یا MP3 شخصی و اتصال به سؤال‌های شنیداری',kind:'audio',available:true},
    {id:'vocabulary',title:'واژگان درس',description:lesson.words.length+' کلمه با معنی فارسی و تلفظ',count:lesson.words.length,kind:'vocabulary',available:true},
    {id:'grammar',title:'گرامر و قواعد',description:lesson.grammar,count:lesson.verbs.length,kind:'grammar',available:true},
    {id:'sentences',title:'جمله‌های کاربردی',description:lesson.sentences.length+' جمله همراه صدا و ترجمه',count:lesson.sentences.length,kind:'sentence',available:true},
