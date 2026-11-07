@@ -366,3 +366,60 @@ test('Android PWA files are served as real icons and manifest, not SPA HTML',asy
  expect(serviceWorker.ok()).toBeTruthy();
  expect(await serviceWorker.text()).toContain('CACHE_PREFIX');
 });
+
+test('home resume, lesson and practice buttons work on Android-sized screens',async ({browser})=>{
+ const context=await browser.newContext({viewport:{width:360,height:780},isMobile:true,hasTouch:true});
+ await context.addInitScript(()=>{
+   localStorage.setItem('dt_current_lesson','5');
+   localStorage.setItem('dt_book_lessons_v1',JSON.stringify({5:{answers:{'l5-o01':{correct:true}}}}));
+ });
+ const page=await context.newPage();
+ try{
+  await page.goto('/');
+  await expect(page.locator('.homeV2Hero')).toBeVisible();
+  const resume=page.locator('.homeV2Primary');
+  await expect(resume).toContainText('ادامه درس 5');
+  await expect(page.locator('.homeV2HeroFoot')).toContainText('از 40 تمرین');
+  const exercise=page.locator('.homeV2Secondary');
+  await expect(exercise).toHaveAttribute('href',/\/lessons\/5\?section=.+&question=2#book-practice$/);
+  await expect(page.locator('.homeV2Destinations a')).toHaveCount(2);
+  await page.locator('.homeV2Destinations a[href="/practice"]').click();
+  await expect(page).toHaveURL(/\/practice$/);
+  await expect(page.getByRole('heading',{name:'کدوم مهارت رو تمرین کنیم؟'})).toBeVisible();
+  await page.getByRole('button',{name:'گفتار و شنیدن'}).click();
+  await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
+  await expect(page.locator('.practiceV2Tiles')).not.toContainText('بازی اعداد');
+  await page.getByRole('button',{name:'همه تمرین‌ها'}).click();
+  await page.getByRole('searchbox',{name:'جست‌وجو در تمرین‌ها'}).fill('اعداد');
+  await expect(page.locator('.practiceV2Tiles')).toContainText('بازی اعداد');
+  await expect(page.locator('.practiceV2Tiles .practiceTile')).toHaveCount(1);
+  await page.locator('.bottomNav a[href="/lessons"]').click();
+  await expect(page).toHaveURL(/\/lessons$/);
+  await expect(page.locator('.ldRoot')).toBeVisible();
+  await page.locator('.bottomNav a[href="/"]').click();
+  await expect(page).toHaveURL('/');
+  await page.locator('.homeV2Primary').click();
+  await expect(page).toHaveURL(/\/lessons\/5$/);
+ }finally{await context.close();}
+});
+
+test('mobile header, dashboard shortcuts and nav never force horizontal page overflow',async ({browser})=>{
+ for(const width of [320,360,390]){
+  const context=await browser.newContext({viewport:{width,height:780},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  try{
+   for(const path of ['/','/practice']){
+    await page.goto(path);
+    await expect(page.locator('.topbar')).toBeVisible();
+    await expect(page.locator('.bottomNav a')).toHaveCount(4);
+    const dimensions=await page.evaluate(()=>({
+      documentWidth:document.documentElement.scrollWidth,
+      viewport:innerWidth,
+      headerHeight:document.querySelector('.topbar').getBoundingClientRect().height
+    }));
+    expect(dimensions.documentWidth).toBeLessThanOrEqual(width+3);
+    expect(dimensions.headerHeight).toBeLessThan(135);
+   }
+  }finally{await context.close();}
+ }
+});
