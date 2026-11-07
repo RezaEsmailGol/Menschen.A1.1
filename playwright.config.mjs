@@ -1,6 +1,7 @@
 import {defineConfig,devices} from '@playwright/test';
 
-// Uses Vite's local dev server: no production account, test data or API keys.
+// CI exercises the actual production build to avoid Vite dev HMR/dependency optimization races.
+// Local development can still use the Vite dev server; no credentials are needed.
 export default defineConfig({
  testDir:'./e2e',
  testMatch:'**/*.spec.js',
@@ -20,7 +21,7 @@ export default defineConfig({
  },
  projects:[{name:'chromium',use:{...devices['Desktop Chrome']}}],
  webServer:{
-   command:'npm run dev -- --host 127.0.0.1 --port 5173 --strictPort',
+   command:process.env.CI?'npm run preview -- --host 127.0.0.1 --port 5173 --strictPort':'npm run dev -- --host 127.0.0.1 --port 5173 --strictPort',
    url:'http://127.0.0.1:5173',
    reuseExistingServer:!process.env.CI,
    timeout:90_000
