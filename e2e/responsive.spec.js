@@ -423,3 +423,55 @@ test('without cloud clips, exercises keep working with their own audio buttons',
  await context.close();
 });
 
+
+
+test('illustrated audio studio runs pronunciation, dictation and meaning quiz on a narrow phone',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:360,height:820},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ await context.addInitScript(()=>{
+   window.SpeechRecognition=class FakeSpeechRecognition {
+     constructor(){this.lang='de-DE';this.continuous=false;this.interimResults=false;}
+     start(){setTimeout(()=>{this.onresult?.({results:[[{transcript:'Hallo!'}]]});this.onend?.();},30);}
+     abort(){this.onend?.();}
+   };
+ });
+ const page=await context.newPage();
+ await page.route('**/api/audio/catalog?**',route=>route.fulfill({
+  status:200,contentType:'application/json',body:JSON.stringify({configured:false,tracks:[]})
+ }));
+ await page.goto('/lessons/1');
+ await expect(page.locator('.laExperience')).toBeVisible();
+ await expect(page.locator('.laAudioCard')).toHaveCount(4);
+ await expect(page.locator('.laAudioCard svg').first()).toBeVisible();
+ await expect(page.locator('.laSpeechResult')).toHaveCount(0);
+ await page.getByRole('button',{name:'شروع تمرین تلفظ'}).click();
+ await expect(page.locator('.laSpeechResult')).toContainText('100%');
+ await page.locator('.laDictation input').fill('Hallo');
+ await page.locator('.laDictation button').click();
+ await expect(page.locator('.laQuizFeedback.correct')).toBeVisible();
+ await page.locator('.laModeTabs button').filter({hasText:'تشخیص معنی'}).click();
+ await page.locator('.laMeanings button').filter({hasText:'سلام!'}).click();
+ await expect(page.locator('.laQuizFeedback.correct')).toBeVisible();
+ const width=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(width).toBeLessThanOrEqual(362);
+ await page.reload();
+ await expect(page.locator('.laStats')).toContainText('تمرین موفق');
+ await expect(page.locator('.laExperience')).toBeVisible();
+ await expect(page.locator('.baRoot,.caRoot,.baUpload')).toHaveCount(0);
+ const textContent=await page.locator('.laExperience').innerText();
+ expect(textContent).not.toMatch(/رانفلر|Runflare|آپلود|ZIP/);
+ await context.close();
+});
+
+test('audio learning displays six illustrative lesson-specific words across later lessons',async ({page})=>{
+ await page.route('**/api/audio/catalog?**',route=>route.fulfill({
+  status:200,contentType:'application/json',body:JSON.stringify({configured:false,tracks:[]})
+ }));
+ for(const id of [2,4,6,9,12]){
+  await page.goto('/lessons/'+id);
+  await expect(page.locator('.laAudioCard')).toHaveCount(4);
+  await page.getByRole('button',{name:'نمایش همه عبارت‌ها'}).click();
+  await expect(page.locator('.laAudioCard')).toHaveCount(6);
+  await expect(page.locator('.laModeTabs button')).toHaveCount(3);
+ }
+});
