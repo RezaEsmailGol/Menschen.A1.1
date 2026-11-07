@@ -46,6 +46,8 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
  const [loading,setLoading]=useState(true);
  const [error,setError]=useState('');
  const [book,setBook]=useState('kursbuch');
+ const [scope,setScope]=useState('lesson');
+ const [search,setSearch]=useState('');
  const [selected,setSelected]=useState(null);
  const [url,setUrl]=useState('');
  const [busy,setBusy]=useState(false);
@@ -55,7 +57,7 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
  async function load(signal){
   setLoading(true);setError('');
   try{
-   const result=await readJson(await fetch('/api/audio/catalog?lesson='+lessonId,{signal}));
+   const result=await readJson(await fetch('/api/audio/catalog?lesson='+(scope==='all'?'all':lessonId),{signal,cache:'no-store'}));
    if(signal?.aborted)return;
    setData(result);
   }catch(err){if(!signal?.aborted)setError(err.message||'خطا در اتصال به فضای ابری');}
@@ -65,10 +67,13 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
   const c=new AbortController();
   setData(null);setSelected(null);setUrl('');load(c.signal);
   return()=>c.abort();
- },[lessonId]);
- useEffect(()=>{setSelected(null);setUrl('');},[book,lessonId]);
+ },[lessonId,scope]);
+ useEffect(()=>{setSelected(null);setUrl('');},[book,lessonId,scope]);
  useEffect(()=>{if(audio.current)audio.current.playbackRate=speed;},[speed,url]);
- const tracks=useMemo(()=>(data?.tracks||[]).filter(t=>t.book===book),[data,book]);
+ const tracks=useMemo(()=>(data?.tracks||[])
+   .filter(t=>t.book===book)
+   .filter(t=>!search.trim()||t.filename.toLocaleLowerCase('de').includes(search.trim().toLocaleLowerCase('de')))
+   .sort((a,b)=>(a.lesson??99)-(b.lesson??99)||a.filename.localeCompare(b.filename,'de',{numeric:true})),[data,book,search]);
  async function choose(track){
   setSelected(track);setUrl('');setBusy(true);setError('');
   try{setUrl(await loadCloudAudioUrl(track));}
@@ -84,22 +89,40 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
  const mapped=taskMap[currentTaskId];
  return <section className="caRoot" aria-label={'فایل‌های صوتی ابری درس '+lessonId}>
    <div className="caHeading"><Cloud size={21}/><div>
-    <h4>پخش مستقیم از فضای ابری ران‌فلر</h4>
-    <p>صدای اصلی هر Lektion بدون آپلود مجدد در گوشی، با پخش امن از سرور اپ</p>
+    <h4>لیست فایل‌های صوتی آنلاین Menschen A1.1</h4>
+    <p>مستقیماً از ران‌فلر؛ انتخاب و پخش هر قطعه، بدون بارگذاری ZIP یا MP3</p>
    </div></div>
    {loading?<p className="caNotice">در حال دریافت فهرست قطعه‌های صوتی...</p>:
-    !data?.configured?<p className="caNotice">اتصال امن فضای ابری هنوز در تنظیمات Vercel فعال نشده است. فایل‌های محلی و تلفظ مرورگر همچنان قابل استفاده‌اند.</p>:
+    !data?.configured?<p className="caNotice" role="status">
+      <strong>فایل‌ها آپلود شده‌اند؛ نیازی به آپلود دوباره نیست.</strong>
+      <span> اتصال S3 برای نسخه اصلی سایت هنوز فعال نیست: متغیرهای محرمانه در Vercel فقط برای Development ثبت شده‌اند و باید با کلید تازه، دسترسی فقط‌خواندنی در Production تنظیم و مجدداً منتشر شود.</span>
+      <span> تا زمان فعال‌سازی، فهرست واقعی فایل‌های خصوصی قابل دریافت نیست.</span>
+     </p>:
     <>
      <div className="caChoices" role="group" aria-label="انتخاب کتاب صوتی">
        <button type="button" className={book==='kursbuch'?'active':''} aria-pressed={book==='kursbuch'} onClick={()=>setBook('kursbuch')}>Kursbuch · کتاب اصلی</button>
        <button type="button" className={book==='arbeitsbuch'?'active':''} aria-pressed={book==='arbeitsbuch'} onClick={()=>setBook('arbeitsbuch')}>Arbeitsbuch · کتاب کار</button>
        <button type="button" onClick={()=>load()} aria-label="به‌روزرسانی فهرست صوتی"><RefreshCw size={16}/></button>
      </div>
-     <p className="caCount">{tracks.length.toLocaleString('fa-IR')} قطعه برای درس {lessonId} · مجموع فایل‌های کتاب: {(data.totals?.[book]||0).toLocaleString('fa-IR')}</p>
+     <div className="caFilters">
+       <label>محدوده فایل‌ها
+         <select aria-label="انتخاب محدوده فایل‌های صوتی" value={scope} onChange={event=>setScope(event.target.value)}>
+           <option value="lesson">فقط درس {lessonId}</option>
+           <option value="all">همه درس‌ها و فایل‌های صوتی</option>
+         </select>
+       </label>
+       <label>جست‌وجوی فایل صوتی
+         <input type="search" aria-label="جست‌وجو در فهرست صوتی" placeholder="Lektion 4, 2.mp3..." value={search}
+           onChange={event=>setSearch(event.target.value)}/>
+       </label>
+     </div>
+     <p className="caCount">{tracks.length.toLocaleString('fa-IR')} فایل {scope==='all'?'در مجموعه انتخاب‌شده':'برای درس '+lessonId} ·
+       مجموع در فضای ابری: {(data.totals?.[book]||0).toLocaleString('fa-IR')}</p>
      {tracks.length?<div className="caList" role="list" aria-label="فایل‌های صوتی این درس">
        {tracks.map(track=><div key={track.book+':'+track.path} role="listitem" className={'caEntry '+(track===selected?'selected':'')}>
          <button type="button" title={'پخش '+track.filename} onClick={()=>choose(track)}>
            <FileAudio size={17}/><span dir="auto">{track.filename}</span>
+           {scope==='all'&&<span className="caTrackLesson">{track.lesson?'درس '+track.lesson:'مقدمه'}</span>}
            <span className="caPlayWord">پخش</span>
          </button>
          {currentTaskId&&<button type="button" className="caAttach"
@@ -107,7 +130,7 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
            {mapped?.book===track.book&&mapped.path===track.path?<><CheckCircle2 size={15}/> متصل</>:<><Link2 size={15}/> اتصال به سؤال</>}
          </button>}
        </div>)}
-      </div>:<p className="caNotice">برای درس {lessonId} فایل صوتی در پوشه انتخاب‌شده پیدا نشد. مسیر پوشه در تنظیمات سرور و نام Lektion فایل‌ها را بررسی کن.</p>}
+      </div>:<p className="caNotice">{search.trim()?'فایلی با این نام پیدا نشد.':'در این بخش فایل صوتی پیدا نشد. با گزینه «همه درس‌ها» فهرست کامل را ببین یا مسیر پوشه را بررسی کن.'}</p>}
      {selected&&<div className="caPlayer">
        <b dir="auto">{selected.filename}</b>
        {busy?<small>در حال دریافت لینک پخش...</small>:url?<audio ref={audio} controls src={url} preload="metadata" aria-label="پخش صوت ابری"/>:null}
