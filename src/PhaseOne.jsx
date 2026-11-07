@@ -158,7 +158,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         <div className="courseTitle"><div><small>VOCABULARY</small><h3>کلمات درس</h3></div><span>{lesson.words.length} کلمه</span></div>
         <div className="vocabGrid">{lesson.words.map(([de,fa],index)=><button className="vocabTile" key={de} onClick={()=>speak(de)}><span className="vocabOrdinal">{String(index+1).padStart(2,'0')}</span><span><b dir="ltr">{de}</b><small>{fa}</small></span><Volume2 size={17}/></button>)}</div>
       </section>
-      <PersianGrammarGuide key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent}/>
+      <PersianGrammarGuide key={'persian-grammar-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent}/>
       <section id="lesson-sentences" className="courseContentBlock">
         <div className="courseTitle"><div><small>SAY IT OUT LOUD</small><h3>جمله‌های کاربردی</h3></div></div>
         <div className="sampleSentences">{lesson.sentences.map(([de,fa])=><div key={de}><button onClick={()=>speak(de)} aria-label={'تلفظ '+de}><Volume2 size={19}/></button><span><b dir="ltr">{de}</b><small>{fa}</small></span></div>)}</div>
