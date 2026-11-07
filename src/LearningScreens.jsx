@@ -71,7 +71,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
       <p>از <strong>درس {currentId} · {lesson.label}</strong> ادامه بده یا مستقیم سراغ تمرین برو.</p>
       <div className="homeV2HeroActions">
         <RouteLink to={'course/'+currentId} navigate={setTab} className="homeV2Primary"><BookOpenCheck size={21}/> ادامه درس {currentId}<ArrowLeft size={19}/></RouteLink>
-        <a className="homeV2Secondary" href={exerciseUrl}><Gamepad2 size={21}/> {currentBook?.correct===currentBook?.total?'مرور تمرین‌های درس':'تمرین همین درس'} <ArrowLeft size={18}/></a>
+        <a className="homeV2Secondary" href={exerciseUrl}><Gamepad2 size={21}/> {currentBook&&currentBook.correct===currentBook.total?'مرور تمرین‌های درس':'تمرین همین درس'} <ArrowLeft size={18}/></a>
       </div>
       <div className="homeV2HeroFoot">
         <span><CheckCircle2 size={16}/> {currentBook?currentBook.correct+' از '+currentBook.total+' تمرین درست':'محتوای پایه و گرامر آماده است'}</span>
