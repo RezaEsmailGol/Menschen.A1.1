@@ -18,7 +18,7 @@ export function lessonOutline(lessonId){
      title:task.prompt,type:task.type}))
  }))||[];
  const modules=[
-   {id:'audio',title:'فایل‌های صوتی Kursbuch / Arbeitsbuch',description:'پخش فایل صوتی اصلی و کتاب کار با ZIP یا MP3 شخصی و اتصال به سؤال‌های شنیداری',kind:'audio',available:true},
+   {id:'audio',title:'تمرین شنیداری و تلفظ',description:'پخش صوت با یک دکمه کنار هر تمرین شنیداری؛ همراه با قطعه‌های درس در صورت دسترسی',kind:'audio',available:true,count:plan?.sections.flatMap(x=>x.tasks).filter(x=>x.type==='listen').length||0},
    {id:'vocabulary',title:'واژگان درس',description:lesson.words.length+' کلمه با معنی فارسی و تلفظ',count:lesson.words.length,kind:'vocabulary',available:true},
    {id:'grammar',title:'آموزش فارسی دستور زبان',description:lesson.grammar+' · مثال صوتی و آزمون کوتاه',count:grammarRuleCount(id),kind:'grammar',available:true},
    {id:'sentences',title:'جمله‌های کاربردی',description:lesson.sentences.length+' جمله همراه صدا و ترجمه',count:lesson.sentences.length,kind:'sentence',available:true},
@@ -29,7 +29,7 @@ export function lessonOutline(lessonId){
  ];
  return {
    id,title:lesson.label,german:lesson.german,goal:lesson.goal,
-   bookAligned:Boolean(plan),tasks,pages:plan?.pages||null,
+   bookAligned:Boolean(plan&&!plan.supplemental),hasExercises:Boolean(plan),supplemental:Boolean(plan?.supplemental),tasks,pages:plan?.pages||null,
    sections,modules,pictureCount:picture.length,
    wordCount:lesson.words.length,sentenceCount:lesson.sentences.length
  };
