@@ -390,7 +390,7 @@ test('home resume, lesson and practice buttons work on Android-sized screens',as
   await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
   await expect(page.locator('.practiceV2Tiles')).not.toContainText('بازی اعداد');
   await page.getByRole('button',{name:'همه تمرین‌ها'}).click();
-  await page.getByRole('searchbox',{name:'جست‌وجو در تمرین‌ها'}).fill('اعداد');
+  await page.getByRole('searchbox',{name:'جست‌وجو در تمرین‌ها'}).fill('بازی اعداد تا');
   await expect(page.locator('.practiceV2Tiles')).toContainText('بازی اعداد');
   await expect(page.locator('.practiceV2Tiles .practiceTile')).toHaveCount(1);
   await page.locator('.bottomNav a[href="/lessons"]').click();
