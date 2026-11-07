@@ -14,7 +14,7 @@ test('official five-lesson teaching outline, with subbranches visible in the lis
   'Hallo! Ich bin Nicole ...','Ich bin Journalistin.','Das ist meine Mutter.',
   'Der Tisch ist schön!','Was ist das? – Das ist ein F.'
  ]);
- assert.deepEqual(courseLessonOutlines.slice(0,5).map(x=>x.tasks),[18,20,28,30,32]);
+ assert.deepEqual(courseLessonOutlines.slice(0,5).map(x=>x.tasks),[18,20,28,30,40]);
  for(const id of [1,2,3,4,5]){
   const o=lessonOutline(id);
   assert.equal(o.bookAligned,true);
@@ -38,8 +38,8 @@ test('official five-lesson teaching outline, with subbranches visible in the lis
 
 test('all new original exercises have unique IDs and valid answer options',()=>{
  const ids=[3,4,5].flatMap(allBookTasks).map(q=>q.id);
- assert.equal(ids.length,90);
- assert.equal(new Set(ids).size,90);
+ assert.equal(ids.length,98);
+ assert.equal(new Set(ids).size,98);
  for(const lesson of Object.values(extendedBookLessons)){
   assert.equal(lesson.sections.length,4);
   for(const section of lesson.sections){
