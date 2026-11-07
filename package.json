@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "npm run test && vite build",
     "preview": "vite preview",
-    "test": "node --test"
+    "test": "node --test",
+    "predev": "node scripts/generate-pwa-icons.mjs",
+    "prebuild": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
