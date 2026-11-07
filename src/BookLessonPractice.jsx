@@ -1,10 +1,8 @@
 import React, {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,Headphones,Mic2,RotateCcw,Volume2,XCircle} from 'lucide-react';
 import {activityItemKey} from './learningMemory.js';
-import BookAudioLibrary from './BookAudioLibrary.jsx';
-import {CloudExercisePlayer} from './CloudAudioLibrary.jsx';
+import LessonAudioButtons,{ExerciseAudioButton} from './LessonAudioButtons.jsx';
 import {readCloudTaskMap} from './cloudAudioCatalog.js';
-import {readAudioTaskMap} from './bookAudioStorage.js';
 import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
 import {readExerciseTarget} from './lessonExerciseLinks.js';
 import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeBookAnswer} from './bookLessonData.js';
@@ -66,8 +64,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
   const [submitted,setSubmitted]=useState(null);
   const [saved,setSaved]=useState(readSaved);
   const [showSummary,setShowSummary]=useState(false);
-  const [audioTaskMap,setAudioTaskMap]=useState(readAudioTaskMap);
-  const [cloudTaskMap,setCloudTaskMap]=useState(readCloudTaskMap);
+  const [cloudTaskMap]=useState(readCloudTaskMap);
   useEffect(()=>{try{localStorage.setItem(STORE,JSON.stringify(saved));}catch{}},[saved]);
   const stats=saved[lessonId]?.answers||{};
   const allTasks=useMemo(()=>allBookTasks(lessonId),[lessonId]);
@@ -105,13 +102,12 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
   const progress=allTasks.length?Math.round(correctCount/allTasks.length*100):0;
   return <section id="book-practice" className="bookLessonRoot" aria-label={'تمرین‌های کتاب درس '+lessonId}>
     <div className="bookLessonTop">
-      <div><span className="bookLessonEyebrow">MENSCHEN A1.1 · LEKTION {lessonId} · SEITEN {plan.pages}</span>
-        <h3>تمرین‌های اختصاصی درس {lessonId}</h3><p>{plan.focus} · تمرین‌های تألیفی هم‌راستا با سرفصل کتاب</p></div>
+      <div><span className="bookLessonEyebrow">MENSCHEN A1.1 · LEKTION {lessonId} {plan.pages?'· SEITEN '+plan.pages:'· ÜBUNGEN'}</span>
+        <h3>تمرین‌های تعاملی درس {lessonId}</h3><p>{plan.focus} · {plan.supplemental?'تمرین‌های تألیفی مکمل برای این موضوع':'تمرین‌های تألیفی هم‌موضوع سرفصل کتاب'}</p></div>
       <div className="bookMastery"><b>{correctCount} / {allTasks.length}</b><small>تمرین تسلط‌یافته</small></div>
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
-    <BookAudioLibrary lessonId={lessonId} currentTaskId={!showSummary&&task?.type==='listen'?task.id:null}
-      onTaskAudioChange={setAudioTaskMap} onCloudTaskAudioChange={setCloudTaskMap}/>
+    <LessonAudioButtons lessonId={lessonId}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
         className={index===sectionIndex&&!showSummary?'active':''} aria-current={index===sectionIndex&&!showSummary?'step':undefined}
@@ -138,14 +134,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       <div className="bookExercise" key={task.id}>
         <div className="bookExerciseHead"><span>تمرین {taskIndex+1} از {section.tasks.length}</span><small>{task.type==='listen'?'شنیداری و دیکته':task.type==='build'?'جمله‌سازی':task.type==='type'?'نوشتاری':'چهارگزینه‌ای'}</small></div>
         <h5>{task.prompt}</h5>
-        {task.type==='listen'&&<div className="bookListeningButtons">
-          <button className="bookAudioPrompt" type="button" onClick={()=>speak(task.audio)}><Headphones size={20}/> شنیدن سؤال با تلفظ مرورگر</button>
-          {audioTaskMap[task.id]&&<button className="bookOriginalAudioPrompt" type="button" onClick={()=>{
-            const audio=document.getElementById('lesson-audio-player-'+lessonId);
-            if(audio){audio.scrollIntoView({block:'nearest'});audio.play().catch(()=>{});}
-          }}><Headphones size={20}/> پخش فایل اصلی متصل به این سؤال</button>}
-        </div>}
-        {task.type==='listen'&&<CloudExercisePlayer taskId={task.id} track={cloudTaskMap[task.id]||null}/>}
+        <ExerciseAudioButton task={task} speak={speak} linkedTrack={task.type==='listen'?cloudTaskMap[task.id]:null}/>
         {task.type==='choice'&&<div className="bookOptions">{task.choices.map(choice=><button key={choice} type="button" disabled={submitted!==null}
             onClick={()=>send(choice)} className={submitted!==null&&choice===task.answer?'right':submitted!==null&&choice===answer&&!submitted?'wrong':''}>
             <span dir="auto">{choice}</span></button>)}</div>}
@@ -175,6 +164,6 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       <span><Mic2 size={16}/> صدا را بشنو و با صدای بلند تکرار کن.</span>
       <button type="button" onClick={()=>setTab('speaking')}>تمرین تلفظ با میکروفون <ChevronLeft size={16}/></button>
     </div>
-    <p className="bookCopyright">این مجموعه مکمل مستقل کتاب است؛ تصاویر، متن تمرین‌ها و فایل صوتی ناشر بازنشر نشده‌اند. {completedCount} تمرین حداقل یک بار انجام شده است.</p>
+    <p className="bookCopyright">تمرین‌ها و مثال‌ها تألیفی هستند؛ دکمه پخش، تلفظ آلمانی هر سؤال را اجرا می‌کند و قطعه‌های صوتی کتاب در صورت دسترسی جداگانه قابل شنیدن‌اند. {completedCount} تمرین حداقل یک بار انجام شده است.</p>
   </section>;
 }
