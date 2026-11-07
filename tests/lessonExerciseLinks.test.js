@@ -49,7 +49,7 @@ test('every lesson module has an explicit reachable anchor on its lesson page',(
   for(const module of outline.modules){
    const href=lessonModuleHref(id,module.kind);
    assert.match(href,new RegExp('^/lessons/'+id+'#lesson-'));
-   assert.ok(['vocabulary','grammar','sentence','picture','review','builder','exam'].includes(module.kind));
+   assert.ok(['audio','vocabulary','grammar','sentence','picture','review','builder','exam'].includes(module.kind));
   }
  }
  assert.equal(lessonModuleHref(4,'picture'),'/lessons/4#lesson-picture');
