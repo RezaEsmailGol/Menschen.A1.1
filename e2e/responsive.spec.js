@@ -329,9 +329,7 @@ test('Persian grammar walkthrough on a narrow phone keeps answers after reload',
   const grammar=page.locator('#lesson-grammar');
   await expect(grammar).toBeVisible();
   await expect(grammar.locator('h3')).toContainText('دستور زبان درس 5');
-  await expect(grammar.locator('.pgTable')).toContainText('Nominativ').catch(async ()=>{
-   await expect(grammar.locator('.pgTable')).toContainText('kein');
-  });
+  await expect(grammar.locator('.pgTable')).toContainText('kein');
   await expect(grammar.locator('.pgChoices button')).toHaveCount(4);
   await grammar.getByRole('button',{name:'Das',exact:true}).click();
   await expect(grammar.locator('.pgFeedbackCorrect')).toContainText('آفرین');
