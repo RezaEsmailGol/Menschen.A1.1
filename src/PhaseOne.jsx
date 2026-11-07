@@ -148,22 +148,22 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         {progress[lesson.id]?.passed ? <span className="lessonPassed"><CheckCircle2 size={17}/> این درس را با حداقل ۸۰٪ گذرانده‌ای</span>
           : <button className="courseStart" onClick={()=>startLesson(lesson.id)}>{progress[lesson.id]?.started || lesson.id===1?'ثبت این درس برای مرور روزانه':'شروع مطالعه و فعال‌سازی مرور'} <ArrowLeft size={17}/></button>}
       </article>
-      {[2,4,5].includes(lesson.id)&&<LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/>}
+      {[2,4,5].includes(lesson.id)&&<div id="lesson-picture"><LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/></div>}
       {[1,2,3,4,5].includes(lesson.id)&&<BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/>} 
-      <section className="courseContentBlock">
+      <section id="lesson-vocabulary" className="courseContentBlock">
         <div className="courseTitle"><div><small>VOCABULARY</small><h3>کلمات درس</h3></div><span>{lesson.words.length} کلمه</span></div>
         <div className="vocabGrid">{lesson.words.map(([de,fa],index)=><button className="vocabTile" key={de} onClick={()=>speak(de)}><span className="vocabOrdinal">{String(index+1).padStart(2,'0')}</span><span><b dir="ltr">{de}</b><small>{fa}</small></span><Volume2 size={17}/></button>)}</div>
       </section>
-      <section className="courseContentBlock">
+      <section id="lesson-grammar" className="courseContentBlock">
         <div className="courseTitle"><div><small>GRAMMAR</small><h3>نکته گرامری</h3></div></div>
         <strong>{lesson.grammar}</strong><p className="grammarTip">{lesson.tip}</p>
         <div className="shortVerbList">{lesson.verbs.map(v=><span key={v} dir="ltr">{v}</span>)}</div>
       </section>
-      <section className="courseContentBlock">
+      <section id="lesson-sentences" className="courseContentBlock">
         <div className="courseTitle"><div><small>SAY IT OUT LOUD</small><h3>جمله‌های کاربردی</h3></div></div>
         <div className="sampleSentences">{lesson.sentences.map(([de,fa])=><div key={de}><button onClick={()=>speak(de)} aria-label={'تلفظ '+de}><Volume2 size={19}/></button><span><b dir="ltr">{de}</b><small>{fa}</small></span></div>)}</div>
       </section>
-      <div className="courseCTA"><button onClick={()=>{startLesson(lesson.id);setTab('builder')}}><Shuffle size={18}/> تمرین جمله‌سازی</button><button onClick={()=>{startLesson(lesson.id);setTab('exam')}}><GraduationCap size={18}/> آزمون پایان درس</button></div>
+      <div id="lesson-actions" className="courseCTA"><button onClick={()=>{startLesson(lesson.id);setTab('builder')}}><Shuffle size={18}/> تمرین جمله‌سازی</button><button onClick={()=>{startLesson(lesson.id);setTab('exam')}}><GraduationCap size={18}/> آزمون پایان درس</button></div>
     </div>
   </div>;
 }
