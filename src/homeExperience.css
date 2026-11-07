@@ -1,0 +1,169 @@
+
+/* Focused mobile-first dashboard and practical lesson/practice navigation. */
+.homeV2,.practiceV2{gap:16px;min-width:0}
+.homeV2 :where(a,button),.practiceV2 :where(a,button){-webkit-tap-highlight-color:transparent}
+.homeV2 :where(a,button):focus-visible,.practiceV2 :where(a,button,input):focus-visible{outline:3px solid #14b8a6;outline-offset:3px}
+.homeV2Hero{color:#fff;background:radial-gradient(ellipse at 20% 0%,#6966c5 0,transparent 57%),linear-gradient(125deg,#232047,#423989 63%,#6555bc);border-radius:25px;padding:25px 27px;position:relative;overflow:hidden;box-shadow:0 16px 38px #2f2a731d}
+.homeV2Hero:after{content:"";position:absolute;width:310px;height:310px;border:1px solid #ffffff1b;border-radius:50%;left:-125px;bottom:-235px;pointer-events:none;box-shadow:0 0 0 53px #ffffff06,0 0 0 110px #ffffff05}
+.homeV2Hero>*{position:relative;z-index:1}
+.homeV2HeroTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.homeV2Kicker{display:inline-flex;align-items:center;gap:7px;color:#d5d0ff;font:800 11px Tahoma,sans-serif;letter-spacing:.55px}
+.homeV2LessonTag{background:#ffffff1d;border:1px solid #ffffff24;border-radius:999px;padding:6px 12px;color:#fff;font-size:11px;font-weight:800}
+.homeV2Hero h1{font-size:clamp(22px,3.3vw,31px);font-weight:900;line-height:1.7;letter-spacing:-.4px;margin:12px 0 3px}
+.homeV2Hero h1 span{color:#9ff2d5;white-space:nowrap}
+.homeV2Hero p{font-size:13px;line-height:1.95;color:#ecebff;margin:0 0 18px}
+.homeV2Hero p strong{color:#fff}
+.homeV2HeroActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.homeV2HeroActions a{display:flex;min-width:0;align-items:center;justify-content:center;gap:8px;min-height:55px;padding:11px 10px;text-align:center;border-radius:15px;font-size:14px;font-weight:850;line-height:1.6;text-decoration:none}
+.homeV2HeroActions a svg{flex:0 0 auto}
+.homeV2Primary{background:#b2f4d8;color:#154244;box-shadow:0 5px 15px #0a534526}
+.homeV2Primary:hover{background:#d4ffea}
+.homeV2Secondary{border:1px solid #ddd5ff7a;color:#fff;background:#ffffff16}
+.homeV2Secondary:hover{background:#ffffff2a}
+.homeV2HeroFoot{display:flex;flex-wrap:wrap;gap:9px 19px;margin-top:15px;color:#e5e4ff;font-size:11px}
+.homeV2HeroFoot>span{display:inline-flex;align-items:center;gap:5px}
+.homeV2Destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.homeV2Destination{display:flex;align-items:center;gap:12px;min-width:0;min-height:100px;padding:17px;border-radius:20px;background:#fff;color:#2f3458;border:1px solid #e8eaf4;text-decoration:none;box-shadow:0 7px 25px #26345c0a}
+.homeV2Destination:hover{border-color:#b8bbeb;transform:translateY(-1px)}
+.homeV2Destination>span:nth-child(2){display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.homeV2Destination strong{font-size:19px;line-height:1.5;font-weight:900}
+.homeV2Destination small{font-size:11px;line-height:1.8;color:#727c98}
+.homeV2DestinationIcon{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border-radius:15px}
+.homeV2DestinationIcon.teal{color:#138573;background:#dff8ef}
+.homeV2DestinationIcon.violet{color:#6555d0;background:#eae7ff}
+.homeV2Destination>svg:last-child{color:#7974c7;flex-shrink:0}
+.homeV2Daily,.homeV2Section,.practiceV2Catalog{background:#fff;border:1px solid #edf0f6;border-radius:22px;padding:20px;box-shadow:0 7px 24px #33447009;min-width:0}
+.homeV2SectionBar{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin-bottom:15px}
+.homeV2SectionBar>div{min-width:0}
+.homeV2Eyebrow{font:800 10px Tahoma,sans-serif;letter-spacing:.8px;color:#8b81cb}
+.homeV2SectionBar h2{font-size:19px;margin:4px 0 0;font-weight:900;color:#26274c;line-height:1.6}
+.homeV2SectionBar>a{display:inline-flex;align-items:center;gap:2px;text-decoration:none;color:#6456c5;background:#f2f0ff;border-radius:11px;padding:8px 10px;font-size:12px;font-weight:800}
+.homeV2DailyStats{display:flex;gap:11px;align-items:center;flex-wrap:wrap;color:#66718b;font-size:11px}
+.homeV2DailyStats>span{display:inline-flex;align-items:center;gap:5px;border:1px solid #e8ebf3;padding:7px 10px;border-radius:10px;background:#fafbff;white-space:nowrap}
+.homeV2DailyStats strong{color:#423d9e;font:800 14px Tahoma,sans-serif}
+.homeV2DailyStats svg{color:#8572c6}
+.homeV2Track,.homeV2LessonTrack{display:block;overflow:hidden;background:#ebedf6;border-radius:999px;height:9px;min-width:0}
+.homeV2Track{margin-top:15px}
+.homeV2Track>span,.homeV2LessonTrack>span{height:100%;display:block;background:linear-gradient(90deg,#3edbb3,#6256ce);border-radius:inherit;transition:width .2s ease}
+.homeV2Daily>p{font-size:11px;line-height:1.8;color:#8a91a6;margin:9px 0 0}
+.homeV2QuickGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.homeV2Quick{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;align-items:start;min-width:0;border:1px solid #e7e9f5;background:#fbfbff;color:#333858;text-decoration:none;border-radius:16px;padding:13px;min-height:139px}
+.homeV2Quick>span:first-child{width:40px;height:40px;display:grid;place-items:center;border-radius:13px}
+.homeV2Quick>span.mint{background:#def8ef;color:#0a886d}
+.homeV2Quick>span.peach{background:#fff1df;color:#bf8126}
+.homeV2Quick>span.lavender{background:#e9e7ff;color:#6959c9}
+.homeV2Quick>span.sky{background:#dff0ff;color:#357bb1}
+.homeV2Quick strong{font-size:14px;font-weight:850;line-height:1.6}
+.homeV2Quick small{font-size:11px;line-height:1.65;color:#8490a4}
+.homeV2Quick>svg{justify-self:end;color:#8074bd}
+.homeV2Quick:hover{border-color:#b9b5e2;background:#f3f4ff}
+.homeV2Lessons{display:grid;gap:8px}
+.homeV2Lesson{display:flex;align-items:center;gap:10px;min-width:0;border:1px solid #edf0f6;background:#fbfcff;border-radius:15px;padding:11px 12px;text-decoration:none;color:#33405f}
+.homeV2Lesson:hover,.homeV2LessonCurrent{background:#f0f9f7;border-color:#9be8d1}
+.homeV2LessonNumber{background:#eeecff;color:#5854bb;font:800 14px Tahoma,sans-serif;width:39px;height:39px;border-radius:12px;display:grid;place-items:center;flex:0 0 39px}
+.homeV2LessonCurrent .homeV2LessonNumber{color:#087b68;background:#d4f8ea}
+.homeV2LessonCopy{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.homeV2LessonCopy strong{font-size:13px;line-height:1.5}
+.homeV2LessonCopy small{font-size:11px;color:#8c96a9}
+.homeV2LessonTrack{height:6px;width:100%}
+.homeV2LessonPercent{font:800 12px Tahoma;color:#177e6f;white-space:nowrap}
+.homeV2Lesson>svg{color:#8a88b7;flex-shrink:0}
+.homeV2Recommendation{background:linear-gradient(110deg,#e6faf3,#f4f2ff);border:1px solid #daece8;border-radius:20px;padding:15px;display:flex;align-items:center;gap:12px;min-width:0}
+.homeV2RecommendIcon{display:grid;place-items:center;background:#fff;color:#1e9687;border-radius:14px;width:47px;height:47px;flex:0 0 47px}
+.homeV2Recommendation>div{flex:1;min-width:0}
+.homeV2Recommendation strong{font-size:13px;color:#374868}
+.homeV2Recommendation p{margin:3px 0 0;color:#79899e;line-height:1.8;font-size:11px}
+.homeV2Recommendation>a{display:inline-flex;align-items:center;gap:4px;border-radius:11px;padding:11px 13px;white-space:nowrap;background:#5d52c5;color:#fff;text-decoration:none;font-size:12px;font-weight:800}
+.homeV2Extras{display:flex;gap:9px;flex-wrap:wrap}
+.homeV2Extras>a{display:inline-flex;align-items:center;gap:7px;background:#fff;color:#675db4;padding:11px 13px;border:1px solid #e7e7f7;border-radius:12px;font-size:12px;text-decoration:none;font-weight:750}
+.practiceV2Header{background:linear-gradient(120deg,#302b73,#5d55b6);color:white;border-radius:22px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.practiceV2Header .homeV2Eyebrow{color:#ccc4ff}
+.practiceV2Header h1{font-size:24px;margin:7px 0 4px;line-height:1.6}
+.practiceV2Header p{color:#e2dfff;font-size:12px;line-height:1.9;margin:0}
+.practiceV2Header>a{display:flex;align-items:center;gap:7px;border:1px solid #ffffff60;border-radius:12px;color:#fff;text-decoration:none;padding:11px;font-size:12px;white-space:nowrap}
+.practiceV2Popular{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.practiceV2PopularItem{display:flex;align-items:center;flex-direction:column;gap:5px;border:1px solid #eceef8;background:#fff;border-radius:17px;padding:14px 7px;text-align:center;text-decoration:none;color:#4b4c9a}
+.practiceV2PopularItem svg{color:#7661bd;margin-bottom:5px}
+.practiceV2PopularItem strong{font-size:13px;line-height:1.5}
+.practiceV2PopularItem small{font-size:10px;line-height:1.6;color:#858b9d}
+.practiceV2Recommended{display:flex;align-items:center;gap:12px;border:1px solid #dcece8;background:#eaf9f5;border-radius:16px;padding:14px}
+.practiceV2Recommended>svg{color:#169a83;flex-shrink:0}
+.practiceV2Recommended>span{min-width:0;flex:1;display:flex;flex-direction:column;gap:5px}
+.practiceV2Recommended strong{font-size:13px}
+.practiceV2Recommended small{font-size:11px;line-height:1.6;color:#778e89}
+.practiceV2Recommended a{display:flex;align-items:center;gap:4px;background:#0e8b78;color:#fff;text-decoration:none;border-radius:10px;padding:10px;white-space:nowrap;font-size:12px}
+.practiceV2Filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;max-width:100%;padding:0 0 8px;overscroll-behavior-x:contain}
+.practiceV2Filters button{border:1px solid #e0e3f1;border-radius:999px;background:#f8f9fe;color:#5f6680;padding:9px 13px;white-space:nowrap;flex:0 0 auto;font-weight:750;font-size:12px;cursor:pointer}
+.practiceV2Filters button.active{background:#5549c2;border-color:#5549c2;color:white}
+.practiceV2Search{display:flex;align-items:center;gap:10px;background:#fafbff;border:1px solid #e4e7f0;border-radius:13px;padding:10px 12px;color:#756cbd;margin:4px 0 14px}
+.practiceV2Search input{font:inherit;font-size:13px;min-width:0;flex:1;border:none;outline:none;background:transparent;color:#303858}
+.practiceV2Tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.practiceV2Tiles .practiceTile{min-height:85px;padding:12px 14px;text-decoration:none}
+.practiceV2Tiles .tileCopy strong{font-size:13px;color:#252b53}
+.practiceV2Tiles .tileIcon{width:44px;height:44px;min-width:44px;border-radius:13px}
+.practiceV2Tiles .practiceTile>svg{color:#8982be;flex-shrink:0}
+.practiceV2Empty{text-align:center;padding:23px;color:#78829b;font-size:12px}
+.practiceV2Empty button{color:#5647c7;background:#eeecff;border:0;border-radius:10px;padding:8px 10px;cursor:pointer}
+.bottomNav>a{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;min-width:0;min-height:58px;text-decoration:none;color:#7e879d;border-radius:15px;padding:8px 4px;font-size:11px;font-weight:850}
+.bottomNav>a[aria-current="page"]{color:#5747be;background:#eeeaff}
+.bottomNav>a:not([aria-current="page"]):hover{background:#f5f5fe}
+.bottomNav>a .bottomNavIcon{height:25px}
+@media(max-width:760px){
+ .homeV2QuickGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .homeV2Quick{min-height:114px}
+ .homeV2Destinations{gap:8px}
+ .homeV2Destination{padding:12px;gap:9px}
+ .homeV2Destination strong{font-size:16px}
+ .homeV2DestinationIcon{width:40px;height:40px;flex-basis:40px}
+ .practiceV2Popular{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+}
+@media(max-width:500px){
+ .app:has(.homeV2,.practiceV2,.phasePage) .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px 12px;min-height:0}
+ .app:has(.homeV2,.practiceV2,.phasePage) .topbar>div:first-child{min-width:0;max-width:100%}
+ .app:has(.homeV2,.practiceV2,.phasePage) .topbar h1{font-size:18px;line-height:1.3;margin:0 0 5px}
+ .app:has(.homeV2,.practiceV2,.phasePage) .topbar p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10px;line-height:1.7;max-width:210px;margin:0}
+ .app:has(.homeV2,.practiceV2,.phasePage) .headerTools{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:5px;width:auto}
+ .app:has(.homeV2,.practiceV2,.phasePage) .voiceControl{min-width:0;max-width:105px}
+ .app:has(.homeV2,.practiceV2,.phasePage) .streak{padding:5px 8px;min-width:0}
+ .homeV2Hero{padding:17px 15px;border-radius:19px}
+ .homeV2Hero h1{font-size:22px;margin-top:10px}
+ .homeV2Hero p{font-size:12px;margin-bottom:14px}
+ .homeV2HeroActions a{font-size:12px;gap:5px;padding:9px 5px;min-height:54px}
+ .homeV2HeroActions a svg{width:16px;height:16px}
+ .homeV2HeroFoot{margin-top:12px;font-size:10px}
+ .homeV2Kicker{font-size:9px}
+ .homeV2LessonTag{font-size:10px;padding:5px 8px}
+ .homeV2Destinations{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .homeV2Destination{align-items:flex-start;flex-wrap:wrap;gap:6px;padding:12px 10px;min-height:124px}
+ .homeV2Destination>span:nth-child(2){flex-basis:calc(100% - 48px)}
+ .homeV2Destination>svg:last-child{margin-right:auto}
+ .homeV2Destination strong{font-size:16px}
+ .homeV2Destination small{font-size:10px}
+ .homeV2Daily,.homeV2Section,.practiceV2Catalog{padding:15px 12px;border-radius:18px}
+ .homeV2SectionBar h2{font-size:17px}
+ .homeV2DailyStats{gap:5px}
+ .homeV2DailyStats>span{padding:6px 7px;font-size:10px}
+ .homeV2DailyStats strong{font-size:12px}
+ .homeV2Quick{min-height:125px;padding:12px}
+ .homeV2Quick strong{font-size:13px}
+ .homeV2Quick small{font-size:10px}
+ .homeV2Recommendation{flex-wrap:wrap}
+ .homeV2Recommendation>a{margin-right:auto}
+ .practiceV2Header{flex-direction:column;align-items:stretch;padding:17px;border-radius:18px}
+ .practiceV2Header h1{font-size:21px}
+ .practiceV2Header>a{align-self:flex-start}
+ .practiceV2PopularItem{padding:11px 3px}
+ .practiceV2PopularItem strong{font-size:11px}
+ .practiceV2PopularItem small{font-size:9px}
+ .practiceV2Tiles{grid-template-columns:minmax(0,1fr)}
+ .practiceV2Recommended{flex-wrap:wrap}
+ .practiceV2Recommended a{margin-right:auto}
+}
+@media(max-width:340px){
+ .homeV2HeroActions{grid-template-columns:1fr}
+ .homeV2Destination{padding:10px 8px}
+ .homeV2DestinationIcon{width:34px;height:34px;flex-basis:34px}
+ .homeV2Destination>span:nth-child(2){flex-basis:calc(100% - 43px)}
+ .homeV2Destination>svg:last-child{display:none}
+}
+@media(prefers-reduced-motion:reduce){.homeV2Destination,.homeV2Track span,.homeV2LessonTrack span{transition:none}}

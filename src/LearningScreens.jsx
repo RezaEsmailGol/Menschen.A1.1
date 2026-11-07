@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ArrowLeft, BookOpen, BookOpenCheck, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap, Moon, ImageIcon } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookOpenCheck, Brain, CalendarDays, CheckCircle2, ChevronLeft, CircleHelp, Clock3, Download, Flame, Gamepad2, GraduationCap, Hash, Headphones, Keyboard, Languages, Layers, Medal, MessageCircle, Mic2, RotateCcw, ShieldCheck, Sparkles, Target, Trophy, Upload, Volume2, WandSparkles, Zap, Moon, ImageIcon, Search } from 'lucide-react';
 import { lessons } from './courseData.js';
 import { dueCards } from './studyEngine.js';
 import { allStudyCards } from './courseData.js';
@@ -7,9 +7,12 @@ import {classSets,classNotesBySet,dueClassSummary} from './classNotesData.js';
 import { learningInsights, recommendedRoute } from './learningMemory.js';
 import {speakingStats} from './speakingEngine.js';
 import RouteLink from './RouteLink';
+import {currentHomeLessonId,bookLessonOverview,nextBookExerciseHref,practiceFilters,matchesPracticeFilter} from './homeLearningUX.js';
 import './mobileGame.css';
+import './homeExperience.css';
 
 const practiceCategories=[
+  {id:'coach',label:'مربی روزانه تو',hint:'برنامه ۳ مرحله‌ای بر اساس عملکرد و نقاط نیازمند مرور',Icon:Brain,theme:'green'},
  {id:'speaking',label:'مربی تلفظ من',hint:'با میکروفون آلمانی بگو؛ همخوانی گفتار و پیشرفت را بسنج',Icon:Mic2,theme:'purple'},
   {id:'night',label:'شیفت شب',hint:'مرور کوتاه و نمایش آرام تصویری پیش از خواب',Icon:Moon,theme:'purple'},
   {id:'visualMemory',label:'یادسپاری با تصویر SVG',hint:'کلمات و اعداد با تصویر، تلفظ و فیلترِ جدید/مسلط/ضعیف',Icon:ImageIcon,theme:'green'},
@@ -20,7 +23,7 @@ const practiceCategories=[
   {id:'workbook',label:'دفتر جلسه اول استاد',hint:'الفبا، استثناها، اعداد، صرف فعل و آزمون',Icon:BookOpen,theme:'green'},
   {id:'srs',label:'مرور هوشمند',hint:'کلمه‌هایی که زمان مرورشان رسیده',Icon:Layers,theme:'purple'},
   {id:'builder',label:'بازی جمله‌سازی',hint:'کلمات را به جمله صحیح تبدیل کن',Icon:Gamepad2,theme:'green'},
-  {id:'numbers',label:'بازی اعداد ۰ تا ۱۰۰',hint:'چهار بازی: صدا، تشخیص کلمه، چهارگزینه‌ای، دیکته و مرور اشتباه‌ها',Icon:Hash,theme:'amber'},
+  {id:'numbers',label:'بازی اعداد تا ۱۰۰ میلیون',hint:'شنیدن، نوشتن، تشخیص کلمه و مرور اعداد سخت',Icon:Hash,theme:'amber'},
   {id:'pronunciation',label:'تلفظ و استثناها',hint:'از Ich-Laut تا Ach-Laut',Icon:Volume2,theme:'sky'},
   {id:'listen',label:'دیکته شنیداری',hint:'گوش بده و کلمه درست را تایپ کن',Icon:Headphones,theme:'pink'},
   {id:'exam',label:'آزمون پایان درس',hint:'۱۰ سؤال و ثبت نتیجه',Icon:GraduationCap,theme:'purple'},
@@ -35,100 +38,162 @@ const skillLabels={
 };
 const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed'];
 
-export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}) {
+
+function savedBookAnswers(){
+  try{
+    const value=JSON.parse(window.localStorage.getItem('dt_book_lessons_v1')||'{}');
+    return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+  }catch{return {};}
+}
+
+export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}){
   const report=learningInsights(memory);
-  const currentId = Number(localStorage.getItem('dt_current_lesson')) || 1;
+  let storedLesson=null;
+  try{storedLesson=window.localStorage.getItem('dt_current_lesson');}catch{}
+  const currentId=currentHomeLessonId(storedLesson,progress);
   const lesson=lessons.find(x=>x.id===currentId)||lessons[0];
-  const enabled=lessons.filter(l=>l.id===1||progress[l.id]?.started).map(l=>l.id);
-  const scheduleDue=dueCards(allStudyCards,schedule,enabled).length;
-  const choice=recommendedRoute(report,scheduleDue);
-  const done=lessons.filter(l=>progress[l.id]?.passed).length;
-  const dailyDone=Math.min(100,Math.round(report.today.attempts/dailyGoal*100));
-  const learningStages=[
-    {id:'course/1',title:'درس ۱ کتاب · سلام و معرفی',subtitle:'۱۸ تمرین · نام، کشور، الفبا و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
-    {id:'course/2',title:'درس ۲ کتاب · شغل و مشخصات',subtitle:'۲۰ تمرین + بازی هوشمند اعداد ۰ تا ۱۰۰',Icon:BookOpenCheck,color:'amber'},
-    {id:'course/3',title:'درس ۳ کتاب · خانواده و زبان‌ها',subtitle:'۲۸ تمرین · mein/meine، dein/deine و سؤال‌های خانواده',Icon:BookOpenCheck,color:'green'},
-    {id:'course/4',title:'درس ۴ کتاب · وسایل خانه',subtitle:'۳۰ تمرین + بازی تصویری der/die/das، میز و صندلی',Icon:BookOpenCheck,color:'amber'},
-    {id:'course/5',title:'درس ۵ کتاب · معرفی اشیا',subtitle:'۳۲ تمرین + بازی تصویری ein/eine و kein/keine',Icon:BookOpenCheck,color:'green'},
-    {id:'speaking',title:'مربی تلفظ شخصی',subtitle:'اعداد، حروف، واژه و جمله با میکروفون و حافظه',Icon:Mic2,color:'purple'},
-    {id:'night',title:'شیفت شب · مرور پیش از خواب',subtitle:'مرور فعال یا نمایش پشت‌سرهم SVG و صدا',Icon:Moon,color:'purple'},
-    {id:'visualMemory',title:'یادسپاری تصویری',subtitle:'اعداد و واژه‌ها با نشانه‌های SVG، تلفظ و حافظه',Icon:ImageIcon,color:'green'},
-    {id:'pictureGame',title:'بازی تصویر به آلمانی',subtitle:'۳ مرحله، XP و مرور هوشمند',Icon:Gamepad2,color:'green'},
-    {id:'visual',title:'کلمات تصویری جلسه اول',subtitle:'۵۰ عبارت + ۱۰ مکالمه',Icon:BookOpen,color:'green'},
-    {id:'dialogues',title:'مکالمه‌های تصویری',subtitle:'پنج داستان شاخه‌دار و روزمره',Icon:MessageCircle,color:'purple'},
-    {id:'workbook',title:'جلسه اول استاد',subtitle:'دفتر مصور + تمرین و آزمون',Icon:BookOpen,color:'purple'},
-    {id:'classNotes',title:'جزوه‌های جدید استاد',subtitle:'اعداد ۱۳–۲۰ و فعل‌ها و احوال‌پرسی',Icon:BookOpenCheck,color:'green'},
-    {id:'srs',title:'تمرین کلمات',subtitle:scheduleDue ? scheduleDue+' کارت موعددار' : 'مرور واژه‌ها',Icon:Brain,color:'green'},
-    {id:'builder',title:'چالش جمله‌سازی',subtitle:'۴ جمله از درس انتخابی',Icon:Gamepad2,color:'amber'},
-    {id:'exam',title:'آزمون دانش',subtitle:'نمره پایانی را ثبت کن',Icon:GraduationCap,color:'sky'}
-  ];
-  return <div className="gameHome">
-    <div className="gameIntro">
-      <div><span className="gameEyebrow"><Sparkles size={16}/> MENSCHEN A1.1 · COMPANION</span>
-        <h1>آلمانی را <span>بازی کن!</span></h1>
-        <p>درس‌ها را یکی‌یکی یاد بگیر. هر پاسخ، برنامه تمرین بعدی‌ات را هوشمندتر می‌کند.</p>
-        <div className="gameHeroActions">
-          <RouteLink className="gamePrimary" to="course/1" navigate={setTab}><BookOpenCheck size={17}/> درس ۱ مطابق کتاب <ArrowLeft size={18}/></RouteLink>
-          <RouteLink className="gameHeroSecondary" to="course/2" navigate={setTab}>درس ۲ و اعداد ۱ تا ۱۰۰</RouteLink>
-          <RouteLink className="gamePrimary" to="classNotes" navigate={setTab}><BookOpenCheck size={17}/> تمرین جزوه‌های جدید استاد <ArrowLeft size={18}/></RouteLink>
-          <RouteLink className="gameHeroSecondary" to="dialogues" navigate={setTab}>گفت‌وگوهای جدید</RouteLink>
-        </div>
+  const bookSaved=savedBookAnswers();
+  const overview=bookLessonOverview(bookSaved,progress);
+  const currentBook=overview.find(x=>x.id===currentId);
+  const done=lessons.filter(x=>progress[x.id]?.passed).length;
+  const enabled=lessons.filter(x=>x.id===1||progress[x.id]?.started).map(x=>x.id);
+  const scheduled=dueCards(allStudyCards,schedule,enabled).length;
+  const recommendation=recommendedRoute(report,scheduled);
+  const dailyDone=Math.min(100,Math.round(report.today.attempts/Math.max(1,dailyGoal)*100));
+  const exerciseUrl=nextBookExerciseHref(currentId,bookSaved);
+  return <div className="gameHome homeV2">
+    <section className="homeV2Hero" aria-label="شروع سریع یادگیری آلمانی">
+      <div className="homeV2HeroTop">
+        <span className="homeV2Kicker"><Sparkles size={15}/> DEUTSCH TRAINER · A1.1</span>
+        <span className="homeV2LessonTag">درس فعلی {String(currentId).padStart(2,'0')} / ۱۲</span>
       </div>
-      <div className="gameOrb" aria-hidden="true"><span>Hallo!</span><div>🇩🇪</div></div>
+      <h1>آماده‌ای ادامه بدیم؟ <span>Los geht’s!</span></h1>
+      <p>از <strong>درس {currentId} · {lesson.label}</strong> ادامه بده یا مستقیم سراغ تمرین برو.</p>
+      <div className="homeV2HeroActions">
+        <RouteLink to={'course/'+currentId} navigate={setTab} className="homeV2Primary"><BookOpenCheck size={21}/> ادامه درس {currentId}<ArrowLeft size={19}/></RouteLink>
+        <a className="homeV2Secondary" href={exerciseUrl}><Gamepad2 size={21}/> {currentBook&&currentBook.correct===currentBook.total?'مرور تمرین‌های درس':'تمرین همین درس'} <ArrowLeft size={18}/></a>
+      </div>
+      <div className="homeV2HeroFoot">
+        <span><CheckCircle2 size={16}/> {currentBook?currentBook.correct+' از '+currentBook.total+' تمرین درست':'محتوای پایه و گرامر آماده است'}</span>
+        <span><Zap size={16}/> {report.today.xp||0} XP امروز</span>
+      </div>
+    </section>
+
+    <nav className="homeV2Destinations" aria-label="ورود سریع به درس‌ها و تمرین‌ها">
+      <RouteLink to="course" navigate={setTab} className="homeV2Destination">
+        <span className="homeV2DestinationIcon teal"><BookOpenCheck size={27}/></span>
+        <span><strong>درس‌ها</strong><small>۱۲ درس، گرامر فارسی و تمرین‌های کتاب</small></span><ArrowLeft size={20}/>
+      </RouteLink>
+      <RouteLink to="practice" navigate={setTab} className="homeV2Destination">
+        <span className="homeV2DestinationIcon violet"><Gamepad2 size={27}/></span>
+        <span><strong>تمرین‌ها</strong><small>تلفظ، اعداد، گفت‌وگو، آزمون و مرور</small></span><ArrowLeft size={20}/>
+      </RouteLink>
+    </nav>
+
+    <section className="homeV2Daily" aria-label="پیشرفت امروز">
+      <div className="homeV2SectionBar">
+        <div><span className="homeV2Eyebrow">DAILY PROGRESS</span><h2>ماموریت امروز</h2></div>
+        <RouteLink to="coach" navigate={setTab}>تنظیم برنامه <ChevronLeft size={16}/></RouteLink>
+      </div>
+      <div className="homeV2DailyStats">
+        <span><strong>{Math.min(report.today.attempts,dailyGoal)} / {dailyGoal}</strong> تمرین امروز</span>
+        <span><Flame size={17}/><strong>{report.streak}</strong> روز پیوسته</span>
+        <span><Zap size={17}/><strong>{report.totalXP}</strong> XP کل</span>
+      </div>
+      <div className="homeV2Track" role="progressbar" aria-label="پیشرفت هدف تمرین روزانه" aria-valuemin={0} aria-valuemax={dailyGoal} aria-valuenow={Math.min(report.today.attempts,dailyGoal)}><span style={{width:dailyDone+'%'}}/></div>
+      <p>{dailyDone===100?'هدف امروز انجام شد؛ می‌توانی برای تسلط بیشتر ادامه بدهی.':'چند تمرین کوتاه انجام بده؛ پیشرفتت خودکار ثبت می‌شود.'}</p>
+    </section>
+
+    <section className="homeV2Section" aria-label="میانبرهای آموزشی">
+      <div className="homeV2SectionBar"><div><span className="homeV2Eyebrow">QUICK ACCESS</span><h2>سریع شروع کن</h2></div></div>
+      <div className="homeV2QuickGrid">
+        <a href={'/lessons/'+currentId+'#lesson-grammar'} className="homeV2Quick"><span className="mint"><BookOpen size={21}/></span><strong>گرامر فارسی</strong><small>قواعد درس {currentId} با مثال</small><ArrowLeft size={16}/></a>
+        <RouteLink to="classNotes" navigate={setTab} className="homeV2Quick"><span className="peach"><BookOpenCheck size={21}/></span><strong>جزوه استاد</strong><small>تمرین‌های کلاس</small><ArrowLeft size={16}/></RouteLink>
+        <RouteLink to="speaking" navigate={setTab} className="homeV2Quick"><span className="lavender"><Mic2 size={21}/></span><strong>مربی تلفظ</strong><small>بگو و دقت را بسنج</small><ArrowLeft size={16}/></RouteLink>
+        <RouteLink to="numbers" navigate={setTab} className="homeV2Quick"><span className="sky"><Hash size={21}/></span><strong>بازی اعداد</strong><small>صدا، نوشتن و تشخیص</small><ArrowLeft size={16}/></RouteLink>
+      </div>
+    </section>
+
+    <section className="homeV2Section" aria-label="مسیر پنج درس دارای تمرین اختصاصی">
+      <div className="homeV2SectionBar">
+        <div><span className="homeV2Eyebrow">LEARNING PATH</span><h2>پیشرفت درس‌های کتاب</h2></div>
+        <RouteLink to="course" navigate={setTab}>همه ۱۲ درس <ChevronLeft size={16}/></RouteLink>
+      </div>
+      <div className="homeV2Lessons">
+        {overview.map(item=><RouteLink to={'course/'+item.id} navigate={setTab} key={item.id}
+          className={'homeV2Lesson'+(currentId===item.id?' homeV2LessonCurrent':'')}>
+          <span className="homeV2LessonNumber">{String(item.id).padStart(2,'0')}</span>
+          <span className="homeV2LessonCopy"><strong>درس {item.id} · {item.title}</strong><small>{item.correct} / {item.total} تمرین صحیح {item.passed?'· آزمون قبول‌شده':''}</small>
+            <span className="homeV2LessonTrack"><span style={{width:item.percent+'%'}}/></span>
+          </span>
+          <span className="homeV2LessonPercent">{item.percent}٪</span>
+          <ChevronLeft size={19}/>
+        </RouteLink>)}
+      </div>
+    </section>
+
+    <section className="homeV2Recommendation">
+      <span className="homeV2RecommendIcon"><WandSparkles size={22}/></span>
+      <div><strong>پیشنهاد هوشمند برای تمرین بعدی</strong><p>{recommendation.why}{report.weak>0?' · '+report.weak+' مورد نیازمند مرور':''}</p></div>
+      <RouteLink to={recommendation.page} navigate={setTab}>شروع <ArrowLeft size={16}/></RouteLink>
+    </section>
+    <div className="homeV2Extras">
+      <RouteLink to="visualMemory" navigate={setTab}><ImageIcon size={19}/> یادسپاری تصویری</RouteLink>
+      <RouteLink to="night" navigate={setTab}><Moon size={19}/> مرور شب</RouteLink>
+      <RouteLink to="progress" navigate={setTab}><Trophy size={19}/> پیشرفت من · {done} درس قبول‌شده</RouteLink>
     </div>
-    <div className="gameScorebar">
-      <div><span className="scoreIcon violet"><Zap size={19}/></span><strong>{report.totalXP}</strong><small>امتیاز XP</small></div>
-      <div><span className="scoreIcon amber"><Flame size={19}/></span><strong>{report.streak}</strong><small>روز تمرین پیوسته</small></div>
-      <div><span className="scoreIcon green"><CheckCircle2 size={19}/></span><strong>{report.mastered}</strong><small>آموخته با تسلط</small></div>
-    </div>
-    <div className="gameGoals">
-      <div className="gameGoalHeader"><div><span className="gameEyebrow">DAILY MISSION</span><h2>ماموریت کوچک امروز</h2></div><span className="gameGoalNumber">{Math.min(report.today.attempts,dailyGoal)} / {dailyGoal} تمرین</span></div>
-      <div className="gameProgress"><span style={{width:dailyDone+'%'}} /></div>
-      <div className="gameGoalDetail"><span><Target size={16}/> هدف قابل‌تنظیم در مربی روزانه؛ بدون جریمه</span><b>{report.today.xp||0} XP امروز</b></div>
-    </div>
-    <div className="nightHomeShortcut">
-      <RouteLink to="speaking" navigate={setTab}><Mic2 size={21}/><span><b>مربی تلفظ من</b><small>بگو، صدایت را بسنج و پیشرفتت را دنبال کن</small></span><ArrowLeft size={18}/></RouteLink>
-       <RouteLink to="night" navigate={setTab}><Moon size={21}/><span><b>🌙 شیفت شب</b><small>قبل از خواب، ۴ تا ۸ کارت با تصویر و صدا</small></span><ArrowLeft size={18}/></RouteLink>
-       <RouteLink to="visualMemory" navigate={setTab}><ImageIcon size={21}/><span><b>یادسپاری تصویری</b><small>عددها، واژه‌های جدید و کارت‌های ضعیف</small></span><ArrowLeft size={18}/></RouteLink>
-    </div>
-    <RouteLink to="coach" navigate={setTab} className="dailyCoachShortcut">
-      <span className="dailyCoachShortcutIcon"><Brain size={25}/></span>
-      <span><b>مربی روزانه تو</b><small>برنامه ۳ مرحله‌ای، گزارش هفتگی، نمودار تمرین و شناسایی نقاط ضعف</small></span>
-      <span className="dailyCoachShortcutCTA">دیدن برنامه <ArrowLeft size={17}/></span>
-    </RouteLink>
-    <div className="gameNext"><span className="nextSparkle"><WandSparkles size={24}/></span><div><b>پیشنهاد شخصی برای تو</b><p>{choice.why}{report.weak>0 ? ' · '+report.weak+' مورد نیازمند تمرین' : ''}</p></div><RouteLink to={choice.page} navigate={setTab}>شروع <ChevronLeft size={17}/></RouteLink></div>
-    <div className="gameSectionHead"><div><span className="gameEyebrow">LEARNING JOURNEY</span><h2>نقشه پیشرفت امروز</h2></div><span>{done} از ۱۲ درس تمام شده</span></div>
-    <div className="learningJourney">
-      {learningStages.map((x,i)=><React.Fragment key={x.id}>
-        <RouteLink className={'journeyNode '+x.color} to={x.id} navigate={setTab}>
-          <span className="journeyIcon"><x.Icon size={24}/></span>
-          <span><b>{x.title}</b><small>{x.subtitle}</small></span>
-          <ChevronLeft size={17}/>
-        </RouteLink>
-        {i<learningStages.length-1 && <div className="journeyConnector"><span/></div>}
-      </React.Fragment>)}
-    </div>
-    <div className="homeContinue"><div><Trophy size={22}/><span><b>سطح {report.level}</b><small>{report.xpIntoLevel} از ۲۰۰ XP برای سطح بعد</small></span></div><RouteLink to="progress" navigate={setTab}>دیدن پیشرفت <ArrowLeft size={16}/></RouteLink></div>
-    {(!report.practiced && (legacyStats?.correct||legacyStats?.known)) ? <p className="migrationNote">آمار قدیمی حفظ شده؛ با اولین تمرین جدید، تحلیل دقیق هر مهارت آغاز می‌شود.</p>:null}
+    {(!report.practiced&&(legacyStats?.correct||legacyStats?.known))&&<p className="migrationNote">امتیازهای قبلی حفظ شده‌اند؛ با تمرین بعدی تحلیل دقیق مهارت‌ها کامل‌تر می‌شود.</p>}
   </div>;
 }
 
-export function PracticeHub({setTab,memory}) {
+export function PracticeHub({setTab,memory}){
   const report=learningInsights(memory);
+  const [filter,setFilter]=React.useState('all');
+  const [search,setSearch]=React.useState('');
   const firstWeak=report.weakItems[0];
-  const destination=firstWeak ? ({
+  const destination=firstWeak?({
     visual:'visual',number:'numbers',pronunciation:'pronunciation',sentence:'builder',grammar:'verbs',dialogue:'classNotes',
     reading:'exam',dictation:'listen',vocab:'srs'
-  }[firstWeak.kind] || 'srs') : 'srs';
-  const focusText=firstWeak ? 'اول این مورد را تقویت کن: '+(firstWeak.label||skillLabels[firstWeak.kind]) : 'چند تمرین انجام بده تا پیشنهاد دقیق دریافت کنی.';
-  return <div className="gamePage">
-    <div className="hubHeading"><span className="gameEyebrow">PRACTICE ZONE</span><h2>زمین بازی آلمانی</h2><p>هر بار روی چیزی تمرین کن که هنوز برایت سخت است.</p></div>
-    <div className="hubSuggestion"><span className="hubIcon"><Brain size={25}/></span><div><b>حافظه آموزشی تو</b><p>{report.practiced?focusText:'تمرین را شروع کن تا نقاط قوت و ضعفت را شناسایی کنیم.'}</p></div><RouteLink to={destination} navigate={setTab}>تمرین <ChevronLeft size={16}/></RouteLink></div>
-    <div className="practiceTiles">{practiceCategories.map(({id,label,hint,Icon,theme})=><RouteLink className={'practiceTile '+theme} key={id} to={id} navigate={setTab}>
-      <span className="tileIcon"><Icon size={23}/></span>
-      <span className="tileCopy"><b>{label}</b><small>{hint}</small></span>
-      <ChevronLeft size={18}/>
-    </RouteLink>)}</div>
+  }[firstWeak.kind]||'srs'):'srs';
+  const focusText=firstWeak?'برای تقویت: '+(firstWeak.label||skillLabels[firstWeak.kind]):'از یک تمرین شروع کن تا نقاط قابل مرور مشخص شوند.';
+  const filtered=practiceCategories.filter(item=>
+    matchesPracticeFilter(item.id,filter)&&
+    (item.label+' '+item.hint).toLocaleLowerCase('fa').includes(search.trim().toLocaleLowerCase('fa')));
+  const popular=[
+    {id:'classNotes',title:'تمرین کلاس',subtitle:'جزوه‌های استاد',Icon:BookOpenCheck},
+    {id:'numbers',title:'اعداد',subtitle:'شنیدن و نوشتن',Icon:Hash},
+    {id:'speaking',title:'تلفظ من',subtitle:'تمرین با صدا',Icon:Mic2},
+    {id:'builder',title:'جمله‌سازی',subtitle:'ساخت جمله صحیح',Icon:Gamepad2}
+  ];
+  return <div className="gamePage practiceV2">
+    <header className="practiceV2Header">
+      <div><span className="homeV2Eyebrow">PRACTICE STUDIO</span><h1>کدوم مهارت رو تمرین کنیم؟</h1><p>تمرین‌ها را فیلتر کن یا از چهار پیشنهاد زیر مستقیماً شروع کن.</p></div>
+      <RouteLink to="course" navigate={setTab}><BookOpenCheck size={17}/> مشاهده درس‌ها <ArrowLeft size={17}/></RouteLink>
+    </header>
+    <nav className="practiceV2Popular" aria-label="شروع سریع تمرین">
+      {popular.map(item=><RouteLink to={item.id} navigate={setTab} key={item.id} className="practiceV2PopularItem">
+        <item.Icon size={23}/><strong>{item.title}</strong><small>{item.subtitle}</small>
+      </RouteLink>)}
+    </nav>
+    <div className="practiceV2Recommended">
+      <Brain size={21}/><span><strong>پیشنهاد متناسب با حافظه تو</strong><small>{focusText}</small></span>
+      <RouteLink to={destination} navigate={setTab}>تمرین کن <ArrowLeft size={16}/></RouteLink>
+    </div>
+    <section className="practiceV2Catalog" aria-label="فهرست قابل جست‌وجوی تمرین‌ها">
+      <div className="homeV2SectionBar"><div><span className="homeV2Eyebrow">ALL ACTIVITIES</span><h2>همه تمرین‌ها</h2></div><span>{filtered.length} مورد</span></div>
+      <div className="practiceV2Filters" role="group" aria-label="دسته‌بندی تمرین‌ها">
+        {practiceFilters.map(item=><button key={item.id} type="button" aria-pressed={filter===item.id}
+          className={filter===item.id?'active':''} onClick={()=>setFilter(item.id)}>{item.label}</button>)}
+      </div>
+      <label className="practiceV2Search"><Search size={19}/><input type="search" value={search} onChange={e=>setSearch(e.target.value)}
+        placeholder="جست‌وجوی تمرین، تلفظ، اعداد..." aria-label="جست‌وجو در تمرین‌ها"/></label>
+      <div className="practiceV2Tiles">
+        {filtered.map(({id,label,hint,Icon,theme})=><RouteLink className={'practiceTile '+theme} key={id} to={id} navigate={setTab}>
+          <span className="tileIcon"><Icon size={23}/></span><span className="tileCopy"><strong>{label}</strong><small>{hint}</small></span><ChevronLeft size={19}/>
+        </RouteLink>)}
+      </div>
+      {!filtered.length&&<div className="practiceV2Empty">برای این جست‌وجو تمرینی پیدا نشد. <button type="button" onClick={()=>{setFilter('all');setSearch('');}}>نمایش همه تمرین‌ها</button></div>}
+    </section>
   </div>;
 }
 
