@@ -12,7 +12,7 @@ export async function loadCloudAudioUrl({book,path},signal){
  const params=new URLSearchParams({book,path});
  const response=await fetch('/api/audio/play?'+params,{signal,cache:'no-store'});
  const data=await readJson(response);
- if(typeof data.url!=='string'||!data.url.startsWith('https://'))
+ if(typeof data.url!=='string'||!data.url.startsWith('/api/audio/stream?'))
   throw new Error('لینک امن پخش نامعتبر است.');
  return data.url;
 }
@@ -85,7 +85,7 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
  return <section className="caRoot" aria-label={'فایل‌های صوتی ابری درس '+lessonId}>
    <div className="caHeading"><Cloud size={21}/><div>
     <h4>پخش مستقیم از فضای ابری ران‌فلر</h4>
-    <p>صدای اصلی هر Lektion بدون آپلود مجدد در گوشی، با لینک موقت و امن</p>
+    <p>صدای اصلی هر Lektion بدون آپلود مجدد در گوشی، با پخش امن از سرور اپ</p>
    </div></div>
    {loading?<p className="caNotice">در حال دریافت فهرست قطعه‌های صوتی...</p>:
     !data?.configured?<p className="caNotice">اتصال امن فضای ابری هنوز در تنظیمات Vercel فعال نشده است. فایل‌های محلی و تلفظ مرورگر همچنان قابل استفاده‌اند.</p>:
@@ -117,6 +117,6 @@ export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAud
      </div>}
     </>}
    {error&&<p className="caError" role="alert">{error}</p>}
-   <small className="caPrivacy">کلیدها در این صفحه یا فایل‌های اپ قرار ندارند؛ سرور فقط برای قطعه‌های همین دوره لینک موقت می‌سازد. لینک پخش تا زمان انقضا قابل استفاده است.</small>
+   <small className="caPrivacy">کلیدهای S3 حتی در نشانی فایل صوتی به مرورگر ارسال نمی‌شوند؛ پخش فقط از مسیر امن همین اپ عبور می‌کند.</small>
  </section>;
 }
