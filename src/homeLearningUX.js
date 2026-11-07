@@ -12,7 +12,7 @@ export function currentHomeLessonId(raw,progress={}){
 }
 
 export function bookLessonOverview(saved={},progress={}){
-  return [1,2,3,4,5].map(id=>{
+  return lessons.map(({id})=>{
     const tasks=allBookTasks(id);
     const answers=saved?.[id]?.answers||{};
     const correct=tasks.filter(t=>answers[t.id]?.correct===true).length;
