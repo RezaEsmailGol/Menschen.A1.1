@@ -39,7 +39,7 @@ test('continue practice links to first unfinished exercise, not the first repeat
  const completed={};
  for(const section of plan.sections)for(const item of section.tasks)completed[item.id]={correct:true};
  assert.equal(nextBookExerciseHref(5,{5:{answers:completed}}),start);
- assert.equal(nextBookExerciseHref(6,{}),'/lessons/6#lesson-actions');
+ assert.match(nextBookExerciseHref(6,{}),/^\/lessons\/6\?section=vocabulary-practice&question=1#book-practice$/);
  assert.throws(()=>nextBookExerciseHref(13,{}),RangeError);
 });
 
