@@ -155,7 +155,7 @@ function App() {
     if(!anchor){window.scrollTo({top:0,behavior:'auto'});return;}
     const frame=window.requestAnimationFrame(()=>{
       const target=document.getElementById(anchor);
-      if(target)target.scrollIntoView({behavior:'instant',block:'start'});
+      if(target)target.scrollIntoView({behavior:'auto',block:'start'});
       else window.scrollTo({top:0,behavior:'auto'});
     });
     return ()=>window.cancelAnimationFrame(frame);
