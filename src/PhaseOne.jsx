@@ -6,6 +6,7 @@ import { activityItemKey } from './learningMemory.js';
 import RouteLink from './RouteLink';
 import QuizFocusShell from './QuizFocusShell.jsx';
 import BookLessonPractice from './BookLessonPractice.jsx';
+import PersianGrammarGuide from './PersianGrammarGuide.jsx';
 import LessonPictureGame from './LessonPictureGame.jsx';
 import LessonDirectory from './LessonDirectory.jsx';
 import BookAudioLibrary from './BookAudioLibrary.jsx';
@@ -149,6 +150,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         {progress[lesson.id]?.passed ? <span className="lessonPassed"><CheckCircle2 size={17}/> این درس را با حداقل ۸۰٪ گذرانده‌ای</span>
           : <button className="courseStart" onClick={()=>startLesson(lesson.id)}>{progress[lesson.id]?.started || lesson.id===1?'ثبت این درس برای مرور روزانه':'شروع مطالعه و فعال‌سازی مرور'} <ArrowLeft size={17}/></button>}
       </article>
+      <a href="#lesson-grammar" className="pgQuickLink"><BookOpenCheck size={19}/> آموزش فارسی گرامر این درس <ChevronLeft size={17}/></a>
       {lesson.id>5&&<BookAudioLibrary lessonId={lesson.id}/>}
       {[2,4,5].includes(lesson.id)&&<div id="lesson-picture"><LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/></div>}
       {[1,2,3,4,5].includes(lesson.id)&&<BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/>} 
@@ -156,11 +158,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         <div className="courseTitle"><div><small>VOCABULARY</small><h3>کلمات درس</h3></div><span>{lesson.words.length} کلمه</span></div>
         <div className="vocabGrid">{lesson.words.map(([de,fa],index)=><button className="vocabTile" key={de} onClick={()=>speak(de)}><span className="vocabOrdinal">{String(index+1).padStart(2,'0')}</span><span><b dir="ltr">{de}</b><small>{fa}</small></span><Volume2 size={17}/></button>)}</div>
       </section>
-      <section id="lesson-grammar" className="courseContentBlock">
-        <div className="courseTitle"><div><small>GRAMMAR</small><h3>نکته گرامری</h3></div></div>
-        <strong>{lesson.grammar}</strong><p className="grammarTip">{lesson.tip}</p>
-        <div className="shortVerbList">{lesson.verbs.map(v=><span key={v} dir="ltr">{v}</span>)}</div>
-      </section>
+      <PersianGrammarGuide key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent}/>
       <section id="lesson-sentences" className="courseContentBlock">
         <div className="courseTitle"><div><small>SAY IT OUT LOUD</small><h3>جمله‌های کاربردی</h3></div></div>
         <div className="sampleSentences">{lesson.sentences.map(([de,fa])=><div key={de}><button onClick={()=>speak(de)} aria-label={'تلفظ '+de}><Volume2 size={19}/></button><span><b dir="ltr">{de}</b><small>{fa}</small></span></div>)}</div>
