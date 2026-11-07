@@ -134,7 +134,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       <div className="bookExercise" key={task.id}>
         <div className="bookExerciseHead"><span>تمرین {taskIndex+1} از {section.tasks.length}</span><small>{task.type==='listen'?'شنیداری و دیکته':task.type==='build'?'جمله‌سازی':task.type==='type'?'نوشتاری':'چهارگزینه‌ای'}</small></div>
         <h5>{task.prompt}</h5>
-        <ExerciseAudioButton task={task} speak={speak} linkedTrack={task.type==='listen'?cloudTaskMap[task.id]:null}/>
+        <ExerciseAudioButton task={task} speak={speak} fallbackAudio={section.cards[0]?.[1]} linkedTrack={task.type==='listen'?cloudTaskMap[task.id]:null}/>
         {task.type==='choice'&&<div className="bookOptions">{task.choices.map(choice=><button key={choice} type="button" disabled={submitted!==null}
             onClick={()=>send(choice)} className={submitted!==null&&choice===task.answer?'right':submitted!==null&&choice===answer&&!submitted?'wrong':''}>
             <span dir="auto">{choice}</span></button>)}</div>}
