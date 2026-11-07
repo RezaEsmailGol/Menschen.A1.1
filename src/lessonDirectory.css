@@ -89,3 +89,8 @@
  .ldExerciseNumber,.ldExerciseType{background:#35586b;color:#d2edf4}
 }
 @media(prefers-reduced-motion:reduce){.ldTopicChevron,.ldModule{transition:none}}
+
+.ldTopicText{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.ldTopicDescription{display:block;font-size:11px;line-height:1.8;color:#708996;overflow-wrap:anywhere}
+.ldTopicDisclosure[open] .ldTopicSummary{color:#137981}
+@media(prefers-color-scheme:dark){.ldTopicDescription{color:#c0d4dd}}
