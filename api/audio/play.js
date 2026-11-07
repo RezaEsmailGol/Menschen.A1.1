@@ -1,4 +1,4 @@
-import {cloudAudioSettings,getCloudCatalog,signCloudTrack} from '../lib/cloudAudioS3.js';
+import {cloudAudioSettings,getCloudCatalog} from '../lib/cloudAudioS3.js';
 import {safeBook,safeAudioRelativePath} from '../../src/cloudAudioCatalog.js';
 
 export async function GET(request){
@@ -15,8 +15,8 @@ export async function GET(request){
   if(!all.some(t=>t.book===book&&t.path===path))
    return Response.json({error:'فایل صوتی در کتابخانه دوره پیدا نشد.'},
      {status:404,headers:{'Cache-Control':'no-store'}});
-  const signed=await signCloudTrack(settings,book,path,all);
-  return Response.json(signed,{headers:{'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}});
+  const relative='/api/audio/stream?'+new URLSearchParams({book,path});
+  return Response.json({url:relative,expiresIn:0},{headers:{'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}});
  }catch{
   return Response.json({error:'ساخت لینک موقت پخش صوت انجام نشد.'},
    {status:502,headers:{'Cache-Control':'no-store'}});
