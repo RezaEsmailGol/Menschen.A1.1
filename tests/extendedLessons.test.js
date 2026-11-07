@@ -39,7 +39,7 @@ test('official five-lesson teaching outline, with subbranches visible in the lis
 test('all new original exercises have unique IDs and valid answer options',()=>{
  const ids=[3,4,5].flatMap(allBookTasks).map(q=>q.id);
  assert.equal(ids.length,98);
- assert.equal(new Set(ids).size,90);
+ assert.equal(new Set(ids).size,98);
  for(const lesson of Object.values(extendedBookLessons)){
   assert.equal(lesson.sections.length,4);
   for(const section of lesson.sections){
