@@ -61,7 +61,7 @@ export default function LessonDirectory({navigate,progress={}}){
                  <details className="ldTopicDisclosure">
                    <summary className="ldTopicSummary" aria-label={'نمایش '+topic.count+' تمرین '+topic.title}>
                      <span className="ldTopicNumber">{String(i+1).padStart(2,'0')}</span>
-                     <div className="ldTopicText"><b>{topic.title}</b><p>{topic.description}</p></div>
+                     <span className="ldTopicText"><b>{topic.title}</b><span className="ldTopicDescription">{topic.description}</span></span>
                      <span className="ldTopicCount">{topic.count} تمرین</span>
                      <ChevronDown className="ldTopicChevron" size={18}/>
                    </summary>
