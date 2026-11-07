@@ -72,11 +72,11 @@ export default function LessonAudioButtons({lessonId}){
  </section>;
 }
 
-export function ExerciseAudioButton({task,speak,linkedTrack}){
+export function ExerciseAudioButton({task,speak,linkedTrack,fallbackAudio}){
  const [busy,setBusy]=useState(false);
  const [error,setError]=useState('');
  const player=useRef(null);
- const spoken=task?.audio||(typeof task?.answer==='string'&&/[A-Za-zÄÖÜäöüß]/.test(task.answer)?task.answer:null);
+ const spoken=task?.audio||(typeof task?.answer==='string'&&/[A-Za-zÄÖÜäöüß]/.test(task.answer)?task.answer:null)||fallbackAudio;
  useEffect(()=>{player.current?.pause();setError('');},[task?.id]);
  if(!spoken&&!linkedTrack)return null;
  async function play(){
