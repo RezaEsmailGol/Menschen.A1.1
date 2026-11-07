@@ -146,7 +146,9 @@ export const extendedBookLessons = {
           {id:'l5-o05',type:'listen',prompt:'نام یک شیء را بشنو و بنویس.',audio:'die Tasche',answer:'die Tasche'},
           {id:'l5-o06',type:'build',prompt:'بساز: این یک کتاب است.',answer:'Das ist ein Buch.'},
           {id:'l5-o07',type:'choice',prompt:'کدام وسیله برای نوشتن با جوهر است؟',choices:['der Kugelschreiber','der Schlüssel','die Brille','die Kette'],answer:'der Kugelschreiber'},
-          {id:'l5-o08',type:'choice',prompt:'کدام واژه به معنی دوربین عکس‌برداری است؟',choices:['der Fotoapparat','das Buch','die Tasche','der Schrank'],answer:'der Fotoapparat'}
+          {id:'l5-o08',type:'choice',prompt:'کدام واژه به معنی دوربین عکس‌برداری است؟',choices:['der Fotoapparat','das Buch','die Tasche','der Schrank'],answer:'der Fotoapparat'},
+          {id:'l5-o09',type:'choice',prompt:'برای پرسیدن «این چیست؟» درباره یک شیء، کدام سؤال را می‌گویی؟',choices:['Was ist das?','Wer ist das?','Wo wohnst du?','Wie alt bist du?'],answer:'Was ist das?',why:'Was برای اشیا و چیزهاست؛ Wer برای اشخاص است.'},
+          {id:'l5-o10',type:'build',prompt:'سؤال بساز: آیا این یک کلید است؟',answer:'Ist das ein Schlüssel?'}
         ]},
       {id:'indefinite',title:'۲. Ein oder eine? · معرفی اشیا',caption:'«این یک ... است» را برای اسم مذکر، مؤنث و خنثی بساز.',
         cards:[['🔵','der Tisch → ein Tisch','اسم مذکر'],['🩷','die Lampe → eine Lampe','اسم مؤنث'],
@@ -160,7 +162,9 @@ export const extendedBookLessons = {
           {id:'l5-i05',type:'type',prompt:'ترجمه کن: این یک عینک است.',answer:'Das ist eine Brille.'},
           {id:'l5-i06',type:'build',prompt:'بساز: این یک خودکار است.',answer:'Das ist ein Kugelschreiber.'},
           {id:'l5-i07',type:'listen',prompt:'جمله معرفی یک شیء را بشنو و بنویس.',audio:'Das ist eine Flasche.',answer:'Das ist eine Flasche.'},
-          {id:'l5-i08',type:'choice',prompt:'کدام یک برای «این چیست؟» درست است؟',choices:['Was ist das?','Wer ist das?','Wie alt ist das?','Woher kommt das?'],answer:'Was ist das?'}
+          {id:'l5-i08',type:'choice',prompt:'کدام یک برای «این چیست؟» درست است؟',choices:['Was ist das?','Wer ist das?','Wie alt ist das?','Woher kommt das?'],answer:'Was ist das?'},
+          {id:'l5-i09',type:'type',prompt:'با یک جمله کامل بنویس: این یک بطری است.',answer:'Das ist eine Flasche.',hint:'Das ist ... Flasche.'},
+          {id:'l5-i10',type:'choice',prompt:'دوستت می‌پرسد «Was ist das?» و شیء یک مداد است؛ چه می‌گویی؟',choices:['Das ist ein Bleistift.','Das ist eine Bleistift.','Das ist kein Bleistift.','Das ist ein Brille.'],answer:'Das ist ein Bleistift.',why:'der Bleistift مذکر است، پس در معرفی یک شیء ein می‌گیرد.'}
         ]},
       {id:'negation',title:'۳. Kein oder keine? · تصحیح و نفی',caption:'«نه، این ... نیست» را با جنسیت درست بساز.',
         cards:[['🚫','kein Tisch','نه یک میز'],['🚫','keine Lampe','نه یک چراغ'],
@@ -173,7 +177,9 @@ export const extendedBookLessons = {
           {id:'l5-n05',type:'build',prompt:'بساز: این عینک نیست.',answer:'Das ist keine Brille.'},
           {id:'l5-n06',type:'listen',prompt:'جمله نفی را بشنو و بنویس.',audio:'Das ist kein Bleistift.',answer:'Das ist kein Bleistift.'},
           {id:'l5-n07',type:'choice',prompt:'سؤال: Ist das ein Tisch? (تصحیح: نه، این یک صندلی است.) کدام پاسخ صحیح است؟',choices:['Nein, das ist ein Stuhl.','Ja, das ist ein Tisch.','Nein, das ist eine Stuhl.','Doch, Tisch ist ein.'],answer:'Nein, das ist ein Stuhl.'},
-          {id:'l5-n08',type:'choice',prompt:'برای die Kette کدام ساختار منفی درست است؟',choices:['Das ist keine Kette.','Das ist kein Kette.','Das ist nicht Kette.','Das sind kein Kette.'],answer:'Das ist keine Kette.'}
+          {id:'l5-n08',type:'choice',prompt:'برای die Kette کدام ساختار منفی درست است؟',choices:['Das ist keine Kette.','Das ist kein Kette.','Das ist nicht Kette.','Das sind kein Kette.'],answer:'Das ist keine Kette.'},
+          {id:'l5-n09',type:'type',prompt:'پاسخ منفی را کامل بنویس: نه، این کتاب نیست.',answer:'Nein, das ist kein Buch.',hint:'Nein, das ist ... Buch.'},
+          {id:'l5-n10',type:'build',prompt:'بساز: نه، این بطری نیست.',answer:'Nein, das ist keine Flasche.'}
         ]},
       {id:'materials',title:'۴. Material und Nachfragen · جنس و مکالمه',caption:'جنس وسایل را بگو، نام واژه را بپرس و توضیحات محصول را بخوان.',
         cards:[['🪵','aus Holz','از چوب'],['🥃','aus Glas','از شیشه'],
@@ -189,7 +195,9 @@ export const extendedBookLessons = {
           {id:'l5-m05',type:'type',prompt:'ترجمه کن: کلید از فلز است.',answer:'Der Schlüssel ist aus Metall.'},
           {id:'l5-m06',type:'build',prompt:'بساز: کتاب از کاغذ است.',answer:'Das Buch ist aus Papier.'},
           {id:'l5-m07',type:'listen',prompt:'درخواست تکرار را بشنو و بنویس.',audio:'Noch einmal, bitte!',answer:'Noch einmal, bitte!'},
-          {id:'l5-m08',type:'choice',prompt:'کدام جمله درباره جنس بطری درست است؟',choices:['Die Flasche ist aus Glas.','Der Flasche ist aus Holz.','Das Flasche sind Glas.','Eine Flasche ist aus dem Brille.'],answer:'Die Flasche ist aus Glas.'}
+          {id:'l5-m08',type:'choice',prompt:'کدام جمله درباره جنس بطری درست است؟',choices:['Die Flasche ist aus Glas.','Der Flasche ist aus Holz.','Das Flasche sind Glas.','Eine Flasche ist aus dem Brille.'],answer:'Die Flasche ist aus Glas.'},
+          {id:'l5-m09',type:'build',prompt:'از استاد بپرس: این به آلمانی چه نام دارد؟',answer:'Wie heißt das auf Deutsch?'},
+          {id:'l5-m10',type:'listen',prompt:'به سؤال کوتاه درباره یک شیء گوش بده و آن را بنویس.',audio:'Ist das ein Schlüssel?',answer:'Ist das ein Schlüssel?'}
         ]}
     ]
   }
