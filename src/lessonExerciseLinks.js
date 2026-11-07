@@ -13,7 +13,7 @@ export function lessonModuleHref(lessonId,kind){
   const n=Number(lessonId);
   if(!Number.isInteger(n)||n<1||n>12)throw new Error('Unknown lesson');
   const ids={
-    audio:'lesson-audio',
+    audio:'book-practice',
     vocabulary:'lesson-vocabulary',grammar:'lesson-grammar',sentence:'lesson-sentences',
     picture:'lesson-picture',review:'lesson-actions',builder:'lesson-actions',exam:'lesson-actions'
   };

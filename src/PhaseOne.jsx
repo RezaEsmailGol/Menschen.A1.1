@@ -9,7 +9,6 @@ import BookLessonPractice from './BookLessonPractice.jsx';
 import PersianGrammarGuide from './PersianGrammarGuide.jsx';
 import LessonPictureGame from './LessonPictureGame.jsx';
 import LessonDirectory from './LessonDirectory.jsx';
-import BookAudioLibrary from './BookAudioLibrary.jsx';
 import {germanChoiceAudio,useQuizQuestionAudio} from './useQuizQuestionAudio.js';
 import {readGameFeedbackPreferences} from './gameEffects.js';
 import './phaseOne.css';
@@ -151,9 +150,8 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
           : <button className="courseStart" onClick={()=>startLesson(lesson.id)}>{progress[lesson.id]?.started || lesson.id===1?'ثبت این درس برای مرور روزانه':'شروع مطالعه و فعال‌سازی مرور'} <ArrowLeft size={17}/></button>}
       </article>
       <a href="#lesson-grammar" className="pgQuickLink"><BookOpenCheck size={19}/> آموزش فارسی گرامر این درس <ChevronLeft size={17}/></a>
-      {lesson.id>5&&<BookAudioLibrary lessonId={lesson.id}/>}
       {[2,4,5].includes(lesson.id)&&<div id="lesson-picture"><LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/></div>}
-      {[1,2,3,4,5].includes(lesson.id)&&<BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/>} 
+      <BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/> 
       <section id="lesson-vocabulary" className="courseContentBlock">
         <div className="courseTitle"><div><small>VOCABULARY</small><h3>کلمات درس</h3></div><span>{lesson.words.length} کلمه</span></div>
         <div className="vocabGrid">{lesson.words.map(([de,fa],index)=><button className="vocabTile" key={de} onClick={()=>speak(de)}><span className="vocabOrdinal">{String(index+1).padStart(2,'0')}</span><span><b dir="ltr">{de}</b><small>{fa}</small></span><Volume2 size={17}/></button>)}</div>

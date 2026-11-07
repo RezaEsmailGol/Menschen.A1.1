@@ -1,4 +1,5 @@
 import {extendedBookLessons} from './extendedBookLessons.js';
+import {supplementalBookLessons} from './supplementalBookLessons.js';
 // Independent exercises mapped to the published Menschen A1.1 Kursbuch syllabus.
 // Neither text nor visual assets are copied from Hueber's copyrighted pages.
 export const bookLessonPlans = {
@@ -85,7 +86,8 @@ export const bookLessonPlans = {
        ]}
     ]
   },
-  ...extendedBookLessons
+  ...extendedBookLessons,
+  ...supplementalBookLessons
 };
 export function allBookTasks(lessonId) {
   return (bookLessonPlans[lessonId]?.sections || []).flatMap(section=>section.tasks);

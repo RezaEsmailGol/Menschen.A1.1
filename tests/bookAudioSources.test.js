@@ -63,7 +63,7 @@ test('all 12 lessons link to the library, without claiming they ship licensed au
   const audio=lesson.modules.find(m=>m.kind==='audio');
   assert.ok(audio,'missing audio module on lesson '+lesson.id);
   assert.equal(audio.available,true);
-  assert.equal(lessonModuleHref(lesson.id,'audio'),'/lessons/'+lesson.id+'#lesson-audio');
-  assert.match(audio.description,/ZIP یا MP3/);
+  assert.equal(lessonModuleHref(lesson.id,'audio'),'/lessons/'+lesson.id+'#book-practice');
+  assert.match(audio.description,/پخش صوت/);
  }
 });

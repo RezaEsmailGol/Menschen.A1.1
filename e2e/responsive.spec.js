@@ -1,5 +1,4 @@
 import {test,expect} from '@playwright/test';
-import JSZip from 'jszip';
 import {ROUTES,DIALOGUE_IDS,WORKBOOK_PAGES} from '../src/appRoutes.js';
 
 const ROUTE_PATHS=[...new Set([
@@ -221,110 +220,71 @@ function littleWav(){
  return out;
 }
 
-test('copyright-safe local Kursbuch ZIP import, lesson grouping, playback and exercise attachment',async ({browser})=>{
+test('each of 12 lessons has four exercise sections with inline audio button on phone',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:375,height:812},isMobile:true,hasTouch:true});
  const page=await context.newPage();
- await page.goto('/lessons/4?section=furniture&question=5#book-practice');
- await expect(page.locator('.bookExercise h5')).toHaveText('نام وسیله خانه را بشنو و بنویس.');
- await expect(page.locator('#lesson-audio')).toBeVisible();
- await expect(page.locator('.baResources a')).toHaveCount(2);
- await expect(page.locator('.baOptional')).not.toHaveAttribute('open','');
- await page.locator('.baOptional>summary').click();
- await expect(page.locator('.baUpload')).toBeVisible();
-
- const zip=new JSZip();
- zip.file('Lektion04_Tisch.wav',littleWav());
- zip.file('Lektion05_Buch.wav',littleWav());
- const file=await zip.generateAsync({type:'nodebuffer'});
- await page.locator('#lesson-audio input[type=file]').setInputFiles({
-  name:'menschen-a11-user-owned.zip',mimeType:'application/zip',buffer:file
- });
- await expect(page.locator('.baMessage')).toContainText('قطعه صوتی فقط در همین مرورگر ذخیره شد.');
- await expect(page.locator('.baTrack')).toHaveCount(1);
- await expect(page.locator('.baTrack').first()).toContainText('Lektion04_Tisch.wav');
- await page.locator('.baTrack').first().click();
- await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
- await expect(page.locator('.baTaskAttach button')).toContainText('اتصال این قطعه');
- await page.locator('.baTaskAttach button').click();
- await expect(page.locator('.bookOriginalAudioPrompt')).toBeVisible();
- await page.reload();
- await expect(page.locator('.bookOriginalAudioPrompt')).toBeVisible();
- await page.locator('.baOptional>summary').click();
- await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
-
- // ZIP's explicit lesson label keeps lesson 5 tracks out of lesson 4.
- await page.goto('/lessons/5');
- await page.locator('.baOptional>summary').click();
- await expect(page.locator('.baTrack')).toHaveCount(1);
- await expect(page.locator('.baTrack').first()).toContainText('Lektion05_Buch.wav');
-
- // Personal local audio is not bundled into production assets and never uploaded.
- const networkRequests=[];
- page.on('request',request=>{if(request.method()==='POST'||request.method()==='PUT')networkRequests.push(request.url());});
- await page.locator('.baTrack').first().click();
- await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
- expect(networkRequests).toEqual([]);
+ await page.route('**/api/audio/catalog?**',route=>route.fulfill({
+  status:200,contentType:'application/json',body:JSON.stringify({configured:false,tracks:[]})
+ }));
+ for(let lesson=1;lesson<=12;lesson++){
+  await page.goto('/lessons/'+lesson);
+  await expect(page.locator('.bookLessonRoot')).toBeVisible();
+  await expect(page.locator('.bookLessonTabs button')).toHaveCount(5);
+  await expect(page.locator('.laExercisePlay')).toHaveCount(1);
+  await expect(page.locator('.baRoot,.caRoot,.baUpload')).toHaveCount(0);
+  await page.locator('.bookLessonTabs button').nth(3).click();
+  await expect(page.locator('.bookExercise h5')).toBeVisible();
+  await expect(page.locator('.laExercisePlay')).toBeVisible();
+  const width=await page.evaluate(()=>document.documentElement.scrollWidth);
+  expect.soft(width,'lesson '+lesson).toBeLessThanOrEqual(377);
+ }
  await context.close();
 });
 
-test('lesson audio module is linked in all 12 lesson directories',async ({page})=>{
+test('listening directory shortcuts open the exercise player in all twelve lessons',async ({page})=>{
  await page.goto('/lessons');
  for(let n=1;n<=12;n++){
   const card=page.locator('.ldLesson').nth(n-1);
   const header=card.locator('.ldLessonHeader');
   if(await header.getAttribute('aria-expanded')!=='true')await header.click();
-  const module=card.locator('.ldModule[href$="#lesson-audio"]');
+  const module=card.locator('.ldModule[href$="#book-practice"]');
   await expect(module).toBeVisible();
-  await expect(module).toHaveAttribute('href','/lessons/'+n+'#lesson-audio');
+  await expect(module).toHaveAttribute('href','/lessons/'+n+'#book-practice');
+  await expect(card.locator('.ldTopics > li')).toHaveCount(4);
  }
 });
 
-
-test('cloud Kursbuch tracks open from lesson 4, and mapping survives reload without S3 credentials in browser',async ({browser})=>{
- const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
-   viewport:{width:375,height:812},isMobile:true,hasTouch:true});
+test('lesson 4 original audio plays by one click, without provider text or uploads',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:375,height:812},isMobile:true,hasTouch:true});
  const page=await context.newPage();
- await page.route('**/api/audio/catalog?**',async route=>{
-  const n=Number(new URL(route.request().url()).searchParams.get('lesson'));
-  const tracks=n===4?[
-   {book:'kursbuch',path:'Lektion 4, 2.mp3',filename:'Lektion 4, 2.mp3',lesson:4,bytes:14333},
-   {book:'arbeitsbuch',path:'Lektion 4, 3b.mp3',filename:'Lektion 4, 3b.mp3',lesson:4,bytes:12333}
-  ]:[];
-  await route.fulfill({status:200,contentType:'application/json',
-   body:JSON.stringify({configured:true,lesson:n,tracks,totals:{kursbuch:38,arbeitsbuch:25},uncategorized:0})});
- });
+ await page.route('**/api/audio/catalog?**',route=>route.fulfill({
+  status:200,contentType:'application/json',
+  body:JSON.stringify({configured:true,lesson:4,tracks:[
+   {book:'kursbuch',path:'Lektion 4, 2.mp3',filename:'Lektion 4, 2.mp3',lesson:4,bytes:4000},
+   {book:'arbeitsbuch',path:'Lektion 4, 3b.mp3',filename:'Lektion 4, 3b.mp3',lesson:4,bytes:3000}
+  ]})
+ }));
  await page.route('**/api/audio/play?**',async route=>{
-  const url=new URL(route.request().url());
-  const relative='/api/audio/stream?'+new URLSearchParams({
-   book:url.searchParams.get('book'),path:url.searchParams.get('path')
-  });
-  await route.fulfill({status:200,contentType:'application/json',
-    body:JSON.stringify({url:relative,expiresIn:0})});
+  const params=new URL(route.request().url()).searchParams;
+  await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+   url:'/api/audio/stream?'+new URLSearchParams({book:params.get('book'),path:params.get('path')})
+  })});
  });
  await page.route('**/api/audio/stream?**',route=>route.fulfill({
   status:200,contentType:'audio/wav',body:littleWav()
  }));
  await page.goto('/lessons/4?section=furniture&question=5#book-practice');
- await expect(page.locator('.caRoot')).toBeVisible();
- await expect(page.locator('.caEntry')).toHaveCount(1);
- await expect(page.locator('.caEntry')).toContainText('Lektion 4, 2.mp3');
- await page.locator('.caEntry>button').first().click();
- await expect(page.locator('.caPlayer audio')).toHaveAttribute('src',/^\/api\/audio\/stream\?/);
- await page.locator('.caAttach').click();
- await expect(page.locator('.caAttach')).toContainText('متصل');
- await expect(page.locator('.caTaskPlayer button')).toBeVisible();
- await page.reload();
- await expect(page.locator('.caTaskPlayer button')).toBeVisible();
- await page.locator('.caTaskPlayer button').click();
- await expect(page.locator('.caTaskPlayer audio')).toHaveAttribute('src',/^\/api\/audio\/stream\?/);
- const body=await page.content();
- expect(body).not.toContain('MENSCHEN_S3_SECRET_ACCESS_KEY');
- expect(body).not.toContain('s3-pish.runflare.cloud');
- const report=await page.evaluate(viewportAudit);
- expect(report.documentWidth).toBeLessThanOrEqual(377);
+ await expect(page.locator('.laStrip')).toBeVisible();
+ await expect(page.locator('.laPlay')).toHaveCount(2);
+ await page.locator('.laPlay').first().click();
+ await expect(page.locator('.laStrip audio')).toHaveAttribute('src',/\/api\/audio\/stream\?/);
+ await expect(page.locator('.laExercisePlay')).toBeVisible();
+ await expect(page.locator('.baUpload,.baRoot,.caRoot')).toHaveCount(0);
+ const visible=await page.locator('.app').innerText();
+ expect(visible).not.toMatch(/رانفلر|Runflare|ZIP|آپلود/);
+ expect((await page.content())).not.toContain('MENSCHEN_S3_SECRET_ACCESS_KEY');
  await context.close();
 });
-
 
 test('Persian grammar walkthrough on a narrow phone keeps answers after reload',async ({browser})=>{
  const context=await browser.newContext({viewport:{width:360,height:780}});
@@ -430,53 +390,36 @@ test('mobile header, dashboard shortcuts and nav never force horizontal page ove
 });
 
 
-test('online audio directory lists all lessons, searches filenames and hides ZIP import by default',async ({browser})=>{
- const context=await browser.newContext({
-  baseURL:'http://127.0.0.1:5173',
-  viewport:{width:375,height:812},isMobile:true,hasTouch:true
- });
+test('a supplemental lesson shows compact online sound buttons, not storage UI',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:360,height:780},isMobile:true,hasTouch:true});
  const page=await context.newPage();
- await page.route('**/api/audio/catalog?**',async route=>{
-  const which=new URL(route.request().url()).searchParams.get('lesson');
-  const lesson4=[{book:'kursbuch',path:'Lektion 4, 2.mp3',filename:'Lektion 4, 2.mp3',lesson:4,bytes:4000}];
-  const all=[...lesson4,
-   {book:'kursbuch',path:'Lektion 2, 1b.mp3',filename:'Lektion 2, 1b.mp3',lesson:2,bytes:3000},
-   {book:'kursbuch',path:'Intro.mp3',filename:'Intro.mp3',lesson:null,bytes:600},
-   {book:'arbeitsbuch',path:'Lektion 4, 3a.mp3',filename:'Lektion 4, 3a.mp3',lesson:4,bytes:5500}];
-  await route.fulfill({status:200,contentType:'application/json',
-   body:JSON.stringify({configured:true,lesson:which,tracks:which==='all'?all:lesson4,
-      totals:{kursbuch:3,arbeitsbuch:1},uncategorized:1})});
- });
- await page.goto('/lessons/4');
- await expect(page.locator('.caRoot')).toBeVisible();
- await expect(page.locator('.caEntry')).toHaveCount(1);
- await expect(page.locator('.baOptional')).not.toHaveAttribute('open','');
- await expect(page.locator('.baUpload')).toBeHidden();
- await page.getByLabel('انتخاب محدوده فایل‌های صوتی').selectOption('all');
- await expect(page.locator('.caEntry')).toHaveCount(3);
- await expect(page.locator('.caEntry')).toContainText(['Lektion 2, 1b.mp3','Lektion 4, 2.mp3','Intro.mp3']);
- await page.getByLabel('جست‌وجو در فهرست صوتی').fill('Lektion 2');
- await expect(page.locator('.caEntry')).toHaveCount(1);
- await expect(page.locator('.caEntry')).toContainText('Lektion 2, 1b.mp3');
- await page.getByLabel('جست‌وجو در فهرست صوتی').clear();
- await page.getByRole('button',{name:'Arbeitsbuch · کتاب کار'}).click();
- await expect(page.locator('.caEntry')).toHaveCount(1);
- await expect(page.locator('.caEntry')).toContainText('Lektion 4, 3a.mp3');
- const width=await page.evaluate(()=>document.documentElement.scrollWidth);
- expect(width).toBeLessThanOrEqual(377);
+ await page.route('**/api/audio/catalog?**',route=>route.fulfill({
+  status:200,contentType:'application/json',body:JSON.stringify({configured:true,tracks:[
+   {book:'kursbuch',filename:'Lektion 9, 1.mp3',path:'Lektion 9, 1.mp3',lesson:9,bytes:2200}
+  ]})
+ }));
+ await page.goto('/lessons/9');
+ await expect(page.locator('.laPlay')).toHaveCount(1);
+ await expect(page.locator('.laPlay')).toContainText('Lektion 9, 1.mp3');
+ await expect(page.locator('.bookLessonTabs button')).toHaveCount(5);
+ await expect(page.locator('.baUpload,.baRoot,.caRoot')).toHaveCount(0);
  await context.close();
 });
 
-test('disconnected production displays no-reupload instruction instead of misleading empty local catalog',async ({browser})=>{
+test('without cloud clips, exercises keep working with their own audio buttons',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:790},isMobile:true,hasTouch:true});
  const page=await context.newPage();
  await page.route('**/api/audio/catalog?**',route=>route.fulfill({
-  status:200,contentType:'application/json',
-  body:JSON.stringify({configured:false,lesson:4,tracks:[],message:'not connected'})
+  status:200,contentType:'application/json',body:JSON.stringify({configured:false,lesson:4,tracks:[]})
  }));
  await page.goto('/lessons/4');
- await expect(page.locator('.caNotice')).toContainText('نیازی به آپلود دوباره نیست');
- await expect(page.locator('.baOptional')).not.toHaveAttribute('open','');
- await expect(page.locator('.baUpload')).toBeHidden();
+ await expect(page.locator('.laStrip,.baUpload,.caRoot')).toHaveCount(0);
+ const play=page.locator('.laExercisePlay');
+ await expect(play).toBeVisible();
+ await expect(play).toBeEnabled();
+ await play.click();
+ await expect(page.locator('.bookExercise')).toBeVisible();
  await context.close();
 });
+

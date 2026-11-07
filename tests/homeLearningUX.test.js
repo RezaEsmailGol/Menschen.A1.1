@@ -15,7 +15,7 @@ test('home continues the selected lesson and falls back to latest started lesson
 
 test('home book counts use live authored lesson data (including lesson 5 = 40)',()=>{
  const overview=bookLessonOverview({},{});
- assert.deepEqual(overview.map(x=>x.total),[18,20,28,30,40]);
+ assert.deepEqual(overview.map(x=>x.total),[18,20,28,30,40,...Array(7).fill(32)]);
  for(const entry of overview){
   assert.equal(entry.total,allBookTasks(entry.id).length);
   assert.equal(entry.correct,0);
@@ -39,7 +39,7 @@ test('continue practice links to first unfinished exercise, not the first repeat
  const completed={};
  for(const section of plan.sections)for(const item of section.tasks)completed[item.id]={correct:true};
  assert.equal(nextBookExerciseHref(5,{5:{answers:completed}}),start);
- assert.equal(nextBookExerciseHref(6,{}),'/lessons/6#lesson-actions');
+ assert.match(nextBookExerciseHref(6,{}),/^\/lessons\/6\?section=vocabulary-practice&question=1#book-practice$/);
  assert.throws(()=>nextBookExerciseHref(13,{}),RangeError);
 });
 
