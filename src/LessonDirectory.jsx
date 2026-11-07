@@ -83,7 +83,7 @@ export default function LessonDirectory({navigate,progress={}}){
            <div className="ldSectionGroup">
              <h3><Sparkles size={18}/> سایر بخش‌های این درس</h3>
              <div className="ldModules">{entry.modules.map(module=><a className="ldModule" key={module.id} href={lessonModuleHref(entry.id,module.kind)}> 
-               <span className="ldModuleIcon">{module.kind==='picture'?<ImageIcon size={18}/>:module.kind==='vocabulary'?<BookOpen size={18}/>:module.kind==='exam'?<GraduationCap size={18}/>:module.kind==='sentence'?<Volume2 size={18}/>:module.kind==='review'?<Layers size={18}/>:<Headphones size={18}/>}</span>
+               <span className="ldModuleIcon">{module.kind==='audio'?<Headphones size={18}/>:module.kind==='picture'?<ImageIcon size={18}/>:module.kind==='vocabulary'?<BookOpen size={18}/>:module.kind==='exam'?<GraduationCap size={18}/>:module.kind==='sentence'?<Volume2 size={18}/>:module.kind==='review'?<Layers size={18}/>:<Headphones size={18}/>}</span>
                <div><b>{module.title}</b><small>{module.description}</small></div>
                {typeof module.count==='number'&&<span>{module.count}</span>}
                <ChevronLeft size={16} className="ldModuleArrow"/>
