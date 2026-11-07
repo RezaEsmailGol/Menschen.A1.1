@@ -150,7 +150,16 @@ function App() {
   const [stats, setStats] = useLocalStorage('dt_stats', { known: 0, missed: 0, typed: 0, correct: 0, streak: 0, lastDay: '' });
 
   const insights=learningInsights(memory);
-  useEffect(() => { window.scrollTo({top:0,behavior:'auto'}); }, [route]);
+  useEffect(() => {
+    const anchor=decodeURIComponent(window.location.hash.slice(1));
+    if(!anchor){window.scrollTo({top:0,behavior:'auto'});return;}
+    const frame=window.requestAnimationFrame(()=>{
+      const target=document.getElementById(anchor);
+      if(target)target.scrollIntoView({behavior:'instant',block:'start'});
+      else window.scrollTo({top:0,behavior:'auto'});
+    });
+    return ()=>window.cancelAnimationFrame(frame);
+  }, [route]);
   useEffect(() => {
     if(!feedback)return;
     const timer=setTimeout(()=>setFeedback(null),1800);
