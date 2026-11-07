@@ -195,7 +195,7 @@ test('lesson module links navigate to actual lesson anchors on mobile',async ({b
   await page.goto('/lessons');
   const lesson=page.locator('.ldLesson').nth(3);
   await lesson.locator('.ldLessonHeader').click();
-  const item=lesson.locator('.ldModule[href$="#'+anchor+'"]');
+  const item=lesson.locator('.ldModule[href$="#'+anchor+'"]').first();
   await expect(item).toBeVisible();
   await item.click();
   await expect(page).toHaveURL(new RegExp('/lessons/4#'+anchor+'$'));
