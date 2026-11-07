@@ -319,3 +319,26 @@ test('cloud Kursbuch tracks open from lesson 4, and mapping survives reload with
  expect(report.documentWidth).toBeLessThanOrEqual(377);
  await context.close();
 });
+
+
+test('Persian grammar walkthrough on a narrow phone keeps answers after reload',async ({browser})=>{
+ const context=await browser.newContext({viewport:{width:360,height:780}});
+ const page=await context.newPage();
+ try{
+  await page.goto('/lessons/5#lesson-grammar');
+  const grammar=page.locator('#lesson-grammar');
+  await expect(grammar).toBeVisible();
+  await expect(grammar.locator('h3')).toContainText('دستور زبان درس 5');
+  await expect(grammar.locator('.pgTable')).toContainText('kein');
+  await expect(grammar.locator('.pgChoices button')).toHaveCount(4);
+  await grammar.getByRole('button',{name:'Das',exact:true}).click();
+  await expect(grammar.locator('.pgFeedbackCorrect')).toContainText('آفرین');
+  await expect(grammar.locator('.pgProgress')).toHaveAttribute('aria-valuenow','1');
+  await page.reload();
+  await expect(page.locator('#lesson-grammar .pgProgress')).toHaveAttribute('aria-valuenow','1');
+  const documentWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+  expect(documentWidth).toBeLessThanOrEqual(364);
+ }finally{
+  await context.close();
+ }
+});
