@@ -454,7 +454,7 @@ test('online audio directory lists all lessons, searches filenames and hides ZIP
  await expect(page.locator('.baUpload')).toBeHidden();
  await page.getByLabel('انتخاب محدوده فایل‌های صوتی').selectOption('all');
  await expect(page.locator('.caEntry')).toHaveCount(3);
- await expect(page.locator('.caEntry')).toContainText(['Lektion 4, 2.mp3','Lektion 2, 1b.mp3','Intro.mp3']);
+ await expect(page.locator('.caEntry')).toContainText(['Lektion 2, 1b.mp3','Lektion 4, 2.mp3','Intro.mp3']);
  await page.getByLabel('جست‌وجو در فهرست صوتی').fill('Lektion 2');
  await expect(page.locator('.caEntry')).toHaveCount(1);
  await expect(page.locator('.caEntry')).toContainText('Lektion 2, 1b.mp3');
