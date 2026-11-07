@@ -2,6 +2,7 @@ import React, {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,Headphones,Mic2,RotateCcw,Volume2,XCircle} from 'lucide-react';
 import {activityItemKey} from './learningMemory.js';
 import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
+import {readExerciseTarget} from './lessonExerciseLinks.js';
 import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeBookAnswer} from './bookLessonData.js';
 import './bookLessonPractice.css';
 
@@ -54,8 +55,8 @@ function NewNumberChallenge({speak,onPracticeEvent}) {
 }
 export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTab}) {
   const plan=bookLessonPlans[lessonId];
-  const [sectionIndex,setSectionIndex]=useState(0);
-  const [taskIndex,setTaskIndex]=useState(0);
+  const [sectionIndex,setSectionIndex]=useState(()=>readExerciseTarget(lessonId,window.location.search)?.sectionIndex??0);
+  const [taskIndex,setTaskIndex]=useState(()=>readExerciseTarget(lessonId,window.location.search)?.taskIndex??0);
   const [answer,setAnswer]=useState('');
   const [chosen,setChosen]=useState([]);
   const [submitted,setSubmitted]=useState(null);
@@ -96,7 +97,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
     setShowSummary(true);
   }
   const progress=allTasks.length?Math.round(correctCount/allTasks.length*100):0;
-  return <section className="bookLessonRoot" aria-label={'تمرین‌های کتاب درس '+lessonId}>
+  return <section id="book-practice" className="bookLessonRoot" aria-label={'تمرین‌های کتاب درس '+lessonId}>
     <div className="bookLessonTop">
       <div><span className="bookLessonEyebrow">MENSCHEN A1.1 · LEKTION {lessonId} · SEITEN {plan.pages}</span>
         <h3>تمرین‌های اختصاصی درس {lessonId}</h3><p>{plan.focus} · تمرین‌های تألیفی هم‌راستا با سرفصل کتاب</p></div>
