@@ -63,3 +63,8 @@
 .bookPictureSvg svg{width:100%!important;max-width:100%;max-height:158px;border-radius:12px}
 .bookPictureCard:has(.bookPictureSvg){min-height:200px}
 @media(max-width:720px){.bookPictureCard:has(.bookPictureSvg){min-height:180px}.bookPictureSvg svg{max-height:115px}}
+
+.bookListeningButtons{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
+.bookListeningButtons button{flex:1 1 170px;min-height:44px;margin:0}
+.bookOriginalAudioPrompt{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#e2f5e9;color:#1a775c;border:1px solid #a5d5be;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:12px;font-weight:800}
+@media(max-width:590px){.bookListeningButtons{flex-direction:column}.bookListeningButtons button{width:100%}}
