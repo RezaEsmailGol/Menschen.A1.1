@@ -21,7 +21,6 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudi
  const [message,setMessage]=useState('');
  const [search,setSearch]=useState('');
  const [showAll,setShowAll]=useState(false);
- const [expanded,setExpanded]=useState(true);
  const [speed,setSpeed]=useState(1);
  const [loop,setLoop]=useState(false);
  const [taskMap,setTaskMap]=useState(readAudioTaskMap);
@@ -126,15 +125,15 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudi
      <span className="baHeaderIcon"><Headphones size={23}/></span>
      <div><span className="baEyebrow">MENSCHEN A1.1 · HÖREN</span>
        <h3>فایل‌های صوتی کتاب، درس {lessonId}</h3>
-       <p>صدای واقعی Kursbuch و Arbeitsbuch را از فایل‌های خودت پخش کن و به تمرین شنیداری متصل کن.</p></div>
-     <button type="button" className="baExpand" onClick={()=>setExpanded(x=>!x)}
-       aria-expanded={expanded} aria-controls={'ba-library-'+lessonId}>{expanded?'بستن':'باز کردن'}</button>
+       <p>فهرست قطعه‌های آپلودشده ران‌فلر را مستقیم ببین و پخش کن؛ دیگر نیازی به بارگذاری ZIP نیست.</p></div>
    </header>
+   <CloudAudioLibrary lessonId={lessonId} currentTaskId={currentTaskId} onCloudTaskAudioChange={onCloudTaskAudioChange}/>
+   <details className="baOptional">
+    <summary><Upload size={17}/> بارگذاری از دستگاه من (اختیاری) <small>فقط اگر فایلی در ران‌فلر موجود نیست</small></summary>
+    <div id={'ba-library-'+lessonId} className="baContent">
    <div className="baStats"><span><b>{stats.lesson.toLocaleString('fa-IR')}</b> قطعه این درس</span>
     <span><b>{stats.unassigned.toLocaleString('fa-IR')}</b> قطعه دسته‌بندی‌نشده</span>
     <span><b>{stats.total.toLocaleString('fa-IR')}</b> کل کتابخانه</span></div>
-   {expanded&&<div id={'ba-library-'+lessonId} className="baContent">
-     <CloudAudioLibrary lessonId={lessonId} currentTaskId={currentTaskId} onCloudTaskAudioChange={onCloudTaskAudioChange}/>
      <div className="baResources">
        <p><BookOpen size={16}/> برای دریافت فایل صوتی از منابع قانونی کتاب استفاده کن. فایل‌های ناشر روی سرور این اپ ذخیره نمی‌شوند.</p>
        <div>{BOOK_AUDIO_REFERENCES.map(source=><a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer">
@@ -198,6 +197,7 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudi
      {currentTaskId&&storedId&&!selected&&<p className="baTaskHint">
        <Link2 size={15}/> برای سؤال فعلی قطعه صوتی مشخص شده است؛ آن را از فهرست انتخاب کن تا پخش شود.
      </p>}
-   </div>}
+    </div>
+   </details>
  </section>;
 }

@@ -27,3 +27,15 @@
 @media(max-width:730px){.caList{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:440px){.caRoot{padding:11px}.caChoices button{flex:1 1 120px;font-size:11px}.caEntry>button.caAttach{font-size:9px;padding:8px 5px}.caEntry>button span:first-of-type{font-size:11px}}
 @media(prefers-color-scheme:dark){.caRoot{background:#243c48;color:#e9f6f7;border-color:#456673}.caHeading p,.caCount,.caPrivacy{color:#b8d4dc}.caEntry,.caPlayer,.caNotice{background:#2d4b56;color:#d4edf0;border-color:#456a75}.caEntry>button,.caPlayWord{color:#d2e8ef}.caEntry.selected{background:#315d57}.caChoices button,.caPlayer select{background:#2d4b56;color:#d2e8ef;border-color:#527781}.caChoices button.active{background:#116f77;color:#fff}.caEntry>button.caAttach{background:#335e56;color:#caefe6}}
+
+
+/* Searchable online cloud file directory, no local upload required. */
+.caFilters{display:grid;grid-template-columns:minmax(130px,1fr) minmax(165px,1.6fr);gap:11px;margin:12px 0}
+.caFilters label{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:12px;font-weight:700;color:#3c7180}
+.caFilters select,.caFilters input{width:100%;max-width:100%;min-width:0;border:1px solid #b8d4d8;border-radius:10px;background:#fff;color:#214f61;padding:11px;font-size:13px}
+.caNotice strong{display:block;margin-bottom:6px;color:#21767e;font-size:13px}
+.caNotice span{display:block;margin-top:5px}
+.caEntry .caTrackLesson{font-size:10px;white-space:nowrap;border-radius:6px;background:#eff8f6;color:#167f7b;padding:4px 6px;flex-shrink:0}
+.caRoot .caList{scrollbar-width:thin}
+@media(max-width:540px){.caFilters{grid-template-columns:minmax(0,1fr);gap:9px}.caFilters select,.caFilters input{font-size:16px}.caEntry .caTrackLesson{font-size:9px;padding:3px 4px}}
+@media(prefers-color-scheme:dark){.caFilters label{color:#d1eaf2}.caFilters select,.caFilters input{background:#2d4b56;color:#e5f2f4;border-color:#527781}.caNotice strong{color:#b8f0e8}.caEntry .caTrackLesson{background:#305a61;color:#d4f6ed}}

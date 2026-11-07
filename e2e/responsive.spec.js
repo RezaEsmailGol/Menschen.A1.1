@@ -228,6 +228,9 @@ test('copyright-safe local Kursbuch ZIP import, lesson grouping, playback and ex
  await expect(page.locator('.bookExercise h5')).toHaveText('نام وسیله خانه را بشنو و بنویس.');
  await expect(page.locator('#lesson-audio')).toBeVisible();
  await expect(page.locator('.baResources a')).toHaveCount(2);
+ await expect(page.locator('.baOptional')).not.toHaveAttribute('open','');
+ await page.locator('.baOptional>summary').click();
+ await expect(page.locator('.baUpload')).toBeVisible();
 
  const zip=new JSZip();
  zip.file('Lektion04_Tisch.wav',littleWav());
@@ -246,10 +249,12 @@ test('copyright-safe local Kursbuch ZIP import, lesson grouping, playback and ex
  await expect(page.locator('.bookOriginalAudioPrompt')).toBeVisible();
  await page.reload();
  await expect(page.locator('.bookOriginalAudioPrompt')).toBeVisible();
+ await page.locator('.baOptional>summary').click();
  await expect(page.locator('.baPlayer audio')).toHaveAttribute('src',/^blob:/);
 
  // ZIP's explicit lesson label keeps lesson 5 tracks out of lesson 4.
  await page.goto('/lessons/5');
+ await page.locator('.baOptional>summary').click();
  await expect(page.locator('.baTrack')).toHaveCount(1);
  await expect(page.locator('.baTrack').first()).toContainText('Lektion05_Buch.wav');
 
@@ -422,4 +427,56 @@ test('mobile header, dashboard shortcuts and nav never force horizontal page ove
    }
   }finally{await context.close();}
  }
+});
+
+
+test('online audio directory lists all lessons, searches filenames and hides ZIP import by default',async ({browser})=>{
+ const context=await browser.newContext({
+  baseURL:'http://127.0.0.1:5173',
+  viewport:{width:375,height:812},isMobile:true,hasTouch:true
+ });
+ const page=await context.newPage();
+ await page.route('**/api/audio/catalog?**',async route=>{
+  const which=new URL(route.request().url()).searchParams.get('lesson');
+  const lesson4=[{book:'kursbuch',path:'Lektion 4, 2.mp3',filename:'Lektion 4, 2.mp3',lesson:4,bytes:4000}];
+  const all=[...lesson4,
+   {book:'kursbuch',path:'Lektion 2, 1b.mp3',filename:'Lektion 2, 1b.mp3',lesson:2,bytes:3000},
+   {book:'kursbuch',path:'Intro.mp3',filename:'Intro.mp3',lesson:null,bytes:600},
+   {book:'arbeitsbuch',path:'Lektion 4, 3a.mp3',filename:'Lektion 4, 3a.mp3',lesson:4,bytes:5500}];
+  await route.fulfill({status:200,contentType:'application/json',
+   body:JSON.stringify({configured:true,lesson:which,tracks:which==='all'?all:lesson4,
+      totals:{kursbuch:3,arbeitsbuch:1},uncategorized:1})});
+ });
+ await page.goto('/lessons/4');
+ await expect(page.locator('.caRoot')).toBeVisible();
+ await expect(page.locator('.caEntry')).toHaveCount(1);
+ await expect(page.locator('.baOptional')).not.toHaveAttribute('open','');
+ await expect(page.locator('.baUpload')).toBeHidden();
+ await page.getByLabel('انتخاب محدوده فایل‌های صوتی').selectOption('all');
+ await expect(page.locator('.caEntry')).toHaveCount(3);
+ await expect(page.locator('.caEntry')).toContainText(['Lektion 2, 1b.mp3','Lektion 4, 2.mp3','Intro.mp3']);
+ await page.getByLabel('جست‌وجو در فهرست صوتی').fill('Lektion 2');
+ await expect(page.locator('.caEntry')).toHaveCount(1);
+ await expect(page.locator('.caEntry')).toContainText('Lektion 2, 1b.mp3');
+ await page.getByLabel('جست‌وجو در فهرست صوتی').clear();
+ await page.getByRole('button',{name:'Arbeitsbuch · کتاب کار'}).click();
+ await expect(page.locator('.caEntry')).toHaveCount(1);
+ await expect(page.locator('.caEntry')).toContainText('Lektion 4, 3a.mp3');
+ const width=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(width).toBeLessThanOrEqual(377);
+ await context.close();
+});
+
+test('disconnected production displays no-reupload instruction instead of misleading empty local catalog',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:790},isMobile:true,hasTouch:true});
+ const page=await context.newPage();
+ await page.route('**/api/audio/catalog?**',route=>route.fulfill({
+  status:200,contentType:'application/json',
+  body:JSON.stringify({configured:false,lesson:4,tracks:[],message:'not connected'})
+ }));
+ await page.goto('/lessons/4');
+ await expect(page.locator('.caNotice')).toContainText('نیازی به آپلود دوباره نیست');
+ await expect(page.locator('.baOptional')).not.toHaveAttribute('open','');
+ await expect(page.locator('.baUpload')).toBeHidden();
+ await context.close();
 });
