@@ -2,6 +2,8 @@ import React, {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,Headphones,Mic2,RotateCcw,Volume2,XCircle} from 'lucide-react';
 import {activityItemKey} from './learningMemory.js';
 import BookAudioLibrary from './BookAudioLibrary.jsx';
+import {CloudExercisePlayer} from './CloudAudioLibrary.jsx';
+import {readCloudTaskMap} from './cloudAudioCatalog.js';
 import {readAudioTaskMap} from './bookAudioStorage.js';
 import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
 import {readExerciseTarget} from './lessonExerciseLinks.js';
@@ -65,6 +67,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
   const [saved,setSaved]=useState(readSaved);
   const [showSummary,setShowSummary]=useState(false);
   const [audioTaskMap,setAudioTaskMap]=useState(readAudioTaskMap);
+  const [cloudTaskMap,setCloudTaskMap]=useState(readCloudTaskMap);
   useEffect(()=>{try{localStorage.setItem(STORE,JSON.stringify(saved));}catch{}},[saved]);
   const stats=saved[lessonId]?.answers||{};
   const allTasks=useMemo(()=>allBookTasks(lessonId),[lessonId]);
@@ -108,7 +111,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
     <BookAudioLibrary lessonId={lessonId} currentTaskId={!showSummary&&task?.type==='listen'?task.id:null}
-      onTaskAudioChange={setAudioTaskMap}/>
+      onTaskAudioChange={setAudioTaskMap} onCloudTaskAudioChange={setCloudTaskMap}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
         className={index===sectionIndex&&!showSummary?'active':''} aria-current={index===sectionIndex&&!showSummary?'step':undefined}
@@ -142,6 +145,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
             if(audio){audio.scrollIntoView({block:'nearest'});audio.play().catch(()=>{});}
           }}><Headphones size={20}/> پخش فایل اصلی متصل به این سؤال</button>}
         </div>}
+        {task.type==='listen'&&<CloudExercisePlayer taskId={task.id} track={cloudTaskMap[task.id]||null}/>}
         {task.type==='choice'&&<div className="bookOptions">{task.choices.map(choice=><button key={choice} type="button" disabled={submitted!==null}
             onClick={()=>send(choice)} className={submitted!==null&&choice===task.answer?'right':submitted!==null&&choice===answer&&!submitted?'wrong':''}>
             <span dir="auto">{choice}</span></button>)}</div>}
