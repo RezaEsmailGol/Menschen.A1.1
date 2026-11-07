@@ -6,11 +6,12 @@ import {
   removeBookAudio,readAudioTaskMap,saveAudioTaskMap
 } from './bookAudioStorage.js';
 import './bookAudioLibrary.css';
+import CloudAudioLibrary from './CloudAudioLibrary.jsx';
 
 function sizeLabel(bytes=0){
  return (bytes/1024/1024).toLocaleString('fa-IR',{maximumFractionDigits:1})+' مگابایت';
 }
-export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudioChange}){
+export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudioChange,onCloudTaskAudioChange}){
  const [book,setBook]=useState('kursbuch');
  const [tracks,setTracks]=useState([]);
  const [selectedId,setSelectedId]=useState(null);
@@ -133,6 +134,7 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudi
     <span><b>{stats.unassigned.toLocaleString('fa-IR')}</b> قطعه دسته‌بندی‌نشده</span>
     <span><b>{stats.total.toLocaleString('fa-IR')}</b> کل کتابخانه</span></div>
    {expanded&&<div id={'ba-library-'+lessonId} className="baContent">
+     <CloudAudioLibrary lessonId={lessonId} currentTaskId={currentTaskId} onCloudTaskAudioChange={onCloudTaskAudioChange}/>
      <div className="baResources">
        <p><BookOpen size={16}/> برای دریافت فایل صوتی از منابع قانونی کتاب استفاده کن. فایل‌های ناشر روی سرور این اپ ذخیره نمی‌شوند.</p>
        <div>{BOOK_AUDIO_REFERENCES.map(source=><a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer">
