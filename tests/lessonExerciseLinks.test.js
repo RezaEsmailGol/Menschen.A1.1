@@ -27,7 +27,7 @@ test('every exercise in all five book lessons is exposed through a working targe
    }
   }
  }
- assert.equal(count,128);
+ assert.equal(count,136);
 });
 
 test('exercise navigation rejects unrecognized and out-of-range targets',()=>{
