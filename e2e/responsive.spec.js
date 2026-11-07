@@ -157,7 +157,8 @@ test('course lesson topics expand and open the exact chosen question',async ({br
   for(const lesson of [1,2,3,4,5]){
    await page.goto('/lessons');
    const card=page.locator('.ldLesson').nth(lesson-1);
-   await card.locator('.ldLessonHeader').click();
+   if(await card.locator('.ldLessonHeader').getAttribute('aria-expanded')!=='true')
+     await card.locator('.ldLessonHeader').click();
    await expect(card.locator('.ldTopics > li')).toHaveCount(4);
    const topic=card.locator('.ldTopics > li').nth(2);
    await topic.locator('.ldTopicSummary').click();
@@ -199,8 +200,9 @@ test('lesson module links navigate to actual lesson anchors on mobile',async ({b
   await item.click();
   await expect(page).toHaveURL(new RegExp('/lessons/4#'+anchor+'$'));
   await expect(page.locator('#'+anchor)).toBeAttached();
-  const target=await page.locator('#'+anchor).evaluate(node=>node.getBoundingClientRect().top);
-  expect(target).toBeLessThan(900);
+  // The application schedules hash scrolling after the React commit.
+  await expect.poll(()=>page.locator('#'+anchor).evaluate(node=>node.getBoundingClientRect().top),
+    {message:'Anchor should scroll into view after navigation',timeout:6000}).toBeLessThan(900);
  }
  await context.close();
 });
