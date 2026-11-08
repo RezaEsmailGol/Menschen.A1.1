@@ -14,7 +14,6 @@ export default function PracticeJourney({journey,setTab,medal}){
  const [expanded,setExpanded]=useState(journey.next?.id||1);
  const filtered=filterPracticeLessons(journey.lessons,search,mode,status);
  const current=journey.next;
- const nextMode=nextPracticeSection(current,mode);
  return <div className="pjRoot">
   <section className="pjHero" aria-label="پیشرفت تمرین‌های ۱۲ درس">
    <div className="pjHeroText">
