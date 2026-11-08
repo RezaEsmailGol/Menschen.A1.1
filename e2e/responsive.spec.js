@@ -254,7 +254,7 @@ test('listening directory shortcuts open the exercise player in all twelve lesso
  }
 });
 
-test('lesson 4 original audio plays by one click, without provider text or uploads',async ({browser})=>{
+test('lesson 4 plays a manually linked book MP3 inside its illustrated learning card',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:375,height:812},isMobile:true,hasTouch:true});
  const page=await context.newPage();
  await page.route('**/api/audio/catalog?**',route=>route.fulfill({
@@ -274,12 +274,19 @@ test('lesson 4 original audio plays by one click, without provider text or uploa
   status:200,contentType:'audio/wav',body:littleWav()
  }));
  await page.goto('/lessons/4?section=furniture&question=5#book-practice');
- await expect(page.locator('.laStrip')).toBeVisible();
- await expect(page.locator('.laPlay')).toHaveCount(2);
- await page.locator('.laPlay').first().click();
- await expect(page.locator('.laStrip audio')).toHaveAttribute('src',/\/api\/audio\/stream\?/);
+ const workbook=page.locator('.laWorkbook');
+ await expect(workbook.locator('.laWorkbookPage')).toBeVisible();
+ const selector=workbook.getByRole('combobox',{name:'انتخاب فایل صوتی برای کارت فعلی'});
+ await expect(selector.locator('option')).toHaveCount(3);
+ await selector.selectOption('kursbuch:Lektion 4, 2.mp3');
+ await workbook.getByRole('button',{name:'پخش فایل اصلی'}).click();
+ await expect(workbook.locator('.laWorkbookOriginal audio')).toHaveAttribute('src',/\/api\/audio\/stream\?/);
+ await expect(workbook.locator('.laWorkbookArt svg')).toBeVisible();
+ await expect(workbook.locator('.laWorkbookText')).toBeVisible();
  await expect(page.locator('.laExercisePlay')).toBeVisible();
- await expect(page.locator('.baUpload,.baRoot,.caRoot')).toHaveCount(0);
+ await expect(page.locator('.baUpload,.baRoot,.caRoot,.laStrip')).toHaveCount(0);
+ await page.reload();
+ await expect(workbook.getByRole('combobox',{name:'انتخاب فایل صوتی برای کارت فعلی'})).toHaveValue('kursbuch:Lektion 4, 2.mp3');
  const visible=await page.locator('.app').innerText();
  expect(visible).not.toMatch(/رانفلر|Runflare|ZIP|آپلود/);
  expect((await page.content())).not.toContain('MENSCHEN_S3_SECRET_ACCESS_KEY');
