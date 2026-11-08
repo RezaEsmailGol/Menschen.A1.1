@@ -175,12 +175,6 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
   const filtered=practiceCategories.filter(item=>
     matchesPracticeFilter(item.id,filter)&&
     (item.label+' '+item.hint).toLocaleLowerCase('fa').includes(search.trim().toLocaleLowerCase('fa')));
-  const popular=[
-    {id:'classNotes',title:'تمرین کلاس',subtitle:'جزوه‌های استاد',Icon:BookOpenCheck},
-    {id:'numbers',title:'اعداد',subtitle:'شنیدن و نوشتن',Icon:Hash},
-    {id:'speaking',title:'تلفظ من',subtitle:'تمرین با صدا',Icon:Mic2},
-    {id:'builder',title:'جمله‌سازی',subtitle:'ساخت جمله صحیح',Icon:Gamepad2}
-  ];
   return <div className="gamePage practiceV2">
     <header className="practiceV2Header">
       <div><span className="homeV2Eyebrow">PRACTICE STUDIO</span><h1>تمرین‌های آلمانی من</h1><p>از بین ۱۲ درس، ۳۶۰ سؤال و تمرین‌های تصویری و شنیداری، مسیر مناسب خودت را انتخاب کن.</p></div>
