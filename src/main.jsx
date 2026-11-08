@@ -190,7 +190,7 @@ function App() {
 
     <main>
       {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} dailyGoal={safeDailyGoal(dailyGoal)} />}
-      {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} />}
+      {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} progress={progress} dailyGoal={dailyGoal} speakingState={speakingState} />}
       {tab==='coach' && <DailyCoach setTab={setTab} memory={memory} progress={progress} schedule={schedule} goal={dailyGoal} setGoal={updateDailyGoal} />}
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}

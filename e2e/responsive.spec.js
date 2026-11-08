@@ -357,7 +357,7 @@ test('home resume, lesson and practice buttons work on Android-sized screens',as
   await expect(page.locator('.homeV2Destinations a')).toHaveCount(2);
   await page.locator('.homeV2Destinations a[href="/practice"]').click();
   await expect(page).toHaveURL(/\/practice$/);
-  await expect(page.getByRole('heading',{name:'کدوم مهارت رو تمرین کنیم؟'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'تمرین‌های آلمانی من'})).toBeVisible();
   await page.getByRole('button',{name:'گفتار و شنیدن'}).click();
   await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
   await expect(page.locator('.practiceV2Tiles')).not.toContainText('بازی اعداد');
@@ -550,5 +550,62 @@ test('fresh learner progress keeps trophies locked and shows no fabricated speec
  await expect(page.locator('.pgBarColumn')).toHaveCount(7);
  const width=await page.evaluate(()=>document.documentElement.scrollWidth);
  expect(width).toBeLessThanOrEqual(322);
+ await context.close();
+});
+
+
+test('new practice studio has 360 lesson exercises, four deep-linked skills and usable legacy activities',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.goto('/practice');
+ await expect(page.locator('.pjHero')).toContainText('۳۶۰');
+ await expect(page.locator('.pjLessonCard')).toHaveCount(12);
+ await expect(page.locator('.pjQuickMode')).toHaveCount(4);
+ await expect(page.locator('.pjModeTabs button')).toHaveCount(5);
+ await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(4);
+ await expect(page.locator('.pjLessonCard.open .pjAudioLink')).toHaveAttribute('href','/lessons/1#lesson-audio');
+ await expect(page.locator('.practiceV2Catalog')).toContainText('بازی اعداد');
+ await expect(page.locator('.practiceV2Catalog')).toContainText('مرور هوشمند');
+ await page.locator('.pjSearch input').fill('مبلمان');
+ await expect(page.locator('.pjLessonCard')).toHaveCount(1);
+ await expect(page.locator('.pjLessonCard h4')).toContainText('مبلمان');
+ await page.locator('.pjModeTabs button').filter({hasText:'شنیداری'}).click();
+ await page.locator('.pjExpand').click();
+ await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(1);
+ const href=await page.locator('.pjLessonCard.open .pjSectionLink').getAttribute('href');
+ expect(href).toMatch(/^\/lessons\/4\?section=/);
+ await page.locator('.pjLessonCard.open .pjSectionLink').click();
+ await expect(page).toHaveURL(/\/lessons\/4\?section=.*#book-practice/);
+ await expect(page.locator('.bookLessonRoot')).toBeVisible();
+ await context.close();
+});
+
+test('practice progress shows saved book answers, audio progress and filters at 320px without overflow',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:320,height:780},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.addInitScript(()=>{
+  localStorage.setItem('dt_book_lessons_v1',JSON.stringify({4:{answers:{
+   'l4-f01':{attempts:1,correct:true},
+   'l4-f02':{attempts:2,correct:false}
+  }}}));
+  localStorage.setItem('dt_audio_learning_v1',JSON.stringify({completed:{'4:a4-1:dictation':true}}));
+ });
+ await page.goto('/practice');
+ await expect(page.locator('.pjLessonCard')).toHaveCount(12);
+ await expect(page.locator('.pjHero')).toContainText('تمرین صوتی موفق');
+ await expect(page.locator('.pjHero')).toContainText('۱');
+ await page.getByLabel('فیلتر وضعیت درس‌ها').selectOption('ongoing');
+ await expect(page.locator('.pjLessonCard')).toHaveCount(1);
+ await expect(page.locator('.pjLessonCard')).toContainText('مبلمان');
+ await page.getByLabel('فیلتر وضعیت درس‌ها').selectOption('done');
+ await expect(page.locator('.pjLessonCard')).toHaveCount(0);
+ await expect(page.locator('.pjEmpty')).toBeVisible();
+ await page.locator('.pjEmpty button').click();
+ await expect(page.locator('.pjLessonCard')).toHaveCount(12);
+ const audit=await page.evaluate(viewportAudit);
+ expect(audit.documentWidth).toBeLessThanOrEqual(322);
+ expect(audit.controls).toHaveLength(0);
  await context.close();
 });
