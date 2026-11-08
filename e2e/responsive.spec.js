@@ -357,7 +357,7 @@ test('home resume, lesson and practice buttons work on Android-sized screens',as
   await expect(page.locator('.homeV2Destinations a')).toHaveCount(2);
   await page.locator('.homeV2Destinations a[href="/practice"]').click();
   await expect(page).toHaveURL(/\/practice$/);
-  await expect(page.getByRole('heading',{name:'کدوم مهارت رو تمرین کنیم؟'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'تمرین‌های آلمانی من'})).toBeVisible();
   await page.getByRole('button',{name:'گفتار و شنیدن'}).click();
   await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
   await expect(page.locator('.practiceV2Tiles')).not.toContainText('بازی اعداد');
@@ -598,7 +598,7 @@ test('practice progress shows saved book answers, audio progress and filters at 
  await expect(page.locator('.pjHero')).toContainText('۱');
  await page.getByLabel('فیلتر وضعیت درس‌ها').selectOption('ongoing');
  await expect(page.locator('.pjLessonCard')).toHaveCount(1);
- await expect(page.locator('.pjLessonCard')).toContainText('درس');
+ await expect(page.locator('.pjLessonCard')).toContainText('مبلمان');
  await page.getByLabel('فیلتر وضعیت درس‌ها').selectOption('done');
  await expect(page.locator('.pjLessonCard')).toHaveCount(0);
  await expect(page.locator('.pjEmpty')).toBeVisible();
