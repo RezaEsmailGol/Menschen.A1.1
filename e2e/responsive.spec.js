@@ -499,3 +499,56 @@ test('every illustrated audio lesson displays one card at a time and six selecta
   await expect(studio.locator('.laWorkbookPageTop')).toContainText('SEITE 2 / 6');
  }
 });
+
+
+test('progress achievements show real earned medals, weekly graph, audio and lesson progress on narrow phones',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.addInitScript(()=>{
+  const now=Date.now();
+  const today=new Date(now);const day=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+  const memory={
+   version:1,items:{'start:vocab':{id:'start:vocab',lesson:1,kind:'vocab',label:'Hallo',mastery:35,correct:1,wrong:0,attempts:1,reviewedDays:1,lastAt:now,nextAt:now+86400000,lastCorrect:true}},
+   days:{[day]:{attempts:5,correct:4,xp:42}},history:[{id:'audiotest',kind:'dictation',correct:true,at:now}],
+   totalXP:42
+  };
+  localStorage.setItem('dt_mastery_v1',JSON.stringify(memory));
+  localStorage.setItem('dt_book_lessons_v1',JSON.stringify({1:{answers:{'l1-g1':{correct:true,attempts:1}}}}));
+  localStorage.setItem('dt_audio_learning_v1',JSON.stringify({completed:{'1:a1-1:dictation':true},
+    speech:{'1:a1-1:repeat':{lesson:1,score:90,heard:'Hallo'}},plays:{'1:a1-1:listen':2}}));
+ });
+ await page.goto('/progress');
+ await expect(page.locator('.pgDashboard')).toBeVisible();
+ await expect(page.locator('.pgHero')).toContainText('۴۲');
+ await expect(page.locator('.pgBadge')).toHaveCount(12);
+ await expect(page.locator('.pgBadge.earned')).not.toHaveCount(0);
+ await expect(page.locator('.pgMedalArt.locked')).not.toHaveCount(0);
+ await expect(page.locator('.pgMission')).toHaveCount(3);
+ await expect(page.locator('.pgBarColumn')).toHaveCount(7);
+ await expect(page.locator('.pgLesson')).toHaveCount(12);
+ await expect(page.locator('.pgMetrics')).toContainText('تمرین صوتی موفق');
+ await page.locator('.pgBadge').filter({hasText:'شنونده حرفه‌ای'}).click();
+ await expect(page.locator('.pgBadgeDetail')).toContainText('۱۲ تمرین صوتی متفاوت');
+ await expect(page.locator('.pgBadgeDetail')).toContainText('تا باز شدن مدال');
+ await expect(page.locator('.gameBackup')).toBeVisible();
+ const width=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(width).toBeLessThanOrEqual(362);
+ const href=await page.locator('.pgLesson').first().getAttribute('href');
+ expect(href).toMatch(/^\/lessons\/1\?section=/);
+ await context.close();
+});
+
+test('fresh learner progress keeps trophies locked and shows no fabricated speech score',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:320,height:780},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.goto('/progress');
+ await expect(page.locator('.pgBadge.earned')).toHaveCount(0);
+ await expect(page.locator('.pgBadge.unearned')).toHaveCount(12);
+ await expect(page.locator('.pgHeroLevel')).toContainText('سطح');
+ await expect(page.locator('.pgMetrics')).toContainText('—');
+ await expect(page.locator('.pgLesson')).toHaveCount(12);
+ await expect(page.locator('.pgBarColumn')).toHaveCount(7);
+ const width=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(width).toBeLessThanOrEqual(322);
+ await context.close();
+});
