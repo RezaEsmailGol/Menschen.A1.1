@@ -587,8 +587,8 @@ test('practice progress shows saved book answers, audio progress and filters at 
  const page=await context.newPage();
  await page.addInitScript(()=>{
   localStorage.setItem('dt_book_lessons_v1',JSON.stringify({4:{answers:{
-   'l4-f1':{attempts:1,correct:true},
-   'l4-f2':{attempts:2,correct:false}
+   'l4-f01':{attempts:1,correct:true},
+   'l4-f02':{attempts:2,correct:false}
   }}}));
   localStorage.setItem('dt_audio_learning_v1',JSON.stringify({completed:{'4:a4-1:dictation':true}}));
  });
