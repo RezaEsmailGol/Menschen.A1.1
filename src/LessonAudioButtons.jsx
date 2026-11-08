@@ -232,10 +232,9 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
       {originalPlaying?'توقف':'پخش فایل اصلی'}
      </button>
     </div>
-    {originalUrl&&<audio controls ref={audioRef} preload="none" src={originalUrl} playbackRate={rate}
+    <audio ref={audioRef} controls={Boolean(originalUrl)} hidden={!originalUrl} preload="none"
       aria-label={'فایل اصلی کتاب برای کارت '+(index+1)}
-      onEnded={()=>setOriginalPlaying(false)} onPause={()=>setOriginalPlaying(false)} onPlay={()=>setOriginalPlaying(true)}/>}
-    {!originalUrl&&<audio ref={audioRef} preload="none" hidden aria-label="پخش صوت اصلی کتاب"/>}
+      onEnded={()=>setOriginalPlaying(false)} onPause={()=>setOriginalPlaying(false)} onPlay={()=>setOriginalPlaying(true)}/>
     {originalUrl&&<label className="laWorkbookSpeed">سرعت پخش
       <select aria-label="سرعت قطعه اصلی" value={rate} onChange={event=>setRate(Number(event.target.value))}>
        <option value={0.75}>۰٫۷۵×</option><option value={1}>۱×</option><option value={1.25}>۱٫۲۵×</option>
