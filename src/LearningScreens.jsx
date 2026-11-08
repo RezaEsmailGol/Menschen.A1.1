@@ -6,6 +6,8 @@ import { allStudyCards } from './courseData.js';
 import {classSets,classNotesBySet,dueClassSummary} from './classNotesData.js';
 import { learningInsights, recommendedRoute } from './learningMemory.js';
 import {speakingStats} from './speakingEngine.js';
+import {buildProgressReport} from './progressAchievements.js';
+import ProgressAchievements from './ProgressAchievements.jsx';
 import RouteLink from './RouteLink';
 import {currentHomeLessonId,bookLessonOverview,nextBookExerciseHref,practiceFilters,matchesPracticeFilter} from './homeLearningUX.js';
 import './mobileGame.css';
@@ -44,6 +46,14 @@ function savedBookAnswers(){
     const value=JSON.parse(window.localStorage.getItem('dt_book_lessons_v1')||'{}');
     return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
   }catch{return {};}
+}
+
+
+function savedAudioProgress(){
+ try{
+  const value=JSON.parse(window.localStorage.getItem('dt_audio_learning_v1')||'{}');
+  return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+ }catch{return {};}
 }
 
 export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dailyGoal=10}){
@@ -199,7 +209,7 @@ export function PracticeHub({setTab,memory}){
 
 export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10,speakingState={}}) {
   const insights=learningInsights(memory);
-  const masteredCourses=lessons.filter(x=>progress[x.id]?.passed).length;
+  const gamified=buildProgressReport({memory,progress,bookSaved:savedBookAnswers(),audioSaved:savedAudioProgress(),speakingState,dailyGoal});
   const speechReport=speakingStats(speakingState);
   const upload=useRef(null);
   const saveBackup=()=>{
@@ -232,25 +242,13 @@ export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10,speak
       window.location.reload();
     }catch{alert('فرمت فایل بکاپ معتبر نیست یا فایل آسیب دیده است.');}
   };
-  return <div className="gamePage">
-    <div className="hubHeading"><span className="gameEyebrow">MY LEARNING MEMORY</span><h2>پیشرفت و حافظه من</h2><p>آمار واقعی تمرین‌های تو؛ نه فقط تعداد بازدید از صفحه‌ها.</p></div>
-    <div className="progressOverview">
-      <div className="progressLevel"><Medal size={30}/><small>سطح کنونی</small><strong>{insights.level}</strong><div className="gameProgress"><span style={{width:insights.xpIntoLevel/2+'%'}}/></div><small>{insights.totalXP} XP مجموع</small></div>
-      <div className="progressQuickstats">{[
-        [insights.mastered,'کاملاً یادگرفته',CheckCircle2],
-        [insights.weak,'نیازمند تمرین',Target],
-        [insights.due,'موعد مرور',Clock3],
-        [masteredCourses,'درس قبول شده',BookOpen]
-      ].map(([value,name,Icon])=><div key={name}><Icon size={21}/><b>{value}</b><span>{name}</span></div>)}</div>
-    </div>
+  return <div className="gamePage pgPage">
+    <ProgressAchievements report={gamified} setTab={setTab}/>
     <div className="scProgressLink">
       <div><Mic2 size={23}/><span><b>حافظه و پیشرفت تلفظ من</b><small>امتیازها از تطبیق متن تشخیص گفتار به‌دست می‌آیند؛ نه نمره تخصصی لهجه.</small></span></div>
       <div className="scProgressNumbers"><strong>{speechReport.average===null?'—':speechReport.average+'٪'}</strong><small>میانگین گفتار</small><strong>{speechReport.weak}</strong><small>نیازمند تمرین</small></div>
       <RouteLink to="speaking" navigate={setTab}>تمرین با میکروفون <ArrowLeft size={16}/></RouteLink>
     </div>
-    <div className="gameGoals"><div className="gameGoalHeader"><div><span className="gameEyebrow">TODAY</span><h2>تمرین امروز</h2></div><strong>{insights.today.attempts} پاسخ</strong></div>
-      <div className="gameProgress"><span style={{width:Math.min(100,insights.today.attempts/Math.max(dailyGoal,1)*100)+'%'}}/></div>
-      <p className="progressSoftNote">هر پاسخ درست ۱۰ XP و تلاش برای پاسخ اشتباه ۲ XP دارد؛ اشتباه کردن بخشی از یادگیری است.</p></div>
     <RouteLink to="coach" navigate={setTab} className="dailyCoachShortcut">
       <span className="dailyCoachShortcutIcon"><CalendarDays size={25}/></span>
       <span><b>گزارش کامل مربی روزانه</b><small>نمودار ۱۴ روز، نرخ پاسخ‌های درست، برنامه تمرین و گزارش قابل ارسال</small></span>
