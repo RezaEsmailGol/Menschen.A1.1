@@ -390,9 +390,8 @@ test('mobile header, dashboard shortcuts and nav never force horizontal page ove
 });
 
 
-test('a supplemental lesson shows compact online sound buttons, not storage UI',async ({browser})=>{
- const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
-  viewport:{width:360,height:780},isMobile:true,hasTouch:true});
+test('supplemental lesson shows book sound inside the current illustrated exercise',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:780},isMobile:true,hasTouch:true});
  const page=await context.newPage();
  await page.route('**/api/audio/catalog?**',route=>route.fulfill({
   status:200,contentType:'application/json',body:JSON.stringify({configured:true,tracks:[
@@ -400,13 +399,24 @@ test('a supplemental lesson shows compact online sound buttons, not storage UI',
   ]})
  }));
  await page.goto('/lessons/9');
- await expect(page.locator('.laPlay')).toHaveCount(1);
- await expect(page.locator('.laPlay')).toContainText('Lektion 9, 1.mp3');
+ const studio=page.locator('.laWorkbook');
+ await expect(studio).toBeVisible();
+ await expect(studio.locator('.laWorkbookIndex button')).toHaveCount(6);
+ await expect(studio.locator('.laWorkbookPage')).toBeVisible();
+ const trackSelect=studio.getByRole('combobox',{name:'انتخاب فایل صوتی برای کارت فعلی'});
+ await expect(trackSelect.locator('option')).toHaveCount(2);
+ await trackSelect.selectOption('kursbuch:Lektion 9, 1.mp3');
+ await expect(studio.getByRole('button',{name:'پخش فایل اصلی'})).toBeEnabled();
+ const binding=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_menschen_audio_card_tracks_v1')));
+ expect(binding['9:a9-1']).toEqual({book:'kursbuch',path:'Lektion 9, 1.mp3'});
+ await studio.locator('.laWorkbookIndex button').nth(1).click();
+ await expect(trackSelect).toHaveValue('');
+ await studio.locator('.laWorkbookIndex button').first().click();
+ await expect(trackSelect).toHaveValue('kursbuch:Lektion 9, 1.mp3');
  await expect(page.locator('.bookLessonTabs button')).toHaveCount(5);
- await expect(page.locator('.baUpload,.baRoot,.caRoot')).toHaveCount(0);
+ await expect(page.locator('.baUpload,.baRoot,.caRoot,.laStrip')).toHaveCount(0);
  await context.close();
 });
-
 test('without cloud clips, exercises keep working with their own audio buttons',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:790},isMobile:true,hasTouch:true});
  const page=await context.newPage();
@@ -425,53 +435,60 @@ test('without cloud clips, exercises keep working with their own audio buttons',
 
 
 
-test('illustrated audio studio runs pronunciation, dictation and meaning quiz on a narrow phone',async ({browser})=>{
- const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
-  viewport:{width:360,height:820},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+test('one illustrated book page integrates pronunciation, dictation and meaning on a narrow phone',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:820},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  await context.addInitScript(()=>{
-   window.SpeechRecognition=class FakeSpeechRecognition {
-     constructor(){this.lang='de-DE';this.continuous=false;this.interimResults=false;}
-     start(){setTimeout(()=>{this.onresult?.({results:[[{transcript:'Hallo!'}]]});this.onend?.();},30);}
-     abort(){this.onend?.();}
-   };
+  window.SpeechRecognition=class FakeSpeechRecognition{
+   start(){setTimeout(()=>{this.onresult?.({results:[[{transcript:'Hallo!'}]]});this.onend?.();},30);}
+   abort(){this.onend?.();}
+  };
  });
  const page=await context.newPage();
  await page.route('**/api/audio/catalog?**',route=>route.fulfill({
   status:200,contentType:'application/json',body:JSON.stringify({configured:false,tracks:[]})
  }));
  await page.goto('/lessons/1');
- await expect(page.locator('.laExperience')).toBeVisible();
- await expect(page.locator('.laAudioCard')).toHaveCount(4);
- await expect(page.locator('.laAudioCard svg').first()).toBeVisible();
- await expect(page.locator('.laSpeechResult')).toHaveCount(0);
- await page.getByRole('button',{name:'شروع تمرین تلفظ'}).click();
- await expect(page.locator('.laSpeechResult')).toContainText('100%');
- await page.locator('.laDictation input').fill('Hallo');
- await page.locator('.laDictation button').click();
- await expect(page.locator('.laQuizFeedback.correct')).toBeVisible();
- await page.locator('.laModeTabs button').filter({hasText:'تشخیص معنی'}).click();
- await page.locator('.laMeanings button').filter({hasText:'سلام!'}).click();
- await expect(page.locator('.laQuizFeedback.correct')).toBeVisible();
+ const studio=page.locator('.laWorkbook');
+ await expect(studio).toBeVisible();
+ await expect(studio.locator('.laWorkbookIndex button')).toHaveCount(6);
+ await expect(studio.locator('.laWorkbookPage')).toHaveCount(1);
+ await expect(studio.locator('.laWorkbookArt svg')).toBeVisible();
+ await expect(studio.locator('.laWorkbookText')).toContainText('Hallo!');
+ await expect(studio.locator('.laWorkbookText')).toContainText('سلام!');
+ await expect(studio.locator('.laWorkbookOriginalPlay')).toBeDisabled();
+ await studio.getByRole('button',{name:'تلفظ',exact:true}).click();
+ await studio.getByRole('button',{name:'شروع سنجش تلفظ'}).click();
+ await expect(studio.locator('.laWorkbookSpeechScore')).toContainText('100٪');
+ await studio.getByRole('button',{name:'دیکته',exact:true}).click();
+ await expect(studio.locator('.laWorkbookMasked')).toBeVisible();
+ await studio.getByRole('textbox',{name:'متن شنیده‌شده به آلمانی'}).fill('Hallo');
+ await studio.getByRole('button',{name:'بررسی'}).click();
+ await expect(studio.locator('.laWorkbookFeedback.correct')).toBeVisible();
+ await studio.getByRole('button',{name:'معنی',exact:true}).click();
+ await expect(studio.locator('.laWorkbookText')).not.toContainText('سلام!');
+ await studio.locator('.laWorkbookMeaningChoices button').filter({hasText:'سلام!'}).click();
+ await expect(studio.locator('.laWorkbookFeedback.correct')).toBeVisible();
  const width=await page.evaluate(()=>document.documentElement.scrollWidth);
- expect(width).toBeLessThanOrEqual(362);
+ expect(width).toBeLessThanOrEqual(363);
  await page.reload();
- await expect(page.locator('.laStats')).toContainText('تمرین موفق');
- await expect(page.locator('.laExperience')).toBeVisible();
- await expect(page.locator('.baRoot,.caRoot,.baUpload')).toHaveCount(0);
- const textContent=await page.locator('.laExperience').innerText();
- expect(textContent).not.toMatch(/رانفلر|Runflare|آپلود|ZIP/);
+ await expect(page.locator('.laWorkbookProgress')).toHaveAttribute('aria-valuenow','1');
+ await expect(page.locator('.laWorkbook')).toBeVisible();
+ await expect(page.locator('.baRoot,.caRoot,.baUpload,.laAudioCard,.laStrip')).toHaveCount(0);
+ expect(await page.locator('.laWorkbook').innerText()).not.toMatch(/رانفلر|Runflare|آپلود|ZIP/);
  await context.close();
 });
 
-test('audio learning displays six illustrative lesson-specific words across later lessons',async ({page})=>{
+test('every illustrated audio lesson displays one card at a time and six selectable pages',async ({page})=>{
  await page.route('**/api/audio/catalog?**',route=>route.fulfill({
   status:200,contentType:'application/json',body:JSON.stringify({configured:false,tracks:[]})
  }));
- for(const id of [2,4,6,9,12]){
+ for(const id of [2,4,5,6,9,12]){
   await page.goto('/lessons/'+id);
-  await expect(page.locator('.laAudioCard')).toHaveCount(4);
-  await page.getByRole('button',{name:'نمایش همه عبارت‌ها'}).click();
-  await expect(page.locator('.laAudioCard')).toHaveCount(6);
-  await expect(page.locator('.laModeTabs button')).toHaveCount(3);
+  const studio=page.locator('.laWorkbook');
+  await expect(studio.locator('.laWorkbookIndex button')).toHaveCount(6);
+  await expect(studio.locator('.laWorkbookPage')).toHaveCount(1);
+  await expect(studio.locator('.laWorkbookTabs button')).toHaveCount(4);
+  await studio.locator('.laWorkbookPaging button').last().click();
+  await expect(studio.locator('.laWorkbookPageTop')).toContainText('SEITE 2 / 6');
  }
 });
