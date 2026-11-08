@@ -17,7 +17,7 @@ export function normalizeAudioCardBindings(raw){
  for(const [key,track] of Object.entries(data)){
   if(!/^(?:[1-9]|1[0-2]):a(?:[1-9]|1[0-2])-\d{1,2}$/.test(key))continue;
   const [lesson,card]=key.split(':');
-  if(cardBindingKey(Number(lesson),card)!==key)continue;
+  if(cardBindingKey(Number(lesson),card)!==key||card.slice(1).split('-')[0]!==lesson)continue;
   if(safeBook(track?.book)&&safeAudioRelativePath(track?.path))
    result[key]={book:track.book,path:track.path};
  }
