@@ -1,273 +1,289 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
-import {AudioLines,ArrowLeft,BookOpen,Check,CheckCircle2,ChevronLeft,Headphones,Mic,MicOff,Pause,Play,RotateCcw,Volume2,Target,X} from 'lucide-react';
+import {AudioLines,ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,ChevronRight,Headphones,Mic,MicOff,Pause,Play,Volume2,X} from 'lucide-react';
 import AudioLessonArt from './AudioLessonArt.jsx';
-import {lessonAudioCards,soundMeaningOptions,verifyAudioDictation,AUDIO_LEARNING_MODES,audioLearningItemKey,parseAudioLearningStats,audioLearningSummary} from './audioLearningData.js';
+import {lessonAudioCards,soundMeaningOptions,verifyAudioDictation,AUDIO_LEARNING_MODES,audioLearningItemKey,parseAudioLearningStats} from './audioLearningData.js';
 import {scoreSpeechMatch} from './speakingEngine.js';
+import {AUDIO_CARD_TRACK_KEY,normalizeAudioCardBindings,getAudioCardBinding,withAudioCardBinding,audioCardTrackLabel,completedAudioCards} from './audioWorkbookData.js';
 import './lessonAudioButtons.css';
+import './illustratedAudioWorkbook.css';
 
 const STATS_KEY='dt_audio_learning_v1';
 function savedStats(){
  try{return parseAudioLearningStats(localStorage.getItem(STATS_KEY));}
  catch{return parseAudioLearningStats({});}
 }
+function savedBindings(){
+ try{return normalizeAudioCardBindings(localStorage.getItem(AUDIO_CARD_TRACK_KEY));}
+ catch{return {};}
+}
 function getRecognizer(){
  if(typeof window==='undefined')return null;
  return window.SpeechRecognition||window.webkitSpeechRecognition||null;
-}
-function Waveform({active=false}){
- const heights=[7,14,10,22,14,30,17,12,27,18,10,22,13,7];
- return <span className={'alWave '+(active?'playing':'')} aria-hidden="true">
-  {heights.map((n,i)=><span key={i} style={{height:n+'px'}}/>)}
- </span>;
 }
 async function requestPlayback(track){
  const params=new URLSearchParams({book:track.book,path:track.path});
  const response=await fetch('/api/audio/play?'+params.toString(),{cache:'no-store'});
  const json=await response.json().catch(()=>({}));
  if(!response.ok||!json.url?.startsWith('/api/audio/stream?'))
-  throw new Error('پخش این قطعه فعلاً ممکن نیست.');
+  throw new Error('پخش قطعه اصلی کتاب فعلاً در دسترس نیست.');
  return json.url;
 }
 
+const LEARNING_TABS=[
+ {id:'study',title:'یادگیری'},
+ {id:'meaning',title:'معنی'},
+ {id:'dictation',title:'دیکته'},
+ {id:'repeat',title:'تلفظ'}
+];
+
 export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEvent}){
  const cards=useMemo(()=>lessonAudioCards(lessonId),[lessonId]);
- const [showAll,setShowAll]=useState(false);
+ const [index,setIndex]=useState(0);
+ const [mode,setMode]=useState('study');
  const [stats,setStats]=useState(savedStats);
- const [selected,setSelected]=useState(0);
+ const [bindings,setBindings]=useState(savedBindings);
  const [tracks,setTracks]=useState([]);
- const [trackId,setTrackId]=useState('');
- const [trackPlaying,setTrackPlaying]=useState(false);
- const [trackError,setTrackError]=useState('');
- const player=useRef(null);
- const [quizMode,setQuizMode]=useState('dictation');
- const [quizIndex,setQuizIndex]=useState(0);
+ const [catalogReady,setCatalogReady]=useState(false);
  const [quizInput,setQuizInput]=useState('');
  const [quizAnswer,setQuizAnswer]=useState(null);
  const [recording,setRecording]=useState(false);
  const [speech,setSpeech]=useState(null);
  const [micError,setMicError]=useState('');
+ const [originalUrl,setOriginalUrl]=useState('');
+ const [originalBusy,setOriginalBusy]=useState(false);
+ const [originalPlaying,setOriginalPlaying]=useState(false);
+ const [originalError,setOriginalError]=useState('');
+ const [rate,setRate]=useState(1);
+ const audioRef=useRef(null);
  const recognizer=useRef(null);
- const recogSequence=useRef(0);
- const supported=Boolean(getRecognizer());
- const summary=audioLearningSummary(stats,lessonId);
- const current=cards[selected]||cards[0];
- const quizCard=cards[quizIndex%Math.max(cards.length,1)];
- const mode=AUDIO_LEARNING_MODES.find(x=>x.id===quizMode);
- const meaningChoices=useMemo(()=>soundMeaningOptions(cards,quizIndex%Math.max(cards.length,1)),[cards,quizIndex]);
+ const sequence=useRef(0);
+ const playbackSequence=useRef(0);
+ const current=cards[index]||cards[0];
+ const recognizerSupported=Boolean(getRecognizer());
+ const linked=current?getAudioCardBinding(bindings,lessonId,current.id):null;
+ const chosenTrack=linked?tracks.find(track=>track.book===linked.book&&track.path===linked.path):null;
+ const completed=completedAudioCards(cards,stats,lessonId);
+ const meaningChoices=useMemo(()=>soundMeaningOptions(cards,index),[cards,index]);
+
  useEffect(()=>{try{localStorage.setItem(STATS_KEY,JSON.stringify(stats));}catch{}},[stats]);
+ useEffect(()=>{try{localStorage.setItem(AUDIO_CARD_TRACK_KEY,JSON.stringify(bindings));}catch{}},[bindings]);
  useEffect(()=>{
   const controller=new AbortController();
-  setTracks([]);setTrackId('');setTrackError('');setTrackPlaying(false);
+  setCatalogReady(false);setTracks([]);
   fetch('/api/audio/catalog?lesson='+lessonId,{signal:controller.signal,cache:'no-store'})
    .then(response=>response.ok?response.json():null)
    .then(data=>{
-    if(!controller.signal.aborted&&data?.configured&&Array.isArray(data.tracks))
-      setTracks(data.tracks.filter(t=>t?.book&&t?.path&&t?.filename));
-   }).catch(()=>{});
-  return ()=>{controller.abort();player.current?.pause();};
+    if(controller.signal.aborted)return;
+    if(data?.configured&&Array.isArray(data.tracks))
+     setTracks(data.tracks.filter(t=>t&&['kursbuch','arbeitsbuch'].includes(t.book)&&typeof t.path==='string'&&typeof t.filename==='string'&&t.lesson===Number(lessonId)));
+   }).catch(()=>{}).finally(()=>{if(!controller.signal.aborted)setCatalogReady(true);});
+  return ()=>controller.abort();
  },[lessonId]);
+ function stopRecording(){
+  sequence.current++;
+  try{recognizer.current?.abort();}catch{}
+  recognizer.current=null;setRecording(false);
+ }
+ function stopOriginal(){
+  playbackSequence.current++;
+  audioRef.current?.pause();
+  if(audioRef.current)audioRef.current.removeAttribute('src');
+  setOriginalUrl('');setOriginalBusy(false);setOriginalPlaying(false);setOriginalError('');
+ }
  useEffect(()=>{
-  // Abort a microphone session on lesson change or unmount; no audio is stored.
-  return ()=>{recogSequence.current++;try{recognizer.current?.abort();}catch{}recognizer.current=null;};
+  // The old learner stats and existing lesson selections remain intact.
+  setIndex(0);setMode('study');setQuizInput('');setQuizAnswer(null);
+  setSpeech(null);setMicError('');
+  return ()=>{sequence.current++;playbackSequence.current++;try{recognizer.current?.abort();}catch{}audioRef.current?.pause();};
  },[lessonId]);
- useEffect(()=>{
-  if(player.current)player.current.pause();
-  setSelected(0);setQuizIndex(0);setQuizMode('dictation');setQuizInput('');setQuizAnswer(null);
-  setSpeech(null);setMicError('');setRecording(false);setShowAll(false);
- },[lessonId]);
- function registerPlay(card){
+ useEffect(()=>{if(audioRef.current)audioRef.current.playbackRate=rate;},[rate,originalUrl]);
+ if(!cards.length)return null;
+ function choose(next){
+  const position=Math.max(0,Math.min(cards.length-1,next));
+  if(position===index)return;
+  stopRecording();stopOriginal();setIndex(position);
+  setQuizInput('');setQuizAnswer(null);setSpeech(null);setMicError('');
+ }
+ function changeMode(next){
+  if(!LEARNING_TABS.some(t=>t.id===next))return;
+  stopRecording();setMode(next);setQuizInput('');setQuizAnswer(null);setSpeech(null);setMicError('');
+ }
+ function registerSample(card){
   try{speak(card.text);}catch{}
   const key=audioLearningItemKey(lessonId,card.id,'listen');
   setStats(old=>({...old,plays:{...old.plays,[key]:(old.plays[key]||0)+1}}));
  }
- function stopRecording(){
-  recogSequence.current++;
-  try{recognizer.current?.abort();}catch{}
-  recognizer.current=null;
-  setRecording(false);
+ function setTrack(value){
+  stopOriginal();
+  const track=tracks.find(t=>t.book+':'+t.path===value)||null;
+  try{setBindings(prev=>withAudioCardBinding(prev,lessonId,current.id,track));}
+  catch{setOriginalError('این قطعه صوتی قابل انتخاب نیست.');}
+ }
+ async function playOriginal(){
+  if(!linked)return;
+  const el=audioRef.current;
+  if(!el)return;
+  if(originalUrl){
+   if(!el.paused){el.pause();return;}
+   try{await el.play();}catch{setOriginalError('برای پخش، از کنترل روی فایل صوتی استفاده کن.');}
+   return;
+  }
+  const serial=++playbackSequence.current;
+  setOriginalBusy(true);setOriginalError('');
+  try{
+   const url=await requestPlayback(linked);
+   if(serial!==playbackSequence.current||!audioRef.current)return;
+   audioRef.current.src=url;setOriginalUrl(url);
+   audioRef.current.playbackRate=rate;
+   try{await audioRef.current.play();}
+   catch{setOriginalError('اگر پخش خودکار شروع نشد، روی نوار صوتی دکمه پخش را بزن.');}
+  }catch(error){
+   if(serial===playbackSequence.current)setOriginalError(error.message||'فایل اصلی در دسترس نیست.');
+  }finally{if(serial===playbackSequence.current)setOriginalBusy(false);}
  }
  function startRecording(card){
   const Ctor=getRecognizer();
-  if(!Ctor){
-   setMicError('تشخیص گفتار آلمانی در این مرورگر پشتیبانی نمی‌شود. در Chrome با مجوز میکروفون امتحان کن.');
-   setSpeech(null);return;
-  }
-  stopRecording();
-  setSpeech(null);setMicError('');
+  if(!Ctor){setMicError('تشخیص گفتار در این مرورگر فعال نیست؛ Chrome با مجوز میکروفون را امتحان کن.');return;}
+  stopRecording();setMicError('');setSpeech(null);
   let instance;
-  try{
-   instance=new Ctor();instance.lang='de-DE';instance.continuous=false;
-   instance.interimResults=false;instance.maxAlternatives=3;
-  }catch{setMicError('راه‌اندازی میکروفون ممکن نشد.');return;}
-  const seq=++recogSequence.current;
-  recognizer.current=instance;
+  try{instance=new Ctor();instance.lang='de-DE';instance.continuous=false;instance.interimResults=false;instance.maxAlternatives=3;}
+  catch{setMicError('امکان راه‌اندازی میکروفون وجود ندارد.');return;}
+  const call=++sequence.current;recognizer.current=instance;
   instance.onresult=event=>{
-   if(seq!==recogSequence.current)return;
-   const result=event.results?.[0];
-   const candidates=Array.from(result||[]).map(x=>x.transcript).filter(Boolean);
-   if(!candidates.length){setMicError('صدای مشخصی تشخیص داده نشد. دوباره امتحان کن.');return;}
-   const comparison=candidates.map(heard=>({heard,...scoreSpeechMatch(card.text,heard,'sentences')}))
-      .sort((a,b)=>b.score-a.score)[0];
-   setSpeech({cardId:card.id,...comparison});
+   if(call!==sequence.current)return;
+   const choices=Array.from(event.results?.[0]||[]).map(x=>x.transcript).filter(Boolean);
+   if(!choices.length){setMicError('صدایی شناسایی نشد.');return;}
+   const best=choices.map(heard=>({heard,...scoreSpeechMatch(card.text,heard,'sentences')})).sort((a,b)=>b.score-a.score)[0];
+   setSpeech({cardId:card.id,...best});
    const key=audioLearningItemKey(lessonId,card.id,'repeat');
+   const correct=best.score>=80;
    setStats(old=>({...old,
-    completed:{...old.completed,...(comparison.score>=80?{[key]:true}:{})},
-    speech:{...old.speech,[key]:{lesson:Number(lessonId),score:comparison.score,heard:comparison.heard,at:Date.now()}}
+    completed:{...old.completed,...(correct?{[key]:true}:{})},
+    speech:{...old.speech,[key]:{lesson:Number(lessonId),score:best.score,heard:best.heard,at:Date.now()}}
    }));
-   if(quizMode==='repeat')setQuizAnswer({correct:comparison.score>=80,text:card.text,score:comparison.score});
-   onPracticeEvent?.({id:'audio-speech-'+key,lesson:lessonId,kind:'pronunciation',label:card.text,correct:comparison.score>=80});
+   if(mode==='repeat')setQuizAnswer({correct,text:card.text,meaning:card.meaning});
+   onPracticeEvent?.({id:'audio-speech-'+key,lesson:lessonId,kind:'pronunciation',label:card.text,correct});
   };
   instance.onerror=event=>{
-   if(seq!==recogSequence.current)return;
-   setMicError(event.error==='not-allowed'?'دسترسی میکروفون مسدود شده؛ مجوز مرورگر را فعال کن.':
-    event.error==='no-speech'?'صدایی تشخیص داده نشد؛ دوباره تلاش کن.':'تشخیص گفتار انجام نشد؛ اتصال و میکروفون را بررسی کن.');
+   if(call!==sequence.current)return;
+   setMicError(event.error==='not-allowed'?'اجازه میکروفون داده نشده است.':event.error==='no-speech'?'صدایی تشخیص داده نشد.':'خطا در تشخیص گفتار؛ دوباره امتحان کن.');
   };
-  instance.onend=()=>{if(seq===recogSequence.current){setRecording(false);recognizer.current=null;}};
-  try{instance.start();setRecording(true);}
-  catch{setRecording(false);setMicError('میکروفون باز نشد؛ مجوز مرورگر را بررسی کن.');}
- }
- function setMode(next){
-  stopRecording();setQuizMode(next);setQuizIndex(0);setQuizAnswer(null);setQuizInput('');setSpeech(null);setMicError('');
+  instance.onend=()=>{if(call===sequence.current){setRecording(false);recognizer.current=null;}};
+  try{instance.start();setRecording(true);}catch{setRecording(false);setMicError('میکروفون باز نشد.');}
  }
  function submitQuiz(value){
-  if(!quizCard||quizAnswer!==null)return;
-  const correct=quizMode==='dictation'?verifyAudioDictation(quizCard.text,value):value===quizCard.meaning;
-  setQuizAnswer({correct,text:quizCard.text,meaning:quizCard.meaning});
-  const key=audioLearningItemKey(lessonId,quizCard.id,quizMode);
+  if(!current||quizAnswer!==null||mode==='study'||mode==='repeat')return;
+  const correct=mode==='dictation'?verifyAudioDictation(current.text,value):value===current.meaning;
+  setQuizAnswer({correct,text:current.text,meaning:current.meaning});
+  const key=audioLearningItemKey(lessonId,current.id,mode);
   if(correct)setStats(old=>({...old,completed:{...old.completed,[key]:true}}));
-  onPracticeEvent?.({id:'audio-learning-'+key,lesson:lessonId,kind:quizMode==='dictation'?'dictation':'listening',label:quizCard.text,correct});
+  onPracticeEvent?.({id:'audio-learning-'+key,lesson:lessonId,
+   kind:mode==='dictation'?'dictation':'listening',label:current.text,correct});
  }
- function nextQuiz(){
-  stopRecording();setQuizIndex(index=>(index+1)%cards.length);setQuizInput('');setQuizAnswer(null);setSpeech(null);setMicError('');
- }
- async function toggleTrack(track){
-  const id=track.book+':'+track.path,el=player.current;
-  if(!el)return;
-  setTrackError('');
-  if(trackId===id){
-   if(!el.paused){el.pause();setTrackPlaying(false);}
-   else try{await el.play();setTrackPlaying(true);}catch{setTrackError('مرورگر نتوانست این صوت را پخش کند.');}
-   return;
-  }
-  try{
-   el.pause();
-   el.src=await requestPlayback(track);
-   setTrackId(id);
-   await el.play();
-   setTrackPlaying(true);
-  }catch{setTrackPlaying(false);setTrackError('پخش این قطعه ممکن نشد؛ فایل درس را بررسی کن.');}
- }
- if(!cards.length)return null;
- const visibleCards=showAll?cards:cards.slice(0,4);
- return <section id="lesson-audio" className="laExperience" aria-label={'یادگیری صوتی و تلفظ درس '+lessonId}>
-  <div className="laExperienceHeading">
-   <span className="laLargeIcon"><Headphones size={27}/></span>
-   <div><span className="laEyebrow">LISTEN · SPEAK · LEARN</span>
-    <h3>فایل‌های صوتی و تمرین تلفظ</h3><p>گوش بده، تکرار کن و یاد بگیر.</p></div>
-  </div>
-  <div className="laStats">
-   <span><Headphones size={17}/><b>{tracks.length?tracks.length:cards.length}</b> {tracks.length?'قطعه کتاب':'عبارت برای شنیدن'}</span>
-   <span><Mic size={17}/><b>{summary.attempts}</b> تمرین تلفظ</span>
-   <span><BookOpen size={17}/><b>{summary.completed}</b> تمرین موفق</span>
-  </div>
-  <div className="laSectionHeading"><h4>گوش بده و تصویر را به خاطر بسپار</h4><span>{cards.length} عبارت متناسب با درس {lessonId}</span></div>
-  <div className="laCardList">
-   {visibleCards.map((card,index)=><article className={'laAudioCard '+(selected===index?'active':'')} key={card.id}>
-     <AudioLessonArt scene={card.scene} word={card.text}/>
-     <div className="laAudioCopy"><strong dir="ltr" lang="de">{card.text}</strong><span>{card.meaning}</span></div>
-     <Waveform active={selected===index&&recording}/>
-     <button type="button" className="laCirclePlay" aria-label={'پخش '+card.text}
-      onClick={()=>{setSelected(index);registerPlay(card);setSpeech(null);}}><Play size={19} fill="currentColor"/></button>
-    </article>)}
-  </div>
-  {cards.length>4&&<button type="button" className="laShowAll" onClick={()=>setShowAll(v=>!v)}>
-   {showAll?'نمایش چهار عبارت اول':'نمایش همه عبارت‌ها'} <ChevronLeft size={16}/>
-  </button>}
-  {tracks.length>0&&<div className="laStrip" aria-label={'قطعه‌های اصلی صوتی درس '+lessonId}>
-   <div className="laHeading"><AudioLines size={18}/><b>قطعه‌های صوتی همین درس</b><small>{tracks.length} فایل آماده پخش</small></div>
-   <div className="laTracks">
-    {tracks.map(track=>{
-     const id=track.book+':'+track.path;
-     return <button type="button" className={'laPlay '+(trackId===id?'active':'')} key={id}
-      onClick={()=>toggleTrack(track)} aria-pressed={trackId===id&&trackPlaying}
-      aria-label={'پخش '+track.filename+' از '+(track.book==='kursbuch'?'کتاب اصلی':'کتاب کار')}>
-      {trackId===id&&trackPlaying?<Pause size={16}/>:<Play size={16}/>}
-      <span dir="auto">{track.filename}</span><small>{track.book==='kursbuch'?'کتاب اصلی':'کتاب کار'}</small>
-     </button>;
-    })}
+ const visibleText=mode!=='dictation'||quizAnswer!==null;
+ const visibleMeaning=mode!=='meaning'||quizAnswer!==null;
+ const trackValue=linked?linked.book+':'+linked.path:'';
+ const currentMode=AUDIO_LEARNING_MODES.find(item=>item.id===mode);
+ return <section id="lesson-audio" className="laExperience laWorkbook" aria-label={'کتاب صوتی تصویری درس '+lessonId}>
+  <header className="laWorkbookHeader">
+   <div><span className="laEyebrow">HÖREN · SEHEN · ÜBEN</span>
+    <h3><BookOpen size={24}/> کتاب تصویری و تمرین صوتی درس {lessonId}</h3>
+    <p>تصویر را ببین، صدا را بشنو، جمله را بخوان و همان‌جا تمرین کن.</p>
    </div>
-   <audio ref={player} preload="none" aria-label={'صدای کتاب درس '+lessonId}
-    onEnded={()=>setTrackPlaying(false)} onPause={()=>setTrackPlaying(false)} onPlay={()=>setTrackPlaying(true)}/>
-   {trackError&&<small className="laError" role="alert">{trackError}</small>}
-  </div>}
-  {!tracks.length&&<audio ref={player} preload="none" hidden aria-label={'صدای کتاب درس '+lessonId}/>}
-  <div className="laSpeakPanel">
-   <div className="laPanelHeading"><span><Mic size={24}/></span><div><h4>تمرین تلفظ</h4>
-     <p>تلفظ خودت را با متن تشخیص‌داده‌شده در مرورگر مقایسه کن.</p></div></div>
-   <div className="laSpeakBody">
-    <div className="laSteps">
-     <span><Headphones size={18}/> بشنو</span><ChevronLeft size={16}/><span><Mic size={18}/> تکرار کن</span>
-     <ChevronLeft size={16}/><span><AudioLines size={18}/> مقایسه کن</span>
+   <span className="laWorkbookCount">{completed} / {cards.length} کارت تمرین‌شده</span>
+  </header>
+  <div className="laWorkbookProgress" role="progressbar" aria-label="پیشرفت کارت‌های صوتی" aria-valuenow={completed} aria-valuemin={0} aria-valuemax={cards.length}><span style={{width:Math.round(completed/cards.length*100)+'%'}}/></div>
+  <nav className="laWorkbookIndex" aria-label="انتخاب صفحه تصویری درس">
+   {cards.map((card,position)=><button type="button" key={card.id}
+    aria-current={index===position?'step':undefined}
+    className={(index===position?'active ':'')+(completedAudioCards([card],stats,lessonId)?'completed':'')}
+    onClick={()=>choose(position)}><span>{String(position+1).padStart(2,'0')}</span>
+    <strong dir="auto">{card.meaning}</strong>
+    {completedAudioCards([card],stats,lessonId)>0&&<CheckCircle2 size={15}/>}
+   </button>)}
+  </nav>
+  <article className="laWorkbookPage">
+   <div className="laWorkbookPageTop"><span>SEITE {index+1} / {cards.length}</span><span>درس {lessonId} · تمرین تصویری</span></div>
+   <div className="laWorkbookScene">
+    <div className="laWorkbookArt"><AudioLessonArt key={current.id} scene={current.scene} word={current.text}/></div>
+    <div className="laWorkbookText">
+     <span className="laWorkbookLabel">{visibleText?'بخوان و تکرار کن':'اول گوش بده و بنویس'}</span>
+     {visibleText?<h4 dir="ltr" lang="de">{current.text}</h4>:<h4 className="laWorkbookMasked" aria-label="متن تمرین تا بررسی پاسخ مخفی است">● ● ●</h4>}
+     {visibleMeaning?<p>{current.meaning}</p>:<p>اول پاسخ بده؛ سپس معنی را ببین.</p>}
+     <button type="button" className="laWorkbookSample" onClick={()=>registerSample(current)}>
+      <Volume2 size={20}/> شنیدن تلفظ نمونه
+     </button>
     </div>
-    <div className="laSpeakTarget"><small>عبارت منتخب</small><b dir="ltr">{current.text}</b><span>{current.meaning}</span></div>
-    <div className="laSpeakControls">
-      <button type="button" className="laHear" onClick={()=>registerPlay(current)}><Volume2 size={17}/> شنیدن نمونه</button>
-      <button type="button" className="laMicButton" aria-label={recording?'توقف تشخیص گفتار':'شروع تمرین تلفظ'}
-       onClick={()=>recording?stopRecording():startRecording(current)}>
-       {recording?<MicOff size={19}/>:<Mic size={19}/>}
-       {recording?'توقف میکروفون':'شروع تمرین تلفظ'}
-      </button>
-    </div>
-    {!supported&&<p className="laMicNotice">در این مرورگر سنجش گفتار پشتیبانی نمی‌شود؛ هنوز می‌توانی نمونه را گوش بدهی و تکرار کنی.</p>}
-    {recording&&<p className="laRecording" role="status">میکروفون فعال است؛ حالا عبارت آلمانی را بگو…</p>}
-    {micError&&<p className="laError" role="alert">{micError}</p>}
-    {speech?.cardId===current.id&&<div className="laSpeechResult" role="status">
-      <div className="laScoreRing" style={{'--la-score':speech.score+'%'}}><strong>{speech.score}%</strong></div>
-      <div><b>امتیاز تطبیق گفتار</b><span dir="ltr">{speech.heard}</span>
-       <small>{speech.score>=85?'بسیار خوب؛ یک بار دیگر تکرار کن.':'دوباره گوش بده و آهسته‌تر تکرار کن.'}</small></div>
-    </div>}
-    <p className="laSpeechPrivacy">این امتیاز از تطبیق متن تشخیص‌داده‌شده محاسبه می‌شود، نه تحلیل دقیق لهجه. بسته به مرورگر، پردازش گفتار ممکن است در سرویس تشخیص صدای مرورگر انجام شود.</p>
    </div>
-  </div>
-  <div className="laLearningPanel">
-    <div className="laPanelHeading"><span><Target size={23}/></span><div><h4>یادگیری با صدا</h4>
-      <p>با شنیدن و پاسخ‌دادن، حافظه شنیداری‌ات را تقویت کن.</p></div></div>
-    <div className="laModeTabs" role="group" aria-label="انتخاب نوع تمرین صوتی">
-     {AUDIO_LEARNING_MODES.map(item=><button type="button" key={item.id} className={quizMode===item.id?'chosen':''}
-       onClick={()=>setMode(item.id)} aria-pressed={quizMode===item.id}>
-       {item.id==='dictation'?<Headphones size={17}/>:item.id==='repeat'?<Mic size={17}/>:<BookOpen size={17}/>}
-       {item.title}</button>)}
+   <div className="laWorkbookOriginal">
+    <div className="laWorkbookOriginalHeading"><Headphones size={18}/><b>صدای اصلی کتاب</b><small>قطعه مرتبط را انتخاب کن؛ متن بالا، رونویسی فایل نیست.</small></div>
+    <div className="laWorkbookTrackRow">
+     <label className="laWorkbookSelect">انتخاب قطعه برای این تصویر
+      <select aria-label="انتخاب فایل صوتی برای کارت فعلی" value={trackValue} onChange={event=>setTrack(event.target.value)}>
+       <option value="">{catalogReady?(tracks.length?'انتخاب قطعه صوتی…':'فایل اصلی برای این درس موجود نیست'):'در حال بررسی فایل‌های درس…'}</option>
+       {tracks.map(track=><option key={track.book+':'+track.path} value={track.book+':'+track.path}>
+        {audioCardTrackLabel(track)} · {track.filename}
+       </option>)}
+       {linked&&!chosenTrack&&<option value={trackValue}>قطعه قبلی (در فهرست فعلی یافت نشد)</option>}
+      </select>
+     </label>
+     <button type="button" className="laWorkbookOriginalPlay" disabled={!linked||originalBusy} onClick={playOriginal}>
+      {originalBusy?'آماده‌سازی…':originalPlaying?<Pause size={18}/>:<Play size={18}/>}
+      {originalPlaying?'توقف':'پخش فایل اصلی'}
+     </button>
     </div>
-    <div className="laQuiz" key={quizMode+':'+quizIndex}>
-      <div className="laQuizMeta"><span>{mode.description}</span><small>{quizIndex+1} / {cards.length}</small></div>
-      <p>{quizMode==='dictation'?'صدا را گوش بده و عبارت آلمانی را بنویس.':
-          quizMode==='meaning'?'ابتدا گوش بده؛ سپس معنی درست را انتخاب کن.':'نمونه را بشنو و همان عبارت را با میکروفون تکرار کن.'}</p>
-      <button type="button" className="laQuizListen" onClick={()=>registerPlay(quizCard)}>
-       <Play size={18} fill="currentColor"/><Waveform/><span>پخش نمونه صوتی</span>
-      </button>
-      {quizMode==='dictation'&&<form className="laDictation" onSubmit={event=>{event.preventDefault();submitQuiz(quizInput);}}>
-        <input type="text" lang="de" dir="ltr" value={quizInput} disabled={quizAnswer!==null}
-         aria-label="دیکته آلمانی" placeholder="آنچه شنیدی به آلمانی بنویس…" onChange={event=>setQuizInput(event.target.value)}/>
-        <button type="submit" disabled={!quizInput.trim()||quizAnswer!==null}>بررسی</button>
+    <audio ref={audioRef} controls={Boolean(originalUrl)} hidden={!originalUrl} preload="none"
+      aria-label={'فایل اصلی کتاب برای کارت '+(index+1)}
+      onEnded={()=>setOriginalPlaying(false)} onPause={()=>setOriginalPlaying(false)} onPlay={()=>setOriginalPlaying(true)}/>
+    {originalUrl&&<label className="laWorkbookSpeed">سرعت پخش
+      <select aria-label="سرعت قطعه اصلی" value={rate} onChange={event=>setRate(Number(event.target.value))}>
+       <option value={0.75}>۰٫۷۵×</option><option value={1}>۱×</option><option value={1.25}>۱٫۲۵×</option>
+      </select></label>}
+    {originalError&&<p className="laError" role="alert">{originalError}</p>}
+   </div>
+   <div className="laWorkbookTasks">
+    <div className="laWorkbookTabs" role="group" aria-label="روش یادگیری با این تصویر">
+     {LEARNING_TABS.map(item=><button type="button" key={item.id} className={mode===item.id?'chosen':''}
+      aria-pressed={mode===item.id} onClick={()=>changeMode(item.id)}>{item.title}</button>)}
+    </div>
+    {mode==='study'?<div className="laWorkbookInstruction"><BookOpen size={20}/><div>
+      <strong>گام اول: تصویر، متن و معنی را با هم یاد بگیر.</strong>
+      <p>نمونه را پخش کن، با صدای بلند تکرار کن و سپس یکی از تمرین‌های «معنی»، «دیکته» یا «تلفظ» را انتخاب کن.</p>
+     </div></div>:<div className="laWorkbookExercise" key={mode+':'+current.id}>
+      <div className="laWorkbookExerciseHeading"><strong>{currentMode?.title}</strong><small>{currentMode?.description}</small></div>
+      {mode==='meaning'&&<div className="laWorkbookMeaningChoices">
+       {meaningChoices.map(choice=><button type="button" key={choice} disabled={quizAnswer!==null}
+        className={quizAnswer!==null&&choice===current.meaning?'right':''} onClick={()=>submitQuiz(choice)}>{choice}</button>)}
+      </div>}
+      {mode==='dictation'&&<form className="laDictation" onSubmit={event=>{event.preventDefault();submitQuiz(quizInput);}}>
+       <input lang="de" dir="ltr" aria-label="متن شنیده‌شده به آلمانی" placeholder="آنچه شنیدی را به آلمانی بنویس…"
+        value={quizInput} disabled={quizAnswer!==null} onChange={event=>setQuizInput(event.target.value)}/>
+       <button type="submit" disabled={!quizInput.trim()||quizAnswer!==null}>بررسی</button>
       </form>}
-      {quizMode==='meaning'&&<div className="laMeanings">
-       {meaningChoices.map(choice=><button key={choice} type="button" disabled={quizAnswer!==null}
-          className={quizAnswer!==null&&choice===quizCard.meaning?'right':''} onClick={()=>submitQuiz(choice)}>{choice}</button>)}
+      {mode==='repeat'&&<div className="laWorkbookRepeat">
+       <button type="button" className="laMicButton" disabled={!recognizerSupported}
+        aria-label={recording?'توقف تمرین گفتار':'شروع سنجش تلفظ'} onClick={()=>recording?stopRecording():startRecording(current)}>
+        {recording?<MicOff size={18}/>:<Mic size={18}/>}
+        {recording?'توقف':'با میکروفون تکرار کن'}</button>
+       {!recognizerSupported&&<small>این مرورگر تشخیص گفتار را پشتیبانی نمی‌کند؛ همچنان می‌توانی با نمونه تکرار کنی.</small>}
+       <small>امتیاز بر اساس تطبیق متن گفتار است، نه اندازه‌گیری دقیق لهجه. ممکن است تشخیص گفتار توسط سرویس مرورگر انجام شود.</small>
       </div>}
-      {quizMode==='repeat'&&<div className="laRepeat">
-       <b dir="ltr" lang="de">{quizCard.text}</b><button type="button" disabled={recording}
-         onClick={()=>startRecording(quizCard)}><Mic size={17}/> {recording?'در حال گوش‌دادن…':'تکرار با میکروفون'}</button>
-       {!supported&&<small>برای این تمرین، مرورگری با پشتیبانی از تشخیص گفتار آلمانی لازم است.</small>}
-       {micError&&<small role="alert">{micError}</small>}
+      {recording&&<p role="status" className="laRecording">گوش می‌دهم؛ عبارت را با صدای بلند بگو…</p>}
+      {micError&&<p className="laError" role="alert">{micError}</p>}
+      {speech?.cardId===current.id&&<p role="status" className="laWorkbookSpeechScore">متن تشخیص‌داده‌شده: <b dir="ltr">{speech.heard}</b> · امتیاز تطبیق {speech.score}٪</p>}
+      {quizAnswer!==null&&<div className={'laWorkbookFeedback '+(quizAnswer.correct?'correct':'wrong')} role="status">
+       {quizAnswer.correct?<CheckCircle2 size={20}/>:<X size={20}/>}
+       <span><strong>{quizAnswer.correct?'آفرین! درست انجام شد.':'این بار درست نبود؛ نمونه را دوباره گوش بده.'}</strong>
+       <b dir="ltr" lang="de">{quizAnswer.text}</b><small>{quizAnswer.meaning}</small></span>
       </div>}
-      {quizAnswer!==null&&<div className={'laQuizFeedback '+(quizAnswer.correct?'correct':'wrong')} role="status">
-       {quizAnswer.correct?<CheckCircle2 size={18}/>:<X size={18}/>}
-       <div><strong>{quizAnswer.correct?'آفرین، درست انجام شد!':'دوباره مرور کن.'}</strong>
-        <span dir="ltr" lang="de">{quizAnswer.text}</span><small>{quizCard.meaning}</small></div>
-       <button type="button" onClick={nextQuiz}>تمرین بعدی <ArrowLeft size={15}/></button>
-      </div>}
-    </div>
-  </div>
+     </div>}
+   </div>
+   <div className="laWorkbookPaging">
+    <button type="button" disabled={index===0} onClick={()=>choose(index-1)}><ChevronRight size={17}/> صفحه قبل</button>
+    <span>صفحه {index+1} از {cards.length}</span>
+    <button type="button" onClick={()=>choose((index+1)%cards.length)}>{index===cards.length-1?'از اول':'تصویر بعدی'} <ArrowLeft size={17}/></button>
+   </div>
+  </article>
  </section>;
 }
 

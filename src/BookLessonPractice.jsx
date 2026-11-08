@@ -164,6 +164,6 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       <span><Mic2 size={16}/> صدا را بشنو و با صدای بلند تکرار کن.</span>
       <button type="button" onClick={()=>setTab('speaking')}>تمرین تلفظ با میکروفون <ChevronLeft size={16}/></button>
     </div>
-    <p className="bookCopyright">تمرین‌ها و مثال‌ها تألیفی هستند؛ دکمه پخش، تلفظ آلمانی هر سؤال را اجرا می‌کند و قطعه‌های صوتی کتاب در صورت دسترسی جداگانه قابل شنیدن‌اند. {completedCount} تمرین حداقل یک بار انجام شده است.</p>
+    <p className="bookCopyright">تمرین‌ها و مثال‌ها تألیفی هستند؛ دکمه پخش، تلفظ آلمانی هر سؤال را اجرا می‌کند و در بخش کتاب تصویری می‌توان قطعه واقعی مربوط به هر تصویر را به‌صورت دستی وصل کرد؛ متن‌های آموزشی رونویسی قطعه‌ها نیستند. {completedCount} تمرین حداقل یک بار انجام شده است.</p>
   </section>;
 }

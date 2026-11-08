@@ -1,0 +1,100 @@
+/* One book-like page per image/text/audio pair, replacing independent long lists. */
+.laWorkbook{background:linear-gradient(145deg,#f3f2ff,#f9fafc);padding:19px;border-color:#d7d5ee}
+.laWorkbookHeader{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 11px}
+.laWorkbookHeader>div{flex:1 1 220px;min-width:0}
+.laWorkbookHeader h3{display:flex;align-items:center;gap:9px;color:#30305d;font-size:clamp(18px,2.7vw,23px);line-height:1.6;margin:6px 0}
+.laWorkbookHeader h3 svg{color:#6056b9;flex-shrink:0}
+.laWorkbookHeader p{font-size:12px;color:#79819b;line-height:1.8;margin:0}
+.laWorkbookCount{font-size:11px;font-weight:800;white-space:nowrap;color:#4f48aa;background:#eae7fc;border:1px solid #d8d0f5;border-radius:999px;padding:8px 10px}
+.laWorkbookProgress{height:7px;border-radius:999px;background:#e2e5f3;overflow:hidden;margin:0 0 13px}
+.laWorkbookProgress>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#3dc8a5,#6550d5);transition:width .25s}
+.laWorkbookIndex{display:flex;align-items:stretch;gap:7px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;padding-bottom:10px;overscroll-behavior-x:contain}
+.laWorkbookIndex button{flex:0 0 auto;max-width:172px;min-height:44px;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #dddfee;border-radius:11px;background:#fff;color:#555d7f;cursor:pointer;font-size:11px}
+.laWorkbookIndex button>span{background:#efeff9;color:#776cb1;border-radius:7px;padding:4px;font:800 10px Tahoma}
+.laWorkbookIndex button strong{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.laWorkbookIndex button.active{border-color:#6e62d4;background:#eeeaff;color:#4936a3;box-shadow:0 0 0 1px #c4b7f6}
+.laWorkbookIndex button.completed>svg{color:#14927d;flex-shrink:0}
+.laWorkbookPage{border-radius:20px;background:#fff;border:1px solid #e3e5f0;overflow:hidden;min-width:0;box-shadow:0 8px 24px #3032540d}
+.laWorkbookPageTop{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;background:#f5f5fc;border-bottom:1px solid #eaeaf4;padding:10px 17px;font:800 10px Tahoma;color:#747299;letter-spacing:.15px}
+.laWorkbookScene{display:grid;grid-template-columns:minmax(130px,0.75fr) minmax(0,1.25fr);gap:18px;align-items:center;padding:22px;border-bottom:1px solid #f0eff6;min-width:0}
+.laWorkbookArt{display:grid;place-items:center;min-width:0;padding:10px;background:linear-gradient(145deg,#f4efff,#ebf8f7);border:1px solid #eee9fa;border-radius:20px;aspect-ratio:1.25;overflow:hidden}
+.laWorkbookArt .alArt{display:grid;place-items:center;width:100%;min-width:0;max-width:300px;flex:none}
+.laWorkbookArt .alArt svg{display:block;width:100%;height:auto;max-height:none;max-width:100%;border-radius:13px}
+.laWorkbookText{display:flex;flex-direction:column;align-items:flex-start;gap:9px;min-width:0}
+.laWorkbookLabel{font-size:11px;font-weight:800;color:#7772ae}
+.laWorkbookText h4{font:900 clamp(19px,2.8vw,28px)/1.6 Tahoma,system-ui,sans-serif;color:#24254c;margin:0;text-align:left;unicode-bidi:isolate;overflow-wrap:anywhere;max-width:100%}
+.laWorkbookText .laWorkbookMasked{letter-spacing:8px;color:#8e8ab3;font-size:23px}
+.laWorkbookText p{font-size:14px;line-height:1.8;color:#656d84;margin:0}
+.laWorkbookSample{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;border-radius:13px;background:#6155c8;color:#fff;font-size:12px;font-weight:800;min-height:45px;padding:10px 15px;margin-top:3px;cursor:pointer}
+.laWorkbookOriginal{background:#f7faf9;padding:15px 22px;border-bottom:1px solid #e8efef}
+.laWorkbookOriginalHeading{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.laWorkbookOriginalHeading svg{color:#008c82}
+.laWorkbookOriginalHeading b{font-size:12px;color:#226460}
+.laWorkbookOriginalHeading small{font-size:10px;color:#7c9292;line-height:1.6}
+.laWorkbookTrackRow{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.laWorkbookSelect{display:flex;flex-direction:column;gap:7px;font-size:11px;color:#667e83;flex:1 1 190px;min-width:0}
+.laWorkbookSelect select,.laWorkbookSpeed select{width:100%;min-width:0;border:1px solid #b6d6d3;color:#214f56;font:inherit;font-size:12px;border-radius:10px;background:#fff;padding:10px;min-height:45px}
+.laWorkbookOriginalPlay{min-height:45px;display:flex;align-items:center;justify-content:center;gap:7px;color:#fff;background:#177b79;border:1px solid #177b79;padding:10px 15px;border-radius:11px;font-size:12px;font-weight:800;cursor:pointer}
+.laWorkbookOriginalPlay:disabled{opacity:.5;cursor:not-allowed}
+.laWorkbookOriginal>audio{display:block;width:100%;max-width:100%;margin-top:12px;min-height:42px}
+.laWorkbookOriginal>audio[hidden]{display:none}
+.laWorkbookSpeed{font-size:11px;color:#647c80;display:flex;align-items:center;gap:8px;margin-top:8px}
+.laWorkbookSpeed select{width:auto;min-height:37px;padding:5px 9px}
+.laWorkbookTasks{padding:17px 22px}
+.laWorkbookTabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:13px}
+.laWorkbookTabs button{min-height:45px;padding:9px 7px;border:1px solid #dedcf0;background:#fff;border-radius:11px;color:#5e5a8a;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer}
+.laWorkbookTabs button.chosen{color:#fff;background:#5f53c8;border-color:#5f53c8}
+.laWorkbookInstruction{display:flex;gap:12px;align-items:flex-start;border:1px solid #d6e8e3;background:#edfaf6;border-radius:14px;padding:13px;color:#245e5d}
+.laWorkbookInstruction>svg{flex:0 0 20px}
+.laWorkbookInstruction strong{font-size:12px}
+.laWorkbookInstruction p{margin:4px 0 0;font-size:11px;line-height:2;color:#637e81}
+.laWorkbookExercise{padding:14px;border:1px solid #e6e5ef;background:#fafbff;border-radius:14px}
+.laWorkbookExerciseHeading{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.laWorkbookExerciseHeading strong{color:#42358e;font-size:13px}
+.laWorkbookExerciseHeading small{font-size:11px;color:#8d91a5}
+.laWorkbookMeaningChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.laWorkbookMeaningChoices button{border:1px solid #d8d8ea;border-radius:11px;background:#fff;min-height:45px;padding:9px;color:#464c6c;font-size:12px}
+.laWorkbookMeaningChoices button.right{background:#e3f8ee;border-color:#75cba5;color:#116847}
+.laWorkbookMeaningChoices button:disabled{cursor:default;opacity:.8}
+.laWorkbookRepeat{display:flex;flex-wrap:wrap;gap:8px}
+.laWorkbookRepeat>.laMicButton{min-height:45px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px}
+.laWorkbookRepeat small{width:100%;line-height:1.9;color:#7e899b;font-size:10px}
+.laWorkbookRepeat>.laMicButton:disabled{opacity:.55}
+.laWorkbookFeedback{display:flex;gap:10px;align-items:flex-start;border:1px solid #f1c3c8;background:#fff1f2;border-radius:12px;padding:12px;margin-top:12px;color:#9b4548}
+.laWorkbookFeedback.correct{border-color:#9ddfbf;background:#eafaf1;color:#176b4d}
+.laWorkbookFeedback>span{display:flex;flex-direction:column;gap:4px;flex:1}
+.laWorkbookFeedback strong,.laWorkbookFeedback b{font-size:13px}
+.laWorkbookFeedback small{font-size:11px}
+.laWorkbookSpeechScore{font-size:11px;color:#216f6b;line-height:1.9}
+.laWorkbookSpeechScore b{font-size:12px}
+.laWorkbookPaging{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 22px;border-top:1px solid #ebedf5;background:#f9faff}
+.laWorkbookPaging button{border:1px solid #cbc6e9;background:#fff;color:#5648af;display:inline-flex;gap:6px;align-items:center;justify-content:center;min-height:43px;border-radius:11px;padding:9px 12px;font-weight:800;font-size:12px;cursor:pointer}
+.laWorkbookPaging button:last-child{background:#5d53c7;color:white;border-color:#5d53c7}
+.laWorkbookPaging button:disabled{opacity:.45;cursor:default}
+.laWorkbookPaging span{font-size:11px;color:#8d91ac;white-space:nowrap}
+.laWorkbook :where(button,select,input):focus-visible{outline:3px solid #40bbaa;outline-offset:3px}
+@media(max-width:700px){
+ .laWorkbook{padding:11px}
+ .laWorkbookScene{grid-template-columns:minmax(0,1fr);gap:11px;padding:14px}
+ .laWorkbookArt{aspect-ratio:1.7;padding:4px}
+ .laWorkbookArt .alArt{max-width:280px}
+ .laWorkbookArt .alArt svg{max-height:175px;object-fit:contain}
+ .laWorkbookText{gap:6px}
+ .laWorkbookText h4{font-size:21px}
+ .laWorkbookSample{width:100%;min-height:46px}
+ .laWorkbookOriginal,.laWorkbookTasks{padding:13px 12px}
+ .laWorkbookPageTop,.laWorkbookPaging{padding:10px 12px}
+ .laWorkbookTabs{gap:5px}
+ .laWorkbookTabs button{font-size:11px;padding:8px 3px}
+ .laWorkbookTrackRow{align-items:stretch;flex-direction:column}
+ .laWorkbookSelect,.laWorkbookOriginalPlay{flex:0 0 auto;width:100%}
+ .laWorkbookMeaningChoices{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .laWorkbookPaging button{font-size:11px;padding:8px}
+}
+@media(max-width:350px){
+ .laWorkbookMeaningChoices{grid-template-columns:minmax(0,1fr)}
+ .laWorkbookPaging{flex-wrap:wrap}
+ .laWorkbookPaging span{order:-1;flex-basis:100%;text-align:center}
+ .laWorkbookText h4{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){.laWorkbookProgress>span{transition:none}}

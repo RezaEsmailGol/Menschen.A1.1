@@ -65,9 +65,11 @@ test('lesson audio UI uses authored SVG, accessible microphone and quiz controls
  assert.match(jsx,/scoreSpeechMatch/);
  assert.match(jsx,/onresult/);
  assert.match(jsx,/لازم نیست|تشخیص گفتار/);
- assert.match(jsx,/role="group" aria-label="انتخاب نوع تمرین صوتی"/);
- assert.match(jsx,/laAudioCard/);
- assert.match(jsx,/laQuizFeedback/);
+ assert.match(jsx,/role="group" aria-label="روش یادگیری با این تصویر"/);
+ assert.match(jsx,/laWorkbookPage/);
+ assert.match(jsx,/laWorkbookArt/);
+ assert.match(jsx,/laWorkbookOriginalPlay/);
+ assert.match(jsx,/laWorkbookFeedback/);
  assert.match(jsx,/className="laExercisePlay"/);
  assert.match(jsx,/startsWith\('\/api\/audio\/stream\?'\)/);
  assert.match(wrapper,/LessonAudioButtons lessonId=\{lessonId\} speak=\{speak\} onPracticeEvent=\{onPracticeEvent\}/);
@@ -75,5 +77,6 @@ test('lesson audio UI uses authored SVG, accessible microphone and quiz controls
   assert.match(art,new RegExp("kind==='"+type+"'"));
  assert.match(styles,/@media\(max-width:620px\)/);
  assert.match(styles,/prefers-reduced-motion:reduce/);
+ assert.match(read('src/illustratedAudioWorkbook.css'),/laWorkbookScene/);
  assert.doesNotMatch(jsx,/Runflare|رانفلر|ZIP|آپلود|@aws|SECRET_ACCESS_KEY/);
 });
