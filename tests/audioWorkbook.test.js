@@ -51,7 +51,7 @@ test('study/meaning/dictation/repeat reuse existing learning progress and meanin
  assert.equal(new Set(options).size,options.length);
  assert.equal(verifyAudioDictation(answer.text,answer.text),true);
  assert.equal(verifyAudioDictation(answer.text,'غلط'),false);
- const stats={completed:{'5:'+answer.id+':meaning':true,'5:'+cards[1].id+':dictation':true,'5:'+cards[2].id+':repeat':true}};
+ const stats={completed:{['5:'+answer.id+':meaning']:true,['5:'+cards[1].id+':dictation']:true,['5:'+cards[2].id+':repeat']:true}};
  assert.equal(completedAudioCards(cards,stats,5),3);
  assert.equal(completedAudioCards(cards,stats,4),0);
  assert.equal(completedAudioCards(cards,{completed:{}},5),0);
