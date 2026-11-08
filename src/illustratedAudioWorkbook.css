@@ -42,7 +42,7 @@
 .laWorkbookSpeed select{width:auto;min-height:37px;padding:5px 9px}
 .laWorkbookTasks{padding:17px 22px}
 .laWorkbookTabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:13px}
-.laWorkbookTabs button{min-height:45px;padding:9px 7px;border:1px solid #dedcf0;background:#fff;border-radius:11px;color:#5e5a8a;font:800 12px inherit;cursor:pointer}
+.laWorkbookTabs button{min-height:45px;padding:9px 7px;border:1px solid #dedcf0;background:#fff;border-radius:11px;color:#5e5a8a;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer}
 .laWorkbookTabs button.chosen{color:#fff;background:#5f53c8;border-color:#5f53c8}
 .laWorkbookInstruction{display:flex;gap:12px;align-items:flex-start;border:1px solid #d6e8e3;background:#edfaf6;border-radius:14px;padding:13px;color:#245e5d}
 .laWorkbookInstruction>svg{flex:0 0 20px}
