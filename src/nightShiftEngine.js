@@ -3,6 +3,8 @@ import { allStudyCards, lessons } from './courseData.js';
 import { activityItemKey, localDay } from './learningMemory.js';
 import { shuffleArray } from './studyEngine.js';
 import {ALPHABET_CARDS} from './visualDictionary.js';
+import {coreArticleNouns} from './articleNouns.js';
+import {articleKey} from './articleTrainerEngine.js';
 
 export const NIGHT_KEY = 'dt_night_shift_v1';
 
@@ -49,9 +51,17 @@ export function nightCandidates({memory={},schedule={},progress={},personalCards
     letter:letter.letter,audio:letter.example,lesson:1,note:letter.cue,
     priority:normalizeScore(memory.items?.[activityItemKey('alphabet',letter.letter)],Infinity,now)
   }));
+  // Self-rated visual recall has its own key; it cannot inflate scored gender mastery.
+  const articleCards=coreArticleNouns.map(noun=>({
+    id:activityItemKey('article-recall',noun.noun),source:'article-recall',kind:'vocab',group:'articles',
+    prompt:noun.fa+'؛ اسم را همراه der / die / das بگو.',answer:noun.word,audio:noun.word,
+    lesson:noun.lesson,note:'حرف تعریف + اسم؛ جمع: die '+noun.plural,
+    priority:Math.max(normalizeScore(memory.items?.[articleKey(noun,'gender')],Infinity,now),
+      normalizeScore(memory.items?.[activityItemKey('article-recall',noun.noun)],Infinity,now))
+  }));
   // Only one copy of a concept with a stable original key; no new IDs
   // are created for the same existing flashcard or classroom question.
-  return [...classItems,...vocab,...alphabet];
+  return [...classItems,...vocab,...alphabet,...articleCards];
 }
 
 export function buildNightReview(options={},count=6,random=Math.random,now=Date.now()) {
@@ -72,7 +82,7 @@ export function buildNightReview(options={},count=6,random=Math.random,now=Date.
    const due=ranked.find(q=>q.source===source);
    if(due)add(due);
  }
- for(const group of ['verbs','numbers','greetings','alphabet']){
+ for(const group of ['articles','verbs','numbers','greetings','alphabet']){
    const item=ranked.find(q=>q.group===group);
    if(item && selection.length<target)add(item);
  }
