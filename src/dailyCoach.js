@@ -16,9 +16,10 @@ function dayKeyOffset(now,offset){
 function categoryOf(event){
  const kind=event.kind;
  if(kind==='dialogue')return 'conversation';
+ if(kind==='article'&&/:(write|acc|neg|plural|nom)$/.test(String(event.id||'')))return 'production';
  if(kind==='sentence'||kind==='grammar'||kind==='dictation')return 'production';
  if(kind==='visual'&&/:type$|:build$/.test(String(event.id||'')))return 'production';
- if(['number','visual','vocab','reading','pronunciation'].includes(kind))return 'recognition';
+ if(['article','number','visual','vocab','reading','pronunciation'].includes(kind))return 'recognition';
  return null;
 }
 function getTaskCounts(memory,now){
@@ -43,6 +44,7 @@ function miniTrend(memory,now,days=14){
  });
 }
 function keyForWeakKind(kind,itemId=''){
+ if(kind==='article')return 'articles';
  if(kind==='number')return 'numbers';
  if(kind==='grammar')return 'verbs';
  if(kind==='sentence')return 'builder';
@@ -72,7 +74,7 @@ export function dailyCoachReport(memory={},scheduleDue=0,goal=10,now=Date.now())
   {id:'recognition',title:'مرور و یادآوری',details:dueCount?'ابتدا کارت‌های موعددار یا دشوار را مرور کن':'کلمات و تصویرها را بدون عجله مرور کن',
    route:dueCount?reviewRoute:'pictureGame',target:recognitionGoal,done:counts.recognition},
   {id:'production',title:'تولید جمله از حافظه',details:'تایپ آلمانی، صرف فعل یا ساختن جمله؛ نه فقط حدس گزینه',
-   route:firstWeak&&['grammar','sentence','dictation'].includes(firstWeak.kind)?firstRoute:'pictureGame',
+   route:firstWeak&&['article','grammar','sentence','dictation'].includes(firstWeak.kind)?firstRoute:'pictureGame',
    target:productionGoal,done:counts.production},
   {id:'conversation',title:'تمرین پاسخ در گفت‌وگو',details:'یک پاسخ واقعی در داستان یا مربی مکالمه ثبت کن',
    route:'dialogues/greetings',target:conversationGoal,done:counts.conversation}
