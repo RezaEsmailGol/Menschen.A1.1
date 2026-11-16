@@ -171,7 +171,7 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
   const [search,setSearch]=React.useState('');
   const firstWeak=report.weakItems[0];
   const destination=firstWeak?({
-    visual:'visual',number:'numbers',pronunciation:'pronunciation',sentence:'builder',grammar:'verbs',dialogue:'classNotes',
+    article:'articles',visual:'visual',number:'numbers',pronunciation:'pronunciation',sentence:'builder',grammar:'verbs',dialogue:'classNotes',
     reading:'exam',dictation:'listen',vocab:'srs'
   }[firstWeak.kind]||'srs'):'srs';
   const focusText=firstWeak?'برای تقویت: '+(firstWeak.label||skillLabels[firstWeak.kind]):'از یک تمرین شروع کن تا نقاط قابل مرور مشخص شوند.';
