@@ -51,10 +51,10 @@ export const practiceFilters=Object.freeze([
 ]);
 
 const practiceFilterIds={
-  daily:['coach','classNotes','night','srs','workbook'],
+  daily:['articles','coach','classNotes','night','srs','workbook'],
   speaking:['speaking','pronunciation','listen','dialogues','classNotes'],
-  words:['visualMemory','visual','srs','flash','words','alphabet','verbs'],
-  challenge:['pictureGame','builder','numbers','exam','workbook']
+  words:['articles','visualMemory','visual','srs','flash','words','alphabet','verbs'],
+  challenge:['articles','pictureGame','builder','numbers','exam','workbook']
 };
 export function matchesPracticeFilter(id,filter){
   return filter==='all'||(practiceFilterIds[filter]?.includes(id)??false);
