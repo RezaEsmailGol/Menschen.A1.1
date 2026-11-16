@@ -87,14 +87,21 @@ export const persianGrammarGuides = {
     ]
   },
   6: {
-    summary:'برای گفتن روز و ساعت قرار، am و um را از هم جدا می‌کنیم.',
+    summary:'جنسیت اسم، جمع و کاربرد اسم به‌عنوان مفعول مستقیم را با وسایل دفتر کار تمرین کن.',
     rules:[
-      rule('am-um','تفاوت am و um','برای روزهای هفته از am و برای ساعت دقیق از um استفاده می‌کنیم. هر دو معمولاً قبل از زمان می‌آیند.','am Montag · um neun Uhr',
-        [['Der Termin ist am Montag.','قرار روز دوشنبه است.'],['Ich komme um neun Uhr.','من ساعت ۹ می‌آیم.']],
-        quiz('جای خالی: Der Termin ist ___ Freitag.',['am','um','im','aus'],'am','روز هفته با am می‌آید.')),
-      rule('wann','پرسیدن زمان قرار','Wann می‌پرسد «چه زمانی؟». وقتی ساعت دقیق را می‌خواهی، Um wie viel Uhr ...? طبیعی‌تر است؛ در سؤال W فعل بعد از عبارت پرسشی می‌آید.','Wann kommst du? / Um wie viel Uhr kommst du?',
-        [['Wann ist der Termin?','قرار کی است؟'],['Um wie viel Uhr beginnt der Kurs?','کلاس ساعت چند شروع می‌شود؟']],
-        quiz('برای سؤال «ساعت چند می‌آیی؟» کدام درست است؟',['Um wie viel Uhr kommst du?','Woher kommst du?','Wer kommst du?','Wie alt kommst du?'],'Um wie viel Uhr kommst du?','برای ساعت دقیق از Um wie viel Uhr استفاده می‌کنیم.'))
+      rule('office-articles','حرف تعریف اسم‌های اداری','اسم‌های آلمانی را همراه der، die یا das حفظ کن؛ از معنی فارسی نمی‌توان جنسیت را همیشه حدس زد.','der Laptop · die Maus · das Handy',
+        [['Der Laptop ist neu.','لپ‌تاپ جدید است.'],['Die Maus ist klein.','ماوس کوچک است.'],['Das Handy ist teuer.','موبایل گران است.']],
+        quiz('حرف تعریف Bildschirm چیست؟',['der','die','das','den'],'der','der Bildschirm مذکر است.')),
+      rule('accusative-office','مفعول مستقیم در Akkusativ','با فعل‌هایی مانند haben، brauchen و kaufen، اسم مفعول مستقیم در Akkusativ می‌آید. در مفرد فقط شکل مذکر تغییر می‌کند.','der → den · ein → einen · kein → keinen',
+        [['Ich brauche einen Laptop.','من یک لپ‌تاپ لازم دارم.'],['Ich habe keine Maus.','من ماوس ندارم.'],['Ich kaufe ein Handy.','من یک موبایل می‌خرم.']],
+        quiz('Ich brauche ___ Drucker.',['einen','ein','eine','einer'],'einen','der Drucker مذکر است؛ einen Drucker.'),'بعد از sein، اسم خبری در Nominativ است، نه Akkusativ.',
+        [['نوع','Nominativ','Akkusativ','نفی Akkusativ'],['مذکر','der / ein','den / einen','keinen'],['مؤنث','die / eine','die / eine','keine'],['خنثی','das / ein','das / ein','kein'],['جمع','die','die','keine']]),
+      rule('office-plural','جمع اسم‌ها','اسم را همراه شکل جمع یاد بگیر؛ حرف تعریف معین جمع در Nominativ و Akkusativ همیشه die است.','der Bildschirm → die Bildschirme · die Maus → die Mäuse',
+        [['Ich brauche zwei Bildschirme.','من دو نمایشگر لازم دارم.'],['Ich habe keine Bücher.','من کتاب ندارم.']],
+        quiz('جمع das Handy چیست؟',['die Handys','die Handyes','der Handys','die Handy'],'die Handys','Handy در جمع s می‌گیرد.')),
+      rule('wohin-extra','تمرین تکمیلی کلاس: Wohin?','برای حرکت به داخل یک مکان با in، در پاسخ به Wohin? از Akkusativ استفاده می‌کنیم. برای موقعیت ثابت Wo? از Dativ استفاده می‌شود.','in das = ins · in den · in die',
+        [['Ich gehe ins Büro.','من به دفتر کار می‌روم.'],['Ich gehe in den Park.','من به پارک می‌روم.'],['Ich bin im Büro.','من در دفتر کار هستم.']],
+        quiz('Ich gehe ___ Büro.',['ins','im','in dem','aus dem'],'ins','مقصد حرکت: in das Büro = ins Büro.'))
     ]
   },
   7: {
