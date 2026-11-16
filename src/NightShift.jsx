@@ -7,7 +7,7 @@ import MnemonicArt from './MnemonicArt.jsx';
 import './nightShift.css';
 
 function prettyGroup(group){
- return ({verbs:'صرف فعل',numbers:'اعداد',greetings:'حال و احوال',origin:'معرفی و کشورها',classroom:'واژه‌های کلاس',vocabulary:'فلش‌کارت درس'})[group]||'مرور آلمانی';
+ return ({verbs:'صرف فعل',numbers:'اعداد',greetings:'حال و احوال',origin:'معرفی و کشورها',classroom:'واژه‌های کلاس',vocabulary:'فلش‌کارت درس',articles:'جنسیت اسم‌ها'})[group]||'مرور آلمانی';
 }
 
 export default function NightShift({memory,schedule,progress,personalCards,nightState,setNightState,setSchedule,onPracticeEvent,speak}){
