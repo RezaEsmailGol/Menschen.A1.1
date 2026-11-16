@@ -16,6 +16,7 @@ import './mobileGame.css';
 import './homeExperience.css';
 
 const practiceCategories=[
+  {id:'articles',label:'باشگاه der / die / das',hint:'۳۵ اسم اصلی تا درس ۶، آزمون جنسیت، املا، Akkusativ و جمع',Icon:Brain,theme:'green'},
   {id:'coach',label:'مربی روزانه تو',hint:'برنامه ۳ مرحله‌ای بر اساس عملکرد و نقاط نیازمند مرور',Icon:Brain,theme:'green'},
  {id:'speaking',label:'مربی تلفظ من',hint:'با میکروفون آلمانی بگو؛ همخوانی گفتار و پیشرفت را بسنج',Icon:Mic2,theme:'purple'},
   {id:'night',label:'شیفت شب',hint:'مرور کوتاه و نمایش آرام تصویری پیش از خواب',Icon:Moon,theme:'purple'},
@@ -37,6 +38,7 @@ const practiceCategories=[
   {id:'flash',label:'فلش‌کارت شخصی',hint:'افزودن و ورود و خروجی کارت',Icon:RotateCcw,theme:'pink'}
 ];
 const skillLabels={
+  article:'جنسیت و حالت اسم‌ها',
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',speaking:'تمرین گفتار',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
@@ -121,6 +123,7 @@ export function TodayDashboard({setTab,memory,progress,schedule,legacyStats,dail
       <div className="homeV2QuickGrid">
         <a href={'/lessons/'+currentId+'#lesson-grammar'} className="homeV2Quick"><span className="mint"><BookOpen size={21}/></span><strong>گرامر فارسی</strong><small>قواعد درس {currentId} با مثال</small><ArrowLeft size={16}/></a>
         <RouteLink to="classNotes" navigate={setTab} className="homeV2Quick"><span className="peach"><BookOpenCheck size={21}/></span><strong>جزوه استاد</strong><small>تمرین‌های کلاس</small><ArrowLeft size={16}/></RouteLink>
+        <RouteLink to="articles" navigate={setTab} className="homeV2Quick"><span className="lavender"><Brain size={21}/></span><strong>der · die · das</strong><small>جنسیت اسم‌ها تا درس ۶</small><ArrowLeft size={16}/></RouteLink>
         <RouteLink to="speaking" navigate={setTab} className="homeV2Quick"><span className="lavender"><Mic2 size={21}/></span><strong>مربی تلفظ</strong><small>بگو و دقت را بسنج</small><ArrowLeft size={16}/></RouteLink>
         <RouteLink to="numbers" navigate={setTab} className="homeV2Quick"><span className="sky"><Hash size={21}/></span><strong>بازی اعداد</strong><small>صدا، نوشتن و تشخیص</small><ArrowLeft size={16}/></RouteLink>
       </div>
