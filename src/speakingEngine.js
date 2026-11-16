@@ -78,7 +78,7 @@ export function speakingCards(category='numbers',{range='0-12',progress={}}={}){
  const enabled=lessons.filter(l=>l.id===1||progress[l.id]?.started);
  if(category==='words'){
   const words=enabled.flatMap(l=>l.words.map(([de,fa],index)=>({
-   id:'word:'+l.id+':'+index,category,text:de,label:de,meaning:fa,lesson:l.id
+   id:'word:'+(l.id===6?'6-office':l.id)+':'+index,category,text:de,label:de,meaning:fa,lesson:l.id
   })));
   const notes=classNotes.filter(x=>x.set==='classroom').map(x=>({
    id:'classword:'+x.id,category,text:x.de,label:x.de,meaning:x.fa,lesson:1
@@ -87,7 +87,7 @@ export function speakingCards(category='numbers',{range='0-12',progress={}}={}){
  }
  if(category==='sentences'){
   const fromLessons=enabled.flatMap(l=>l.sentences.map(([de,fa],index)=>({
-   id:'sentence:'+l.id+':'+index,category,text:de,label:de,meaning:fa,lesson:l.id
+   id:'sentence:'+(l.id===6?'6-office':l.id)+':'+index,category,text:de,label:de,meaning:fa,lesson:l.id
   })));
   const notes=classNotes.filter(x=>x.set==='origin'||x.set==='greetings').map(x=>({
    id:'classsentence:'+x.id,category,text:x.de,label:x.de,meaning:x.fa,lesson:1
