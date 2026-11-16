@@ -9,7 +9,7 @@ import {dailyCoachReport,GOAL_OPTIONS} from './dailyCoach.js';
 import './dailyCoach.css';
 
 const friendlySkill={
- vocab:'واژگان',grammar:'گرامر و صرف',sentence:'ساخت جمله',reading:'درک مطلب',
+ article:'جنسیت و حالت اسم‌ها',vocab:'واژگان',grammar:'گرامر و صرف',sentence:'ساخت جمله',reading:'درک مطلب',
  number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تصویر و واژه'
 };
 const taskIcons={recognition:Brain,production:BookOpen,conversation:MessageCircle};
