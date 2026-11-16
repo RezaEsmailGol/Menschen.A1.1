@@ -149,6 +149,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         {progress[lesson.id]?.passed ? <span className="lessonPassed"><CheckCircle2 size={17}/> این درس را با حداقل ۸۰٪ گذرانده‌ای</span>
           : <button className="courseStart" onClick={()=>startLesson(lesson.id)}>{progress[lesson.id]?.started || lesson.id===1?'ثبت این درس برای مرور روزانه':'شروع مطالعه و فعال‌سازی مرور'} <ArrowLeft size={17}/></button>}
       </article>
+      {[4,5,6].includes(lesson.id)&&<RouteLink to="articles" navigate={setTab} className="pgQuickLink"><BookOpenCheck size={19}/> تمرین جدی جنسیت اسم‌ها · der / die / das <ChevronLeft size={17}/></RouteLink>}
       <a href="#lesson-grammar" className="pgQuickLink"><BookOpenCheck size={19}/> آموزش فارسی گرامر این درس <ChevronLeft size={17}/></a>
       {[2,4,5].includes(lesson.id)&&<div id="lesson-picture"><LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/></div>}
       <BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/> 
