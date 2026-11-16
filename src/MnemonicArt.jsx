@@ -1,4 +1,5 @@
 import React, {useId} from 'react';
+import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
 import {getVisualEntry} from './visualDictionary.js';
 
 // Every artwork is a local, scalable and offline-capable SVG.
@@ -115,6 +116,7 @@ export default function MnemonicArt({word='',number=null,letter=null,prompt='',m
  const n=entry.kind==='number'?entry.number:null;
  const alphabet=entry.kind==='alphabet';
  const conjugation=entry.kind==='conjugation';
+ if(n===null&&!alphabet&&!conjugation&&hasLessonScene(word))return <LessonSceneArt word={showLabel?word:String(word).replace(/^(der|die|das)\s+/i,'')} showArticle={showLabel} size={size}/>;
  return <svg viewBox="0 0 320 280" role="img"
  aria-label={`نشانه تصویری: ${entry.cue||entry.fa||word}`}
  style={{width:'100%',height:'auto',maxWidth:size,display:'block',marginInline:'auto'}}
