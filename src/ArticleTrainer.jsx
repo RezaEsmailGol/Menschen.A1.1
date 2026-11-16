@@ -9,7 +9,7 @@ const names={new:'جدید',weak:'نیاز به مرور',learning:'در حال 
 const scopes=[['core','فهرست اصلی (۳۵ اسم)'],['4','درس ۴ · مبلمان'],['5','درس ۵ · اشیا'],['6','درس ۶ · دفتر کار'],['all','همه ۴۵ اسم']];
 const colors={der:'masculine',die:'feminine',das:'neuter'};
 function Art({noun,revealed=false}){
- return <div className="atArt">{hasLessonScene(noun.word)?<LessonSceneArt word={noun.word} showArticle={revealed} size={240}/>:<span role="img" aria-label={noun.fa}>{noun.icon}</span>}</div>;
+ return <div className="atArt">{hasLessonScene(noun.word)?<LessonSceneArt word={revealed?noun.word:noun.noun} showArticle={revealed} size={240}/>:<span role="img" aria-label={noun.fa}>{noun.icon}</span>}</div>;
 }
 export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}}){
  const [scope,setScope]=useState('core'),[mode,setMode]=useState('gender'),[filter,setFilter]=useState('all');
@@ -70,6 +70,6 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
     </div>}
   </section>}
   {finished&&<section className="atPanel atDone"><h2>نتیجه دور تمرین</h2><strong>{wins} / {queue.length}</strong><p>دقت دور: {Math.round(100*wins/queue.length)}٪ · {misses.length} مورد اشتباه</p>{misses.length>0&&<><p dir="ltr">{misses.map(x=>x.noun.word).join(' · ')}</p><button onClick={()=>begin(misses)}><RotateCcw size={18}/> فقط اشتباه‌ها را دوباره تمرین کن</button></>}<button className="atSecondary" onClick={reset}>بازگشت به واژه‌نامه</button></section>}
-  <section className="atPanel"><h2>الگوی مهم Nominativ و Akkusativ</h2><div className="atTable"><table dir="ltr"><thead><tr><th>Gender</th><th>Nominativ</th><th>Akkusativ</th><th>Negation (Akk.)</th></tr></thead><tbody>{Object.entries(CASE_FORMS).map(([a,f])=><tr key={a} className={colors[a]}><th>{a}</th><td>{a} / {f.nomInd}</td><td>{f.def} / {f.ind}</td><td>{f.neg}</td></tr>)}</tbody></table></div><p className="atNote">در مفرد Akkusativ فقط مذکر تغییر می‌کند: der → den، ein → einen، kein → keinen. جمع: die / keine.</p></section>
+  {(view==='learn'||finished)&&<section className="atPanel"><h2>الگوی مهم Nominativ و Akkusativ</h2><div className="atTable"><table dir="ltr"><thead><tr><th>Gender</th><th>Nominativ</th><th>Akkusativ</th><th>Negation (Akk.)</th></tr></thead><tbody>{Object.entries(CASE_FORMS).map(([a,f])=><tr key={a} className={colors[a]}><th>{a}</th><td>{a} / {f.nomInd}</td><td>{f.def} / {f.ind}</td><td>{f.neg}</td></tr>)}</tbody></table></div><p className="atNote">در مفرد Akkusativ فقط مذکر تغییر می‌کند: der → den، ein → einen، kein → keinen. جمع: die / keine.</p></section>}
  </main>;
 }
