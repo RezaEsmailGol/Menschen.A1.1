@@ -73,7 +73,7 @@ export function learningInsights(memory={}, now=Date.now()) {
     streak++;
     start.setDate(start.getDate()-1);
   }
-  const byType=['vocab','grammar','sentence','reading','number','dictation','pronunciation','dialogue','visual'].map(kind=>{
+  const byType=['article','vocab','grammar','sentence','reading','number','dictation','pronunciation','dialogue','visual'].map(kind=>{
     const list=practiced.filter(x=>x.kind===kind);
     return {kind,attempts:list.reduce((s,x)=>s+x.attempts,0),mastered:list.filter(x=>x.mastery>=80&&x.correct>=3&&x.reviewedDays>=2).length,
       weak:list.filter(x=>x.mastery<55).length};
@@ -110,6 +110,7 @@ export function chooseAdaptiveNumbers(maximum, memory={}, size=10, random=Math.r
 
 export function learningItemDestination(item) {
  const id=String(item?.id||'');
+ if(id.startsWith('article:'))return 'articles';
  if(id.startsWith('picture-book:')||id.startsWith('book-exercise:'))return 'course/'+(Number(item?.lesson)||1);
  if(id.includes(':class:')||id.startsWith('notes:'))return 'classNotes';
  // Teacher's six conjugation tables use the historical stable grammar IDs.
