@@ -22,7 +22,11 @@ export const SCENE_WORDS=Object.freeze({
  'schlüssel':'object-key',kugelschreiber:'object-pen',bleistift:'object-pencil',
  flasche:'object-bottle',brille:'object-glasses',tasche:'object-bag',
  fotoapparat:'object-camera',kamera:'object-camera',
- feuerzeug:'object-lighter',kette:'object-necklace',buch:'object-book',uhr:'object-watch'
+ feuerzeug:'object-lighter',kette:'object-necklace',buch:'object-book',uhr:'object-watch',
+ schirm:'object-umbrella',geldbörse:'object-wallet',seife:'object-soap',streichholz:'object-match',
+ laptop:'office-laptop','e-mail':'office-email',handy:'office-mobile',telefon:'office-phone',formular:'office-form',
+ drucker:'office-printer',maus:'office-mouse',computer:'office-computer',stift:'office-pen',kalender:'office-calendar',
+ bildschirm:'office-monitor',büro:'office-room',sms:'office-sms',rechnung:'office-invoice',briefmarke:'office-stamp',notizbuch:'office-notebook',termin:'office-appointment',arbeitsplatz:'office-desk'
 });
 export function wordKey(word=''){
  return String(word).normalize('NFC').toLocaleLowerCase('de').split(/\s+\/\s+/)[0]
