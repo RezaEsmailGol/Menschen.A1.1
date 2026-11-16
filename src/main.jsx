@@ -8,6 +8,7 @@ import NumberLab from './NumberLab';
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
+const ArticleTrainer = React.lazy(() => import('./ArticleTrainer.jsx'));
 const NightShift = React.lazy(() => import('./NightShift.jsx'));
 const VisualMemory = React.lazy(() => import('./VisualMemory.jsx'));
 const SpeakingCoach = React.lazy(() => import('./SpeakingCoach.jsx'));
@@ -118,7 +119,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد ۰ تا ۱۰۰',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
@@ -206,6 +207,7 @@ function App() {
       {tab==='speaking' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی مربی تلفظ...</p>}>
         <SpeakingCoach speak={speak} state={speakingState} setState={setSpeakingState} progress={progress} onPracticeEvent={onPracticeEvent}/>
        </React.Suspense>}
+      {tab==='articles' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین جنسیت...</p>}><ArticleTrainer memory={memory} speak={speak} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
       {tab==='classNotes' && <ClassNotes speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab}/>}
       {tab==='workbook' && <TeacherWorkbook speak={speak} memory={memory} onPracticeEvent={onPracticeEvent}
         routePage={route.startsWith('workbook/')?route.slice('workbook/'.length):null}
