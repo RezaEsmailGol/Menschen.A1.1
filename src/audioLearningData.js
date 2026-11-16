@@ -15,7 +15,7 @@ const SUBJECT_SCENES={
  3:['family','family','greeting','family','question','family'],
  4:['furniture','furniture','house','furniture','house','furniture'],
  5:['objects','objects','objects','house','objects','objects'],
- 6:['sunrise','clock','sunrise','clock','question','clock'],
+ 6:['objects','objects','objects','objects','jobs','jobs'],
  7:['shopping','shopping','objects','shopping','question','shopping'],
  8:['house','house','furniture','house','furniture','house'],
  9:['travel','travel','question','travel','sunrise','travel'],
@@ -33,7 +33,7 @@ export function lessonAudioCards(lessonId){
  ];
  const scenes=SUBJECT_SCENES[lesson.id]||[];
  return samples.map((x,index)=>({
-  id:'a'+lesson.id+'-'+(index+1),
+  id:'a'+lesson.id+'-'+(index+(lesson.id===6?21:1)),
   text:x.text,
   meaning:x.meaning,
   scene:x.scene||scenes[index]||'conversation',
@@ -72,9 +72,10 @@ export function parseAudioLearningStats(raw){
 }
 export function audioLearningSummary(stats,lessonId){
  const prefix=String(lessonId)+':';
- const complete=Object.entries(stats?.completed||{}).filter(([key,value])=>key.startsWith(prefix)&&value===true).length;
- const spoken=Object.values(stats?.speech||{}).filter(x=>x?.lesson===Number(lessonId)&&Number.isFinite(x?.score));
+ const valid=key=>key.startsWith(prefix)&&(Number(lessonId)!==6||/^6:a6-(?:21|22|23|24|25|26)(?::|$)/.test(key));
+ const complete=Object.entries(stats?.completed||{}).filter(([key,value])=>valid(key)&&value===true).length;
+ const spoken=Object.entries(stats?.speech||{}).filter(([key,x])=>x?.lesson===Number(lessonId)&&Number.isFinite(x?.score)&&(Number(lessonId)!==6||valid(key))).map(([,x])=>x);
  const best=spoken.length?Math.max(...spoken.map(x=>x.score)):null;
- const plays=Object.entries(stats?.plays||{}).filter(([key])=>key.startsWith(prefix)).reduce((n,[,value])=>n+(Number(value)||0),0);
+ const plays=Object.entries(stats?.plays||{}).filter(([key])=>valid(key)).reduce((n,[,value])=>n+(Number(value)||0),0);
  return {completed:complete,attempts:spoken.length,bestScore:best,plays};
 }
