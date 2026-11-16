@@ -1,3 +1,4 @@
+import {articleNouns} from './articleNouns.js';
 // Original practice content aligned to CEFR A1 topics.
 // These are independent companion exercises, not a transcription of Hueber Menschen.
 export const pronouns = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
@@ -136,7 +137,7 @@ export const lessons = [
       ['die Uhr','ساعت'],['die Farbe','رنگ'],['das Material','جنس / ماده'],
       ['das Holz','چوب'],['das Glas','شیشه'],['das Papier','کاغذ'],
       ['das Metall','فلز'],['ein','یک (مذکر/خنثی)'],['eine','یک (مؤنث)'],
-      ['kein','هیچ / نیست (مذکر/خنثی)'],['keine','هیچ / نیست (مؤنث/جمع)']
+      ['kein','هیچ / نیست (مذکر/خنثی)'],['keine','هیچ / نیست (مؤنث/جمع)'], ...articleNouns.filter(n=>n.lesson===5&&['Schirm','Seife','Geldbörse','Streichholz'].includes(n.noun)).map(n=>[n.word,n.fa])
     ],
     sentences:[
       ['Was ist das?','این چیست؟'],
@@ -151,12 +152,18 @@ export const lessons = [
     ]
   },
   {
-    id:6, label:'روزها، ساعت و قرار',german:'Uhrzeit und Termine',goal:'ساعت قرار و روز هفته را بیان کن.',
-    grammar:'حروف اضافه زمانی am و um',
-    tip:'برای ساعت از um استفاده کن (um neun Uhr) و برای روزهای هفته از am (am Montag).',
-    verbs:['kommen','haben'],
-    words:[['der Montag','دوشنبه'],['der Dienstag','سه‌شنبه'],['der Mittwoch','چهارشنبه'],['der Freitag','جمعه'],['die Uhr','ساعت'],['der Termin','قرار ملاقات'],['heute','امروز'],['morgen','فردا']],
-    sentences:[['Der Termin ist am Montag.','قرار دوشنبه است.'],['Ich komme um neun Uhr.','من ساعت ۹ می‌آیم.'],['Heute habe ich Zeit.','امروز وقت دارم.'],['Morgen ist Freitag.','فردا جمعه است.']],
+    id:6,label:'وسایل دفتر کار، جمع اسم‌ها و Akkusativ',german:'Ich brauche kein Büro.',
+    goal:'وسایل اداری را با حرف تعریف و جمع یاد بگیر؛ نیاز داشتن، داشتن و نفی اسم در Akkusativ را تمرین کن. (محدوده کلاس: تا صفحه ۳۶)',
+    grammar:'Nominativ و Akkusativ؛ der → den، ein → einen، kein → keinen؛ جمع die / keine',
+    tip:'Ich brauche einen Laptop. Ich habe keinen Drucker. Die Maus ist neu. Ich gehe ins Büro.',
+    verbs:['brauchen','haben','kaufen'],
+    words:articleNouns.filter(n=>n.lesson===6).map(n=>[n.word,n.fa]),
+    sentences:[
+      ['Ich brauche einen Laptop.','من یک لپ‌تاپ لازم دارم.'],
+      ['Ich habe keinen Drucker.','من چاپگر ندارم.'],
+      ['Ich kaufe eine Maus.','من یک ماوس می‌خرم.'],
+      ['Ich brauche kein Büro.','من دفتر کار لازم ندارم.']
+    ],
   },
   {
     id:7, label:'خرید و نیازهای روزانه',german:'Einkaufen',goal:'نام کالا، قیمت و درخواست ساده در خرید را تمرین کن.',
@@ -209,6 +216,7 @@ export const lessons = [
 ];
 
 export function lessonCardId(lessonId, index) {
+  if(lessonId===6)return 'a11:book-6:'+index;
   return lessonId>=3&&lessonId<=5 ? `a11:book-${lessonId}:${index}` : `a11:${lessonId}:${index}`;
 }
 export function getLessonCards(lesson) {
