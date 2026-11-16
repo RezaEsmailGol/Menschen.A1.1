@@ -4,8 +4,8 @@ import {lessons,verbForms} from './courseData.js';
 // These lessons are topical companions; they are NOT represented as official book transcriptions.
 const topicChecks={
   6:[
-    ['برای روزهای هفته کدام حرف اضافه درست است؟',['am','um','im','aus'],'am','am Montag'],
-    ['برای گفتن ساعت قرار کدام حرف اضافه درست است؟',['um','am','aus','mit'],'um','um neun Uhr']
+    ['Ich brauche ___ Laptop.',['einen','ein','eine','der'],'einen','der Laptop → einen Laptop در Akkusativ'],
+    ['Ich habe ___ Drucker.',['keinen','kein','keine','den'],'keinen','der Drucker → keinen Drucker در Akkusativ']
   ],
   7:[
     ['برای درخواست مؤدبانه در فروشگاه کدام فعل مناسب‌تر است؟',['möchte','muss','wohne','bin'],'möchte','Ich möchte ein Brot.'],
@@ -114,12 +114,12 @@ function makeSections(lesson){
    audio:de,answer:de,why:fa
   }))
  };
- return [vocab,grammar,writing,listening];
+ return [vocab,grammar,writing,listening].map(section=>lesson.id===6?{...section,tasks:section.tasks.map(task=>({...task,id:task.id.replace(/^l6-/,'l6-office-')}))}:section);
 }
 export const supplementalBookLessons=Object.fromEntries(
  lessons.filter(lesson=>lesson.id>=6&&lesson.id<=12).map(lesson=>[
   lesson.id,{
-   title:lesson.german,pages:null,focus:lesson.label,
+   title:lesson.german,pages:lesson.id===6?'۳۳ تا ۳۶':null,focus:lesson.label,
    supplemental:true,
    goals:[
     lesson.goal,'تمرین فعال واژگان و معانی درس',
