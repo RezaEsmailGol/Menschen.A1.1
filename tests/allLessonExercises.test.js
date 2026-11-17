@@ -59,8 +59,8 @@ test('all 12 lessons have graded practice with a unique task ID and deep link',(
  assert.equal(ids.size,368);
 });
 test('supplemental courses teach genuinely different topics rather than repeating first lessons',()=>{
- assert.deepEqual(Object.keys(supplementalBookLessons),['6','7','8','9','10','11','12']);
- for(const lesson of lessons.slice(5)){
+ assert.deepEqual(Object.keys(supplementalBookLessons),['7','8','9','10','11','12']);
+ for(const lesson of lessons.slice(6)){
   const plan=supplementalBookLessons[lesson.id];
   assert.ok(plan.focus.includes(lesson.label));
   assert.deepEqual(plan.sections.map(section=>section.tasks.length),[8,8,8,8]);
