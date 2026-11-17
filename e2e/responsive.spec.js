@@ -153,6 +153,25 @@ test('Akkusativ quest practices den, einen and keinen on a phone',async ({browse
  await context.close();
 });
 
+test('lesson 5 picture game offers a supplemental Akkusativ round',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/lessons/5');
+ await expect(page.locator('.lpGame')).toBeVisible();
+ await expect(page.locator('.lpModeRow button')).toHaveCount(3);
+ await page.locator('.lpModeRow button').filter({hasText:'Akkusativ'}).click();
+ await page.locator('.lpStart').click();
+ await expect(page.locator('.lpPlay')).toBeVisible();
+ await expect(page.locator('.lpChoices button')).toHaveCount(4);
+ expect(errors).toEqual([]);
+ const audit=await page.evaluate(viewportAudit);
+ expect.soft(audit.documentWidth,JSON.stringify(audit)).toBeLessThanOrEqual(362);
+ expect.soft(audit.controls,JSON.stringify(audit)).toHaveLength(0);
+ await context.close();
+});
+
 test('verb trainer shows six conjugations and records a classroom verb answer',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const page=await context.newPage();
