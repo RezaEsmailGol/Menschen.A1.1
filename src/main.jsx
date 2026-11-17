@@ -22,6 +22,7 @@ import {vibrateGame,readGameFeedbackPreferences} from './gameEffects.js';
 import RouteLink from './RouteLink';
 import {usePageRoute} from './usePageRoute';
 import { pronouns, verbForms } from './courseData';
+import VerbTrainer from './VerbTrainer.jsx';
 import { Home as HomeIcon, BookOpenCheck, LayoutGrid, ChartNoAxesCombined, ChevronRight } from 'lucide-react';
 import { TodayDashboard, PracticeHub, ProgressPage } from './LearningScreens';
 import { MEMORY_KEY, recordActivity, learningInsights, activityItemKey } from './learningMemory';
@@ -66,7 +67,7 @@ const verbMeanings = {
   haben:'داشتن', arbeiten:'کار کردن', machen:'انجام دادن', spielen:'بازی کردن', lesen:'خواندن',
   brauchen:'نیاز داشتن', kaufen:'خریدن', suchen:'جست‌وجو کردن', fahren:'رفتن با وسیله',
   gehen:'رفتن پیاده', müssen:'مجبور بودن / باید', schreiben:'نوشتن', schicken:'فرستادن',
-  möchten:'مایل بودن / خواستن', können:'توانستن'
+  möchten:'مایل بودن / خواستن', können:'توانستن', sehen:'دیدن', hören:'شنیدن', wollen:'خواستن', treffen:'ملاقات کردن', besuchen:'دیدار کردن', finden:'پیدا کردن / نظر دادن', leben:'زندگی کردن'
 };
 const verbs = Object.fromEntries(Object.entries(verbForms).map(([infinitive,forms]) => [
   infinitive,
@@ -224,7 +225,7 @@ function App() {
         onPracticeEvent({id:activityItemKey('number',number),kind:'number',label:String(number),lesson:1,correct:ok});
       }} />}
       {tab==='alphabet' && <Alphabet />}
-      {tab==='verbs' && <Verbs onPracticeEvent={onPracticeEvent}/>}
+      {tab==='verbs' && <VerbTrainer speak={speak} memory={memory} onPracticeEvent={onPracticeEvent}/>}
     </main>
 
     <footer>تمرین مستقل و مکمل کتاب Menschen A1.1 · اطلاعات شما فقط روی همین دستگاه ذخیره می‌شود.</footer>
@@ -250,7 +251,7 @@ function Home({stats,setTab}) {
     ['دیکته شنیداری', 'گوش بده، کلمه را با دقت بنویس', 'listen', Keyboard, 'blue'],
     ['کلمات جلسه اول', 'کلمات مهم جزوه با معنی و صدا', 'words', Languages, 'rose'],
     ['الفبای آلمانی', 'حروف ویژه و شنیدن نام حروف', 'alphabet', Languages, 'green'],
-    ['صرف افعال', '۲۰ فعل پرکاربرد و آزمون صرف', 'verbs', Shuffle, 'indigo'],
+    ['باشگاه صرف افعال', 'افعال کتاب و تخته کلاس؛ صرف شش ضمیر و آزمون تایپی', 'verbs', Shuffle, 'indigo'],
   ];
   return <>
     <section className="hero upgradedHero">
