@@ -24,6 +24,13 @@ export const verbForms = {
   schicken: ['schicke','schickst','schickt','schicken','schickt','schicken'],
   möchten: ['möchte','möchtest','möchte','möchten','möchtet','möchten'],
   können: ['kann','kannst','kann','können','könnt','können'],
+  sehen: ['sehe','siehst','sieht','sehen','seht','sehen'],
+  hören: ['höre','hörst','hört','hören','hört','hören'],
+  wollen: ['will','willst','will','wollen','wollt','wollen'],
+  treffen: ['treffe','triffst','trifft','treffen','trefft','treffen'],
+  besuchen: ['besuche','besuchst','besucht','besuchen','besucht','besuchen'],
+  finden: ['finde','findest','findet','finden','findet','finden'],
+  leben: ['lebe','lebst','lebt','leben','lebt','leben'],
 };
 
 export const lessons = [
