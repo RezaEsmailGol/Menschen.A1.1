@@ -19,9 +19,8 @@ export default function VerbTrainer({speak=()=>{},onPracticeEvent=()=>{},memory=
  const currentVerb=verbs.includes(verb)?verb:verbs[0];
  const info=verbInfo[currentVerb];
  const forms=getVerbForms(currentVerb)||{};
- const currentForms=question?getVerbForms(question.verb):forms;
  const currentInfo=question?verbInfo[question.verb]:info;
- const progress=Object.keys(memory.items||{}).filter(key=>key.includes(':grammar:')).length;
+ const tracked=pronouns.filter(person=>memory.items?.[activityItemKey('grammar',currentVerb,person)]?.attempts).length;
 
  function chooseGroup(id){
   setGroup(id);
@@ -52,7 +51,7 @@ export default function VerbTrainer({speak=()=>{},onPracticeEvent=()=>{},memory=
    <small>MENSCHEN A1.1 · VERB TRAINER</small>
    <h1>باشگاه صرف افعال</h1>
    <p>فعل را انتخاب کن، صرف هر شش ضمیر را ببین و بعد بدون نگاه کردن جواب بده.</p>
-   <div className="vtHeroStats"><span><Trophy size={16}/> {score.correct} پاسخ درست</span><span><BookOpen size={16}/> {verbs.length} فعل در این مسیر</span></div>
+   <div className="vtHeroStats"><span><Trophy size={16}/> {score.correct} پاسخ درست</span><span><BookOpen size={16}/> {verbs.length} فعل در این مسیر</span><span>{tracked}/۶ ضمیر ثبت‌شده برای این فعل</span></div>
   </header>
 
   <section className="vtPanel">
