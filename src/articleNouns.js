@@ -51,7 +51,7 @@ const rows=[
 export const articleNouns=Object.freeze(rows.map(([lesson,article,noun,fa,plural,icon],i)=>Object.freeze({lesson,article,noun,fa,plural,icon,core:i<35,word:article+' '+noun})));
 export const coreArticleNouns=articleNouns.filter(x=>x.core);
 export const CASE_FORMS=Object.freeze({
- der:{def:'den',ind:'einen',neg:'keinen',nomInd:'ein',nomNeg:'kein',pronoun:'er'},
- die:{def:'die',ind:'eine',neg:'keine',nomInd:'eine',nomNeg:'keine',pronoun:'sie'},
- das:{def:'das',ind:'ein',neg:'kein',nomInd:'ein',nomNeg:'kein',pronoun:'es'}
+ der:{def:'den',ind:'einen',neg:'keinen',nomInd:'ein',nomNeg:'kein',datDef:'dem',datInd:'einem',datNeg:'keinem',pronoun:'er'},
+ die:{def:'die',ind:'eine',neg:'keine',nomInd:'eine',nomNeg:'keine',datDef:'der',datInd:'einer',datNeg:'keiner',pronoun:'sie'},
+ das:{def:'das',ind:'ein',neg:'kein',nomInd:'ein',nomNeg:'kein',datDef:'dem',datInd:'einem',datNeg:'keinem',pronoun:'es'}
 });

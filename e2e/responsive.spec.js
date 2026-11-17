@@ -124,6 +124,33 @@ test('lesson 6: office SVG gallery exposes 18 objects and four article grammar m
  await context.close();
 });
 
+test('Dativ quest converts die Lampe to der Lampe and eine Lampe to einer Lampe',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/articles');
+ await expect(page.locator('.atRoot')).toBeVisible();
+ await expect(page.locator('.atDativeJourney')).toBeVisible();
+ await expect(page.locator('.atDativeStage')).toHaveCount(3);
+ const definite=page.locator('.atDativeStage').nth(0);
+ const indefinite=page.locator('.atDativeStage').nth(1);
+ await expect(definite).toContainText('die Lampe → der Lampe');
+ await expect(indefinite).toContainText('eine Lampe → einer Lampe');
+ await indefinite.click();
+ await expect(indefinite).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('.atDativeStage.active')).toContainText('eine Lampe → einer Lampe');
+ await page.locator('.atActions button').first().click();
+ await expect(page.locator('.atQuiz')).toBeVisible();
+ await expect(page.locator('.atQuiz h2')).toContainText('Nominativ را به Dativ تبدیل کن');
+ await expect(page.locator('.atOptions button')).toHaveCount(4);
+ expect(errors).toEqual([]);
+ const audit=await page.evaluate(viewportAudit);
+ expect.soft(audit.documentWidth,JSON.stringify(audit)).toBeLessThanOrEqual(362);
+ expect.soft(audit.controls,JSON.stringify(audit)).toHaveLength(0);
+ await context.close();
+});
+
 test('responsive lesson index opens nested modules and lesson details',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true});
  const page=await context.newPage();
