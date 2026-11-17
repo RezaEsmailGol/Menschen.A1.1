@@ -63,7 +63,7 @@ export const lesson6BookLesson = {
         {id:'l6-office-g05',type:'choice',prompt:'جمع die Briefmarke چیست؟',choices:['die Briefmarken','die Briefmarke','die Briefmarkes','der Briefmarken'],answer:'die Briefmarken',why:'اسم مؤنث Briefmarke در اینجا پسوند -n می‌گیرد.'},
         {id:'l6-office-g06',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Laptop.',choices:['einen','ein','eine','den'],answer:'einen',why:'Laptop مذکر است و مفعول مستقیم در Akkusativ می‌آید: einen Laptop.'},
         {id:'l6-office-g07',type:'choice',prompt:'جای خالی را کامل کن: Ich suche ___ Kalender.',choices:['den','der','die','das'],answer:'den',why:'حرف تعریف معین مذکر در Akkusativ از der به den تغییر می‌کند.'},
-        {id:'l6-office-g08',type:'choice',prompt:'جای خالی را کامل کن: Ich habe ___ Maus.',choices:['keine','kein','keinen','einen'],answer:'keine',why:'Maus مؤنث است؛ در Akkusativ شکل آن keine باقی می‌ماند.'},
+        {id:'l6-office-g08',type:'choice',prompt:'جای خالی را کامل کن: Ich habe ___ Drucker.',choices:['keinen','kein','keine','nicht'],answer:'keinen',why:'Drucker مذکر است و در Akkusativ منفی، kein به keinen تبدیل می‌شود.'},
         {id:'l6-office-g09',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Handy.',choices:['ein','einen','eine','den'],answer:'ein',why:'Handy خنثی است؛ ein در Akkusativ تغییر نمی‌کند.'},
         {id:'l6-office-g10',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Briefmarken.',choices:['keine','kein','keinen','eine'],answer:'keine',why:'در جمع، kein به keine تبدیل می‌شود؛ این شکل در Akkusativ جمع هم ثابت می‌ماند.'}
       ]
