@@ -1,6 +1,6 @@
 import {lessons,verbForms} from './courseData.js';
 
-// Independent A1 practice for the app's supplemental lessons 6–12.
+// Independent A1 practice for the app's supplemental lessons 7–12.
 // These lessons are topical companions; they are NOT represented as official book transcriptions.
 const topicChecks={
   7:[
