@@ -50,7 +50,7 @@ test('lesson five teaches the handwritten Nominativ table',()=>{
  assert.deepEqual(table[4],['جمع','die','—','keine','sie']);
  assert.ok(rules[1].examples.some(x=>x[0].includes('eine Brille')));
  assert.ok(rules[2].examples.some(x=>x[0].includes('keine Tasche')));
- assert.ok(rules[4].examples.some(x=>x[0].includes('Ich suche den Schlüssel')));
+ assert.ok(rules[4].pattern.includes('Ich suche den Schlüssel'));
  assert.match(rules[4].warning,/تمرین تکمیلی کلاس/);
 });
 
