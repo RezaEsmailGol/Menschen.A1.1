@@ -135,7 +135,7 @@ export const lessons = [
     goal:'نام اشیای روزمره را بگو، ein/eine/kein/keine را درست انتخاب کن و جنس محصول را توصیف کن. (کتاب: صفحه ۲۹–۳۲)',
     grammar:'حرف تعریف نامعین ein/eine و منفی kein/keine در حالت Nominativ؛ اسم‌های der/die/das؛ جنس aus + Material',
     tip:'Das ist ein Schlüssel (der). Das ist eine Brille (die). Das ist ein Buch (das). Das ist keine Tasche.',
-    verbs:['sein','heißen','haben'],
+    verbs:['sein','haben','finden','kosten','leben'],
     words:[
       ['der Schlüssel','کلید'],['der Kugelschreiber','خودکار'],
       ['der Bleistift','مداد'],['der Fotoapparat','دوربین'],
@@ -163,7 +163,7 @@ export const lessons = [
     goal:'وسایل دفتر کار و فناوری را با تصویر و حرف تعریف یاد بگیر؛ مفرد و جمع، Akkusativ، مکالمه تلفنی، ایمیل و SMS را تمرین کن. (کتاب: صفحه ۳۳ تا ۳۶)',
     grammar:'Singular / Plural؛ Nominativ و Akkusativ؛ der → den، ein → einen، kein → keinen؛ جمع die / keine',
     tip:'Ich brauche einen Laptop. Ich habe keinen Drucker. Ich suche den Kalender. Guten Tag, hier ist Reza. Auf Wiederhören!',
-    verbs:['brauchen','haben','suchen'],
+    verbs:['arbeiten','sehen','hören','lesen','brauchen','suchen','schreiben','haben','möchten','können','fahren','treffen','besuchen','wollen','müssen'],
     words:articleNouns.filter(n=>n.lesson===6).map(n=>[n.word,n.fa]),
     sentences:[
       ['Ich brauche einen Laptop.','من یک لپ‌تاپ لازم دارم.'],
