@@ -81,7 +81,7 @@ export const lesson6BookLesson = {
         ['🙏','Vielen Dank!','بسیار ممنون'],
         ['☎️','Auf Wiederhören!','خدانگهدار تلفنی']
       ],
-      reading: 'A: Guten Tag, hier ist Reza.\\nB: Guten Tag, Herr Reza. Was kann ich für Sie tun?\\nA: Ich suche den Kalender.\\nB: Einen Moment, bitte.\\nA: Vielen Dank. Auf Wiederhören!',
+      reading: 'A: Guten Tag, hier ist Reza.\\nB: Guten Tag. Was kann ich für Sie tun?\\nA: Ich suche den Kalender.\\nB: Einen Moment, bitte.\\nA: Vielen Dank. Auf Wiederhören!',
       tasks: [
         {id:'l6-office-t01',type:'choice',prompt:'برای پاسخ‌گویی رسمی به تماس شرکت، کدام عبارت مناسب است؟',choices:['Brenner IT-Consulting, guten Tag.','Gute Nacht, tschüs.','Ich bin im Park.','Was kostet das?'],answer:'Brenner IT-Consulting, guten Tag.'},
         {id:'l6-office-t02',type:'choice',prompt:'برای معرفی خودت پشت تلفن کدام عبارت را می‌گویی؟',choices:['Guten Tag, hier ist Reza.','Guten Tag, ich bin Büro.','Ich habe ein Kalender.','Woher ist der Laptop?'],answer:'Guten Tag, hier ist Reza.'},
