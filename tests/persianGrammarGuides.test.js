@@ -41,7 +41,7 @@ test('every course lesson has a Persian grammar guide and independent mini quizz
 
 test('lesson five teaches the handwritten Nominativ table',()=>{
  const rules=grammarGuideForLesson(5).rules;
- assert.deepEqual(rules.map(x=>x.id),['nominative-table','ein-eine','kein-keine','things-and-sounds']);
+ assert.deepEqual(rules.map(x=>x.id),['nominative-table','ein-eine','kein-keine','things-and-sounds','akkusativ-class-practice']);
  const table=rules[0].table;
  assert.deepEqual(table[0],['نوع اسم','معین','نامعین','منفی','ضمیر']);
  assert.deepEqual(table[1],['مذکر','der','ein','kein','er']);
@@ -50,6 +50,8 @@ test('lesson five teaches the handwritten Nominativ table',()=>{
  assert.deepEqual(table[4],['جمع','die','—','keine','sie']);
  assert.ok(rules[1].examples.some(x=>x[0].includes('eine Brille')));
  assert.ok(rules[2].examples.some(x=>x[0].includes('keine Tasche')));
+ assert.ok(rules[4].examples.some(x=>x[0].includes('Ich suche den Schlüssel')));
+ assert.match(rules[4].warning,/تمرین تکمیلی کلاس/);
 });
 
 test('classroom topics include W-questions, family and doch',()=>{
