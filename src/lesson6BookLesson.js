@@ -54,6 +54,10 @@ export const lesson6BookLesson = {
         ['🔵','der Laptop → den Laptop','مذکر: der به den تغییر می‌کند'],
         ['🟣','ein Laptop → einen Laptop','نامعین مذکر: ein به einen'],
         ['🚫','kein Laptop → keinen Laptop','منفی مذکر: kein به keinen']
+         ['🖱️','eine Maus → eine Maus','مؤنث در Akkusativ تغییر نمی‌کند'],
+         ['🖱️','keine Maus → keine Maus','منفی مؤنث'],
+         ['📱','ein Handy → ein Handy','خنثی در Akkusativ تغییر نمی‌کند'],
+         ['✉️','keine Briefmarken','منفی جمع'],
       ],
       tasks: [
         {id:'l6-office-g01',type:'choice',prompt:'جمع das Handy کدام است؟',choices:['die Handys','die Handyes','die Handy','der Handys'],answer:'die Handys',why:'بسیاری از واژه‌های وام‌گرفته مانند Handy در جمع s می‌گیرند.'},
@@ -64,7 +68,7 @@ export const lesson6BookLesson = {
         {id:'l6-office-g06',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Laptop.',choices:['einen','ein','eine','den'],answer:'einen',why:'Laptop مذکر است و مفعول مستقیم در Akkusativ می‌آید: einen Laptop.'},
         {id:'l6-office-g07',type:'choice',prompt:'جای خالی را کامل کن: Ich suche ___ Kalender.',choices:['den','der','die','das'],answer:'den',why:'حرف تعریف معین مذکر در Akkusativ از der به den تغییر می‌کند.'},
         {id:'l6-office-g08',type:'choice',prompt:'جای خالی را کامل کن: Ich habe ___ Drucker.',choices:['keinen','kein','keine','nicht'],answer:'keinen',why:'Drucker مذکر است و در Akkusativ منفی، kein به keinen تبدیل می‌شود.'},
-        {id:'l6-office-g09',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Handy.',choices:['ein','einen','eine','den'],answer:'ein',why:'Handy خنثی است؛ ein در Akkusativ تغییر نمی‌کند.'},
+        {id:'l6-office-g09',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Maus.',choices:['eine','einen','ein','einer'],answer:'eine',why:'Maus مؤنث است؛ eine در Akkusativ بدون تغییر می‌ماند.'},
         {id:'l6-office-g10',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Briefmarken.',choices:['keine','kein','keinen','eine'],answer:'keine',why:'در جمع، kein به keine تبدیل می‌شود؛ این شکل در Akkusativ جمع هم ثابت می‌ماند.'}
       ]
     },
