@@ -124,26 +124,53 @@ test('lesson 6: office SVG gallery exposes 18 objects and four article grammar m
  await context.close();
 });
 
-test('Dativ quest converts die Lampe to der Lampe and eine Lampe to einer Lampe',async ({browser})=>{
+test('Akkusativ quest practices den, einen and keinen on a phone',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const page=await context.newPage();
  const errors=[];
  page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/articles');
  await expect(page.locator('.atRoot')).toBeVisible();
- await expect(page.locator('.atDativeJourney')).toBeVisible();
- await expect(page.locator('.atDativeStage')).toHaveCount(3);
- const definite=page.locator('.atDativeStage').nth(0);
- const indefinite=page.locator('.atDativeStage').nth(1);
- await expect(definite).toContainText('die Lampe → der Lampe');
- await expect(indefinite).toContainText('eine Lampe → einer Lampe');
+ await expect(page.locator('.atAkkJourney')).toBeVisible();
+ await expect(page.locator('.atAkkStage')).toHaveCount(3);
+ const definite=page.locator('.atAkkStage').nth(0);
+ const indefinite=page.locator('.atAkkStage').nth(1);
+ const negative=page.locator('.atAkkStage').nth(2);
+ await expect(definite).toContainText('der Laptop → den Laptop');
+ await expect(indefinite).toContainText('ein Laptop → einen Laptop');
+ await expect(negative).toContainText('kein Laptop → keinen Laptop');
  await indefinite.click();
  await expect(indefinite).toHaveAttribute('aria-pressed','true');
- await expect(page.locator('.atDativeStage.active')).toContainText('eine Lampe → einer Lampe');
  await page.locator('.atActions button').first().click();
  await expect(page.locator('.atQuiz')).toBeVisible();
- await expect(page.locator('.atQuiz h2')).toContainText('Nominativ را به Dativ تبدیل کن');
+ await expect(page.locator('.atQuiz h2')).toContainText('Akkusativ');
  await expect(page.locator('.atOptions button')).toHaveCount(4);
+ await expect(page.locator('.atPronounPanel')).toContainText('dich');
+ expect(errors).toEqual([]);
+ const audit=await page.evaluate(viewportAudit);
+ expect.soft(audit.documentWidth,JSON.stringify(audit)).toBeLessThanOrEqual(362);
+ expect.soft(audit.controls,JSON.stringify(audit)).toHaveLength(0);
+ await context.close();
+});
+
+test('verb trainer shows six conjugations and records a classroom verb answer',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/verbs');
+ await expect(page.locator('.verbTrainer')).toBeVisible();
+ await expect(page.locator('.vtConjRow')).toHaveCount(6);
+ await page.locator('.vtGroupTabs button').filter({hasText:'افعال تخته کلاس'}).click();
+ await expect(page.locator('.vtVerbTitle h2')).toHaveText('fahren');
+ await expect(page.locator('.vtConjRow').filter({hasText:'du'})).toContainText('fährst');
+ await page.locator('.vtActions button').first().click();
+ await expect(page.locator('.vtQuiz')).toBeVisible();
+ const prompt=(await page.locator('.vtQuiz h2').innerText()).split('+').map(x=>x.trim());
+ const answers={ich:'fahre',du:'fährst','er/sie/es':'fährt',wir:'fahren',ihr:'fahrt','sie/Sie':'fahren'};
+ await page.locator('.vtQuiz input').fill(answers[prompt[0]]);
+ await page.locator('.vtQuiz form button').click();
+ await expect(page.locator('.vtFeedback.right')).toBeVisible();
  expect(errors).toEqual([]);
  const audit=await page.evaluate(viewportAudit);
  expect.soft(audit.documentWidth,JSON.stringify(audit)).toBeLessThanOrEqual(362);
