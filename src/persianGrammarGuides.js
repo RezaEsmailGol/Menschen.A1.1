@@ -89,7 +89,7 @@ export const persianGrammarGuides = {
          [['Das ist ein Buch.','این یک کتاب است. (Nominativ)'],['Ich lese ein Buch.','من یک کتاب می‌خوانم. (Akkusativ خنثی، بدون تغییر)'],['Ich sehe eine Brille.','من یک عینک می‌بینم. (Akkusativ مؤنث، بدون تغییر)']],
          quiz('Ich sehe ___ Schlüssel.',['den','der','die','das'],'den','Schlüssel مذکر است و مفعول مستقیم در Akkusativ با den می‌آید.'),
          'این بخش تمرین تکمیلی کلاس است؛ موضوع اصلی صفحات درس ۵ معرفی اشیا و Nominativ است.',
-         [['جنس','Nominativ','Akkusativ معین','Akkusativ نامعین','Akkusativ منفی'],['مذکر','der / ein / kein','den','einen','keinen'],['مؤنث','die / eine / keine','die','eine','keine'],['خنثی','das / ein / kein','das','ein','kein'],['جمع','die / keine','die','—','keine']]))
+         [['جنس','Nominativ','Akkusativ معین','Akkusativ نامعین','Akkusativ منفی'],['مذکر','der / ein / kein','den','einen','keinen'],['مؤنث','die / eine / keine','die','eine','keine'],['خنثی','das / ein / kein','das','ein','kein'],['جمع','die / keine','die','—','keine']])
     ]
   },
   6: {
