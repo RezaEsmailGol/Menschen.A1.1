@@ -21,7 +21,7 @@ test('new learner has no fake medals, no fake speech score, and 12 real exercise
  assert.equal(report.speechAverage,null);
  assert.equal(report.audioTotal,0);
  assert.equal(report.bookPercent,0);
- assert.equal(report.allBookTotal,360);
+ assert.equal(report.allBookTotal,368);
  assert.equal(report.lessons.length,12);
  assert.equal(report.lessons[0].correct,0);
  assert.match(report.lessons[0].href,/^\/lessons\/1\?section=/);
