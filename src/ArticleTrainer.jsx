@@ -1,5 +1,5 @@
 import React,{useMemo,useRef,useState} from 'react';
-import {BookOpen,Brain,Check,RotateCcw,Volume2,ArrowLeft} from 'lucide-react';
+import {BookOpen,Brain,Check,RotateCcw,Volume2,ArrowLeft,Trophy,Star} from 'lucide-react';
 import {articleModes,articleStats,articleRound,articleStatus,articleEvent,articleAnswerCorrect,nounPool} from './articleTrainerEngine.js';
 import {CASE_FORMS} from './articleNouns.js';
 import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
@@ -8,6 +8,11 @@ import './articleTrainer.css';
 const names={new:'جدید',weak:'نیاز به مرور',learning:'در حال یادگیری',mastered:'مسلط'};
 const scopes=[['core','فهرست اصلی (۳۵ اسم)'],['4','درس ۴ · مبلمان'],['5','درس ۵ · اشیا'],['6','درس ۶ · دفتر کار'],['all','همه ۴۵ اسم']];
 const colors={der:'masculine',die:'feminine',das:'neuter'};
+const dativeStages=[
+ {id:'dat-def',title:'مرحله ۱',label:'die Lampe → der Lampe',hint:'حرف تعریف معین'},
+ {id:'dat-ind',title:'مرحله ۲',label:'eine Lampe → einer Lampe',hint:'حرف تعریف نامعین'},
+ {id:'dat-neg',title:'مرحله ۳',label:'keine Lampe → keiner Lampe',hint:'حرف تعریف منفی'}
+];
 function Art({noun,revealed=false}){
  return <div className="atArt">{hasLessonScene(noun.word)?<LessonSceneArt word={revealed?noun.word:noun.noun} showArticle={revealed} size={240}/>:<span role="img" aria-label={noun.fa}>{noun.icon}</span>}</div>;
 }
@@ -19,6 +24,7 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
  const submitted=useRef(false);
  const pool=useMemo(()=>nounPool(scope),[scope]);
  const stats=articleStats(pool,memory,mode);
+ const dativeProgress=dativeStages.map(stage=>({...stage,stats:articleStats(pool,memory,stage.id)}));
  const q=queue[at],finished=view==='quiz'&&at>=queue.length;
  function reset(){setView('learn');setQueue([]);setAt(0);setInput('');setJudged(null);setResults([]);submitted.current=false;}
  function begin(retry=null,exam=false){
@@ -45,6 +51,16 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
    <p className="atNote">تسلط هر مهارت جداگانه ثبت می‌شود؛ پاسخ فوری یا مرور تصویری به‌تنهایی معیار تسلط نیست. تمرین موفق در روزهای مختلف لازم است.</p>
    <div className="atSelectors"><label>محدوده درس<select value={scope} onChange={e=>{reset();setScope(e.target.value);setFilter('all')}}>{scopes.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label><label>نوع تمرین<select value={mode} onChange={e=>{reset();setMode(e.target.value);setFilter('all')}}>{articleModes.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</select></label></div>
    <p className="atNote">{articleModes.find(m=>m.id===mode).detail}</p>
+   {mode.startsWith('dat-')&&<section className="atDativeJourney" aria-label="مسیر بازی داتیو">
+    <div className="atDativeHeading"><div><small>DATIV QUEST · سه مرحله</small><h2>ماموریت تبدیل آرتیکل‌ها</h2></div><span><Trophy size={18}/> هر مهارت جداگانه ثبت می‌شود</span></div>
+    <div className="atDativeStages">{dativeProgress.map(stage=><button type="button" key={stage.id} className={'atDativeStage'+(mode===stage.id?' active':'')} aria-pressed={mode===stage.id} onClick={()=>{reset();setMode(stage.id);setFilter('all')}}>
+      <span className="atDativeStageTop"><b>{stage.title}</b><small>{stage.stats.mastered}/{stage.stats.total} مسلط</small></span>
+      <strong dir="ltr">{stage.label}</strong><small>{stage.hint}</small>
+      <span className="atDativeMiniTrack"><i style={{width:(stage.stats.total?100*stage.stats.mastered/stage.stats.total:0)+'%'}}/></span>
+      {stage.stats.mastered===stage.stats.total&&stage.stats.total>0?<span className="atDativeDone"><Star size={14} fill="currentColor"/> کامل شد</span>:null}
+    </button>)}</div>
+    <p className="atNote">هر مرحله تا ۱۲ کارت دارد. جواب اشتباه به فهرست مرور برمی‌گردد؛ بعد از هر دور می‌توانی فقط اشتباه‌ها را دوباره بازی کنی.</p>
+   </section>}
    <div className="atFilters">{[['all','همه'],...Object.entries(names)].map(([id,label])=><button type="button" key={id} aria-pressed={id===filter} className={id===filter?'active':''} onClick={()=>{reset();setFilter(id)}}>{label}</button>)}</div>
    <div className="atActions"><button onClick={()=>begin()} disabled={!(filter==='all'?pool.length:stats[filter])}><Brain size={18}/> تمرین تطبیقی (تا ۱۲ سؤال)</button><button className="atSecondary" onClick={()=>begin(null,true)}>آزمون کامل {pool.length} اسم</button><button className="atSecondary" onClick={reset}><BookOpen size={18}/> واژه‌نامه</button></div>
   </section>
@@ -70,6 +86,6 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
     </div>}
   </section>}
   {finished&&<section className="atPanel atDone"><h2>نتیجه دور تمرین</h2><strong>{wins} / {queue.length}</strong><p>دقت دور: {Math.round(100*wins/queue.length)}٪ · {misses.length} مورد اشتباه</p>{misses.length>0&&<><p dir="ltr">{misses.map(x=>x.noun.word).join(' · ')}</p><button onClick={()=>begin(misses)}><RotateCcw size={18}/> فقط اشتباه‌ها را دوباره تمرین کن</button></>}<button className="atSecondary" onClick={reset}>بازگشت به واژه‌نامه</button></section>}
-  {(view==='learn'||finished)&&<section className="atPanel"><h2>الگوی مهم Nominativ و Akkusativ</h2><div className="atTable"><table dir="ltr"><thead><tr><th>Gender</th><th>Nominativ</th><th>Akkusativ</th><th>Negation (Akk.)</th></tr></thead><tbody>{Object.entries(CASE_FORMS).map(([a,f])=><tr key={a} className={colors[a]}><th>{a}</th><td>{a} / {f.nomInd}</td><td>{f.def} / {f.ind}</td><td>{f.neg}</td></tr>)}</tbody></table></div><p className="atNote">در مفرد Akkusativ فقط مذکر تغییر می‌کند: der → den، ein → einen، kein → keinen. جمع: die / keine.</p></section>}
+  {(view==='learn'||finished)&&<section className="atPanel"><h2>جدول تبدیل Nominativ → Akkusativ → Dativ</h2><div className="atTable"><table dir="ltr"><thead><tr><th>Gender</th><th>Nominativ</th><th>Akkusativ</th><th>Dativ</th></tr></thead><tbody>{Object.entries(CASE_FORMS).map(([a,f])=><tr key={a} className={colors[a]}><th>{a}</th><td>{a} / {f.nomInd}</td><td>{f.def} / {f.ind}</td><td>{f.datDef} / {f.datInd}</td></tr>)}</tbody></table></div><div className="atTable"><table dir="ltr"><thead><tr><th>Gender</th><th>Nominativ · kein</th><th>Akkusativ · kein</th><th>Dativ · kein</th></tr></thead><tbody>{Object.entries(CASE_FORMS).map(([a,f])=><tr key={a} className={colors[a]}><th>{a}</th><td>{f.nomNeg}</td><td>{f.neg}</td><td>{f.datNeg}</td></tr>)}</tbody></table></div><p className="atNote">در Dativ مفرد: مذکر و خنثی dem / einem / keinem می‌گیرند؛ مؤنث der / einer / keiner. فعلاً این بازی روی مفرد تمرکز دارد؛ جمع Dativ را در مرحله بعد اضافه می‌کنیم.</p><p className="atDativeRule"><b>قانون طلایی:</b> حرف اضافه <strong dir="ltr">mit</strong> همیشه Dativ می‌خواهد: <strong dir="ltr">mit der Lampe · mit einer Lampe · mit dem Tisch · mit einem Buch</strong></p></section>}
  </main>;
 }
