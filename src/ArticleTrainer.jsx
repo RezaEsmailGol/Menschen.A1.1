@@ -96,7 +96,7 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
     <div className="atTrack"><i style={{width:100*at/queue.length+'%'}}/></div>
     <Art noun={q.noun} revealed={Boolean(judged)}/>
     <p>{q.noun.fa}</p><h2 dir={['nom','acc','acc-def','acc-ind','acc-neg','neg'].includes(q.mode)?'ltr':'rtl'}>{q.prompt}</h2>
-    {!['write','nom','acc','neg'].includes(q.mode)&&<strong className="atNoun" dir="ltr">{q.noun.noun}</strong>}
+    {!['write','nom','acc','acc-def','acc-ind','acc-neg','neg'].includes(q.mode)&&<strong className="atNoun" dir="ltr">{q.noun.noun}</strong>}
     {q.options?<div className="atOptions">{q.options.map(a=><button dir="ltr" key={a} disabled={Boolean(judged)} className={judged?(a===q.answer?'right':a===judged.value?'wrong':''):''} onClick={()=>judge(a)}>{a}</button>)}</div>:
      <form className="atTyping" onSubmit={e=>{e.preventDefault();judge(input)}}><input dir="ltr" lang="de" autoCorrect="off" autoCapitalize="off" spellCheck={false} placeholder="Artikel + Nomen" value={input} disabled={Boolean(judged)} onChange={e=>setInput(e.target.value)}/><div>{['ä','ö','ü','ß','Ä','Ö','Ü'].map(c=><button key={c} type="button" disabled={Boolean(judged)} onClick={()=>setInput(s=>s+c)}>{c}</button>)}</div><button type="submit" disabled={Boolean(judged)||!input.trim()}>بررسی پاسخ</button></form>}
     {judged&&<div className={'atFeedback '+(judged.correct?'right':'wrong')} role="status">
