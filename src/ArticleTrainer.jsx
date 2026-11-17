@@ -13,6 +13,13 @@ const dativeStages=[
  {id:'dat-ind',title:'مرحله ۲',label:'eine Lampe → einer Lampe',hint:'حرف تعریف نامعین'},
  {id:'dat-neg',title:'مرحله ۳',label:'keine Lampe → keiner Lampe',hint:'حرف تعریف منفی'}
 ];
+function transformedPhrase(q){
+ const f=CASE_FORMS[q.noun.article],name=q.noun.noun;
+ if(q.mode==='dat-def')return q.noun.word+' → '+f.datDef+' '+name;
+ if(q.mode==='dat-ind')return f.nomInd+' '+name+' → '+f.datInd+' '+name;
+ if(q.mode==='dat-neg')return f.nomNeg+' '+name+' → '+f.datNeg+' '+name;
+ return q.noun.word+' → '+f.ind+' '+name;
+}
 function Art({noun,revealed=false}){
  return <div className="atArt">{hasLessonScene(noun.word)?<LessonSceneArt word={revealed?noun.word:noun.noun} showArticle={revealed} size={240}/>:<span role="img" aria-label={noun.fa}>{noun.icon}</span>}</div>;
 }
@@ -51,7 +58,7 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
    <p className="atNote">تسلط هر مهارت جداگانه ثبت می‌شود؛ پاسخ فوری یا مرور تصویری به‌تنهایی معیار تسلط نیست. تمرین موفق در روزهای مختلف لازم است.</p>
    <div className="atSelectors"><label>محدوده درس<select value={scope} onChange={e=>{reset();setScope(e.target.value);setFilter('all')}}>{scopes.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label><label>نوع تمرین<select value={mode} onChange={e=>{reset();setMode(e.target.value);setFilter('all')}}>{articleModes.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</select></label></div>
    <p className="atNote">{articleModes.find(m=>m.id===mode).detail}</p>
-   {mode.startsWith('dat-')&&<section className="atDativeJourney" aria-label="مسیر بازی داتیو">
+   {<section className="atDativeJourney" aria-label="مسیر بازی داتیو">
     <div className="atDativeHeading"><div><small>DATIV QUEST · سه مرحله</small><h2>ماموریت تبدیل آرتیکل‌ها</h2></div><span><Trophy size={18}/> هر مهارت جداگانه ثبت می‌شود</span></div>
     <div className="atDativeStages">{dativeProgress.map(stage=><button type="button" key={stage.id} className={'atDativeStage'+(mode===stage.id?' active':'')} aria-pressed={mode===stage.id} onClick={()=>{reset();setMode(stage.id);setFilter('all')}}>
       <span className="atDativeStageTop"><b>{stage.title}</b><small>{stage.stats.mastered}/{stage.stats.total} مسلط</small></span>
@@ -81,7 +88,7 @@ export default function ArticleTrainer({memory={},speak,onPracticeEvent=()=>{}})
     {q.options?<div className="atOptions">{q.options.map(a=><button dir="ltr" key={a} disabled={Boolean(judged)} className={judged?(a===q.answer?'right':a===judged.value?'wrong':''):''} onClick={()=>judge(a)}>{a}</button>)}</div>:
      <form className="atTyping" onSubmit={e=>{e.preventDefault();judge(input)}}><input dir="ltr" lang="de" autoCorrect="off" autoCapitalize="off" spellCheck={false} placeholder="Artikel + Nomen" value={input} disabled={Boolean(judged)} onChange={e=>setInput(e.target.value)}/><div>{['ä','ö','ü','ß','Ä','Ö','Ü'].map(c=><button key={c} type="button" disabled={Boolean(judged)} onClick={()=>setInput(s=>s+c)}>{c}</button>)}</div><button type="submit" disabled={Boolean(judged)||!input.trim()}>بررسی پاسخ</button></form>}
     {judged&&<div className={'atFeedback '+(judged.correct?'right':'wrong')} role="status">
-     <b>{judged.correct?'درست!':'اشتباه؛ این مورد به مرور برمی‌گردد.'}</b><strong dir="ltr">{q.example}</strong><span dir="ltr">{q.noun.word} → {CASE_FORMS[q.noun.article].ind} {q.noun.noun}</span>
+     <b>{judged.correct?'درست!':'اشتباه؛ این مورد به مرور برمی‌گردد.'}</b><strong dir="ltr">{q.example}</strong><span dir="ltr">{transformedPhrase(q)}</span>
      <button type="button" onClick={()=>speak(q.audio)}><Volume2 size={18}/> تلفظ پاسخ</button><button type="button" onClick={next}>سؤال بعد <ArrowLeft size={17}/></button>
     </div>}
   </section>}
