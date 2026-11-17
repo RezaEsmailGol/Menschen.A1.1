@@ -53,7 +53,7 @@ export const lesson6BookLesson = {
         ['🧾','eine Rechnung – zwei Rechnungen','یک صورتحساب – دو صورتحساب'],
         ['🔵','der Laptop → den Laptop','مذکر: der به den تغییر می‌کند'],
         ['🟣','ein Laptop → einen Laptop','نامعین مذکر: ein به einen'],
-        ['🚫','kein Laptop → keinen Laptop','منفی مذکر: kein به keinen']
+        ['🚫','kein Laptop → keinen Laptop','منفی مذکر: kein به keinen'],
          ['🖱️','eine Maus → eine Maus','مؤنث در Akkusativ تغییر نمی‌کند'],
          ['🖱️','keine Maus → keine Maus','منفی مؤنث'],
          ['📱','ein Handy → ein Handy','خنثی در Akkusativ تغییر نمی‌کند'],
