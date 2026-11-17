@@ -1,12 +1,8 @@
 import {lessons,verbForms} from './courseData.js';
 
-// Independent A1 practice for the app's supplemental lessons 6–12.
+// Independent A1 practice for the app's supplemental lessons 7–12.
 // These lessons are topical companions; they are NOT represented as official book transcriptions.
 const topicChecks={
-  6:[
-    ['Ich brauche ___ Laptop.',['einen','ein','eine','der'],'einen','der Laptop → einen Laptop در Akkusativ'],
-    ['Ich habe ___ Drucker.',['keinen','kein','keine','den'],'keinen','der Drucker → keinen Drucker در Akkusativ']
-  ],
   7:[
     ['برای درخواست مؤدبانه در فروشگاه کدام فعل مناسب‌تر است؟',['möchte','muss','wohne','bin'],'möchte','Ich möchte ein Brot.'],
     ['در جمله «Wir brauchen Milch» فاعل کدام است؟',['wir','ich','du','er'],'wir','ما شیر لازم داریم.']
@@ -114,12 +110,12 @@ function makeSections(lesson){
    audio:de,answer:de,why:fa
   }))
  };
- return [vocab,grammar,writing,listening].map(section=>lesson.id===6?{...section,tasks:section.tasks.map(task=>({...task,id:task.id.replace(/^l6-/,'l6-office-')}))}:section);
+ return [vocab,grammar,writing,listening];
 }
 export const supplementalBookLessons=Object.fromEntries(
- lessons.filter(lesson=>lesson.id>=6&&lesson.id<=12).map(lesson=>[
+ lessons.filter(lesson=>lesson.id>=7&&lesson.id<=12).map(lesson=>[
   lesson.id,{
-   title:lesson.german,pages:lesson.id===6?'۳۳ تا ۳۶':null,focus:lesson.label,
+   title:lesson.german,pages:null,focus:lesson.label,
    supplemental:true,
    goals:[
     lesson.goal,'تمرین فعال واژگان و معانی درس',

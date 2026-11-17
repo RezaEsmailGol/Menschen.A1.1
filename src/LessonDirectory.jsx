@@ -26,7 +26,7 @@ export default function LessonDirectory({navigate,progress={}}){
    <header className="ldHero">
      <div><span className="ldEyebrow"><BookOpenCheck size={16}/> MEN﻿SCHEN A1.1 · COURSE MAP</span>
        <h2>فهرست درس‌ها و زیرشاخه‌های آموزشی</h2>
-       <p>روی هر درس بزن، سپس هر زیرشاخه را باز کن و تمرین دلخواه را مستقیم اجرا کن؛ واژگان، گرامر و سایر بخش‌ها نیز لینک ورود دارند.</p>
+       <p>درس‌های ۱ تا ۶ با سرفصل‌های Menschen A1.1 و تمرین‌های تصویری، شنیداری و گرامری تکمیل شده‌اند؛ درس‌های بعدی مسیر تکمیلی‌اند. هر درس را باز کن تا به واژگان و تمرین‌هایش برسی.</p>
        <div className="ldPills"><span><b>۱۲</b> درس</span><span><b>۱۲</b> درس با تمرین تعاملی</span><span><b>{completed}</b> درس قبول‌شده</span></div>
      </div>
      <span className="ldHeroBook" aria-hidden="true"><BookOpen size={45}/> A1.1</span>

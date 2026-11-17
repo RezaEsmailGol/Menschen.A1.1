@@ -152,17 +152,25 @@ export const lessons = [
     ]
   },
   {
-    id:6,label:'وسایل دفتر کار، جمع اسم‌ها و Akkusativ',german:'Ich brauche kein Büro.',
-    goal:'وسایل اداری را با حرف تعریف و جمع یاد بگیر؛ نیاز داشتن، داشتن و نفی اسم در Akkusativ را تمرین کن. (محدوده کلاس: تا صفحه ۳۶)',
-    grammar:'Nominativ و Akkusativ؛ der → den، ein → einen، kein → keinen؛ جمع die / keine',
-    tip:'Ich brauche einen Laptop. Ich habe keinen Drucker. Die Maus ist neu. Ich gehe ins Büro.',
-    verbs:['brauchen','haben','kaufen'],
+    id:6,label:'دفتر کار، فناوری، جمع اسم‌ها و Akkusativ',german:'Ich brauche kein Büro.',
+    goal:'وسایل دفتر کار و فناوری را با تصویر و حرف تعریف یاد بگیر؛ مفرد و جمع، Akkusativ، مکالمه تلفنی، ایمیل و SMS را تمرین کن. (کتاب: صفحه ۳۳ تا ۳۶)',
+    grammar:'Singular / Plural؛ Nominativ و Akkusativ؛ der → den، ein → einen، kein → keinen؛ جمع die / keine',
+    tip:'Ich brauche einen Laptop. Ich habe keinen Drucker. Ich suche den Kalender. Guten Tag, hier ist Reza. Auf Wiederhören!',
+    verbs:['brauchen','haben','suchen'],
     words:articleNouns.filter(n=>n.lesson===6).map(n=>[n.word,n.fa]),
     sentences:[
       ['Ich brauche einen Laptop.','من یک لپ‌تاپ لازم دارم.'],
       ['Ich habe keinen Drucker.','من چاپگر ندارم.'],
-      ['Ich kaufe eine Maus.','من یک ماوس می‌خرم.'],
-      ['Ich brauche kein Büro.','من دفتر کار لازم ندارم.']
+      ['Ich suche den Kalender.','من دنبال تقویم می‌گردم.'],
+      ['Ich habe zwei Handys.','من دو موبایل دارم.'],
+      ['Ich schreibe drei E-Mails.','من سه ایمیل می‌نویسم.'],
+      ['Die Maus ist neu.','ماوس جدید است.'],
+      ['Der Arbeitsplatz ist schön, aber nicht praktisch.','محل کار زیباست، اما کاربردی نیست.'],
+      ['Guten Tag, hier ist Reza.','روز بخیر، رضا هستم.'],
+      ['Vielen Dank. Auf Wiederhören!','بسیار ممنون. خدانگهدار تلفنی!'],
+      ['Ich habe keine Zeit.','من وقت ندارم.'],
+      ['Ich brauche keine Briefmarken.','من به تمبر نیاز ندارم.'],
+      ['Ich gehe ins Büro.','من به دفتر کار می‌روم.']
     ],
   },
   {

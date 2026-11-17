@@ -47,7 +47,7 @@ export default function LessonPictureGame({lessonId,speak,onPracticeEvent,memory
  return <section className="lpGame" aria-label={'تمرین تصویری درس '+lessonId}>
    <header className="lpHero">
      <div><span className="lpEyebrow"><ImageIcon size={17}/> SVG MEMORY · LEKTION {lessonId}</span>
-       <h3>{lessonId===2?'مشاغل با تصویر و معرفی آدم‌ها':lessonId===4?'مبلمان، جنسیت اسم و ضمایر':'اشیا؛ ein/eine و kein/keine'}</h3>
+       <h3>{lessonId===2?'مشاغل با تصویر و معرفی آدم‌ها':lessonId===4?'مبلمان، جنسیت اسم و ضمایر':lessonId===6?'دفتر کار، جمع اسم‌ها و Akkusativ':'اشیا؛ ein/eine و kein/keine'}</h3>
        <p>تصویر را بشناس، صدای آلمانی را گوش بده و جمله درست را انتخاب کن. پاسخ‌های اشتباه دوباره برمی‌گردند.</p></div>
      <span className="lpCount"><b>{gallery.length}</b> تصویر مستقل</span>
    </header>

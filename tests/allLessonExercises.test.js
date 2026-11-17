@@ -17,7 +17,12 @@ test('all 12 lessons have graded practice with a unique task ID and deep link',(
   assert.equal(plan.sections.length,4);
   assert.equal(outline.sections.length,4);
   assert.ok(outline.tasks>=18);
-  if(lesson.id>5){
+  if(lesson.id===6){
+   assert.equal(plan.supplemental,false);
+   assert.equal(outline.bookAligned,true);
+   assert.equal(outline.tasks,40);
+  }
+  if(lesson.id>6){
    assert.equal(plan.supplemental,true);
    assert.equal(outline.bookAligned,false,'do not imply an official book transcript');
    assert.equal(outline.tasks,32);
@@ -50,12 +55,12 @@ test('all 12 lessons have graded practice with a unique task ID and deep link',(
    }
   }
  }
- assert.equal(count,360);
- assert.equal(ids.size,360);
+ assert.equal(count,368);
+ assert.equal(ids.size,368);
 });
 test('supplemental courses teach genuinely different topics rather than repeating first lessons',()=>{
- assert.deepEqual(Object.keys(supplementalBookLessons),['6','7','8','9','10','11','12']);
- for(const lesson of lessons.slice(5)){
+ assert.deepEqual(Object.keys(supplementalBookLessons),['7','8','9','10','11','12']);
+ for(const lesson of lessons.slice(6)){
   const plan=supplementalBookLessons[lesson.id];
   assert.ok(plan.focus.includes(lesson.label));
   assert.deepEqual(plan.sections.map(section=>section.tasks.length),[8,8,8,8]);
