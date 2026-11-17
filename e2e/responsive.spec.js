@@ -139,7 +139,7 @@ test('Dativ quest converts die Lampe to der Lampe and eine Lampe to einer Lampe'
  await expect(indefinite).toContainText('eine Lampe → einer Lampe');
  await indefinite.click();
  await expect(indefinite).toHaveAttribute('aria-pressed','true');
- await expect(page.locator('.atNote').filter({hasText:'مرحله ۲'})).toHaveCount(0);
+ await expect(page.locator('.atDativeStage.active')).toContainText('eine Lampe → einer Lampe');
  await page.locator('.atActions button').first().click();
  await expect(page.locator('.atQuiz')).toBeVisible();
  await expect(page.locator('.atQuiz h2')).toContainText('Nominativ را به Dativ تبدیل کن');
