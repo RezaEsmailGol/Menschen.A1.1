@@ -8,7 +8,10 @@ export const articleModes=[
  {id:'pronoun',title:'er / sie / es',detail:'ضمیر اشیا'},
  {id:'acc',title:'Akkusativ',detail:'den / die / das و einen / eine / ein'},
  {id:'neg',title:'kein / keinen / keine',detail:'نفی اسم در جمله مفعولی'},
- {id:'plural',title:'جمع اسم‌ها',detail:'die + شکل جمع'}
+ {id:'plural',title:'جمع اسم‌ها',detail:'die + شکل جمع'},
+ {id:'dat-def',title:'Dativ · der / die / das',detail:'مرحله ۱: der → dem، die → der، das → dem'},
+ {id:'dat-ind',title:'Dativ · ein / eine',detail:'مرحله ۲: ein → einem، eine → einer'},
+ {id:'dat-neg',title:'Dativ · kein / keine',detail:'مرحله ۳: kein → keinem، keine → keiner'}
 ];
 export function articleKey(noun,mode='gender'){return activityItemKey('article',noun.noun||noun,mode);}
 export function articleStatus(noun,memory={},mode='gender',now=Date.now()){
@@ -43,6 +46,9 @@ export function articleQuestion(noun,mode='gender',random=Math.random){
  case 'acc':{const definite=random()<.5;prompt=(definite?'Ich suche ___ ':'Ich brauche ___ ')+noun.noun+'.';answer=definite?forms.def:forms.ind;options=definite?['den','die','das','der']:['einen','eine','ein'];example=prompt.replace('___',answer);break;}
  case 'neg':prompt='Ich habe ___ '+noun.noun+'.';answer=forms.neg;options=['kein','keine','keinen'];example=prompt.replace('___',answer);break;
  case 'plural':prompt='جمع این اسم را با die بنویس.';answer='die '+noun.plural;example=answer;break;
+ case 'dat-def':prompt='Nominativ را به Dativ تبدیل کن: '+noun.word;answer=forms.datDef;options=['dem','der','den','das'];example='mit '+answer+' '+noun.noun;break;
+ case 'dat-ind':prompt='Nominativ را به Dativ تبدیل کن: '+forms.nomInd+' '+noun.noun;answer=forms.datInd;options=['einem','einer','einen','eine'];example='mit '+answer+' '+noun.noun;break;
+ case 'dat-neg':prompt='Nominativ را به Dativ تبدیل کن: '+forms.nomNeg+' '+noun.noun;answer=forms.datNeg;options=['keinem','keiner','keinen','keine'];example='mit '+answer+' '+noun.noun;break;
  default:throw new Error('Unknown article mode');
  }
  audio=example;
