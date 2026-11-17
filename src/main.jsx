@@ -123,7 +123,7 @@ const secondaryTitles = {
   coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد ۰ تا ۱۰۰',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
-  words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'صرف افعال'
+  words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'باشگاه صرف افعال'
 };
 function BottomNav({tab,setTab}) {
   const selected=['home','course','practice','progress'].includes(tab)?tab:(tab==='workbook'?'course':'practice');
