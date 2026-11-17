@@ -15,6 +15,7 @@ const accusativeStages=[
 ];
 function transformedPhrase(q){
  const f=CASE_FORMS[q.noun.article],name=q.noun.noun;
+ if(q.mode==='acc'||q.mode==='neg')return q.example;
  if(q.mode==='acc-def')return q.noun.word+' → '+f.def+' '+name;
  if(q.mode==='acc-ind')return f.nomInd+' '+name+' → '+f.ind+' '+name;
  if(q.mode==='acc-neg')return f.nomNeg+' '+name+' → '+f.neg+' '+name;
