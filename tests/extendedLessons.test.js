@@ -38,6 +38,21 @@ test('official six-lesson teaching outline, with subbranches visible in the list
  assert.equal(lessonOutline(13),null);
 });
 
+test('lesson 6 covers the complete published topic scope with original practice and SVG objects',()=>{
+ const plan=bookLessonPlans[6];
+ assert.equal(plan.supplemental,false);
+ assert.equal(plan.pages,'۳۳ تا ۳۶');
+ assert.deepEqual(plan.sections.map(section=>section.tasks.length),[10,10,10,10]);
+ assert.equal(plan.sections[0].cards.length,18);
+ assert.ok(plan.sections[0].tasks.some(task=>task.answer==='Der Arbeitsplatz ist schön, aber nicht praktisch.'));
+ assert.ok(plan.sections[1].tasks.some(task=>task.answer==='die Briefmarken'));
+ assert.ok(plan.sections[1].tasks.some(task=>task.answer==='keine'));
+ assert.ok(plan.sections[2].reading.includes('Auf Wiederhören!'));
+ assert.ok(plan.sections[3].reading.includes('SMS'));
+ assert.ok(plan.sections[3].tasks.some(task=>task.audio==='Büro'));
+ assert.equal(lessonOutline(6).modules.find(module=>module.kind==='picture').count,4);
+});
+
 test('all new original exercises have unique IDs and valid answer options',()=>{
  const ids=[3,4,5].flatMap(allBookTasks).map(q=>q.id);
  assert.equal(ids.length,98);
