@@ -52,7 +52,7 @@ test('lesson six is replaced without inheriting obsolete clock lesson task or fl
  assert.equal(lessons[5].german,'Ich brauche kein Büro.');
  assert.ok(lessons[5].words.some(([de])=>de==='der Bildschirm'));
  assert.ok(lessons[5].words.some(([de])=>de==='die E-Mail'));
- assert.equal(allBookTasks(6).length,32);
+ assert.equal(allBookTasks(6).length,40);
  assert.ok(allBookTasks(6).every(x=>x.id.startsWith('l6-office-')));
  assert.ok(getLessonCards(lessons[5]).every(c=>c.id.startsWith('a11:book-6:')));
  assert.equal(routeFromPath('/articles'),'articles');
