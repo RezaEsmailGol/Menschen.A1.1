@@ -101,6 +101,29 @@ test('lesson 4: SVG gallery, mobile tabs and game buttons remain usable',async (
  }
 });
 
+test('lesson 6: office SVG gallery exposes 18 objects and four article grammar modes',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/lessons/6');
+ await expect(page.locator('.courseIntro')).toBeVisible();
+ await expect(page.locator('.lpGame')).toBeVisible();
+ await expect(page.locator('.lpCount b')).toHaveText('18');
+ await expect(page.locator('.lpGalleryCard svg').first()).toBeVisible();
+ await page.locator('.lpMore').click();
+ await expect(page.locator('.lpGalleryCard')).toHaveCount(18);
+ await expect(page.locator('.lpModeRow button')).toHaveCount(4);
+ await page.locator('.lpModeRow button').filter({hasText:'Singular / Plural'}).click();
+ await page.locator('.lpStart').click();
+ await expect(page.locator('.lpPlay')).toBeVisible();
+ await expect(page.locator('.lpQuestionView svg')).toBeVisible();
+ await expect(page.locator('.lpChoices button')).toHaveCount(4);
+ expect(errors).toEqual([]);
+ await context.close();
+});
+
 test('responsive lesson index opens nested modules and lesson details',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:800},isMobile:true,hasTouch:true});
  const page=await context.newPage();
@@ -554,12 +577,12 @@ test('fresh learner progress keeps trophies locked and shows no fabricated speec
 });
 
 
-test('new practice studio has 360 lesson exercises, four deep-linked skills and usable legacy activities',async ({browser})=>{
+test('new practice studio has 368 lesson exercises, four deep-linked skills and usable legacy activities',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
   viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const page=await context.newPage();
  await page.goto('/practice');
- await expect(page.locator('.pjHero')).toContainText('۳۶۰');
+ await expect(page.locator('.pjHero')).toContainText('۳۶۸');
  await expect(page.locator('.pjLessonCard')).toHaveCount(12);
  await expect(page.locator('.pjQuickMode')).toHaveCount(4);
  await expect(page.locator('.pjModeTabs button')).toHaveCount(5);
