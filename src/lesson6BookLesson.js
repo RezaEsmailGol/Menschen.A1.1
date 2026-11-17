@@ -36,7 +36,7 @@ export const lesson6BookLesson = {
         {id:'l6-office-v07',type:'choice',prompt:'Rechnung به چه معناست؟',choices:['صورتحساب','تلفن','تقویم','چاپگر'],answer:'صورتحساب'},
         {id:'l6-office-v08',type:'choice',prompt:'der Termin یعنی چه؟',choices:['قرار ملاقات','صفحه‌نمایش','کیف پول','دفتر کار'],answer:'قرار ملاقات'},
         {id:'l6-office-v09',type:'choice',prompt:'«دفترچه یادداشت» کدام است؟',choices:['das Notizbuch','der Kalender','die Rechnung','das Formular'],answer:'das Notizbuch'},
-        {id:'l6-office-v10',type:'choice',prompt:'کدام واژه به معنی «دفتر کار» است؟',choices:['das Büro','der Computer','die E-Mail','der Stift'],answer:'das Büro'}
+        {id:'l6-office-v10',type:'choice',prompt:'برای گفتن «محل کار زیباست، اما کاربردی نیست» کدام جمله درست است؟',choices:['Der Arbeitsplatz ist schön, aber nicht praktisch.','Der Arbeitsplatz ist sehr teuer.','Das Büro ist sehr klein.','Ich brauche keinen Arbeitsplatz.'],answer:'Der Arbeitsplatz ist schön, aber nicht praktisch.'}
       ]
     },
     {
@@ -49,6 +49,8 @@ export const lesson6BookLesson = {
         ['🖥️','ein Bildschirm – zwei Bildschirme','یک نمایشگر – دو نمایشگر'],
         ['📓','ein Notizbuch – zwei Notizbücher','یک دفترچه – دو دفترچه'],
         ['🖨️','ein Drucker – zwei Drucker','یک چاپگر – دو چاپگر'],
+        ['✉️','eine Briefmarke – drei Briefmarken','یک تمبر – سه تمبر'],
+        ['🧾','eine Rechnung – zwei Rechnungen','یک صورتحساب – دو صورتحساب'],
         ['🔵','der Laptop → den Laptop','مذکر: der به den تغییر می‌کند'],
         ['🟣','ein Laptop → einen Laptop','نامعین مذکر: ein به einen'],
         ['🚫','kein Laptop → keinen Laptop','منفی مذکر: kein به keinen']
@@ -58,12 +60,12 @@ export const lesson6BookLesson = {
         {id:'l6-office-g02',type:'choice',prompt:'جمع die E-Mail را انتخاب کن.',choices:['die E-Mails','die E-Mailen','die E-Maile','das E-Mails'],answer:'die E-Mails',why:'E-Mail در جمع s می‌گیرد.'},
         {id:'l6-office-g03',type:'choice',prompt:'جمع der Bildschirm چیست؟',choices:['die Bildschirme','die Bildschirm','die Bildschirmen','der Bildschirme'],answer:'die Bildschirme',why:'Bildschirm در جمع e می‌گیرد.'},
         {id:'l6-office-g04',type:'choice',prompt:'جمع das Notizbuch کدام است؟',choices:['die Notizbücher','die Notizbuchs','die Notizbuche','der Notizbücher'],answer:'die Notizbücher',why:'Notizbuch در جمع -er می‌گیرد و واکه تغییر می‌کند.'},
-        {id:'l6-office-g05',type:'choice',prompt:'جمع der Drucker چیست؟',choices:['die Drucker','die Druckern','die Druckers','der Drucker'],answer:'die Drucker',why:'شکل واژه Drucker در جمع تغییر نمی‌کند؛ حرف تعریف جمع die است.'},
+        {id:'l6-office-g05',type:'choice',prompt:'جمع die Briefmarke چیست؟',choices:['die Briefmarken','die Briefmarke','die Briefmarken-n','der Briefmarken'],answer:'die Briefmarken',why:'اسم مؤنث Briefmarke در اینجا پسوند -n می‌گیرد.'},
         {id:'l6-office-g06',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Laptop.',choices:['einen','ein','eine','den'],answer:'einen',why:'Laptop مذکر است و مفعول مستقیم در Akkusativ می‌آید: einen Laptop.'},
         {id:'l6-office-g07',type:'choice',prompt:'جای خالی را کامل کن: Ich suche ___ Kalender.',choices:['den','der','die','das'],answer:'den',why:'حرف تعریف معین مذکر در Akkusativ از der به den تغییر می‌کند.'},
         {id:'l6-office-g08',type:'choice',prompt:'جای خالی را کامل کن: Ich habe ___ Maus.',choices:['keine','kein','keinen','einen'],answer:'keine',why:'Maus مؤنث است؛ در Akkusativ شکل آن keine باقی می‌ماند.'},
         {id:'l6-office-g09',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Handy.',choices:['ein','einen','eine','den'],answer:'ein',why:'Handy خنثی است؛ ein در Akkusativ تغییر نمی‌کند.'},
-        {id:'l6-office-g10',type:'choice',prompt:'جای خالی را کامل کن: Ich habe ___ Drucker.',choices:['keinen','kein','keine','einen'],answer:'keinen',why:'برای نفی اسم مذکر در Akkusativ از keinen استفاده می‌کنیم.'}
+        {id:'l6-office-g10',type:'choice',prompt:'جای خالی را کامل کن: Ich brauche ___ Briefmarken.',choices:['keine','kein','keinen','eine'],answer:'keine',why:'در جمع، kein به keine تبدیل می‌شود؛ این شکل در Akkusativ جمع هم ثابت می‌ماند.'}
       ]
     },
     {
@@ -79,6 +81,7 @@ export const lesson6BookLesson = {
         ['🙏','Vielen Dank!','بسیار ممنون'],
         ['☎️','Auf Wiederhören!','خدانگهدار تلفنی']
       ],
+      reading: 'A: Guten Tag, hier ist Reza.\\nB: Guten Tag, Herr Reza. Was kann ich für Sie tun?\\nA: Ich suche den Kalender.\\nB: Einen Moment, bitte.\\nA: Vielen Dank. Auf Wiederhören!',
       tasks: [
         {id:'l6-office-t01',type:'choice',prompt:'برای پاسخ‌گویی رسمی به تماس شرکت، کدام عبارت مناسب است؟',choices:['Brenner IT-Consulting, guten Tag.','Gute Nacht, tschüs.','Ich bin im Park.','Was kostet das?'],answer:'Brenner IT-Consulting, guten Tag.'},
         {id:'l6-office-t02',type:'choice',prompt:'برای معرفی خودت پشت تلفن کدام عبارت را می‌گویی؟',choices:['Guten Tag, hier ist Reza.','Guten Tag, ich bin Büro.','Ich habe ein Kalender.','Woher ist der Laptop?'],answer:'Guten Tag, hier ist Reza.'},
@@ -89,7 +92,7 @@ export const lesson6BookLesson = {
         {id:'l6-office-t07',type:'listen',prompt:'عبارت معرفی خود پشت تلفن را بشنو و بنویس.',audio:'Hier ist Reza.',answer:'Hier ist Reza.'},
         {id:'l6-office-t08',type:'listen',prompt:'خداحافظی تلفنی را بشنو و بنویس.',audio:'Auf Wiederhören!',answer:'Auf Wiederhören!'},
         {id:'l6-office-t09',type:'choice',prompt:'Vielen Dank! چه معنایی دارد؟',choices:['بسیار ممنون','یک لحظه لطفاً','خدانگهدار تلفنی','من اینجا هستم'],answer:'بسیار ممنون'},
-        {id:'l6-office-t10',type:'type',prompt:'به آلمانی بنویس: روز بخیر، رضا هستم.',answer:'Guten Tag, hier ist Reza.'}
+        {id:'l6-office-t10',type:'listen',prompt:'مکالمه تلفنی کوتاه را بشنو و متن آن را بنویس.',audio:'Guten Tag, hier ist Reza. Guten Tag, Herr Reza. Was kann ich für Sie tun? Ich suche den Kalender. Einen Moment, bitte. Vielen Dank. Auf Wiederhören!',answer:'Guten Tag, hier ist Reza. Guten Tag, Herr Reza. Was kann ich für Sie tun? Ich suche den Kalender. Einen Moment, bitte. Vielen Dank. Auf Wiederhören!'}
       ]
     },
     {
