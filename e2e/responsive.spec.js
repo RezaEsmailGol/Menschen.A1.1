@@ -118,7 +118,7 @@ test('lesson 6: office SVG gallery exposes 18 objects and four article grammar m
  await page.locator('.lpModeRow button').filter({hasText:'Singular / Plural'}).click();
  await page.locator('.lpStart').click();
  await expect(page.locator('.lpPlay')).toBeVisible();
- await expect(page.locator('.lpQuestionView svg')).toBeVisible();
+ await expect(page.locator('.lpQuestionView svg[role="img"]')).toBeVisible();
  await expect(page.locator('.lpChoices button')).toHaveCount(4);
  expect(errors).toEqual([]);
  await context.close();
