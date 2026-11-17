@@ -16,3 +16,24 @@
 .atDativeDone{display:flex;align-items:center;gap:4px;font-size:10px;color:#16835b}
 .atDativeRule{margin:0;padding:12px;border-radius:12px;background:#f2f5ff;color:#424d77;font-size:12px;line-height:2}
 @media(max-width:680px){.atDativeStages{grid-template-columns:1fr}.atDativeHeading>span{width:100%}}
+
+.atAkkJourney{display:grid;gap:12px;padding:14px;border:1px solid #cfe5da;border-radius:17px;background:linear-gradient(145deg,#f1fbf6,#f4f8ff)}
+.atAkkHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.atAkkHeading small{font:800 10px Arial;letter-spacing:1px;color:#28785c}
+.atAkkHeading h2{margin:4px 0 0;font-size:17px}
+.atAkkHeading>span{display:flex;align-items:center;gap:5px;color:#547767;font-size:10px}
+.atAkkStages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.atAkkStage{display:grid;gap:8px;text-align:right;padding:12px;border:1px solid #dce9e2;border-radius:13px;background:#fff;color:#384365;min-width:0}
+.atAkkStage.active{border:2px solid #29936b;background:#effaf4;box-shadow:0 4px 14px #20845c1a}
+.atAkkStageTop{display:flex;justify-content:space-between;gap:4px;align-items:center}
+.atAkkStageTop b{font-size:11px;color:#267a58}
+.atAkkStageTop small,.atAkkStage>small{font-size:10px;color:#7c849c}
+.atAkkStage>strong{font:800 13px Arial;direction:ltr;text-align:left;overflow-wrap:anywhere}
+.atAkkMiniTrack{height:5px;background:#e9f0ec;border-radius:9px;overflow:hidden}
+.atAkkMiniTrack i{display:block;height:100%;background:#32a879;border-radius:9px}
+.atAkkDone{display:flex;align-items:center;gap:4px;font-size:10px;color:#16835b}
+.atPronounPanel{display:grid;gap:12px;padding:14px;border:1px solid #e0e5f0;border-radius:16px;background:#fff}
+.atPronounPanel h2{margin:0;font-size:16px}
+.atPronounPanel .atTable table{font-size:12px}
+.atPronounPanel .atTable td,.atPronounPanel .atTable th{padding:8px 6px}
+@media(max-width:680px){.atAkkStages{grid-template-columns:1fr}.atAkkHeading>span{width:100%}.atPronounPanel .atTable table{font-size:10px}}

@@ -68,7 +68,7 @@ export const persianGrammarGuides = {
     ]
   },
   5: {
-    summary:'قواعد تخته استاد: Nominativ، جدول der/die/das، ein/eine، kein/keine و ضمیرها برای اشیا.',
+    summary:'درس ۵ کتاب: معرفی اشیا با Nominativ و ein/eine/kein/keine؛ در کنار آن، تمرین تکمیلی کلاس برای مقایسه با Akkusativ.',
     rules:[
       rule('nominative-table','جدول اصلی Nominativ','Nominativ در این درس حالت اسم وقتی فاعل است یا بعد از فعل sein به عنوان نام/معرفی می‌آید. در این جدول شکل حرف تعریف معین، نامعین، منفی و ضمیر هر جنس را کنار هم ببین.','der → ein → kein → er / die → eine → keine → sie / das → ein → kein → es',
         [['Der Laptop ist hier.','این لپ‌تاپ اینجاست.'],['Ein Laptop ist dort.','یک لپ‌تاپ آنجاست.'],['Kein Laptop ist hier.','هیچ لپ‌تاپی اینجا نیست.']],
@@ -84,6 +84,12 @@ export const persianGrammarGuides = {
       rule('things-and-sounds','واژه‌های شبیه و توصیف اشیا','Gegenstände، Sachen و Dinge هر سه درباره اشیا/چیزها به کار می‌روند. dunkel یعنی تیره و hell یعنی روشن؛ Aktion با Auktion فرق دارد. bitten یعنی درخواست کردن، bieten یعنی پیشنهاد دادن.','dunkel ↔ hell · bitten ↔ bieten · Aktion ≠ Auktion',
         [['Die Tasche ist dunkel.','کیف تیره است.'],['Das ist eine Auktion.','این یک مزایده است.'],['Ich bitte um Hilfe.','من درخواست کمک می‌کنم.']],
         quiz('کدام واژه به معنی «مزایده» است؟',['Auktion','Aktion','Eigenschaft','Merkmal'],'Auktion','Auktion یعنی مزایده؛ Aktion یعنی اقدام یا طرح/کمپین.'))
+,
+       rule('akkusativ-class-practice','تمرین تکمیلی کلاس: Nominativ در برابر Akkusativ','در صفحات درس ۵ کتاب، شیء را با Das ist ... معرفی می‌کنی و اسم در Nominativ است. اما وقتی شیء مفعول فعل‌هایی مثل suchen، sehen یا brauchen باشد، Akkusativ می‌آید. برای اسم مذکر der به den، ein به einen و kein به keinen تبدیل می‌شود.','Das ist ein Schlüssel. → Ich suche den Schlüssel. → Ich brauche keinen Schlüssel.',
+         [['Das ist ein Buch.','این یک کتاب است. (Nominativ)'],['Ich lese ein Buch.','من یک کتاب می‌خوانم. (Akkusativ خنثی، بدون تغییر)'],['Ich sehe eine Brille.','من یک عینک می‌بینم. (Akkusativ مؤنث، بدون تغییر)']],
+         quiz('Ich sehe ___ Schlüssel.',['den','der','die','das'],'den','Schlüssel مذکر است و مفعول مستقیم در Akkusativ با den می‌آید.'),
+         'این بخش تمرین تکمیلی کلاس است؛ موضوع اصلی صفحات درس ۵ معرفی اشیا و Nominativ است.',
+         [['جنس','Nominativ','Akkusativ معین','Akkusativ نامعین','Akkusativ منفی'],['مذکر','der / ein / kein','den','einen','keinen'],['مؤنث','die / eine / keine','die','eine','keine'],['خنثی','das / ein / kein','das','ein','kein'],['جمع','die / keine','die','—','keine']])
     ]
   },
   6: {
@@ -96,6 +102,9 @@ export const persianGrammarGuides = {
         [['Ich brauche einen Laptop.','من یک لپ‌تاپ لازم دارم.'],['Ich habe keine Maus.','من ماوس ندارم.'],['Ich kaufe ein Handy.','من یک موبایل می‌خرم.']],
         quiz('Ich brauche ___ Drucker.',['einen','ein','eine','einer'],'einen','der Drucker مذکر است؛ einen Drucker.'),'بعد از sein، اسم خبری در Nominativ است، نه Akkusativ.',
         [['نوع','Nominativ','Akkusativ','نفی Akkusativ'],['مذکر','der / ein','den / einen','keinen'],['مؤنث','die / eine','die / eine','keine'],['خنثی','das / ein','das / ein','kein'],['جمع','die','die','keine']]),
+      rule('accusative-pronouns','ضمیرهای مفعولی در Akkusativ','وقتی به جای اسم از ضمیر مفعولی استفاده می‌کنی، شکل ضمیر عوض می‌شود: ich به mich، du به dich و er به ihn تبدیل می‌شود. ضمیرهای sie و es در این حالت تغییر ظاهری ندارند.','ich → mich · du → dich · er → ihn · sie → sie · es → es · wir → uns · ihr → euch · sie/Sie → sie/Sie',
+         [['Ich sehe dich.','من تو را می‌بینم.'],['Ich höre ihn.','من او را می‌شنوم.'],['Er besucht uns.','او به دیدن ما می‌آید.']],
+         quiz('«من تو را می‌بینم» کدام است؟',['Ich sehe dich.','Ich sehe du.','Ich sieht dich.','Ich sehe dir.'],'Ich sehe dich.','بعد از فعل sehen، ضمیر مفعولی dich می‌آید.')),
       rule('office-plural','جمع اسم‌ها','اسم را همراه شکل جمع یاد بگیر؛ حرف تعریف معین جمع در Nominativ و Akkusativ همیشه die است.','der Bildschirm → die Bildschirme · die Maus → die Mäuse',
         [['Ich brauche zwei Bildschirme.','من دو نمایشگر لازم دارم.'],['Ich habe keine Bücher.','من کتاب ندارم.']],
         quiz('جمع das Handy چیست؟',['die Handys','die Handyes','der Handys','die Handy'],'die Handys','Handy در جمع s می‌گیرد.')),
@@ -111,6 +120,11 @@ export const persianGrammarGuides = {
       rule('wohin-extra','تمرین تکمیلی کلاس: Wohin?','برای حرکت به داخل یک مکان با in، در پاسخ به Wohin? از Akkusativ استفاده می‌کنیم. برای موقعیت ثابت Wo? از Dativ استفاده می‌شود.','in das = ins · in den · in die',
         [['Ich gehe ins Büro.','من به دفتر کار می‌روم.'],['Ich gehe in den Park.','من به پارک می‌روم.'],['Ich bin im Büro.','من در دفتر کار هستم.']],
         quiz('Ich gehe ___ Büro.',['ins','im','in dem','aus dem'],'ins','مقصد حرکت: in das Büro = ins Büro.'))
+,
+       rule('class-verbs-and-modals','افعال تخته کلاس و جای مصدر','فعل‌هایی مانند fahren، sehen، hören، lesen، treffen و besuchen را با شش ضمیر صرف کن. در فعل‌های مُدال können، wollen، müssen و möchten، فعل مُدال صرف می‌شود و فعل اصلی به شکل مصدر در پایان جمله قرار می‌گیرد.','ich fahre · du fährst · er fährt / ich muss arbeiten / ich möchte lesen',
+         [['Ich fahre Auto.','من رانندگی می‌کنم.'],['Ich will das Buch lesen.','می‌خواهم کتاب را بخوانم.'],['Ich muss arbeiten.','باید کار کنم.']],
+         quiz('جای خالی: Ich ___ Deutsch sprechen.',['kann','kannst','können','könnt'],'kann','برای ich، شکل فعل können برابر kann است و sprechen در پایان جمله می‌آید.'),
+         'افعال fahren، treffen و besuchen از یادداشت تخته کلاس اضافه شده‌اند؛ آن‌ها را به‌عنوان تمرین کلاس مرور کن.')
     ]
   },
   7: {

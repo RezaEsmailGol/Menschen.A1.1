@@ -16,7 +16,7 @@ import './mobileGame.css';
 import './homeExperience.css';
 
 const practiceCategories=[
-  {id:'articles',label:'باشگاه der / die / das',hint:'۳۵ اسم اصلی تا درس ۶، آزمون جنسیت، املا، Akkusativ و جمع',Icon:Brain,theme:'green'},
+  {id:'articles',label:'بازی Akkusativ · درس ۵ و ۶',hint:'سه مرحله den / einen / keinen، همراه eine و ضمیرهای مفعولی',Icon:Brain,theme:'green'},
   {id:'coach',label:'مربی روزانه تو',hint:'برنامه ۳ مرحله‌ای بر اساس عملکرد و نقاط نیازمند مرور',Icon:Brain,theme:'green'},
  {id:'speaking',label:'مربی تلفظ من',hint:'با میکروفون آلمانی بگو؛ همخوانی گفتار و پیشرفت را بسنج',Icon:Mic2,theme:'purple'},
   {id:'night',label:'شیفت شب',hint:'مرور کوتاه و نمایش آرام تصویری پیش از خواب',Icon:Moon,theme:'purple'},
@@ -32,7 +32,7 @@ const practiceCategories=[
   {id:'pronunciation',label:'تلفظ و استثناها',hint:'از Ich-Laut تا Ach-Laut',Icon:Volume2,theme:'sky'},
   {id:'listen',label:'دیکته شنیداری',hint:'گوش بده و کلمه درست را تایپ کن',Icon:Headphones,theme:'pink'},
   {id:'exam',label:'آزمون پایان درس',hint:'۱۰ سؤال و ثبت نتیجه',Icon:GraduationCap,theme:'purple'},
-  {id:'verbs',label:'صرف ۲۰ فعل',hint:'از kommen تا möchten',Icon:Languages,theme:'green'},
+  {id:'verbs',label:'باشگاه صرف افعال',hint:'افعال کتاب و تخته کلاس؛ شش ضمیر، تلفظ و آزمون تایپی',Icon:Languages,theme:'green'},
   {id:'alphabet',label:'الفبای آلمانی',hint:'حروف و ترکیب‌های ویژه',Icon:BookOpen,theme:'sky'},
   {id:'words',label:'کلمات جلسه اول',hint:'نمونه‌ها و پخش صوت',Icon:Keyboard,theme:'amber'},
   {id:'flash',label:'فلش‌کارت شخصی',hint:'افزودن و ورود و خروجی کارت',Icon:RotateCcw,theme:'pink'}

@@ -1,0 +1,53 @@
+.verbTrainer{display:grid;gap:15px;max-width:1050px;margin:0 auto;padding-bottom:20px;color:#263451}
+.vtHero{padding:clamp(20px,4vw,30px);border-radius:22px;background:linear-gradient(135deg,#23345a,#3c6481);color:#fff}
+.vtHero>small{font:800 10px Arial;letter-spacing:1px;color:#c4e8e6}
+.vtHero h1{margin:10px 0;font-size:clamp(23px,4vw,32px)}
+.vtHero p{margin:0;color:#e0edf4;font-size:13px;line-height:1.9}
+.vtHeroStats{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.vtHeroStats span{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:20px;background:#ffffff18;font-size:11px}
+.vtPanel{display:grid;gap:13px;padding:clamp(13px,3vw,21px);border:1px solid #e0e7ef;border-radius:19px;background:#fff}
+.vtPanel h2{margin:0;font-size:18px}
+.vtGroupTabs{display:flex;gap:7px;flex-wrap:wrap}
+.vtGroupTabs button{padding:9px 12px;border:1px solid #dce5ed;border-radius:11px;background:#f5f8fb;color:#53637a;font:700 11px system-ui,sans-serif;cursor:pointer}
+.vtGroupTabs button.active{background:#e6f5ef;border-color:#67b897;color:#176e4e}
+.vtSelectLabel{display:grid;gap:6px;font-size:12px;font-weight:800}
+.vtSelectLabel select,.vtQuiz input{width:100%;min-width:0;box-sizing:border-box;padding:12px;border:1px solid #dce4ed;border-radius:11px;background:#fbfcfe;color:#263451;font:inherit}
+.vtVerbTitle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px;border-radius:14px;background:#f2f7fb}
+.vtVerbTitle small,.vtExample small{display:block;color:#71839a;font-size:10px}
+.vtVerbTitle h2{margin:4px 0;font:800 25px Arial;color:#294e69}
+.vtVerbTitle p{margin:0;color:#53657c;font-size:12px}
+.vtVerbTitle>button,.vtExample>button{width:42px;height:42px;border:0;border-radius:12px;background:#e3eef5;color:#315a74;display:grid;place-items:center;cursor:pointer}
+.vtConjugation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vtConjRow{display:grid;grid-template-columns:1fr 1.2fr 30px;align-items:center;gap:6px;padding:10px;border:1px solid #e7edf2;border-radius:11px;background:#fff}
+.vtConjRow span{font:700 12px Arial;color:#75839a}
+.vtConjRow b{font:800 16px Arial;color:#294e69}
+.vtConjRow button{border:0;background:transparent;color:#6b8295;cursor:pointer;padding:5px}
+.vtExample{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px;border-radius:13px;background:#f5f8fb}
+.vtExample div{display:grid;gap:5px;min-width:0}
+.vtExample b{font:800 15px Arial;overflow-wrap:anywhere}
+.vtExample span{font-size:12px;color:#68778d}
+.vtModalTip{display:grid;gap:6px;padding:12px;border-right:3px solid #5d9d83;border-radius:10px;background:#eff8f3;font-size:12px;line-height:1.8}
+.vtModalTip strong{font:800 14px Arial;direction:ltr;text-align:left}
+.vtActions{display:flex;gap:8px;flex-wrap:wrap}
+.vtActions button,.vtQuiz form button,.vtFeedback button{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 15px;border:0;border-radius:11px;background:#267b5a;color:#fff;font:800 12px system-ui,sans-serif;cursor:pointer;min-height:43px}
+.vtActions button.secondary{background:#eef2f7;color:#50627b;border:1px solid #dfe6ed}
+.vtQuiz{max-width:650px;width:100%;box-sizing:border-box;margin:0 auto}
+.vtQuizTop{display:flex;justify-content:space-between;color:#77869a;font-size:11px}
+.vtQuiz>small{color:#43866c;font-size:11px;font-weight:800}
+.vtQuiz>h2{font:800 25px Arial;color:#2e526b}
+.vtQuiz>p{margin:0;color:#66758a;font-size:12px}
+.vtQuiz form{display:grid;gap:9px}
+.vtQuiz input{font-size:20px;text-align:center}
+.vtQuiz form button:disabled{opacity:.5;cursor:not-allowed}
+.vtFeedback{display:grid;gap:8px;padding:13px;border-radius:13px;background:#eaf7ef;color:#246b4b}
+.vtFeedback.wrong{background:#fff0f0;color:#a13d4a}
+.vtFeedback strong{font:800 19px Arial}
+.vtFeedback span{font:13px Arial}
+.vtFeedback button{justify-self:start;background:#ffffffb5;color:inherit}
+.vtMuted{margin:0;color:#738096;font-size:12px;line-height:1.8}
+.vtPronounTable{overflow-x:auto}
+.vtPronounTable table{width:100%;border-collapse:collapse;text-align:center;font-size:12px}
+.vtPronounTable th,.vtPronounTable td{padding:9px 6px;border:1px solid #e4eaf0}
+.vtPronounTable th{background:#f3f7fa;color:#566c7e}
+.vtPronounTable td b{color:#16734e}
+@media(max-width:600px){.vtConjugation{grid-template-columns:1fr}.vtActions button{flex:1}.vtGroupTabs{display:grid;grid-template-columns:1fr 1fr}.vtGroupTabs button{min-height:42px}.vtPronounTable table{font-size:10px}}

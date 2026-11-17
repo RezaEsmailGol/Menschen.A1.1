@@ -124,6 +124,15 @@ test('feminine/masculine/neuter grammar is correct for both article games',()=>{
  assert.equal(pictureCollections[6].length,18);
  assert.ok(createPictureRound({lesson:6,mode:'plural'}).every(q=>q.answer.startsWith('die ')));
  assert.ok(createPictureRound({lesson:6,mode:'accusative'}).every(q=>q.audio&&q.answer));
+  assert.ok(pictureModes[5].some(mode=>mode.id==='accusative'),'lesson 5 must offer classroom Akkusativ reinforcement');
+  for(const lesson of [5,6]){
+   const masculine=pictureCollections[lesson].find(item=>item.word.startsWith('der '));
+   assert.equal(makePictureQuestion(masculine,lesson,'accusative',()=>0).answer,'den');
+   assert.equal(makePictureQuestion(masculine,lesson,'accusative',()=>0.4).answer,'einen');
+   assert.equal(makePictureQuestion(masculine,lesson,'accusative',()=>0.8).answer,'keinen');
+   const feminine=pictureCollections[lesson].find(item=>item.word.startsWith('die '));
+   assert.equal(makePictureQuestion(feminine,lesson,'accusative',()=>0.4).answer,'eine');
+  }
  assert.throws(()=>createPictureRound({lesson:8}),/Unsupported/);
  assert.throws(()=>createPictureRound({lesson:4,mode:'jobs'}),/Unsupported/);
 });
