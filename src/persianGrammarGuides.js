@@ -1,5 +1,5 @@
-// تمرین‌ها و توضیح‌های تألیفی فارسی؛ سرفصل‌های ۱ تا ۵ همراه Menschen A1.1
-// و درس‌های ۶ تا ۱۲ بر اساس مسیر تکمیلی همین اپ هستند، نه بازنشر صفحات ناشر.
+// راهنماهای فارسی و تمرین‌های تألیفی؛ درس‌های ۱ تا ۶ هم‌موضوع سرفصل‌های Menschen A1.1 هستند.
+// درس‌های ۷ تا ۱۲ مسیر تکمیلی اپ‌اند؛ هیچ‌کدام بازنشر متن یا تمرین‌های ناشر نیستند.
 const quiz=(question,options,answer,why)=>({question,options,answer,why});
 const rule=(id,title,explanation,pattern,examples,check,warning='',table=null)=>({
   id,title,explanation,pattern,examples,check,warning,table
@@ -87,7 +87,7 @@ export const persianGrammarGuides = {
     ]
   },
   6: {
-    summary:'جنسیت اسم، جمع و کاربرد اسم به‌عنوان مفعول مستقیم را با وسایل دفتر کار تمرین کن.',
+    summary:'واژگان دفتر کار، جمع اسم‌ها، Akkusativ، تماس تلفنی، ایمیل/SMS و تلفظ ü را تمرین کن؛ Wohin? نکته تکمیلی کلاس است.',
     rules:[
       rule('office-articles','حرف تعریف اسم‌های اداری','اسم‌های آلمانی را همراه der، die یا das حفظ کن؛ از معنی فارسی نمی‌توان جنسیت را همیشه حدس زد.','der Laptop · die Maus · das Handy',
         [['Der Laptop ist neu.','لپ‌تاپ جدید است.'],['Die Maus ist klein.','ماوس کوچک است.'],['Das Handy ist teuer.','موبایل گران است.']],
@@ -99,6 +99,15 @@ export const persianGrammarGuides = {
       rule('office-plural','جمع اسم‌ها','اسم را همراه شکل جمع یاد بگیر؛ حرف تعریف معین جمع در Nominativ و Akkusativ همیشه die است.','der Bildschirm → die Bildschirme · die Maus → die Mäuse',
         [['Ich brauche zwei Bildschirme.','من دو نمایشگر لازم دارم.'],['Ich habe keine Bücher.','من کتاب ندارم.']],
         quiz('جمع das Handy چیست؟',['die Handys','die Handyes','der Handys','die Handy'],'die Handys','Handy در جمع s می‌گیرد.')),
+      rule('phone-strategy','عبارت‌های کاربردی تماس تلفنی','در تماس تلفنی معمولاً نام شرکت را می‌گوییم، سپس خودمان را معرفی می‌کنیم. برای پایان تماس از عبارت مخصوص شنیدن استفاده می‌کنیم.','Brenner IT-Consulting, guten Tag. · Hier ist Reza. · Auf Wiederhören!',
+        [['Guten Tag, hier ist Reza.','روز بخیر، رضا هستم.'],['Einen Moment, bitte.','یک لحظه لطفاً.'],['Auf Wiederhören!','خدانگهدار تلفنی!']],
+        quiz('برای پایان یک تماس تلفنی رسمی کدام عبارت مناسب است؟',['Auf Wiederhören!','Auf Wiedersehen!','Gute Nacht!','Bis morgen!'],'Auf Wiederhören!','Auf Wiederhören برای خداحافظی در تماس تلفنی به کار می‌رود.')),
+      rule('email-sms','ساختار ایمیل و پیامک','در یک ایمیل ساده می‌توانی موضوع (Betreff)، خطاب (Anrede)، متن اصلی، عبارت پایانی (Grußformel) و نام فرستنده را پیدا کنی. پیامک معمولاً کوتاه‌تر و مستقیم‌تر است.','Betreff → Anrede → Nachricht → Grußformel → Name',
+        [['Betreff: Neue Termine','موضوع: قرارهای جدید'],['Guten Tag, Herr Weber.','روز بخیر آقای وبر.'],['Viele Grüße, Reza','با آرزوی خوب، رضا']],
+        quiz('Betreff در ایمیل به چه معناست؟',['موضوع','امضا','پیوست','نشانی'],'موضوع','Betreff عنوان یا موضوع ایمیل است.')),
+      rule('pronunciation-ue','تلفظ واکه ü','برای گفتن ü لب‌ها را مانند گفتن u گرد کن، اما زبان را در موقعیت نزدیک به i نگه دار. این صدا را با u یکی نکن؛ چند بار با واژه‌های کوتاه تمرین کن.','ü · Büro · Grüße · für',
+        [['das Büro','دفتر کار'],['Viele Grüße','با آرزوی خوب'],['für Sie','برای شما']],
+        quiz('کدام واژه صدای ü دارد؟',['Büro','Buch','Laptop','Maus'],'Büro','در واژه Büro صدای ü شنیده می‌شود.')),
       rule('wohin-extra','تمرین تکمیلی کلاس: Wohin?','برای حرکت به داخل یک مکان با in، در پاسخ به Wohin? از Akkusativ استفاده می‌کنیم. برای موقعیت ثابت Wo? از Dativ استفاده می‌شود.','in das = ins · in den · in die',
         [['Ich gehe ins Büro.','من به دفتر کار می‌روم.'],['Ich gehe in den Park.','من به پارک می‌روم.'],['Ich bin im Büro.','من در دفتر کار هستم.']],
         quiz('Ich gehe ___ Büro.',['ins','im','in dem','aus dem'],'ins','مقصد حرکت: in das Büro = ins Büro.'))
