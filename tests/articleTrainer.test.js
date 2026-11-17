@@ -36,6 +36,24 @@ test('every practice mode is valid, unique, and exact spelling is checked',()=>{
  const couch=coreArticleNouns.find(n=>n.noun==='Couch');
  assert.equal(articleQuestion(sofa,'gender').answer,'das');assert.equal(articleQuestion(couch,'gender').answer,'die');
 });
+test('Akkusativ drills cover den, einen, keinen, eine and unchanged neuter/feminine forms',()=>{
+ const cases=[
+  ['Laptop','acc-def','den'],['Tisch','acc-ind','einen'],['Drucker','acc-neg','keinen'],
+  ['Maus','acc-def','die'],['Maus','acc-ind','eine'],['Maus','acc-neg','keine'],
+  ['Handy','acc-def','das'],['Handy','acc-ind','ein'],['Handy','acc-neg','kein']
+ ];
+ for(const [name,mode,expected] of cases){
+  const noun=articleNouns.find(n=>n.noun===name);
+  const q=articleQuestion(noun,mode,()=>0.2);
+  assert.equal(q.answer,expected, name+' / '+mode);
+  assert.ok(q.options.includes(expected));
+  assert.equal(articleAnswerCorrect(q,expected),true);
+  assert.match(q.example,/^(Ich suche|Ich brauche|Ich habe)/);
+ }
+ const round=articleRound({scope:'5-6',mode:'acc-def',count:100});
+ assert.ok(round.length>0);
+ assert.ok(round.every(q=>[5,6].includes(q.noun.lesson)));
+});
 test('Dativ conversion forms are correct for definite, indefinite and negative articles',()=>{
  const lamp=coreArticleNouns.find(n=>n.noun==='Lampe');
  assert.equal(CASE_FORMS.die.datDef,'der');
