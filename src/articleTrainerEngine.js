@@ -2,16 +2,19 @@ import {articleNouns,coreArticleNouns,CASE_FORMS} from './articleNouns.js';
 import {activityItemKey} from './learningMemory.js';
 
 export const articleModes=[
+ {id:'acc-def',title:'Akkusativ · den / die / das',detail:'حرف تعریف معین در مفعول: der → den؛ die و das ثابت می‌مانند'},
+ {id:'acc-ind',title:'Akkusativ · einen / eine / ein',detail:'حرف تعریف نامعین: مذکر einen، مؤنث eine، خنثی ein'},
+ {id:'acc-neg',title:'Akkusativ · keinen / keine / kein',detail:'نفی مفعول: مذکر keinen، مؤنث keine، خنثی kein؛ جمع keine'},
+ {id:'acc',title:'Akkusativ · ترکیبی',detail:'ترکیب معین و نامعین در جمله‌های روزمره'},
  {id:'gender',title:'der / die / das',detail:'جنسیت اسم؛ سه گزینه بدون راهنما'},
  {id:'write',title:'حرف تعریف + املا',detail:'اسم کامل را از روی معنی و تصویر تایپ کن'},
- {id:'nom',title:'ein / eine',detail:'حرف تعریف نامعین در Nominativ'},
- {id:'pronoun',title:'er / sie / es',detail:'ضمیر اشیا'},
- {id:'acc',title:'Akkusativ',detail:'den / die / das و einen / eine / ein'},
+ {id:'nom',title:'ein / eine · Nominativ',detail:'معرفی یک شیء با ein / eine'},
+ {id:'pronoun',title:'er / sie / es',detail:'ضمیر اشیا در Nominativ'},
  {id:'neg',title:'kein / keinen / keine',detail:'نفی اسم در جمله مفعولی'},
  {id:'plural',title:'جمع اسم‌ها',detail:'die + شکل جمع'},
- {id:'dat-def',title:'Dativ · der / die / das',detail:'مرحله ۱: der → dem، die → der، das → dem'},
- {id:'dat-ind',title:'Dativ · ein / eine',detail:'مرحله ۲: ein → einem، eine → einer'},
- {id:'dat-neg',title:'Dativ · kein / keine',detail:'مرحله ۳: kein → keinem، keine → keiner'}
+ {id:'dat-def',title:'تکمیلی · Dativ معین',detail:'این مبحث خارج از مسیر اصلی درس‌های ۵ و ۶ است'},
+ {id:'dat-ind',title:'تکمیلی · Dativ نامعین',detail:'این مبحث خارج از مسیر اصلی درس‌های ۵ و ۶ است'},
+ {id:'dat-neg',title:'تکمیلی · Dativ منفی',detail:'این مبحث خارج از مسیر اصلی درس‌های ۵ و ۶ است'}
 ];
 export function articleKey(noun,mode='gender'){return activityItemKey('article',noun.noun||noun,mode);}
 export function articleStatus(noun,memory={},mode='gender',now=Date.now()){
@@ -23,6 +26,7 @@ export function articleStatus(noun,memory={},mode='gender',now=Date.now()){
 }
 export function nounPool(scope='core'){
  if(scope==='all')return articleNouns;
+ if(scope==='5-6')return articleNouns.filter(n=>n.lesson===5||n.lesson===6);
  if(scope==='core')return coreArticleNouns;
  return articleNouns.filter(n=>n.lesson===Number(scope));
 }
@@ -44,6 +48,9 @@ export function articleQuestion(noun,mode='gender',random=Math.random){
  case 'nom':prompt='Das ist ___ '+noun.noun+'.';answer=forms.nomInd;options=['ein','eine'];example='Das ist '+answer+' '+noun.noun+'.';break;
  case 'pronoun':prompt='ضمیر مناسب برای این اسم چیست؟';answer=forms.pronoun;options=['er','sie','es'];example=noun.word+'. '+answer[0].toUpperCase()+answer.slice(1)+' ist hier.';break;
  case 'acc':{const definite=random()<.5;prompt=(definite?'Ich suche ___ ':'Ich brauche ___ ')+noun.noun+'.';answer=definite?forms.def:forms.ind;options=definite?['den','die','das','der']:['einen','eine','ein'];example=prompt.replace('___',answer);break;}
+  case 'acc-def':prompt='حرف تعریف معین را در Akkusativ کامل کن: Ich suche ___ '+noun.noun+'.';answer=forms.def;options=['den','die','das','der'];example='Ich suche '+answer+' '+noun.noun+'.';break;
+  case 'acc-ind':prompt='حرف تعریف نامعین را در Akkusativ کامل کن: Ich brauche ___ '+noun.noun+'.';answer=forms.ind;options=['einen','eine','ein','einem'];example='Ich brauche '+answer+' '+noun.noun+'.';break;
+  case 'acc-neg':prompt='جمله منفی را در Akkusativ کامل کن: Ich habe ___ '+noun.noun+'.';answer=forms.neg;options=['keinen','keine','kein','nicht'];example='Ich habe '+answer+' '+noun.noun+'.';break;
  case 'neg':prompt='Ich habe ___ '+noun.noun+'.';answer=forms.neg;options=['kein','keine','keinen'];example=prompt.replace('___',answer);break;
  case 'plural':prompt='جمع این اسم را با die بنویس.';answer='die '+noun.plural;example=answer;break;
  case 'dat-def':prompt='Nominativ را به Dativ تبدیل کن: '+noun.word;answer=forms.datDef;options=['dem','der','den','das'];example='mit '+answer+' '+noun.noun;break;
