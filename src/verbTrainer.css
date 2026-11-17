@@ -8,7 +8,7 @@
 .vtPanel{display:grid;gap:13px;padding:clamp(13px,3vw,21px);border:1px solid #e0e7ef;border-radius:19px;background:#fff}
 .vtPanel h2{margin:0;font-size:18px}
 .vtGroupTabs{display:flex;gap:7px;flex-wrap:wrap}
-.vtGroupTabs button{padding:9px 12px;border:1px solid #dce5ed;border-radius:11px;background:#f5f8fb;color:#53637a;font:700 11px inherit;cursor:pointer}
+.vtGroupTabs button{padding:9px 12px;border:1px solid #dce5ed;border-radius:11px;background:#f5f8fb;color:#53637a;font:700 11px system-ui,sans-serif;cursor:pointer}
 .vtGroupTabs button.active{background:#e6f5ef;border-color:#67b897;color:#176e4e}
 .vtSelectLabel{display:grid;gap:6px;font-size:12px;font-weight:800}
 .vtSelectLabel select,.vtQuiz input{width:100%;min-width:0;box-sizing:border-box;padding:12px;border:1px solid #dce4ed;border-radius:11px;background:#fbfcfe;color:#263451;font:inherit}
@@ -29,7 +29,7 @@
 .vtModalTip{display:grid;gap:6px;padding:12px;border-right:3px solid #5d9d83;border-radius:10px;background:#eff8f3;font-size:12px;line-height:1.8}
 .vtModalTip strong{font:800 14px Arial;direction:ltr;text-align:left}
 .vtActions{display:flex;gap:8px;flex-wrap:wrap}
-.vtActions button,.vtQuiz form button,.vtFeedback button{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 15px;border:0;border-radius:11px;background:#267b5a;color:#fff;font:800 12px inherit;cursor:pointer;min-height:43px}
+.vtActions button,.vtQuiz form button,.vtFeedback button{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 15px;border:0;border-radius:11px;background:#267b5a;color:#fff;font:800 12px system-ui,sans-serif;cursor:pointer;min-height:43px}
 .vtActions button.secondary{background:#eef2f7;color:#50627b;border:1px solid #dfe6ed}
 .vtQuiz{max-width:650px;width:100%;box-sizing:border-box;margin:0 auto}
 .vtQuizTop{display:flex;justify-content:space-between;color:#77869a;font-size:11px}
