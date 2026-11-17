@@ -36,7 +36,7 @@ export const pictureCollections=Object.freeze({
 export const pictureModes=Object.freeze({
  2:[{id:'jobs',label:'معرفی شغل 👩‍⚕️'}],
  4:[{id:'articles',label:'der / die / das'},{id:'pronouns',label:'er / sie / es'}],
- 5:[{id:'indefinite',label:'ein / eine'},{id:'negative',label:'kein / keine'}],
+ 5:[{id:'indefinite',label:'ein / eine · Nominativ'},{id:'negative',label:'kein / keine · Nominativ'},{id:'accusative',label:'Akkusativ · den / einen / keinen'}],
  6:[{id:'articles',label:'der / die / das'},{id:'plural',label:'Singular / Plural'},{id:'accusative',label:'Akkusativ'},{id:'negative',label:'kein / keine / keinen'}]
 });
 export function articleOf(word){
@@ -96,13 +96,27 @@ export function makePictureQuestion(item,lesson,mode,random=Math.random){
    why='اسم را همراه شکل جمعش حفظ کن: '+item.word+' → '+answer+'.';
    audio=answer;
  } else if(mode==='accusative'){
-   if(lesson!==6)throw new Error('Akkusativ mode belongs to lesson 6');
-   const definite=random()<.5;
-   answer=definite?(article==='der'?'den':article==='die'?'die':'das'):(article==='der'?'einen':article==='die'?'eine':'ein');
-   options=definite?['den','die','das','der']:['einen','eine','ein','einem'];
-   prompt=(definite?'Ich suche ___ ':'Ich brauche ___ ')+name+'.';
-   why=definite?'Akkusativ معین: der → den؛ die و das تغییر نمی‌کنند.':'Akkusativ نامعین: مذکر einen، مؤنث eine و خنثی ein.';
-   audio=prompt.replace('___',answer);
+   if(![5,6].includes(lesson))throw new Error('Akkusativ mode belongs to lessons 5 and 6');
+   const kind=Math.floor(random()*3);
+   if(kind===0){
+     answer=article==='der'?'den':article==='die'?'die':'das';
+     options=['den','die','das','der'];
+     prompt='حرف تعریف معین را در Akkusativ کامل کن: Ich suche ___ '+name+'.';
+     why='Akkusativ معین: der → den؛ die و das تغییر نمی‌کنند.';
+     audio='Ich suche '+answer+' '+name+'.';
+   } else if(kind===1){
+     answer=article==='der'?'einen':article==='die'?'eine':'ein';
+     options=['einen','eine','ein','einem'];
+     prompt='حرف تعریف نامعین را در Akkusativ کامل کن: Ich brauche ___ '+name+'.';
+     why='Akkusativ نامعین: مذکر einen، مؤنث eine و خنثی ein.';
+     audio='Ich brauche '+answer+' '+name+'.';
+   } else {
+     answer=article==='der'?'keinen':article==='die'?'keine':'kein';
+     options=['keinen','keine','kein','nicht'];
+     prompt='نفی را در Akkusativ کامل کن: Ich habe ___ '+name+'.';
+     why='نفی Akkusativ: مذکر keinen، مؤنث keine و خنثی kein.';
+     audio='Ich habe '+answer+' '+name+'.';
+   }
  } else if(mode==='indefinite'){
    if(lesson!==5)throw new Error('Indefinite mode belongs to lesson 5');
    const yes=indefiniteArticle(item.word),other=yes==='ein'?'eine':'ein';
