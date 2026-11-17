@@ -36,6 +36,29 @@ test('every practice mode is valid, unique, and exact spelling is checked',()=>{
  const couch=coreArticleNouns.find(n=>n.noun==='Couch');
  assert.equal(articleQuestion(sofa,'gender').answer,'das');assert.equal(articleQuestion(couch,'gender').answer,'die');
 });
+test('Dativ conversion forms are correct for definite, indefinite and negative articles',()=>{
+ const lamp=coreArticleNouns.find(n=>n.noun==='Lampe');
+ assert.equal(CASE_FORMS.die.datDef,'der');
+ assert.equal(CASE_FORMS.die.datInd,'einer');
+ assert.equal(CASE_FORMS.die.datNeg,'keiner');
+ assert.equal(articleQuestion(lamp,'dat-def').answer,'der');
+ assert.equal(articleQuestion(lamp,'dat-ind').answer,'einer');
+ assert.equal(articleQuestion(lamp,'dat-neg').answer,'keiner');
+ const tableNouns={
+  der:coreArticleNouns.find(n=>n.noun==='Tisch'),
+  das:coreArticleNouns.find(n=>n.noun==='Buch')
+ };
+ assert.equal(articleQuestion(tableNouns.der,'dat-def').answer,'dem');
+ assert.equal(articleQuestion(tableNouns.der,'dat-ind').answer,'einem');
+ assert.equal(articleQuestion(tableNouns.das,'dat-def').answer,'dem');
+ assert.equal(articleQuestion(tableNouns.das,'dat-ind').answer,'einem');
+ for(const mode of ['dat-def','dat-ind','dat-neg']){
+  const q=articleQuestion(lamp,mode);
+  assert.ok(q.example.startsWith('mit '));
+  assert.ok(q.options.includes(q.answer));
+  assert.equal(articleAnswerCorrect(q,q.answer),true);
+ }
+});
 test('weak questions are prioritized and each gender skill is separately recorded',()=>{
  const n=coreArticleNouns.find(n=>n.noun==='Laptop');const q=articleQuestion(n,'gender');const now=Date.now();
  let memory=recordActivity({},articleEvent(q,false),now);
