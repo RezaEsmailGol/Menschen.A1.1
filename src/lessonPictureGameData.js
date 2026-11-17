@@ -1,4 +1,5 @@
-// Pure, testable picture-quiz engine for lessons 2, 4 and 5.
+// Pure, testable picture-quiz engine for lessons 2, 4, 5 and 6.
+import {articleNouns} from './articleNouns.js';
 const jobs=[
  ['der Lehrer','معلم مرد','Lehrer','Lehrerin','er'],
  ['die Lehrerin','معلم زن','Lehrer','Lehrerin','sie'],
@@ -29,12 +30,14 @@ const objects=[
 export const pictureCollections=Object.freeze({
  2:jobs.map(([de,fa,male,female,person])=>({word:de,fa,male,female,person})),
  4:furniture.map(([de,fa])=>({word:de,fa})),
- 5:objects.map(([de,fa])=>({word:de,fa}))
+ 5:objects.map(([de,fa])=>({word:de,fa})),
+ 6:articleNouns.filter(noun=>noun.lesson===6).map(noun=>({word:noun.word,fa:noun.fa,plural:noun.plural}))
 });
 export const pictureModes=Object.freeze({
  2:[{id:'jobs',label:'معرفی شغل 👩‍⚕️'}],
  4:[{id:'articles',label:'der / die / das'},{id:'pronouns',label:'er / sie / es'}],
- 5:[{id:'indefinite',label:'ein / eine'},{id:'negative',label:'kein / keine'}]
+ 5:[{id:'indefinite',label:'ein / eine'},{id:'negative',label:'kein / keine'}],
+ 6:[{id:'articles',label:'der / die / das'},{id:'plural',label:'Singular / Plural'},{id:'accusative',label:'Akkusativ'},{id:'negative',label:'kein / keine / keinen'}]
 });
 export function articleOf(word){
  const article=String(word).match(/^(der|die|das)\s/);
@@ -71,19 +74,35 @@ export function makePictureQuestion(item,lesson,mode,random=Math.random){
    why='در معرفی شغل، برای مرد Er ist ... و برای زن Sie ist ... به‌کار می‌بریم؛ پسوند -in معمولاً مؤنث می‌سازد.';
    audio=answer;
  } else if(mode==='articles'){
-   if(lesson!==4)throw new Error('Article mode belongs to lesson 4');
+   if(![4,6].includes(lesson))throw new Error('Article mode belongs to lessons 4 and 6');
    answer=article;
    options=['der','die','das','den'];
    prompt='حرف تعریف معین این وسیله کدام است؟';
    why='اسم را همیشه با حرف تعریفش یاد بگیر: '+item.word+'.';
    audio=item.word;
  } else if(mode==='pronouns'){
-   if(lesson!==4)throw new Error('Pronoun mode belongs to lesson 4');
+   if(![4,6].includes(lesson))throw new Error('Pronoun mode belongs to lessons 4 and 6');
    answer=pronounFor(item.word);
    options=['er','sie','es','wir'];
    prompt='برای اشاره دوباره به این وسیله کدام ضمیر مناسب است؟';
    why='در حالت مفرد: der → er، die → sie، das → es.';
    audio=article==='der'?'Er ist schön.':article==='die'?'Sie ist schön.':'Es ist schön.';
+ } else if(mode==='plural'){
+   if(lesson!==6||!item.plural)throw new Error('Plural mode belongs to lesson 6');
+   answer='die '+item.plural;
+   const pool=pictureCollections[6].map(noun=>'die '+noun.plural).filter(value=>value!==answer);
+   options=[answer,...pool.slice(0,3)];
+   prompt='شکل جمع این اسم چیست؟';
+   why='اسم را همراه شکل جمعش حفظ کن: '+item.word+' → '+answer+'.';
+   audio=answer;
+ } else if(mode==='accusative'){
+   if(lesson!==6)throw new Error('Akkusativ mode belongs to lesson 6');
+   const definite=random()<.5;
+   answer=definite?(article==='der'?'den':article==='die'?'die':'das'):(article==='der'?'einen':article==='die'?'eine':'ein');
+   options=definite?['den','die','das','der']:['einen','eine','ein','einem'];
+   prompt=(definite?'Ich suche ___ ':'Ich brauche ___ ')+name+'.';
+   why=definite?'Akkusativ معین: der → den؛ die و das تغییر نمی‌کنند.':'Akkusativ نامعین: مذکر einen، مؤنث eine و خنثی ein.';
+   audio=prompt.replace('___',answer);
  } else if(mode==='indefinite'){
    if(lesson!==5)throw new Error('Indefinite mode belongs to lesson 5');
    const yes=indefiniteArticle(item.word),other=yes==='ein'?'eine':'ein';
@@ -93,13 +112,22 @@ export function makePictureQuestion(item,lesson,mode,random=Math.random){
    why='der/das → ein و die → eine (حالت Nominativ).';
    audio=answer;
  } else if(mode==='negative'){
-   if(lesson!==5)throw new Error('Negative mode belongs to lesson 5');
-   const no=negativeArticle(item.word),other=no==='kein'?'keine':'kein';
-   answer='Das ist '+no+' '+name+'.';
-   options=[answer,'Das ist '+other+' '+name+'.','Das ist nicht '+name+'.','Das ist '+indefiniteArticle(item.word)+' '+name+'.'];
-   prompt='تمرین گرامر: جمله فرضی «این '+item.fa+' نیست» را با kein یا keine بساز.';
-   why='der/das → kein و die → keine. برای نفی نام یک شیء از kein/keine استفاده کن.';
-   audio=answer;
+   if(lesson===5){
+     const no=negativeArticle(item.word),other=no==='kein'?'keine':'kein';
+     answer='Das ist '+no+' '+name+'.';
+     options=[answer,'Das ist '+other+' '+name+'.','Das ist nicht '+name+'.','Das ist '+indefiniteArticle(item.word)+' '+name+'.'];
+     prompt='تمرین گرامر: جمله فرضی «این '+item.fa+' نیست» را با kein یا keine بساز.';
+     why='der/das → kein و die → keine. برای نفی نام یک شیء در Nominativ از kein/keine استفاده کن.';
+     audio=answer;
+   } else if(lesson===6){
+     const no=article==='der'?'keinen':article==='die'?'keine':'kein';
+     const wrong=article==='der'?['kein','keine','einen']:article==='die'?['kein','keinen','eine']:['keine','keinen','ein'];
+     answer='Ich habe '+no+' '+name+'.';
+     options=[answer,...wrong.map(form=>'Ich habe '+form+' '+name+'.')];
+     prompt='نفی را در Akkusativ کامل کن: Ich habe ___ '+name+'.';
+     why='در Akkusativ مذکر: keinen؛ مؤنث: keine؛ خنثی: kein.';
+     audio=answer;
+   } else throw new Error('Negative mode belongs to lessons 5 and 6');
  } else throw new Error('Unsupported image game mode');
  if(new Set(options).size!==4 || !options.includes(answer))throw new Error('Ambiguous picture question');
  return {id,lesson,mode,word:item.word,fa:item.fa,prompt,answer,options:shuffle(options,random),why,audio};
