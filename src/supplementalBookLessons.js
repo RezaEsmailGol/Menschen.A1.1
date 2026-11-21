@@ -8,8 +8,8 @@ const topicChecks={
     ['در جمله «Wir brauchen Milch» فاعل کدام است؟',['wir','ich','du','er'],'wir','ما شیر لازم داریم.']
   ],
   8:[
-    ['حرف تعریف درست Küche چیست؟',['die','der','das','den'],'die','die Küche'],
-    ['حرف تعریف درست Zimmer چیست؟',['das','der','die','den'],'das','das Zimmer']
+    ['برای روزهای هفته مانند Montag کدام حرف اضافه زمانی درست است؟',['am','um','im','in'],'am','am Montag یعنی روز دوشنبه.'],
+    ['قبل از ساعت دقیق مانند 8 Uhr از چه حرف اضافه‌ای استفاده می‌کنیم؟',['um','am','in','auf'],'um','um acht Uhr یعنی ساعت هشت.']
   ],
   9:[
     ['کدام عبارت به معنی «با اتوبوس» است؟',['mit dem Bus','im Busse','mit das Bus','zum Bus'],'mit dem Bus','برای وسیله نقلیه mit + Dativ.'],

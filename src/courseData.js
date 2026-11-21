@@ -189,12 +189,29 @@ export const lessons = [
     sentences:[['Ich möchte ein Brot.','من یک نان می‌خواهم.'],['Das Wasser kostet zwei Euro.','این آب دو یورو قیمت دارد.'],['Ich kaufe Obst.','من میوه می‌خرم.'],['Wir brauchen Milch.','ما شیر لازم داریم.']],
   },
   {
-    id:8, label:'خانه و وسایل',german:'Wohnung und Zimmer',goal:'اتاق‌ها، وسایل و خانه مدنظرت را توصیف کن.',
-    grammar:'حرف تعریف der / die / das و جمع اسم‌ها',
-    tip:'اسم را همیشه با حرف تعریفش یاد بگیر؛ جنس دستوری اسم قابل حدس قطعی نیست.',
-    verbs:['wohnen','suchen'],
-    words:[['das Zimmer','اتاق'],['die Küche','آشپزخانه'],['das Bad','حمام'],['das Bett','تخت'],['der Tisch','میز'],['der Stuhl','صندلی'],['das Fenster','پنجره'],['die Miete','اجاره']],
-    sentences:[['Die Wohnung hat zwei Zimmer.','آپارتمان دو اتاق دارد.'],['Ich suche eine Wohnung.','من دنبال یک آپارتمان می‌گردم.'],['Das Fenster ist groß.','پنجره بزرگ است.'],['Die Miete ist hoch.','اجاره بالاست.']],
+    id:8, label:'روزهای هفته، ساعت و قرار گذاشتن',german:'Kein Problem. Ich habe Zeit!',
+    goal:'روزها و بخش‌های روز را بگو، ساعت را بخوان و برای تفریح قرار بگذار یا مؤدبانه رد کن. (درس ۸ کتاب Menschen A1.1)',
+    grammar:'am + روز و بخش روز؛ um + ساعت؛ in der Nacht؛ جایگاه دوم فعل؛ پرسش و پاسخ درباره زمان قرار',
+    tip:'Am Freitag um fünf Uhr habe ich Zeit. · Am Montag um acht Uhr habe ich keine Zeit. · Hast du am Dienstag Zeit?',
+    verbs:['haben','gehen','treffen'],
+    words:[
+      ['Montag','دوشنبه'],['Dienstag','سه‌شنبه'],['Mittwoch','چهارشنبه'],
+      ['Donnerstag','پنج‌شنبه'],['Freitag','جمعه'],['Samstag','شنبه'],['Sonntag','یکشنبه'],
+      ['der Morgen','صبح'],['der Vormittag','پیش از ظهر'],['der Mittag','ظهر'],
+      ['der Nachmittag','بعدازظهر'],['der Abend','عصر / شب'],['die Nacht','شب'],
+      ['die Uhrzeit','ساعت / زمان'],['die Zeit','وقت / زمان'],['die Woche','هفته'],
+      ['halb neun','هشت و نیم'],['Viertel nach vier','چهار و ربع'],['Viertel vor zehn','یک ربع مانده به ده'],
+      ['am Montag','روز دوشنبه'],['um acht Uhr','ساعت هشت'],['in der Nacht','در شب'],
+      ['das Kino','سینما'],['das Museum','موزه'],['das Schwimmbad','استخر'],
+      ['Gute Idee!','فکر خوبی است!'],['Leider nicht.','متأسفانه نه.'],
+      ['Januar','ژانویه (مرور اضافی)'],['Februar','فوریه (مرور اضافی)'],['März','مارس (مرور اضافی)']
+    ],
+    sentences:[
+      ['Ich habe am Dienstag Zeit.','سه‌شنبه وقت دارم.'],
+      ['Am Montag um acht Uhr habe ich keine Zeit.','دوشنبه ساعت هشت وقت ندارم.'],
+      ['Wir gehen am Samstag ins Kino.','ما شنبه به سینما می‌رویم.'],
+      ['Am Freitag treffe ich Sara.','جمعه سارا را می‌بینم.']
+    ]
   },
   {
     id:9, label:'مسیر و رفت‌وآمد',german:'Unterwegs in der Stadt',goal:'درباره وسیله نقلیه و مسیر رفتن بپرس.',
