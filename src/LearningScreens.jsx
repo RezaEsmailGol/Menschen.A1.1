@@ -183,7 +183,7 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
       <div><span className="homeV2Eyebrow">PRACTICE STUDIO</span><h1>تمرین‌های آلمانی من</h1><p>از بین ۱۲ درس، ۳۶۰ سؤال و تمرین‌های تصویری و شنیداری، مسیر مناسب خودت را انتخاب کن.</p></div>
       <RouteLink to="course" navigate={setTab}><BookOpenCheck size={17}/> مشاهده درس‌ها <ArrowLeft size={17}/></RouteLink>
     </header>
-    <PracticeJourney journey={journey} setTab={setTab} medal={achievements.nextBadge}/>
+    <PracticeJourney journey={journey} setTab={setTab} medal={achievements.nextBadge} memory={memory}/>
     <div className="practiceV2Recommended">
       <Brain size={21}/><span><strong>تمرین پیشنهادی برای مرور نقاط ضعف</strong><small>{focusText}</small></span>
       <RouteLink to={destination} navigate={setTab}>تمرین کن <ArrowLeft size={16}/></RouteLink>
