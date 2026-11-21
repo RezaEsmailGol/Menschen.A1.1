@@ -139,14 +139,20 @@ export const persianGrammarGuides = {
     ]
   },
   8: {
-    summary:'حرف تعریف اسم‌ها را با جمع آن‌ها یاد می‌گیریم و تعداد اتاق‌ها را می‌گوییم.',
+    summary:'در درس هشتم با روزهای هفته، ساعت و قرار گذاشتن کار می‌کنیم: am برای روزها و بخش‌های روز، um برای ساعت و in der Nacht برای شب است. فعل جمله خبری همیشه جایگاه دوم دارد.',
     rules:[
-      rule('plural','اسم جمع و حرف تعریف die','در آلمانی حالت جمع یک قاعده واحد ندارد. مثلاً Zimmer در جمع تغییر نمی‌کند ولی Stuhl به Stühle تبدیل می‌شود. حرف تعریف معین جمع همیشه die است.','das Zimmer → die Zimmer · der Stuhl → die Stühle',
-        [['Die Wohnung hat zwei Zimmer.','آپارتمان دو اتاق دارد.'],['Die Stühle sind neu.','صندلی‌ها جدید هستند.']],
-        quiz('شکل جمع درست «das Zimmer» کدام است؟',['die Zimmer','die Zimmers','das Zimmern','der Zimmer'],'die Zimmer','Zimmer در جمع شکلش تغییر نمی‌کند و حرف تعریف آن die است.')),
-      rule('house-sentences','جمله درباره خانه: hat و ist','برای بیان تعداد اتاق‌ها از hat استفاده می‌کنیم؛ برای ویژگی خانه و اتاق از ist. فعل در جمله خبری معمولاً جای دوم است.','Die Wohnung hat zwei Zimmer. / Die Küche ist klein.',
-        [['Das Bad ist groß.','حمام بزرگ است.'],['Meine Wohnung hat ein Zimmer.','خانه من یک اتاق دارد.']],
-        quiz('جای خالی: Die Wohnung ___ zwei Zimmer.',['hat','habe','sind','haben'],'hat','فاعل die Wohnung مفرد است؛ hat.'))
+      rule('am-um','am / um برای زمان','قبل از روزهای هفته و اغلب بخش‌های روز am می‌آید: am Montag، am Nachmittag. قبل از ساعت مشخص um می‌آید: um acht Uhr. استثنای مهم: in der Nacht.','am + Wochentag / Tageszeit · um + Uhrzeit · in der Nacht',
+        [['Wir treffen uns am Freitag.','ما جمعه همدیگر را می‌بینیم.'],['Der Kurs beginnt um neun Uhr.','کلاس ساعت نه شروع می‌شود.'],['In der Nacht schlafe ich.','شب می‌خوابم.']],
+        quiz('کامل کن: Am Dienstag ___ acht Uhr.', ['um','am','im','von'],'um','برای عدد ساعت، um درست است.')),
+      rule('position-2','جایگاه دوم فعل در جمله خبری','وقتی جمله با زمان شروع شود، فعل صرف‌شده بلافاصله بعد از آن قرار می‌گیرد، و سپس فاعل می‌آید. جمله «Am Freitag ich habe Zeit» نادرست است.','Am Freitag | habe | ich Zeit.',
+        [['Ich habe am Montag Zeit.','دوشنبه وقت دارم.'],['Am Montag habe ich Zeit.','دوشنبه وقت دارم (با تأکید روی روز).']],
+        quiz('کدام جمله ترتیب صحیح دارد؟',['Am Montag habe ich Zeit.','Am Montag ich habe Zeit.','Am Montag haben ich Zeit.','Am Montag Zeit ich habe.'],'Am Montag habe ich Zeit.','بعد از قید زمانی در آغاز، فعل habe در جایگاه دوم می‌آید.')),
+      rule('clock-reading','گفتن ساعت: halb، Viertel vor / nach','در آلمانی گفتاری، halb neun یعنی ۸:۳۰، نه ۹:۳۰. Viertel nach vier یعنی ۴:۱۵ و Viertel vor zehn یعنی ۹:۴۵. برای ۸:۰۰ می‌گوییم acht Uhr.','8:00 = acht Uhr · 8:30 = halb neun · 9:45 = Viertel vor zehn',
+        [['Wir treffen uns um halb neun.','ساعت هشت و نیم همدیگر را می‌بینیم.'],['Es ist Viertel nach vier.','ساعت چهار و ربع است.']],
+        quiz('halb neun یعنی چه ساعتی؟',['۸:۳۰','۹:۳۰','۸:۱۵','۹:۴۵'],'۸:۳۰','halb در آلمانی به ساعت بعدی اشاره می‌کند.')),
+      rule('appointments','قرار گذاشتن، قبول و رد کردن','برای پرسیدن وقت آزاد از Hast du ... Zeit? و برای پیشنهاد از Gehen wir ...? استفاده کن. برای رد مؤدبانه Ich habe leider keine Zeit. رایج است. Zeit اسم مؤنث است؛ منفی آن keine Zeit می‌شود.','Hast du am Samstag Zeit? · Gehen wir ins Kino?',
+        [['Hast du am Samstag Zeit?','شنبه وقت داری؟'],['Gute Idee! Am Samstag habe ich Zeit.','فکر خوبی است! شنبه وقت دارم.'],['Leider habe ich keine Zeit.','متأسفانه وقت ندارم.']],
+        quiz('کدام جمله به معنی «وقت ندارم» درست است؟',['Ich habe keine Zeit.','Ich habe keinen Zeit.','Ich bin nicht Zeit.','Ich habe nicht einen Zeit.'],'Ich habe keine Zeit.','Zeit مؤنث است و برای نفی اسم از keine استفاده می‌کنیم.'))
     ]
   },
   9: {
