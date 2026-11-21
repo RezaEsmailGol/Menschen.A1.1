@@ -3,11 +3,13 @@ import {ArrowLeft,BookOpenCheck,Brain,CheckCircle2,ChevronDown,ChevronLeft,Headp
 import RouteLink from './RouteLink';
 import {filterPracticeLessons,LESSON_PRACTICE_MODES,nextPracticeSection} from './practiceJourneyData.js';
 import './practiceJourney.css';
+import './fourFormNouns.css';
+import {fourFormProgress} from './fourFormNouns.js';
 
 const ICONS={all:Layers,vocabulary:BookOpenCheck,grammar:Brain,sentences:Pencil,listening:Headphones};
 const display=n=>Number(n||0).toLocaleString('fa-IR');
 
-export default function PracticeJourney({journey,setTab,medal}){
+export default function PracticeJourney({journey,setTab,medal,memory={}}){
  const [mode,setMode]=useState('all');
  const [search,setSearch]=useState('');
  const [status,setStatus]=useState('all');
@@ -46,6 +48,7 @@ export default function PracticeJourney({journey,setTab,medal}){
     </a>;
    })}
   </section>
+  <a className="ffLaunch" href="/lessons/6#four-form"><Brain size={28}/><div><b>چالش چهارحالتی اسم‌ها · درس ۶</b><small>آرتیکل، جمع، Akkusativ مثبت و منفی · ۲۵ واژه / ۱۰۰ پاسخ · {display(fourFormProgress(memory).correct)} پاسخ صحیح اخیر</small></div><ChevronLeft size={20}/></a>
   {medal&&<div className="pjMedalPrompt">
     <span className="pjMedalIcon"><Trophy size={23}/></span>
     <div><b>مدال بعدی: {medal.title}</b><small>{medal.detail} · {display(Math.min(medal.value,medal.target))} از {display(medal.target)}</small>
