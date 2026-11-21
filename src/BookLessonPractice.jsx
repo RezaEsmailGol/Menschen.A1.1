@@ -7,6 +7,7 @@ import LessonSceneArt,{hasLessonScene} from './LessonSceneArt.jsx';
 import {readExerciseTarget} from './lessonExerciseLinks.js';
 import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeBookAnswer} from './bookLessonData.js';
 import './bookLessonPractice.css';
+import FourFormTrainer from './FourFormTrainer.jsx';
 
 const STORE='dt_book_lessons_v1';
 function readSaved() {
@@ -55,7 +56,7 @@ function NewNumberChallenge({speak,onPracticeEvent}) {
     <p className="bookHint">مثال: ۲۱ = einundzwanzig. عددهای ۱۲ (zwölf) و ۲۰ (zwanzig) را بیشتر مرور کن.</p>
   </div>;
 }
-export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTab}) {
+export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTab,memory={}}) {
   const plan=bookLessonPlans[lessonId];
   const [sectionIndex,setSectionIndex]=useState(()=>readExerciseTarget(lessonId,window.location.search)?.sectionIndex??0);
   const [taskIndex,setTaskIndex]=useState(()=>readExerciseTarget(lessonId,window.location.search)?.taskIndex??0);
@@ -107,6 +108,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
       <div className="bookMastery"><b>{correctCount} / {allTasks.length}</b><small>تمرین تسلط‌یافته</small></div>
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
+    {lessonId===6&&<FourFormTrainer speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/>}
     <LessonAudioButtons lessonId={lessonId} speak={speak} onPracticeEvent={onPracticeEvent}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"

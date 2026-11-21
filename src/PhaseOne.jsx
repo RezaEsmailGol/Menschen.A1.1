@@ -153,7 +153,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
             {[5,6].includes(lesson.id)&&<RouteLink to="verbs" navigate={setTab} className="pgQuickLink"><BookOpenCheck size={19}/> بازی صرف افعال کتاب و کلاس · شش ضمیر <ChevronLeft size={17}/></RouteLink>}
       <a href="#lesson-grammar" className="pgQuickLink"><BookOpenCheck size={19}/> آموزش فارسی گرامر این درس <ChevronLeft size={17}/></a>
       {[2,4,5,6].includes(lesson.id)&&<div id="lesson-picture"><LessonPictureGame key={'picture-'+lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/></div>}
-      <BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab}/> 
+      <BookLessonPractice key={lesson.id} lessonId={lesson.id} speak={speak} onPracticeEvent={onPracticeEvent} setTab={setTab} memory={memory}/> 
       <section id="lesson-vocabulary" className="courseContentBlock">
         <div className="courseTitle"><div><small>VOCABULARY</small><h3>کلمات درس</h3></div><span>{lesson.words.length} کلمه</span></div>
         <div className="vocabGrid">{lesson.words.map(([de,fa],index)=><button className="vocabTile" key={de} onClick={()=>speak(de)}><span className="vocabOrdinal">{String(index+1).padStart(2,'0')}</span><span><b dir="ltr">{de}</b><small>{fa}</small></span><Volume2 size={17}/></button>)}</div>
