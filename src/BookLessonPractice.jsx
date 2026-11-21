@@ -8,6 +8,7 @@ import {readExerciseTarget} from './lessonExerciseLinks.js';
 import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeBookAnswer} from './bookLessonData.js';
 import './bookLessonPractice.css';
 import FourFormTrainer from './FourFormTrainer.jsx';
+import Lesson8TimeLab from './Lesson8TimeLab.jsx';
 
 const STORE='dt_book_lessons_v1';
 function readSaved() {
@@ -109,6 +110,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
     {lessonId===6&&<FourFormTrainer speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/>}
+    {lessonId===8&&<Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/>}
     <LessonAudioButtons lessonId={lessonId} speak={speak} onPracticeEvent={onPracticeEvent}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
