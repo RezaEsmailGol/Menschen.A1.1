@@ -9,7 +9,7 @@ export const SCENE_WORDS=Object.freeze({
  'verkäufer':'job-seller','verkäuferin':'job-seller',
  student:'job-student',studentin:'job-student',
  musiker:'job-musician',musikerin:'job-musician',
- mutter:'family-mother',vater:'family-father',schwester:'family-sister',
+ mann:'family-father',mutter:'family-mother',vater:'family-father',schwester:'family-sister',
  bruder:'family-brother',oma:'family-grandma',opa:'family-grandpa',
  'großmutter':'family-grandma','großvater':'family-grandpa',
  sohn:'family-brother',tochter:'family-sister',eltern:'family-parents',
