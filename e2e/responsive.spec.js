@@ -705,3 +705,26 @@ test('practice progress shows saved book answers, audio progress and filters at 
  expect(audit.controls).toHaveLength(0);
  await context.close();
 });
+
+test('four-form noun challenge corrects each form and persists real XP on mobile',async ({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.goto('/practice');
+ await page.locator('.ffLaunch').click();
+ await expect(page).toHaveURL(/\/lessons\/6#four-form/);
+ const trainer=page.locator('.ffRoot');
+ await expect(trainer).toBeVisible();
+ await expect(trainer.locator('.ffWord b')).toHaveText('Laptop');
+ await trainer.getByRole('button',{name:'der',exact:true}).click();
+ await trainer.getByLabel('جمع',{exact:true}).fill('Laptops');
+ await trainer.getByLabel('Akkusativ مثبت',{exact:true}).fill('einen Laptop');
+ await trainer.getByLabel('Akkusativ منفی',{exact:true}).fill('kein Laptop');
+ await trainer.getByRole('button',{name:'بررسی هر چهار پاسخ'}).click();
+ await expect(trainer.locator('.ffResult.ok')).toHaveCount(3);
+ await expect(trainer.locator('.ffResult.bad')).toContainText('keinen Laptop');
+ await expect(trainer.locator('.ffResults h4')).toContainText('۳۲ XP');
+ await trainer.getByRole('button',{name:'واژه بعدی'}).click();
+ await expect(trainer.locator('.ffWord b')).toHaveText('Maus');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+ await page.reload();
+ await expect(trainer.locator('.ffStats')).toContainText('۳ / ۱۰۰');
+});
