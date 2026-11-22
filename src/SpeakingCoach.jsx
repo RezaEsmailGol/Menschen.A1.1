@@ -2,7 +2,7 @@ import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {AlertCircle,ArrowLeft,BarChart3,BookOpen,CheckCircle2,ChevronRight,Clock3,Ear,Headphones,
   Mic,MicOff,RotateCcw,ShieldCheck,Shuffle,Sparkles,Volume2,VolumeX} from 'lucide-react';
 import {SPEAKING_CATEGORIES,speakingCards,speakingReview,scoreSpeechMatch,
-  addSpeechReview,speakingStatus,speakingStats} from './speakingEngine.js';
+  addSpeechReview,dismissSpeechRecognition,speakingStatus,speakingStats} from './speakingEngine.js';
 import {NUMBER_SECTIONS} from './numberSections.js';
 import MnemonicArt from './MnemonicArt.jsx';
 import './speakingCoach.css';
@@ -27,6 +27,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
  const [error,setError]=useState('');
  const [interim,setInterim]=useState('');
  const recognitionRef=useRef(null);
+ const resultRef=useRef(null);
  const micTimer=useRef(null);
  const sessionRef=useRef(0);
  const browserSupported=Boolean(getRecognition());
@@ -70,6 +71,17 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    setQueue(category==='words'&&filter==='weak'&&weakWords.length?chosen.slice(0,8):speakingReview(chosen,state,Math.min(8,chosen.length)));setIndex(0);
    setResult(null);setReady(true);
  }
+ function flagRecognitionMistake(){
+   if(!current||!result||result.score>=85||result.reported)return;
+   setState(previous=>dismissSpeechRecognition(previous,current,result));
+   setResult(previous=>previous?{...previous,reported:true}:previous);
+ }
+ useEffect(()=>{
+   if(result&&resultRef.current){
+     const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+     resultRef.current.scrollIntoView?.({behavior:reduced?'instant':'smooth',block:'nearest'});
+   }
+ },[result?.transcript]);
  function moveNext(){
    stopListening();setResult(null);setError('');
    setIndex(i=>i+1);
@@ -204,15 +216,30 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
     <SpeechGauge score={interim?scoreSpeechMatch(current.text,interim,category).score:undefined} provisional listening/>
    </div>}
     {error&&<div className="scError" role="alert"><AlertCircle size={18}/>{error}</div>}
-    {result&&<div className="scResult" aria-live="polite"><SpeechGauge score={result.score}/><div className="speechWordRows">{result.wordRows?.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>
-       <div className="scResultHeading">
-         <div><span>میزان همخوانی متن تشخیص‌داده‌شده</span><strong className={result.score>=85?'good':result.score>=65?'mid':'low'}>{fmt(result.score)}٪</strong></div>
-         <span className="scResultStatus">{result.score>=85?'خیلی خوب!':result.score>=65?'بد نیست، تمرین کن':'این عبارت را دوباره بگو'}</span>
-       </div>
-       <div className="scCompare"><div><small>متن درست</small><b dir="ltr" lang="de">{current.text}</b></div>
-         <div><small>چیزی که مرورگر شنید</small><b dir="ltr" lang="de">{result.transcript}</b></div></div>
-       {result.missing.length>0&&<div className="scMissing"><b>بخش‌هایی که شناسایی نشد:</b> <span dir="ltr">{result.missing.join(' · ')}</span></div>}
-       {result.score<85&&<p>نمونه را دوباره گوش کن، آرام و واضح تکرار کن. تشخیص گفتار ممکن است حتی با تلفظ درست هم اشتباه کند.</p>}
+    {result&&<div className="scResult scResultCompact" ref={resultRef} aria-live="polite">
+     <div className="scResultCompactTop">
+      <SpeechGauge score={result.score}/>
+      <div className="scResultOverview">
+       <span className="scResultMiniLabel">مرورگر این را شنید</span>
+       <strong dir="ltr" lang="de">{result.transcript}</strong>
+       <small>{result.score>=85?'متن به‌خوبی شناسایی شد.':result.reported?'خطای تشخیص مرورگر علامت خورد.': 'تشخیص مرورگر ممکن است اشتباه باشد.'}</small>
+       {result.score<85&&(result.reported
+        ?<span className="scDisputed" role="status"><CheckCircle2 size={16}/> از فهرست خطا کنار گذاشته شد؛ نمره تغییر نکرد.</span>
+        :<button type="button" className="scRecognitionIssue" onClick={flagRecognitionMistake}>
+          <ShieldCheck size={16}/> اشتباه تشخیص بود
+         </button>)}
+      </div>
+     </div>
+     {result.wordRows?.length>1&&<div className="speechWordRows">{result.wordRows.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>}
+     <details className="scResultDetails">
+      <summary>مشاهده متن درست و جزئیات تشخیص <ChevronRight size={16}/></summary>
+      <div className="scCompare">
+       <div><small>متن درست</small><b dir="ltr" lang="de">{current.text}</b></div>
+       <div><small>متنی که مرورگر شنید</small><b dir="ltr" lang="de">{result.transcript}</b></div>
+      </div>
+      {result.missing?.length>0&&<div className="scMissing"><b>شناسایی‌نشده:</b> <span dir="ltr">{result.missing.join(' · ')}</span></div>}
+      <p>نمره فقط شباهت متن تشخیص‌داده‌شده است؛ نه اندازه‌گیری دقیق آواها یا لهجه.</p>
+     </details>
     </div>}
     <div className="scNavigation">
      <button type="button" className="scRetry" onClick={()=>{stopListening();setResult(null);setError('')}} disabled={listening}>
@@ -238,6 +265,6 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
       <strong>{fmt(item.lastScore)}٪</strong>
     </div>)}
    </section>}
-  <aside className="scPrivacy"><ShieldCheck size={20}/><p><b>نکته درباره دقت و حریم خصوصی:</b> درصد بالا، میزان شباهت متن بازشناسی‌شده با عبارت درست است، نه اندازه‌گیری مستقیم لهجه، آواها یا نمره رسمی گفتار. این اپ فایل صوتی را ذخیره نمی‌کند؛ متن تشخیص‌داده‌شده و پیشرفت روی همین مرورگر نگه داشته می‌شوند. سرویس تشخیص گفتار Chrome ممکن است برای پردازش صدا از سرورهای ارائه‌دهنده مرورگر استفاده کند؛ تنها با موافقت خودت میکروفون را روشن کن.</p></aside>
+  <details className="scPrivacy"><summary><ShieldCheck size={18}/> دقت سنجش و حریم خصوصی <ChevronRight size={16}/></summary><p><b>نکته درباره دقت و حریم خصوصی:</b> درصد بالا، میزان شباهت متن بازشناسی‌شده با عبارت درست است، نه اندازه‌گیری مستقیم لهجه، آواها یا نمره رسمی گفتار. این اپ فایل صوتی را ذخیره نمی‌کند؛ متن تشخیص‌داده‌شده و پیشرفت روی همین مرورگر نگه داشته می‌شوند. سرویس تشخیص گفتار Chrome ممکن است برای پردازش صدا از سرورهای ارائه‌دهنده مرورگر استفاده کند؛ تنها با موافقت خودت میکروفون را روشن کن.</p></details>
  </div>;
 }

@@ -1,4 +1,4 @@
-import {alignSpeechWords,recordSpeechWords,weakSpeechWords} from './speechWordMemory.js';
+import {alignSpeechWords,recordSpeechWords,weakSpeechWords,dismissRecognizedWords} from './speechWordMemory.js';
 import {lessons} from './courseData.js';
 import {classNotes} from './classNotesData.js';
 import {ALPHABET_CARDS} from './visualDictionary.js';
@@ -107,6 +107,7 @@ export function speakingReview(cards,state={},size=8,random=Math.random,now=Date
  const scored=shuffle(cards,random).map(c=>{
   const item=items[c.id];let priority=0;
   if(!item)priority=45;
+  else if(item.recognitionFlag)priority=12;
   else if(item.lastScore<65)priority=100;
   else if(item.dueAt<=now)priority=95;
   else if(item.lastScore<85)priority=85;
@@ -136,10 +137,19 @@ export function addSpeechReview(previous={},card,scoreData,recognized,now=Date.n
  const history=[...(previous.history||[]),{id:card.id,category:card.category,score,at:now}].slice(-120);
  return recordSpeechWords({...previous,version:1,items:{...src,[card.id]:entry},history,total:(previous.total||0)+1},scoreData.wordRows||[],card.lesson||1,now);
 }
+export function dismissSpeechRecognition(previous={},card,scoreData,now=Date.now()){
+ if(!card?.id||!Number.isFinite(scoreData?.score)||scoreData.score>=85)return previous;
+ const item=previous.items?.[card.id];
+ const words=dismissRecognizedWords(previous,scoreData.wordRows||[],now);
+ if(!item)return words;
+ const entry={...item,recognitionFlag:true,reviewDisputedAt:now};
+ return {...words,items:{...(previous.items||{}),[card.id]:entry}};
+}
 export function speakingStatus(entry,now=Date.now()){
  if(!entry)return 'new';
  if(entry.goodDays>=2&&entry.avgScore>=85&&entry.attempts>=3)return 'mastered';
  // Past misses and elapsed review intervals never override the last successful attempt.
+ if(entry.recognitionFlag)return 'learning';
  if(entry.lastScore<85)return 'weak';
  return 'learning';
 }

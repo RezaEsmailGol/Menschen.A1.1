@@ -862,3 +862,46 @@ test('provisional speech gauge reacts to interim recognition but only final spee
  await page.goto('/speaking?review=words');
  await expect(page.locator('.speechWeakList')).toHaveCount(0);
 });
+
+test('speaking coach displays compact result, optional details and disputed recognition without false scores on 360px',async({page})=>{
+ await page.setViewportSize({width:360,height:740});
+ await page.addInitScript(()=>{
+  localStorage.setItem('dt_speaking_v1',JSON.stringify({version:1,total:1,items:{},history:[],words:{
+   beruf:{word:'beruf',display:'Beruf',lesson:2,lastCorrect:false,attempts:1,misses:1,lastAt:1,dueAt:20}
+  }}));
+  window.SpeechRecognition=class{
+   start(){setTimeout(()=>{const row=Object.assign([{transcript:'Bilder'}],{isFinal:true});this.onresult?.({results:[row]});this.onend?.()},140)}
+   stop(){this.onend?.()}
+   abort(){}
+  };
+ });
+ await page.goto('/speaking?review=words');
+ await page.getByRole('button',{name:/شروع تمرین تصادفی/}).click();
+ await expect(page.locator('.scPrompt h2')).toHaveText('Beruf');
+ await page.locator('.scMic').click();
+ await expect(page.locator('.scResultCompact')).toBeVisible();
+ await expect(page.locator('.scResultOverview')).toContainText('Bilder');
+ await expect(page.locator('.scResultDetails .scCompare')).toBeHidden();
+ const first=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')));
+ expect(first.words.beruf.lastCorrect).toBe(false);
+ const grade=first.items['review-word:beruf'].lastScore;
+ await page.getByRole('button',{name:'اشتباه تشخیص بود'}).click();
+ await expect(page.locator('.scDisputed')).toContainText('نمره تغییر نکرد');
+ await expect(page.locator('.speechWeakList')).toHaveCount(0);
+ const corrected=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')));
+ expect(corrected.items['review-word:beruf'].lastScore).toBe(grade);
+ expect(corrected.items['review-word:beruf'].attempts).toBe(1);
+ expect(corrected.words.beruf.misses).toBe(2);
+ await page.locator('.scResultDetails summary').click();
+ await expect(page.locator('.scResultDetails .scCompare')).toBeVisible();
+ await expect(page.locator('.scResultDetails')).toContainText('Beruf');
+ await expect(page.locator('.scResultDetails')).toContainText('Bilder');
+ await expect(page.locator('.scPrivacy')).not.toHaveAttribute('open','');
+ const measures=await page.evaluate(()=>{
+  const prompt=document.querySelector('.scPrompt').getBoundingClientRect();
+  const result=document.querySelector('.scResultCompact').getBoundingClientRect();
+  return {promptHeight:prompt.height,resultHeight:result.height,pageWidth:document.documentElement.scrollWidth,viewport:innerWidth};
+ });
+ expect(measures.promptHeight).toBeLessThan(180);
+ expect(measures.pageWidth).toBeLessThanOrEqual(measures.viewport+2);
+});

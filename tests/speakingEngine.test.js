@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {SPEAKING_KEY,makeSpeakingState,germanSpeechNormalize,scoreSpeechMatch,
- speakingCards,speakingReview,addSpeechReview,speakingStats,speakingStatus} from '../src/speakingEngine.js';
+ speakingCards,speakingReview,addSpeechReview,dismissSpeechRecognition,speakingStats,speakingStatus} from '../src/speakingEngine.js';
 import {activityItemKey} from '../src/learningMemory.js';
 
 test('speech transcript accepts numeric recognizer output and German ß, umlaut spellings',()=>{
@@ -88,4 +88,21 @@ test('successful retry removes speech item from weak status even if average and 
  assert.notEqual(speakingStatus(b.items[card.id],now+1001),'weak');
  assert.notEqual(speakingStatus(b.items[card.id],now+12*86400000),'weak');
  assert.equal(speakingStats(b).weak,0);
+});
+
+test('browser misrecognition can be disputed without awarding fabricated 100% or XP',()=>{
+ const now=Date.now(),card={id:'review-word:beruf',text:'Beruf',category:'words',lesson:2};
+ const wrong=scoreSpeechMatch('Beruf','Bilder');
+ const first=addSpeechReview(makeSpeakingState(),card,wrong,'Bilder',now);
+ const disputed=dismissSpeechRecognition(first,card,wrong,now+500);
+ assert.equal(disputed.items[card.id].lastScore,wrong.score);
+ assert.equal(disputed.items[card.id].attempts,1);
+ assert.equal(disputed.total,1);
+ assert.equal(disputed.history.length,1);
+ assert.equal(disputed.words.beruf.misses,1);
+ assert.equal(speakingStats(disputed).weak,0);
+ assert.equal(disputed.words.beruf.dismissedAt,now+500);
+ const second=addSpeechReview(disputed,card,wrong,'Bilder',now+1000);
+ assert.equal(speakingStatus(second.items[card.id]),'weak');
+ assert.equal(second.words.beruf.misses,2);
 });

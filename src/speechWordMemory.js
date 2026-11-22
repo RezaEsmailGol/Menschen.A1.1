@@ -30,7 +30,18 @@ export function recordSpeechWords(previous={},rows=[],lesson=1,now=Date.now()){
  }
  return {...previous,words};
 }
+// A user may reject an erroneous browser transcript without fabricating a correct grade.
+// Keep the failed attempt in history but stop prioritizing only the disputed word(s).
+export function dismissRecognizedWords(previous={},rows=[],now=Date.now()){
+ const words={...(previous.words||{})};
+ for(const row of rows){
+  if(!row.word||row.correct===true||!words[row.word])continue;
+  const old=words[row.word];
+  if(old.lastCorrect===false)words[row.word]={...old,dismissedAt:Math.max(now,old.lastAt||0)};
+ }
+ return {...previous,words};
+}
 export function weakSpeechWords(state={},now=Date.now()){
- return Object.values(state.words||{}).filter(x=>x.lastCorrect===false)
+ return Object.values(state.words||{}).filter(x=>x.lastCorrect===false && !(Number(x.dismissedAt||0)>=Number(x.lastAt||0)))
  .sort((a,b)=>Number(a.lastCorrect)-Number(b.lastCorrect)||b.misses-a.misses||a.dueAt-b.dueAt);
 }
