@@ -64,7 +64,10 @@ function ClockFace({hour,minute}){
   </svg>;
 }
 export default function Lesson8TimeLab({speak,onPracticeEvent}){
-  const [mode,setMode]=useState('days');
+  const [mode,setMode]=useState(()=>{
+    const requested=new URLSearchParams(window.location.search).get('lab');
+    return modes.some(m=>m.id===requested)?requested:'days';
+  });
   const [indexes,setIndexes]=useState(Object.fromEntries(modes.map(m=>[m.id,0])));
   const [answered,setAnswered]=useState(null);
   const [results,setResults]=useState(Object.fromEntries(modes.map(m=>[m.id,{good:0,total:0}])));

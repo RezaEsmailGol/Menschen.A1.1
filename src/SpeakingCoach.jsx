@@ -6,6 +6,8 @@ import {SPEAKING_CATEGORIES,speakingCards,speakingReview,scoreSpeechMatch,
 import {NUMBER_SECTIONS} from './numberSections.js';
 import MnemonicArt from './MnemonicArt.jsx';
 import './speakingCoach.css';
+import SpeechGauge from './SpeechGauge.jsx';
+import {recognitionTranscript,weakSpeechWords} from './speechWordMemory.js';
 
 const statuses={new:'جدید',weak:'نیاز به تمرین',learning:'در حال یادگیری',mastered:'مسلط'};
 const fmt=n=>Number(n||0).toLocaleString('fa-IR');
@@ -14,9 +16,9 @@ const getRecognition=()=>{
  return window.SpeechRecognition||window.webkitSpeechRecognition||null;
 };
 export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},progress={},onPracticeEvent=()=>{}}){
- const [category,setCategory]=useState('numbers');
+ const [category,setCategory]=useState(()=>new URLSearchParams(window.location.search).get('review')==='words'?'words':'numbers');
  const [range,setRange]=useState('0-12');
- const [filter,setFilter]=useState('all');
+ const [filter,setFilter]=useState(()=>new URLSearchParams(window.location.search).get('review')==='words'?'weak':'all');
  const [locale,setLocale]=useState('de-DE');
  const [queue,setQueue]=useState([]);
  const [index,setIndex]=useState(0);
@@ -25,6 +27,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
  const [error,setError]=useState('');
  const [interim,setInterim]=useState('');
  const recognitionRef=useRef(null);
+ const micTimer=useRef(null);
  const sessionRef=useRef(0);
  const browserSupported=Boolean(getRecognition());
  const cards=useMemo(()=>speakingCards(category,{range,progress}),[category,range,progress]);
@@ -33,10 +36,13 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
  const done=queue.length>0 && index>=queue.length;
  const currentMemory=current ? state?.items?.[current.id] : null;
  const totalCategory=useMemo(()=>speakingStats(state,category),[state,category]);
- const available=cards.filter(c=>filter==='all'||speakingStatus(state?.items?.[c.id])===filter);
+ const weakWords=weakSpeechWords(state);
+ const wordCard=w=>({id:'review-word:'+w.word,category:'words',text:w.display||w.word,label:w.display||w.word,meaning:'مرور کلمه دشوار',lesson:w.lesson});
+ const available=category==='words'&&filter==='weak'&&weakWords.length?weakWords.map(wordCard):cards.filter(c=>filter==='all'||speakingStatus(state?.items?.[c.id])===filter);
  const [ready,setReady]=useState(false);
 
  function stopListening(invalidate=true){
+   clearTimeout(micTimer.current);
    if(invalidate)sessionRef.current++;
    const active=recognitionRef.current;
    recognitionRef.current=null;
@@ -45,7 +51,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    setInterim('');
  }
  useEffect(()=>()=>{
-   sessionRef.current++;
+   sessionRef.current++;clearTimeout(micTimer.current);
    try{recognitionRef.current?.abort()}catch{}
    recognitionRef.current=null;
  },[]);
@@ -61,7 +67,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    setError('');
    const chosen=available;
    if(!chosen.length){setError('در این فیلتر هنوز موردی برای تمرین وجود ندارد؛ گزینه «همه» را انتخاب کن.');return;}
-   setQueue(speakingReview(chosen,state,Math.min(8,chosen.length)));setIndex(0);
+   setQueue(category==='words'&&filter==='weak'&&weakWords.length?chosen.slice(0,8):speakingReview(chosen,state,Math.min(8,chosen.length)));setIndex(0);
    setResult(null);setReady(true);
  }
  function moveNext(){
@@ -90,20 +96,12 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    let captured=false,err=false;
    instance.onresult=e=>{
      if(sessionRef.current!==identifier)return;
-     const results=[];
-     let live='';
-     for(let i=e.resultIndex;i<e.results.length;i++){
-       const result=e.results[i];
-       if(result.isFinal){
-         for(let j=0;j<result.length;j++)if(result[j]?.transcript)results.push(result[j].transcript);
-       }else live+=result[0]?.transcript||'';
-     }
+     const live=Array.from(e.results||[]).filter(r=>r.isFinal===false).map(r=>r[0]?.transcript||'').join(' ');
      if(live)setInterim(live);
-     if(!results.length || captured)return;
-     captured=true;
-     const ranked=results.map(text=>({text,match:scoreSpeechMatch(current.text,text,category)}))
-       .sort((a,b)=>b.match.score-a.match.score);
-     const best=ranked[0];
+     const text=recognitionTranscript(e);
+     if(!text||captured||err)return;
+     captured=true;clearTimeout(micTimer.current);
+     const best={text,match:scoreSpeechMatch(current.text,text,category)};
      setResult({...best.match,transcript:best.text});
      setListening(false);setInterim('');
      setState(previous=>addSpeechReview(previous,current,best.match,best.text));
@@ -112,7 +110,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    };
    instance.onerror=e=>{
      if(sessionRef.current!==identifier)return;
-     err=true;setListening(false);
+     err=true;clearTimeout(micTimer.current);setListening(false);
      const errors={
       'not-allowed':'مجوز میکروفون بسته است. از تنظیمات Chrome دسترسی Microphone را فعال کن.',
       'service-not-allowed':'سرویس تشخیص گفتار این مرورگر مجاز نیست.',
@@ -126,10 +124,10 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    };
    instance.onend=()=>{
      if(sessionRef.current!==identifier)return;
-     recognitionRef.current=null;setListening(false);setInterim('');
+     clearTimeout(micTimer.current);recognitionRef.current=null;setListening(false);setInterim('');
      if(!captured&&!err)setError('صدای قابل‌تشخیصی دریافت نشد؛ دوباره امتحان کن.');
    };
-   try{instance.start();setListening(true)}
+   try{instance.start();setListening(true);micTimer.current=setTimeout(()=>{if(sessionRef.current===identifier&&!captured){stopListening();setError('زمان ضبط پایان یافت؛ دوباره تلاش کن.');}},12000)}
    catch(e){recognitionRef.current=null;setListening(false);setError('شروع ضبط ممکن نشد. از اتصال امن HTTPS و مجوز میکروفون مطمئن شو.');}
  }
  const recent=Object.values(state?.items||{}).filter(x=>x.category===category &&
@@ -196,14 +194,14 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
     <div className="scActions">
       <button className="scListen" type="button" onClick={hearExample}><Volume2 size={20}/> شنیدن تلفظ نمونه</button>
       <button className={'scMic '+(listening?'recording':'')} type="button"
-        disabled={!browserSupported || Boolean(result)} onClick={listening?()=>stopListening():startListening}>
+        disabled={!browserSupported || Boolean(result)} onClick={listening?()=>{try{recognitionRef.current?.stop()}catch{stopListening()}}:startListening}>
         {listening?<MicOff size={20}/>:<Mic size={20}/>}
         {listening?'توقف میکروفون':'شروع گفتن با میکروفون'}
       </button>
     </div>
     {listening&&<div className="scListening" role="status"><span className="scDot"/> در حال گوش دادن… {interim&&<span dir="ltr">{interim}</span>}</div>}
     {error&&<div className="scError" role="alert"><AlertCircle size={18}/>{error}</div>}
-    {result&&<div className="scResult" aria-live="polite">
+    {result&&<div className="scResult" aria-live="polite"><SpeechGauge score={result.score}/><div className="speechWordRows">{result.wordRows?.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>
        <div className="scResultHeading">
          <div><span>میزان همخوانی متن تشخیص‌داده‌شده</span><strong className={result.score>=85?'good':result.score>=65?'mid':'low'}>{fmt(result.score)}٪</strong></div>
          <span className="scResultStatus">{result.score>=85?'خیلی خوب!':result.score>=65?'بد نیست، تمرین کن':'این عبارت را دوباره بگو'}</span>
@@ -228,6 +226,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
       <button onClick={resetSession} className="scRetry">تغییر دسته تمرین</button></div>
    </section>}
 
+  {weakWords.length>0&&<section className="scHistory"><h2>کلمات نیازمند تکرار</h2><p>از تمرین جمله و کلمه جمع شده‌اند.</p><div className="speechWeakList">{weakWords.slice(0,8).map(w=><button key={w.word} type="button" onClick={()=>{stopListening();setCategory('words');setFilter('weak');setQueue([wordCard(w)]);setIndex(0);setResult(null);setError('');setReady(true)}}><b dir="ltr">{w.display||w.word}</b><small>{fmt(w.misses)} خطا · تمرین</small></button>)}</div></section>}
   {recent.length>0&&<section className="scHistory">
     <div className="scHistoryTitle"><BarChart3 size={21}/><div><h2>مواردی که بیشتر باید تمرین کنی</h2><p>بر اساس آخرین نتیجه و سابقه همین دستگاه</p></div></div>
     {recent.map(item=><div className="scHistoryItem" key={item.id}>

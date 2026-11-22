@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {bookLessonPlans} from '../src/bookLessonData.js';
 import {lessonExerciseHref,readExerciseTarget} from '../src/lessonExerciseLinks.js';
-import {LESSON_PRACTICE_MODES,practiceJourney,filterPracticeLessons,nextPracticeSection} from '../src/practiceJourneyData.js';
+import {LESSON8_QUICK_LINKS,activePracticeLesson,LESSON_PRACTICE_MODES,practiceJourney,filterPracticeLessons,nextPracticeSection} from '../src/practiceJourneyData.js';
 
 test('practice dashboard has 12 lessons, four skill modules each, 400 real question slots and valid deep links',()=>{
  const model=practiceJourney();
@@ -112,4 +112,19 @@ test('new practice UI integrates real progress and keeps original 19 practice to
  assert.match(jsx,/aria-label="جست‌وجو در درس‌ها و تمرین‌ها"/);
  assert.match(css,/@media\(max-width:470px\)/);
  assert.match(css,/prefers-reduced-motion:reduce/);
+});
+
+test('practice honors the actual selected lesson, normalizes search and exposes all six lesson 8 modes',()=>{
+ const model=practiceJourney();
+ assert.equal(activePracticeLesson(model,'8').id,8);
+ assert.equal(activePracticeLesson(model,'13').id,1);
+ assert.equal(activePracticeLesson(model,null).id,1);
+ assert.deepEqual(filterPracticeLessons(model.lessons,'درس ۸').map(x=>x.id),[8]);
+ assert.deepEqual(filterPracticeLessons(model.lessons,'٨').map(x=>x.id),[8]);
+ assert.ok(filterPracticeLessons(model.lessons,'Februar').some(x=>x.id===8));
+ assert.ok(filterPracticeLessons(model.lessons,'jeden').some(x=>x.id===8));
+ assert.deepEqual(LESSON8_QUICK_LINKS.map(x=>x.id),['days','months','clocks','appointments','frequency','intervals']);
+ assert.equal(LESSON8_QUICK_LINKS[2].href,'/lessons/8?lab=clocks#lesson8-time-lab');
+ const complete=Object.fromEntries(bookLessonPlans[1].sections.flatMap(s=>s.tasks).map(t=>[t.id,{correct:true}]));
+ assert.equal(filterPracticeLessons(practiceJourney({1:{answers:complete}}).lessons,'','all','ongoing').length,0);
 });
