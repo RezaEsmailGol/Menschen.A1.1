@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {CalendarDays,CheckCircle2,Clock3,Headphones,RotateCcw,Volume2,XCircle} from 'lucide-react';
+import {CalendarDays,CheckCircle2,Clock3,ChevronLeft,ChevronRight,Headphones,RotateCcw,Volume2,XCircle} from 'lucide-react';
 import {activityItemKey} from './learningMemory.js';
 import './lesson8TimeLab.css';
 import {class8Games} from './lesson8Classroom.js';
@@ -79,6 +79,7 @@ export default function Lesson8TimeLab({speak,onPracticeEvent}){
   function select(value){
     if(answered!==null)return;
     const correct=value===item.de;
+    speak?.(value);
     setAnswered({value,correct});
     setResults(prev=>({...prev,[mode]:{good:prev[mode].good+Number(correct),total:prev[mode].total+1}}));
     onPracticeEvent?.({
@@ -91,6 +92,7 @@ export default function Lesson8TimeLab({speak,onPracticeEvent}){
     setIndexes(prev=>({...prev,[mode]:(prev[mode]+1)%items.length}));
     setAnswered(null);
   }
+  function previous(){setIndexes(prev=>({...prev,[mode]:Math.max(0,prev[mode]-1)}));setAnswered(null);}
   function changeMode(value){setMode(value);setAnswered(null);}
   return <section className="l8-lab" id="lesson8-time-lab" aria-label="بازی تصویری روز، ساعت، ماه و قرار ملاقات درس هشت">
     <div className="l8-lab-head"><div><span className="l8-overline">LEKTION 8 · 6 MINI-GAMES</span>
@@ -116,9 +118,12 @@ export default function Lesson8TimeLab({speak,onPracticeEvent}){
       {answered!==null&&<div className={'l8-result '+(answered.correct?'correct':'incorrect')} role="status">
         {answered.correct?<CheckCircle2 size={20}/>:<XCircle size={20}/>}
         <span>{answered.correct?'درست بود!':'جواب درست:'} <strong lang="de">{item.de}</strong>{' '}<small>{item.fa}</small></span>
-        <button type="button" onClick={()=>speak(item.de)}><Volume2 size={16}/> تلفظ</button>
-        <button type="button" onClick={next}>بعدی ←</button>
+        <button type="button" onClick={()=>speak(item.de)}><Volume2 size={16}/> شنیدن پاسخ درست</button>
       </div>}
+      <nav className="l8-question-nav" aria-label="جابجایی بین سؤال‌ها">
+        <button type="button" onClick={previous} disabled={index===0}><ChevronRight size={18}/> قبلی</button>
+        <button type="button" onClick={next}>{index===items.length-1?'شروع دوباره':'بعدی'} <ChevronLeft size={18}/></button>
+      </nav>
     </div>
     <div className="l8-lab-footer">
       <span><Headphones size={16}/> برای تثبیت تلفظ، بعد از دیدن جواب آن را با صدای بلند تکرار کن.</span>

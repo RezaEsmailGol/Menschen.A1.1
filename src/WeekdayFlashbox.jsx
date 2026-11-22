@@ -31,6 +31,7 @@ export default function WeekdayFlashbox({speak=()=>{},onPracticeEvent}){
  function select(value){
   if(answer!==null||finished)return;
   const correct=gradeWeekday(index,mode,value);
+  speak?.(mode==='test'?current.de:value);
   setAnswer({value,correct});
   setProgress(old=>saveWeekdayProgress(old,current.de,correct));
   setRuns(old=>({...old,[mode]:{right:old[mode].right+Number(correct),total:old[mode].total+1}}));
@@ -63,7 +64,7 @@ export default function WeekdayFlashbox({speak=()=>{},onPracticeEvent}){
   </div>:<>
    <div className="wdCounter"><span>{index+1} / 7</span><span>{mode==='learn'?'کارت را لمس کن تا معنی آشکار شود':mode==='game'?'معادل آلمانی را انتخاب کن':'معنی فارسی را انتخاب کن'}</span></div>
    {mode==='learn'?<div className="wdStudy">
-    <button type="button" className={'wdFlash '+(flipped?'flipped':'')} onClick={()=>setFlipped(v=>!v)} aria-label={flipped?'نمایش آلمانی کارت':'نمایش معنی فارسی کارت'}>
+    <button type="button" className={'wdFlash '+(flipped?'flipped':'')} onClick={()=>{speak?.(current.de);setFlipped(v=>!v)}} aria-label={flipped?'نمایش آلمانی کارت':'نمایش معنی فارسی کارت'}>
      <span className="wdFlashHint">{flipped?'معنی فارسی':'روز هفته به آلمانی'}</span>
      <strong lang={flipped?'fa':'de'} dir={flipped?'rtl':'ltr'}>{flipped?current.fa:current.de}</strong>
      <small>{flipped?current.exampleFa:'برای برگرداندن کارت لمس کن'}</small>
@@ -85,9 +86,12 @@ export default function WeekdayFlashbox({speak=()=>{},onPracticeEvent}){
     </div>
     {answer!==null&&<div className={'wdAnswer '+(answer.correct?'correct':'wrong')} role="status">
       <span>{answer.correct?'درست گفتی!':'پاسخ درست:'} <b lang="de" dir="ltr">{current.de}</b> — {current.fa}</span>
-      <button type="button" onClick={()=>speak(current.de)}><Volume2 size={16}/> بشنو</button>
-      <button type="button" onClick={next}>بعدی <ArrowLeft size={16}/></button>
+      <button type="button" onClick={()=>speak(current.de)}><Volume2 size={16}/> شنیدن پاسخ</button>
     </div>}
+    <nav className="wdQuizNav" aria-label="جابجایی بین کارت‌های بازی و آزمون">
+     <button type="button" disabled={index===0} onClick={prev}><ChevronRight size={18}/> قبلی</button>
+     <button type="button" onClick={next}>{index===WEEKDAYS.length-1?'نمایش نتیجه':'بعدی'} <ChevronLeft size={18}/></button>
+    </nav>
    </div>}
   </>}
   <div className="wdNote">قبل از روزها <b lang="de" dir="ltr">am</b> می‌آید: <b lang="de" dir="ltr">am Montag</b> یعنی «روز دوشنبه».</div>

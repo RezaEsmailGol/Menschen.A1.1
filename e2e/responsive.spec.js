@@ -1128,3 +1128,28 @@ test('weekday flashbox is short on 360px and learns through card flip, game and 
  await expect(page.locator('.bookLessonRoot .wdBox')).toBeVisible();
  await expect(page.locator('.bookLessonRoot .bookPictureCard')).toHaveCount(4);
 });
+
+test('lesson eight tapped choices and previous-next navigation fit a narrow phone',async({page})=>{
+ await page.setViewportSize({width:360,height:780});
+ await page.goto('/lessons/8?lab=days#lesson8-time-lab');
+ const lab=page.locator('#lesson8-time-lab');
+ await lab.locator('.l8-choice-grid').getByRole('button',{name:'Montag',exact:true}).click();
+ await expect(lab.locator('.l8-result')).toContainText('Montag');
+ await expect(lab.locator('.l8-question-nav button')).toHaveCount(2);
+ await expect(lab.locator('.l8-question-nav button').first()).toBeDisabled();
+ await lab.locator('.l8-question-nav').getByRole('button',{name:/بعدی/}).click();
+ await expect(lab.locator('.l8-question-top')).toContainText('2 از 7');
+ await lab.locator('.l8-question-nav').getByRole('button',{name:/قبلی/}).click();
+ await expect(lab.locator('.l8-question-top')).toContainText('1 از 7');
+ const widths=await lab.locator('.l8-question-nav button').evaluateAll(nodes=>nodes.map(el=>el.getBoundingClientRect().width));
+ expect(Math.min(...widths)).toBeGreaterThan(95);
+ const box=page.locator('.bookLessonRoot .wdBox');
+ await box.getByRole('button',{name:'بازی',exact:true}).click();
+ await box.locator('.wdOptions').getByRole('button',{name:'Montag'}).click();
+ await expect(box.locator('.wdQuizNav button')).toHaveCount(2);
+ await box.locator('.wdQuizNav').getByRole('button',{name:/بعدی/}).click();
+ await expect(box.locator('.wdPlayPrompt')).toHaveText('سه‌شنبه');
+ await box.locator('.wdQuizNav').getByRole('button',{name:/قبلی/}).click();
+ await expect(box.locator('.wdPlayPrompt')).toHaveText('دوشنبه');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+});

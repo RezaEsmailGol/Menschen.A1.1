@@ -40,3 +40,10 @@
 @media(max-width:355px){.wdStats{display:none}.wdModes button{font-size:10px}.wdModes button svg{width:14px}.wdActions button{font-size:11px}}
 @media(prefers-color-scheme:dark){.wdBox{background:linear-gradient(130deg,#26374b,#303553);border-color:#536079;color:#f2f4ff}.wdEyebrow,.wdStats{color:#d3c8ff}.wdStats{background:#47416c}.wdHeader small,.wdCounter,.wdNote{color:#c8d2ea}.wdModes button,.wdExample button,.wdActions button,.wdPlayPrompt,.wdOptions button,.wdFinished{background:#35445c;color:#f2f2ff;border-color:#5b6785}.wdModes button.selected,.wdActions button.primary,.wdFinished button{background:#7058d6;color:white;border-color:#7058d6}.wdFlash{background:#2d4159;color:#f6f4ff;border-color:#60708c}.wdFlash.flipped{background:#2b5a54}.wdFlashHint,.wdFlash small{color:#c6d4e6}.wdPlayPrompt{color:#fff}.wdOptions button.correct{background:#245741;color:#ddffed}.wdOptions button.wrong{background:#644040;color:#ffe0e0}.wdAnswer{background:#285346;color:#e7fff3}.wdAnswer.wrong{background:#5c4235;color:#ffe7c8}.wdCounter span:first-child{color:#c6baff}.wdNote{border-color:#54647e}}
 @media(prefers-reduced-motion:reduce){.wdFlash,.wdProgress span{transition:none}.wdFlash.flipped{transform:none}}
+
+.wdQuizNav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-width:0}
+.wdQuizNav button{min-height:48px;min-width:0;border-radius:11px;border:1px solid #cbd3e9;background:#fff;color:#4f5685;font-size:13px;font-weight:850;display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer}
+.wdQuizNav button:last-child{background:#6452c9;border-color:#6452c9;color:white}.wdQuizNav button:disabled{opacity:.42;cursor:not-allowed}
+.wdQuizNav button:focus-visible{outline:3px solid #b297ff;outline-offset:2px}.wdAnswer>span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:540px){.wdQuizNav{gap:7px}.wdQuizNav button{font-size:12px}}
+@media(prefers-color-scheme:dark){.wdQuizNav button{background:#35445c;color:#f2f2ff;border-color:#5b6785}.wdQuizNav button:last-child{background:#7058d6;color:white;border-color:#7058d6}}
