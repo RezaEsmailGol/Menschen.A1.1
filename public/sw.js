@@ -1,6 +1,6 @@
 // Cache only public app-shell assets. Never intercept private Runflare/Vercel audio APIs.
 const CACHE_PREFIX='deutsch-trainer-pwa-';
-const CACHE_NAME=CACHE_PREFIX+'20261122-mobile-speech-v2';
+const CACHE_NAME=CACHE_PREFIX+'20261122-mobile-focus-v3';
 const APP_SHELL=['/','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(
