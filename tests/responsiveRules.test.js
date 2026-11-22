@@ -36,7 +36,7 @@ test('styles touch every major route family, including workbook and SVG memory',
    '.wbRoot','.nrGame','.wcGame','.pgPage','.nightPage','.dcPage','.phasePage',
    '.vocabGrid','.numberDuoHero','.hero','.progressColumns','.gameHome'];
  for(const selector of families)assert.ok(css.includes(selector),selector);
- assert.equal(Object.keys(ROUTES).length,27);
+ assert.equal(Object.keys(ROUTES).length,28);
  assert.equal(ROUTES.articles,'/articles');
  assert.equal(WORKBOOK_PAGES.length,7);
  assert.equal(DIALOGUE_IDS.length,5);

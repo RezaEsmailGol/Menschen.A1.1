@@ -89,6 +89,7 @@ export default function PartnerPractice({speak=()=>{}}){
   </section>}
   <nav className="partnerBottomLinks" aria-label="مسیرهای دیگر تمرین">
    <a href={'/lessons/'+lessonId+'#book-practice'}><BookOpenCheck size={18}/> تمرین‌های انفرادی همین درس</a>
+   <a href={'/arbeitsbuch-media?lesson='+lessonId}><Headphones size={17}/> تمرین‌های شنیداری و تصویری</a>
    <a href={'/arbeitsbuch?lesson='+lessonId}><BookOpenCheck size={17}/> کتاب کار همین درس</a>
    <a href={'/book-exercises?lesson='+lessonId+'&collection=actions'}><BookOpenCheck size={17}/> تمرین‌های صفحه‌دار کتاب</a>
    <a href="/practice"><ArrowLeft size={17}/> همه تمرین‌ها</a>

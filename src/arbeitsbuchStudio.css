@@ -137,3 +137,9 @@
  .abStudioRelated a{background:#41426b;color:#eae5ff}
 }
 @media(prefers-reduced-motion:reduce){.abStudioProgress span{transition:none}}
+
+.abStudioMediaBanner{display:flex;align-items:center;gap:10px;padding:12px;border-radius:13px;background:linear-gradient(110deg,#4e4ca7,#6452cc);color:white;text-decoration:none}
+.abStudioMediaBanner span{display:grid;gap:3px;flex:1;min-width:0}
+.abStudioMediaBanner b{font-size:13px}.abStudioMediaBanner small{font-size:10px;line-height:1.7;color:#eeeaff}
+.abStudioMediaBanner>svg{flex:none}.abStudioMediaBanner:focus-visible{outline:3px solid #c29eff;outline-offset:2px}
+@media(max-width:500px){.abStudioMediaBanner{padding:9px}.abStudioMediaBanner b{font-size:11px}.abStudioMediaBanner small{font-size:9px}}

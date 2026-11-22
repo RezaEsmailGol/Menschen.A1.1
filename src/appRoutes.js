@@ -2,7 +2,7 @@
 export const ROUTES=Object.freeze({
   home:'/', course:'/lessons', practice:'/practice', progress:'/progress', coach:'/coach',
   articles:'/articles', classNotes:'/class-notes', night:'/night-shift', visualMemory:'/visual-memory',
-  workbook:'/workbook', dialogues:'/dialogues',partner:'/partner-practice',bookSource:'/book-exercises',arbeitsbuch:'/arbeitsbuch',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
+  workbook:'/workbook', dialogues:'/dialogues',partner:'/partner-practice',bookSource:'/book-exercises',arbeitsbuch:'/arbeitsbuch',arbeitsbuchMedia:'/arbeitsbuch-media',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
   numbers:'/numbers',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
   listen:'/dictation',words:'/first-words',alphabet:'/alphabet',verbs:'/verbs'
 });
