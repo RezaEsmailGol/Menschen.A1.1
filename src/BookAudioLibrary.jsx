@@ -11,8 +11,8 @@ import CloudAudioLibrary from './CloudAudioLibrary.jsx';
 function sizeLabel(bytes=0){
  return (bytes/1024/1024).toLocaleString('fa-IR',{maximumFractionDigits:1})+' مگابایت';
 }
-export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudioChange,onCloudTaskAudioChange}){
- const [book,setBook]=useState('kursbuch');
+export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudioChange,onCloudTaskAudioChange,initialBook='kursbuch'}){
+ const [book,setBook]=useState(initialBook);
  const [tracks,setTracks]=useState([]);
  const [selectedId,setSelectedId]=useState(null);
  const [audioUrl,setAudioUrl]=useState(null);
@@ -127,7 +127,7 @@ export default function BookAudioLibrary({lessonId,currentTaskId=null,onTaskAudi
        <h3>فایل‌های صوتی کتاب، درس {lessonId}</h3>
        <p>فهرست قطعه‌های آپلودشده ران‌فلر را مستقیم ببین و پخش کن؛ دیگر نیازی به بارگذاری ZIP نیست.</p></div>
    </header>
-   <CloudAudioLibrary lessonId={lessonId} currentTaskId={currentTaskId} onCloudTaskAudioChange={onCloudTaskAudioChange}/>
+   <CloudAudioLibrary lessonId={lessonId} currentTaskId={currentTaskId} onCloudTaskAudioChange={onCloudTaskAudioChange} initialBook={initialBook}/>
    <details className="baOptional">
     <summary><Upload size={17}/> بارگذاری از دستگاه من (اختیاری) <small>فقط اگر فایلی در ران‌فلر موجود نیست</small></summary>
     <div id={'ba-library-'+lessonId} className="baContent">

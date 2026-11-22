@@ -27,7 +27,7 @@ export default function ArbeitsbuchMediaArt({name}){
     const a=i*Math.PI/6-Math.PI/2,x1=110+57*Math.cos(a),y1=84+57*Math.sin(a),x2=110+64*Math.cos(a),y2=84+64*Math.sin(a);
     return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#5865a3" strokeWidth="3"/>;
    })}
-   <line x1="110" y1="84" x2="83" y2="64" stroke="#2b416b" strokeWidth="8" strokeLinecap="round"/>
+   <line x1="110" y1="84" x2="76" y2="93" stroke="#2b416b" strokeWidth="8" strokeLinecap="round"/>
    <line x1="110" y1="84" x2="110" y2="137" stroke="#e8a352" strokeWidth="5" strokeLinecap="round"/>
    <circle cx="110" cy="84" r="5" fill="#2e4274"/>
   </svg>

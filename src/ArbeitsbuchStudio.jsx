@@ -81,6 +81,10 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
    </div>
    <div className="abStudioTotal"><strong>{display(totalDone)} / {display(arbeitsbuchTotal)}</strong><span>فعالیت انجام‌شده</span></div>
   </header>
+  <a className="abStudioMediaBanner" href={'/arbeitsbuch-media?lesson='+lessonId}>
+    <Headphones size={20}/><span><b>تمرین‌های تصویری و شنیداری این درس</b>
+    <small>تصاویر تألیفی، صوت تمرینی، اتصال صدای اصلی و فهرست صفحات کتاب کار</small></span><ArrowLeft size={19}/>
+   </a>
   <section className="abStudioChoose" aria-label="انتخاب درس کتاب کار">
    <div className="abStudioChooserHead"><b>درس را انتخاب کن</b><span>{display(lessonId)} از ۱۲</span></div>
    <div className="abStudioLessonGrid">
@@ -111,7 +115,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
     <button type="button" onClick={()=>{setFilter('all');setActiveId('')}}>نمایش همه تمرین‌ها</button>
    </div>}
   {current&&<section className="abStudioExercise" aria-label="تمرین فعال کتاب کار" key={current.id}>
-   <div className="abStudioExerciseHead"><span><FileText size={16}/> Arbeitsbuch · Seite {current.page} <small>(PDF {current.pdfPage})</small></span><strong>{current.title}</strong></div>
+   <div className="abStudioExerciseHead"><span><FileText size={16}/> Arbeitsbuch · Seite {current.page} <small>{current.sourcePageAvailable?'(PDF '+current.pdfPage+')':'(این صفحه در فایل PDF موجود نیست)'}</small></span><strong>{current.title}</strong></div>
    <div className="abStudioQuestion">
     <span className="abStudioTag">{sectionName[current.section]||current.section} · {kindName[current.kind]}</span>
     {current.kind==='order'?<p>کلمات را برای ساخت جمله درست انتخاب کن:</p>:current.kind==='fill'?<p>جای خالی را به آلمانی کامل کن:</p>:current.kind==='choice'?<p>گزینه درست را انتخاب کن:</p>:<p>بدون دیدن نمونه، به آلمانی بنویس:</p>}
