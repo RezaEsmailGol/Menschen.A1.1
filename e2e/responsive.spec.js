@@ -1088,3 +1088,43 @@ test('Arbeitsbuch new media cards do not scroll horizontally on small phones',as
   await context.close();
  }
 });
+
+test('weekday flashbox is short on 360px and learns through card flip, game and exam with recoverable errors',async({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.goto('/lessons');
+ const lesson=page.locator('.ldLesson').nth(7);
+ await lesson.locator('.ldLessonHeader').click();
+ const box=lesson.locator('.wdBox');
+ await expect(box).toBeVisible();
+ await expect(box.locator('.wdFlash strong')).toHaveText('Montag');
+ const size=await box.evaluate(el=>({width:el.getBoundingClientRect().width,viewport:innerWidth}));
+ expect(size.width).toBeLessThanOrEqual(size.viewport);
+ await box.getByRole('button',{name:'نمایش معنی فارسی کارت'}).click();
+ await expect(box.locator('.wdFlash strong')).toHaveText('دوشنبه');
+ await box.getByRole('button',{name:/یاد گرفتم، بعدی/}).click();
+ await expect(box.locator('.wdFlash strong')).toHaveText('Dienstag');
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_weekdays_flash_v1')||'{}').Montag?.seen)).toBe(true);
+ await box.getByRole('button',{name:'بازی',exact:true}).click();
+ await box.locator('.wdOptions').getByRole('button',{name:'Mittwoch'}).click();
+ await expect(box.locator('.wdAnswer')).toContainText('پاسخ درست');
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_weekdays_flash_v1')||'{}').Montag?.lastCorrect)).toBe(false);
+ await box.getByRole('button',{name:'بازی',exact:true}).click();
+ await box.locator('.wdOptions').getByRole('button',{name:'Montag'}).click();
+ await expect(box.locator('.wdAnswer')).toContainText('درست گفتی');
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_weekdays_flash_v1')||'{}').Montag?.lastCorrect)).toBe(true);
+ await box.getByRole('button',{name:'آزمون',exact:true}).click();
+ await expect(box.locator('.wdPlayPrompt')).toHaveText('Montag');
+ await box.locator('.wdOptions').getByRole('button',{name:'دوشنبه'}).click();
+ await expect(box.locator('.wdAnswer')).toContainText('درست گفتی');
+ const topic=lesson.locator('.ldTopics > li').first();
+ await topic.locator('.ldTopicSummary').click();
+ await expect(topic.locator('.ldExerciseLink')).toHaveCount(3);
+ await topic.locator('.ldShowTopicMore').click();
+ expect(await topic.locator('.ldExerciseLink').count()).toBeGreaterThan(3);
+ await topic.locator('.ldShowTopicMore').click();
+ await expect(topic.locator('.ldExerciseLink')).toHaveCount(3);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+ await page.goto('/lessons/8');
+ await expect(page.locator('.bookLessonRoot .wdBox')).toBeVisible();
+ await expect(page.locator('.bookLessonRoot .bookPictureCard')).toHaveCount(4);
+});
