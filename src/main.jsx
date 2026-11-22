@@ -12,6 +12,7 @@ const ArticleTrainer = React.lazy(() => import('./ArticleTrainer.jsx'));
 const NightShift = React.lazy(() => import('./NightShift.jsx'));
 const VisualMemory = React.lazy(() => import('./VisualMemory.jsx'));
 const SpeakingCoach = React.lazy(() => import('./SpeakingCoach.jsx'));
+const PartnerPractice = React.lazy(() => import('./PartnerPractice.jsx'));
 import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
@@ -120,7 +121,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  partner:'گفت‌وگوی دونفره',coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد ۰ تا ۱۰۰',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'باشگاه صرف افعال'
@@ -196,7 +197,8 @@ function App() {
       {tab==='coach' && <DailyCoach setTab={setTab} memory={memory} progress={progress} schedule={schedule} goal={dailyGoal} setGoal={updateDailyGoal} />}
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}
-      {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
+      {tab==='partner' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین دونفره...</p>}><PartnerPractice speak={speak}/></React.Suspense>}
+       {tab==='dialogues' && <Dialogues routeScene={route.startsWith('dialogues/')?route.slice('dialogues/'.length):null} setTab={setTab} speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} />}
       {tab==='night' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی شیفت شب...</p>}>
          <NightShift speak={speak} memory={memory} schedule={schedule} progress={progress}
          personalCards={cards} nightState={nightState} setNightState={setNightState} setSchedule={setSchedule} onPracticeEvent={onPracticeEvent}/>

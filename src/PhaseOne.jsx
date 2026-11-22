@@ -135,7 +135,12 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         <span><b>گفت‌وگوی تعاملی این درس</b><small>مکالمه تصویری با انتخاب مسیر و تمرین موقعیت واقعی</small></span>
         <ChevronLeft size={20}/>
       </RouteLink>
-      {lesson.id===1&&<RouteLink className="wbCourseBanner" to="workbook" navigate={setTab}>
+      <a className="wbCourseBanner dialogueLessonBanner" href={'/partner-practice?lesson='+lesson.id}>
+        <span className="wbCourseBannerIcon"><Headphones size={23}/></span>
+        <span><b>تمرین دونفره این درس · Partnerarbeit</b><small>۲ گفت‌وگوی تألیفی، تغییر نقش A و B، تلفظ و راهنمای پاسخ</small></span>
+        <ChevronLeft size={20}/>
+       </a>
+       {lesson.id===1&&<RouteLink className="wbCourseBanner" to="workbook" navigate={setTab}>
         <span className="wbCourseBannerIcon"><BookOpenCheck size={23}/></span>
         <span><b>دفتر تمرین جلسه اول استاد</b><small>الفبا، تلفظ و استثناها، ۰ تا ۱۲، ضمیر و صرف kommen — با آزمون تعاملی</small></span>
         <ChevronLeft size={20}/>

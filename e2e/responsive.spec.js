@@ -905,3 +905,34 @@ test('speaking coach displays compact result, optional details and disputed reco
  expect(measures.promptHeight).toBeLessThan(180);
  expect(measures.pageWidth).toBeLessThanOrEqual(measures.viewport+2);
 });
+
+test('lesson eight has two-person speaking drills with persisting progress on narrow mobile',async({page})=>{
+ await page.setViewportSize({width:360,height:780});
+ await page.goto('/lessons/8');
+ const link=page.getByRole('link',{name:/تمرین دونفره این درس/});
+ await expect(link).toHaveAttribute('href','/partner-practice?lesson=8');
+ await link.click();
+ await expect(page).toHaveURL(/\/partner-practice\?lesson=8/);
+ await expect(page.locator('#partner-lesson')).toHaveValue('8');
+ await expect(page.locator('.partnerScene')).toHaveCount(2);
+ await page.getByRole('button',{name:/قرار جمعه/}).click();
+ const stage=page.locator('.partnerStage');
+ await expect(stage).toContainText('نقش A');
+ await expect(stage.locator('.partnerQuestion strong')).toHaveText('Hast du am Freitag Zeit?');
+ await expect(stage.locator('.partnerSample')).toHaveCount(0);
+ await stage.getByRole('button',{name:/نمایش راهنمای پاسخ/}).click();
+ await expect(stage.locator('.partnerSample')).toContainText('am Freitag');
+ await stage.getByRole('button',{name:/گفتیم، بعدی/}).click();
+ await expect(stage).toContainText('نقش B');
+ await expect(stage.locator('.partnerQuestion strong')).toContainText('Treffen wir uns');
+ await stage.getByRole('button',{name:/نیاز به تمرین بیشتر/}).click();
+ await stage.getByRole('button',{name:/گفتیم، بعدی/}).click();
+ await expect(stage).toContainText('گفت‌وگو را انجام دادید');
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_partner_practice_v1')||'{}')['partner-8-1']?.done)).toBe(3);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_partner_practice_v1')||'{}'));
+ expect(saved['partner-8-1'].hard).toBe(1);
+ expect(saved['partner-8-1'].completed).toBe(true);
+ await page.reload();
+ await expect(page.getByRole('button',{name:/قرار جمعه/})).toContainText('تکمیل شده');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+});
