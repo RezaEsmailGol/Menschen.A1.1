@@ -1012,7 +1012,7 @@ test('Arbeitsbuch lesson 8 grades exercises and persists recovery on 360px phone
 });
 test('Arbeitsbuch cards stay within 320px and 390px in dark and light mode',async({browser})=>{
  for(const [width,scheme] of [[320,'dark'],[390,'light']]){
-  const context=await browser.newContext({viewport:{width,height:760},colorScheme:scheme,isMobile:true,hasTouch:true});
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width,height:760},colorScheme:scheme,isMobile:true,hasTouch:true});
   const page=await context.newPage();
   await page.goto('/arbeitsbuch?lesson=8');
   await expect(page.locator('.abStudio')).toBeVisible();
