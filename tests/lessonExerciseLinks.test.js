@@ -27,7 +27,7 @@ test('every exercise in all 12 lesson practice plans is exposed through a workin
    }
   }
  }
- assert.equal(count,368);
+ assert.equal(count,400);
 });
 
 test('exercise navigation rejects unrecognized and out-of-range targets',()=>{

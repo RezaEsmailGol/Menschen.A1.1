@@ -29,9 +29,9 @@ test('official six-lesson teaching outline, with subbranches visible in the list
   const o=lessonOutline(id);
   assert.equal(o.bookAligned,false,'later lesson must not claim book-aligned exercises');
   assert.equal(o.supplemental,true);
-  assert.equal(o.tasks,32);
+  assert.equal(o.tasks,id===8?64:32);
   assert.equal(o.sections.length,4);
-  assert.ok(o.sections.every(section=>section.exercises.length===8));
+  assert.ok(o.sections.every(section=>section.exercises.length===(id===8?16:8)));
   assert.ok(o.wordCount>=8);
  }
  assert.equal(lessonOutline(0),null);
