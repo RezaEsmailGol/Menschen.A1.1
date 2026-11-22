@@ -3,6 +3,8 @@ import {AudioLines,ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,ChevronRight,Head
 import AudioLessonArt from './AudioLessonArt.jsx';
 import {lessonAudioCards,soundMeaningOptions,verifyAudioDictation,AUDIO_LEARNING_MODES,audioLearningItemKey,parseAudioLearningStats} from './audioLearningData.js';
 import {scoreSpeechMatch} from './speakingEngine.js';
+import SpeechGauge from './SpeechGauge.jsx';
+import {recognitionTranscript,recordSpeechWords,weakSpeechWords} from './speechWordMemory.js';
 import {AUDIO_CARD_TRACK_KEY,normalizeAudioCardBindings,getAudioCardBinding,withAudioCardBinding,audioCardTrackLabel,completedAudioCards} from './audioWorkbookData.js';
 import './lessonAudioButtons.css';
 import './illustratedAudioWorkbook.css';
@@ -36,7 +38,7 @@ const LEARNING_TABS=[
  {id:'repeat',title:'تلفظ'}
 ];
 
-export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEvent}){
+export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEvent,speakingState={},setSpeakingState}){
  const cards=useMemo(()=>lessonAudioCards(lessonId),[lessonId]);
  const [index,setIndex]=useState(0);
  const [mode,setMode]=useState('study');
@@ -56,6 +58,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
  const [rate,setRate]=useState(1);
  const audioRef=useRef(null);
  const recognizer=useRef(null);
+ const micTimer=useRef(null);
  const sequence=useRef(0);
  const playbackSequence=useRef(0);
  const current=cards[index]||cards[0];
@@ -80,7 +83,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   return ()=>controller.abort();
  },[lessonId]);
  function stopRecording(){
-  sequence.current++;
+  clearTimeout(micTimer.current);sequence.current++;
   try{recognizer.current?.abort();}catch{}
   recognizer.current=null;setRecording(false);
  }
@@ -94,7 +97,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   // The old learner stats and existing lesson selections remain intact.
   setIndex(0);setMode('study');setQuizInput('');setQuizAnswer(null);
   setSpeech(null);setMicError('');
-  return ()=>{sequence.current++;playbackSequence.current++;try{recognizer.current?.abort();}catch{}audioRef.current?.pause();};
+  return ()=>{clearTimeout(micTimer.current);sequence.current++;playbackSequence.current++;try{recognizer.current?.abort();}catch{}audioRef.current?.pause();};
  },[lessonId]);
  useEffect(()=>{if(audioRef.current)audioRef.current.playbackRate=rate;},[rate,originalUrl]);
  if(!cards.length)return null;
@@ -144,16 +147,18 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
  function startRecording(card){
   const Ctor=getRecognizer();
   if(!Ctor){setMicError('تشخیص گفتار در این مرورگر فعال نیست؛ Chrome با مجوز میکروفون را امتحان کن.');return;}
-  stopRecording();setMicError('');setSpeech(null);
+  stopRecording();stopOriginal();try{window.speechSynthesis?.cancel()}catch{}setMicError('');setSpeech(null);setQuizAnswer(null);
   let instance;
   try{instance=new Ctor();instance.lang='de-DE';instance.continuous=false;instance.interimResults=false;instance.maxAlternatives=3;}
   catch{setMicError('امکان راه‌اندازی میکروفون وجود ندارد.');return;}
-  const call=++sequence.current;recognizer.current=instance;
+  const call=++sequence.current;recognizer.current=instance;let captured=false,failed=false;
   instance.onresult=event=>{
-   if(call!==sequence.current)return;
-   const choices=Array.from(event.results?.[0]||[]).map(x=>x.transcript).filter(Boolean);
-   if(!choices.length){setMicError('صدایی شناسایی نشد.');return;}
-   const best=choices.map(heard=>({heard,...scoreSpeechMatch(card.text,heard,'sentences')})).sort((a,b)=>b.score-a.score)[0];
+   if(call!==sequence.current||captured||failed)return;
+   const heard=recognitionTranscript(event);
+   if(!heard)return;
+   captured=true;clearTimeout(micTimer.current);
+   const best={...scoreSpeechMatch(card.text,heard,'sentences'),heard};
+   setSpeakingState?.(old=>recordSpeechWords(old,best.wordRows||[],lessonId));
    setSpeech({cardId:card.id,...best});
    const key=audioLearningItemKey(lessonId,card.id,'repeat');
    const correct=best.score>=80;
@@ -166,10 +171,11 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   };
   instance.onerror=event=>{
    if(call!==sequence.current)return;
+   failed=true;clearTimeout(micTimer.current);setRecording(false);
    setMicError(event.error==='not-allowed'?'اجازه میکروفون داده نشده است.':event.error==='no-speech'?'صدایی تشخیص داده نشد.':'خطا در تشخیص گفتار؛ دوباره امتحان کن.');
   };
-  instance.onend=()=>{if(call===sequence.current){setRecording(false);recognizer.current=null;}};
-  try{instance.start();setRecording(true);}catch{setRecording(false);setMicError('میکروفون باز نشد.');}
+  instance.onend=()=>{if(call===sequence.current){clearTimeout(micTimer.current);setRecording(false);recognizer.current=null;if(!captured&&!failed)setMicError('صدای قابل تشخیصی دریافت نشد؛ دوباره امتحان کن.');}};
+  try{instance.start();setRecording(true);micTimer.current=setTimeout(()=>{if(call===sequence.current&&!captured){try{instance.stop()}catch{};stopRecording();setMicError('زمان ضبط پایان یافت؛ دوباره تلاش کن.');}},12000);}catch{setRecording(false);setMicError('میکروفون باز نشد.');}
  }
  function submitQuiz(value){
   if(!current||quizAnswer!==null||mode==='study'||mode==='repeat')return;
@@ -260,9 +266,9 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
         value={quizInput} disabled={quizAnswer!==null} onChange={event=>setQuizInput(event.target.value)}/>
        <button type="submit" disabled={!quizInput.trim()||quizAnswer!==null}>بررسی</button>
       </form>}
-      {mode==='repeat'&&<div className="laWorkbookRepeat">
+      {mode==='repeat'&&<div className="laWorkbookRepeat"><SpeechGauge score={speech?.cardId===current.id?speech.score:undefined}/>
        <button type="button" className="laMicButton" disabled={!recognizerSupported}
-        aria-label={recording?'توقف تمرین گفتار':'شروع سنجش تلفظ'} onClick={()=>recording?stopRecording():startRecording(current)}>
+        aria-label={recording?'توقف تمرین گفتار':'شروع سنجش تلفظ'} onClick={()=>{if(recording){try{recognizer.current?.stop()}catch{stopRecording()}}else startRecording(current)}}>
         {recording?<MicOff size={18}/>:<Mic size={18}/>}
         {recording?'توقف':'با میکروفون تکرار کن'}</button>
        {!recognizerSupported&&<small>این مرورگر تشخیص گفتار را پشتیبانی نمی‌کند؛ همچنان می‌توانی با نمونه تکرار کنی.</small>}
@@ -270,6 +276,8 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
       </div>}
       {recording&&<p role="status" className="laRecording">گوش می‌دهم؛ عبارت را با صدای بلند بگو…</p>}
       {micError&&<p className="laError" role="alert">{micError}</p>}
+      {speech?.cardId===current.id&&<div className="speechWordRows">{speech.wordRows?.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>}
+      {mode==='repeat'&&weakSpeechWords(speakingState).length>0&&<a className="speechWeakLink" href="/speaking?review=words"><Mic size={18}/><span>مرور {weakSpeechWords(speakingState).length} کلمه نیازمند تمرین</span><ChevronLeft size={16}/></a>}
       {speech?.cardId===current.id&&<p role="status" className="laWorkbookSpeechScore">متن تشخیص‌داده‌شده: <b dir="ltr">{speech.heard}</b> · امتیاز تطبیق {speech.score}٪</p>}
       {quizAnswer!==null&&<div className={'laWorkbookFeedback '+(quizAnswer.correct?'correct':'wrong')} role="status">
        {quizAnswer.correct?<CheckCircle2 size={20}/>:<X size={20}/>}

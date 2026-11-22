@@ -1,3 +1,4 @@
+import {alignSpeechWords,recordSpeechWords,weakSpeechWords} from './speechWordMemory.js';
 import {lessons} from './courseData.js';
 import {classNotes} from './classNotesData.js';
 import {ALPHABET_CARDS} from './visualDictionary.js';
@@ -64,7 +65,9 @@ export function scoreSpeechMatch(reference,heard,category='words'){
  const exact=ref===out;
  const calculated=a.length===1?similarity:(.65*wordSimilarity+.35*similarity);
  const score=exact?100:Math.max(0,Math.min(99,Math.round(100*calculated)));
- return {score,exact,expected:ref,heard:out,matched,missing,extra};
+ const originals=String(reference).match(/[\p{L}\p{N}]+/gu)||[];
+ const wordRows=alignSpeechWords(ref,out).map(row=>({...row,display:originals.find(w=>germanSpeechNormalize(w)===row.word)||row.word}));
+ return {score,exact,expected:ref,heard:out,matched,missing,extra,wordRows};
 }
 function unique(items){
  const ids=new Set();return items.filter(x=>{if(ids.has(x.id))return false;ids.add(x.id);return Boolean(x.text.trim());});
@@ -130,7 +133,7 @@ export function addSpeechReview(previous={},card,scoreData,recognized,now=Date.n
   lastGoodDay:successful?today:(old.lastGoodDay||null),
   lastHeard:String(recognized||'').slice(0,250)};
  const history=[...(previous.history||[]),{id:card.id,category:card.category,score,at:now}].slice(-120);
- return {version:1,items:{...src,[card.id]:entry},history,total:(previous.total||0)+1};
+ return recordSpeechWords({...previous,version:1,items:{...src,[card.id]:entry},history,total:(previous.total||0)+1},scoreData.wordRows||[],card.lesson||1,now);
 }
 export function speakingStatus(entry,now=Date.now()){
  if(!entry)return 'new';

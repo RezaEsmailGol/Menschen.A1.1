@@ -6,6 +6,8 @@ import { allStudyCards } from './courseData.js';
 import {classSets,classNotesBySet,dueClassSummary} from './classNotesData.js';
 import { learningInsights, recommendedRoute } from './learningMemory.js';
 import {speakingStats} from './speakingEngine.js';
+import {weakSpeechWords} from './speechWordMemory.js';
+import './speechGauge.css';
 import {buildProgressReport} from './progressAchievements.js';
 import ProgressAchievements from './ProgressAchievements.jsx';
 import PracticeJourney from './PracticeJourney.jsx';
@@ -186,6 +188,7 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
       <RouteLink to="course" navigate={setTab}><BookOpenCheck size={17}/> مشاهده درس‌ها <ArrowLeft size={17}/></RouteLink>
     </header>
     <nav className="practiceJumpNav" aria-label="دسترسی سریع در صفحه تمرین‌ها"><a href="#practice-lessons"><BookOpenCheck size={17}/> درس‌ها</a><a href="#practice-tools"><Layers size={17}/> ابزارهای تمرینی</a><a href="#practice-review"><RotateCcw size={17}/> مرور و مدال</a></nav>
+    <a className="speechWeakLink" href="/speaking?review=words"><Mic2 size={21}/><span>تمرین هوشمند تلفظ · {weakSpeechWords(speakingState).length.toLocaleString('fa-IR')} کلمه برای مرور</span><ChevronLeft size={17}/></a>
     <PracticeJourney journey={journey} setTab={setTab} medal={achievements.nextBadge} memory={memory} storedLesson={storedLesson}/>
     <div className="practiceV2Recommended">
       <Brain size={21}/><span><strong>تمرین پیشنهادی برای مرور نقاط ضعف</strong><small>{focusText}</small></span>

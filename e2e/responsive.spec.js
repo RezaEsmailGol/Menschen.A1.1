@@ -453,7 +453,7 @@ test('home resume, lesson and practice buttons work on Android-sized screens',as
   await expect(page.locator('.homeV2Destinations a')).toHaveCount(2);
   await page.locator('.homeV2Destinations a[href="/practice"]').click();
   await expect(page).toHaveURL(/\/practice$/);
-  await expect(page.getByRole('heading',{name:'تمرین‌های آلمانی من'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'تمرین‌های آلمانی'})).toBeVisible();
   await page.getByRole('button',{name:'گفتار و شنیدن'}).click();
   await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
   await expect(page.locator('.practiceV2Tiles')).not.toContainText('بازی اعداد');
@@ -773,4 +773,18 @@ test('organized practice page resumes selected lesson and opens the correct less
  await expect(page).toHaveURL(/\/lessons\/8\?lab=months#lesson8-time-lab/);
  await expect(page.locator('.l8-modes button.active')).toContainText('ماه‌ها');
  await expect(page.locator('.l8-question-top')).toContainText('12');
+});
+
+test('speech gauge and word memory persist the primary transcript on mobile',async ({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.addInitScript(()=>{window.SpeechRecognition=class{start(){setTimeout(()=>{this.onresult?.({results:[[{transcript:'Buch'},{transcript:'Hallo!'}]]});this.onend?.()},30)} abort(){} stop(){this.onend?.()}}});
+ await page.goto('/lessons/1#lesson-audio');
+ const studio=page.locator('.laWorkbook');
+ await studio.getByRole('button',{name:'تلفظ',exact:true}).click();
+ await expect(studio.locator('.speechGauge')).toContainText('هنوز ارزیابی نشده');
+ await studio.getByRole('button',{name:'شروع سنجش تلفظ'}).click();
+ await expect(studio.locator('.speechGauge')).toHaveAttribute('aria-valuenow','0');
+ await expect(studio.locator('.speechWordRows .missed')).toContainText('Hallo');
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')||'{}').words?.hallo?.misses)).toBe(1);
+ await expect(studio.locator('.speechWeakLink')).toBeVisible();
 });
