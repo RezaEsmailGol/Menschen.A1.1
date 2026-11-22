@@ -98,9 +98,22 @@ const lessons=[
   w(95,'آخر هفته گذشته','Schreibe, wohin du gefahren bist und was du gemacht hast.','Ich bin am Samstag nach Berlin gefahren. Ich habe meine Freunde besucht.','سفر و فعالیتی در گذشته را بنویس.','sein برای حرکت، haben برای بسیاری از فعالیت‌ها.','Lernwortschatz')
  ]}
 ];
+// The supplied OCR PDF omits two printed pages (56, 87). Its page offsets
+// shift at those gaps, so a constant printed-to-PDF offset is incorrect.
+export function printedArbeitsbuchToPdfPage(page){
+ const p=Number(page);
+ if(!Number.isInteger(p)||p<6||p>99||p===56||p===87)return null;
+ return p<=55?p-4:p<=86?p-5:p-6;
+}
 export const arbeitsbuchLessons=Object.freeze(lessons.map(lesson=>({
- ...lesson, pdfStart:lesson.start-4,pdfEnd:lesson.end-4,
- tasks:lesson.tasks.map((task,index)=>({...task,lesson:lesson.id,id:'ab-'+lesson.id+'-'+(index+1),pdfPage:task.page-4}))
+ ...lesson,
+ pdfStart:printedArbeitsbuchToPdfPage(lesson.start),
+ pdfEnd:printedArbeitsbuchToPdfPage(lesson.end),
+ tasks:lesson.tasks.map((task,index)=>({
+  ...task,lesson:lesson.id,id:'ab-'+lesson.id+'-'+(index+1),
+  pdfPage:printedArbeitsbuchToPdfPage(task.page),
+  sourcePageAvailable:printedArbeitsbuchToPdfPage(task.page)!==null
+ }))
 })));
 export const arbeitsbuchLesson=id=>arbeitsbuchLessons.find(x=>x.id===Number(id));
 export const arbeitsbuchTasks=Object.freeze(arbeitsbuchLessons.flatMap(x=>x.tasks));

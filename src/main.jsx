@@ -15,6 +15,7 @@ const SpeakingCoach = React.lazy(() => import('./SpeakingCoach.jsx'));
 const PartnerPractice = React.lazy(() => import('./PartnerPractice.jsx'));
 const KursbuchSourcePractice = React.lazy(() => import('./KursbuchSourcePractice.jsx'));
 const ArbeitsbuchStudio = React.lazy(() => import('./ArbeitsbuchStudio.jsx'));
+const ArbeitsbuchMediaStudio = React.lazy(() => import('./ArbeitsbuchMediaStudio.jsx'));
 import {NIGHT_KEY,createNightState} from './nightShiftEngine.js';
 import Dialogues from './Dialogues';
 import VisualLesson from './VisualLesson';
@@ -123,7 +124,7 @@ const routes = [
   {id:'progress',title:'پیشرفت',Icon:ChartNoAxesCombined}
 ];
 const secondaryTitles = {
-  arbeitsbuch:'کتاب کار Arbeitsbuch',bookSource:'تمرین‌های اصلی کتاب',partner:'گفت‌وگوی دونفره',coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
+  arbeitsbuchMedia:'کتاب کار · تمرین تصویری و شنیداری',arbeitsbuch:'کتاب کار Arbeitsbuch',bookSource:'تمرین‌های اصلی کتاب',partner:'گفت‌وگوی دونفره',coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
   numbers:'بازی اعداد ۰ تا ۱۰۰',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'باشگاه صرف افعال'
@@ -199,6 +200,7 @@ function App() {
       {tab==='coach' && <DailyCoach setTab={setTab} memory={memory} progress={progress} schedule={schedule} goal={dailyGoal} setGoal={updateDailyGoal} />}
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}
+      {tab==='arbeitsbuchMedia' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین‌های شنیداری و تصویری...</p>}><ArbeitsbuchMediaStudio speak={speak} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
       {tab==='arbeitsbuch' && <React.Suspense fallback={<p role="status">در حال بازکردن کتاب کار...</p>}><ArbeitsbuchStudio speak={speak} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
       {tab==='bookSource' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین‌های کتاب...</p>}><KursbuchSourcePractice speak={speak} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
        {tab==='partner' && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین دونفره...</p>}><PartnerPractice speak={speak}/></React.Suspense>}

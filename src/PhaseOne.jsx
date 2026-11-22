@@ -135,7 +135,12 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
         <span><b>گفت‌وگوی تعاملی این درس</b><small>مکالمه تصویری با انتخاب مسیر و تمرین موقعیت واقعی</small></span>
         <ChevronLeft size={20}/>
       </RouteLink>
-      <a className="wbCourseBanner dialogueLessonBanner" href={'/arbeitsbuch?lesson='+lesson.id}>
+      <a className="wbCourseBanner dialogueLessonBanner" href={'/arbeitsbuch-media?lesson='+lesson.id}>
+         <span className="wbCourseBannerIcon"><Headphones size={23}/></span>
+         <span><b>تصویری و شنیداری کتاب کار</b><small>تمرین تصویری، شنیداری با صوت تمرینی، فایل اصلی کتاب و فهرست صفحات</small></span>
+         <ChevronLeft size={20}/>
+       </a>
+       <a className="wbCourseBanner dialogueLessonBanner" href={'/arbeitsbuch?lesson='+lesson.id}>
         <span className="wbCourseBannerIcon"><BookOpenCheck size={23}/></span>
         <span><b>کتاب کار این درس · Arbeitsbuch</b><small>تمرین‌های صفحه‌دار کتاب کار با پاسخ و توضیح فارسی و مرور خطاها</small></span>
         <ChevronLeft size={20}/>

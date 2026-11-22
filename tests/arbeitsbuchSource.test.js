@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
  ARBEITSBUCH_KEY,ARBEITSBUCH_SOURCE,arbeitsbuchLesson,arbeitsbuchLessons,arbeitsbuchTotal,
  arbeitsbuchTasks,gradeArbeitsbuchTask,normalizeArbeitsbuchAnswer,recordArbeitsbuchAttempt,
- recordArbeitsbuchWriting,arbeitsbuchWeakTasks
+ recordArbeitsbuchWriting,arbeitsbuchWeakTasks,printedArbeitsbuchToPdfPage
 } from '../src/arbeitsbuchSourceData.js';
 import {ROUTES,routeFromPath,pathForRoute} from '../src/appRoutes.js';
 test('Arbeitsbuch has separate source metadata and accurate printed/PDF lesson page ranges',()=>{
@@ -18,12 +18,12 @@ test('Arbeitsbuch has separate source metadata and accurate printed/PDF lesson p
   const lesson=arbeitsbuchLesson(id);
   assert.equal(lesson.start,starts[id-1]);
   assert.equal(lesson.end,lesson.start+5);
-  assert.equal(lesson.pdfStart,starts[id-1]-4);
-  assert.equal(lesson.pdfEnd,lesson.end-4);
+  assert.equal(lesson.pdfStart,printedArbeitsbuchToPdfPage(lesson.start));
+  assert.equal(lesson.pdfEnd,printedArbeitsbuchToPdfPage(lesson.end));
   assert.equal(lesson.tasks.length,id===8?7:5);
   for(const task of lesson.tasks){
    assert.equal(task.lesson,id);
-   assert.equal(task.pdfPage,task.page-4);
+   assert.equal(task.pdfPage,printedArbeitsbuchToPdfPage(task.page));
    assert.ok(task.page>=lesson.start&&task.page<=lesson.end);
    assert.ok(task.id&&task.title&&task.section&&task.fa&&task.tip);
    if(task.kind==='choice'){
@@ -84,4 +84,16 @@ test('Arbeitsbuch has its own route distinct from existing Kursbuch and teacher 
  assert.equal(routeFromPath('/arbeitsbuch'),'arbeitsbuch');
  assert.equal(ROUTES.bookSource,'/book-exercises');
  assert.equal(ROUTES.workbook,'/workbook');
+});
+
+test('the actual 102-page source has two missing printed pages and two page-offset transitions',()=>{
+ assert.equal(printedArbeitsbuchToPdfPage(55),51);
+ assert.equal(printedArbeitsbuchToPdfPage(56),null);
+ assert.equal(printedArbeitsbuchToPdfPage(57),52);
+ assert.equal(printedArbeitsbuchToPdfPage(60),55);
+ assert.equal(printedArbeitsbuchToPdfPage(87),null);
+ assert.equal(printedArbeitsbuchToPdfPage(88),82);
+ assert.equal(printedArbeitsbuchToPdfPage(99),93);
+ assert.equal(arbeitsbuchLesson(7).tasks.find(t=>t.page===56)?.sourcePageAvailable,false);
+ assert.equal(arbeitsbuchLesson(11).tasks.find(t=>t.page===87)?.sourcePageAvailable,false);
 });

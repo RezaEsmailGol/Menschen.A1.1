@@ -981,7 +981,7 @@ test('Arbeitsbuch lesson 8 grades exercises and persists recovery on 360px phone
  await expect(studio.locator('.abStudioLessonGrid button')).toHaveCount(12);
  await expect(studio.locator('.abStudioTask')).toHaveCount(7);
  await expect(studio.locator('.abStudioChapterInfo')).toContainText('AB S. 60–65');
- await expect(studio.locator('.abStudioExerciseHead')).toContainText('PDF 56');
+ await expect(studio.locator('.abStudioExerciseHead')).toContainText('PDF 55');
  const input=studio.getByRole('textbox',{name:'پاسخ آلمانی'});
  await input.fill('an');
  await studio.getByRole('button',{name:'بررسی پاسخ'}).click();
@@ -1020,6 +1020,71 @@ test('Arbeitsbuch cards stay within 320px and 390px in dark and light mode',asyn
   await expect(page.locator('.abStudioLessonGrid button')).toHaveCount(12);
   const widthActual=await page.evaluate(()=>document.documentElement.scrollWidth);
   expect(widthActual).toBeLessThanOrEqual(width+2);
+  await context.close();
+ }
+});
+
+test('Arbeitsbuch media exercise uses own image and clears wrong answer after a correct retry',async({page})=>{
+ await page.setViewportSize({width:360,height:760});
+ await page.goto('/lessons/8');
+ const link=page.getByRole('link',{name:/تصویری و شنیداری کتاب کار/});
+ await expect(link).toHaveAttribute('href','/arbeitsbuch-media?lesson=8');
+ await link.click();
+ const media=page.locator('.abmPage');
+ await expect(media).toBeVisible();
+ await expect(media.locator('.abmCards button')).toHaveCount(2);
+ await expect(media.locator('.abmArtClock')).toBeVisible();
+ await expect(media.locator('.abmArtClock')).toHaveAttribute('role','img');
+ await media.getByRole('button',{name:'Es ist neun Uhr.'}).click();
+ await expect(media.locator('.abmFeedback.wrong')).toBeVisible();
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_arbeitsbuch_media_v1')||'{}')['ab-visual-8-1']?.misses)).toBe(1);
+ await media.getByRole('button',{name:'تکرار تمرین'}).click();
+ await media.getByRole('button',{name:'Es ist halb neun.'}).click();
+ await expect(media.locator('.abmFeedback.correct')).toBeVisible();
+ const record=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_arbeitsbuch_media_v1')||'{}')['ab-visual-8-1']);
+ expect(record.attempts).toBe(2);
+ expect(record.misses).toBe(1);
+ expect(record.lastCorrect).toBe(true);
+ await media.getByRole('button',{name:/شنیداری تمرینی/}).click();
+ await expect(media.locator('.abmCards button')).toHaveCount(2);
+ await expect(media.locator('.abmOptions button').first()).toBeDisabled();
+ await media.getByRole('button',{name:'شنیدن جمله آلمانی'}).click();
+ await media.getByRole('button',{name:'Freitag, 17:00'}).click();
+ await expect(media.locator('.abmFeedback.correct')).toBeVisible();
+ await media.locator('.abmFeedback summary').click();
+ await expect(media.locator('.abmFeedback details')).toContainText('Treffen wir uns');
+ await page.reload();
+ await expect(media.locator('.abmHeroStats')).toContainText('۲');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+});
+test('original publisher audio activity cannot be completed without a real played track',async({page})=>{
+ await page.setViewportSize({width:390,height:780});
+ await page.goto('/arbeitsbuch-media?lesson=8');
+ const media=page.locator('.abmPage');
+ await media.getByRole('button',{name:/صوت اصلی کتاب/}).click();
+ await expect(media.locator('.abmCards button')).toHaveCount(1);
+ await expect(media.locator('.abmNoTrack')).toBeVisible();
+ await expect(media.getByRole('button',{name:'شنیدم، انجام شد'})).toBeDisabled();
+ await expect(media.getByRole('button',{name:'شنیدم، نیاز به مرور دارم'})).toBeDisabled();
+ expect(await page.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('dt_arbeitsbuch_media_v1')||'{}')).length)).toBe(0);
+ await media.getByRole('button',{name:/فهرست صفحات/}).click();
+ await media.getByRole('combobox',{name:'محدوده صفحات کتاب کار'}).selectOption('all');
+ await expect(media.locator('.abmPageList button')).toHaveCount(94);
+ const missing=media.locator('.abmPageList button').filter({hasText:'۵۶'});
+ await expect(missing).toBeDisabled();
+ await media.locator('.abmPageList button').filter({hasText:'۶۲'}).click();
+ await expect(media.locator('.abmPageDetail')).toContainText('صفحه 57 فایل PDF');
+ await media.locator('.abmPageDetail input[type=checkbox]').check();
+ await media.getByRole('button',{name:'ثبت انجام صفحه'}).click();
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_arbeitsbuch_page_index_v1')||'{}')['ab-page-62']?.completed)).toBe(true);
+});
+test('Arbeitsbuch new media cards do not scroll horizontally on small phones',async({browser})=>{
+ for(const [width,mode] of [[320,'dark'],[360,'light'],[390,'dark']]){
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width,height:740},colorScheme:mode,isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  await page.goto('/arbeitsbuch-media?lesson=6');
+  await expect(page.locator('.abmArt')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+2);
   await context.close();
  }
 });

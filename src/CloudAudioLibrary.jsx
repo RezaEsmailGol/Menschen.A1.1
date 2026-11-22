@@ -17,7 +17,7 @@ export async function loadCloudAudioUrl({book,path},signal){
  return data.url;
 }
 
-export function CloudExercisePlayer({track,taskId}){
+export function CloudExercisePlayer({track,taskId,onPlayed}){
  const [url,setUrl]=useState('');
  const [busy,setBusy]=useState(false);
  const [error,setError]=useState('');
@@ -36,16 +36,16 @@ export function CloudExercisePlayer({track,taskId}){
  return <div className="caTaskPlayer">
    <button type="button" disabled={busy} onClick={play}><Headphones size={18}/>
      {busy?'دریافت لینک موقت...':'پخش صدای اصلی کتاب برای این سؤال'}</button>
-   {url&&<audio ref={audio} controls src={url} preload="none" aria-label={'صدای اصلی '+taskId}/>}
+   {url&&<audio ref={audio} controls src={url} preload="none" onPlay={onPlayed} aria-label={'صدای اصلی '+taskId}/>}
    {error&&<small role="alert">{error}</small>}
  </div>;
 }
 
-export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAudioChange}){
+export default function CloudAudioLibrary({lessonId,currentTaskId,onCloudTaskAudioChange,initialBook='kursbuch'}){
  const [data,setData]=useState(null);
  const [loading,setLoading]=useState(true);
  const [error,setError]=useState('');
- const [book,setBook]=useState('kursbuch');
+ const [book,setBook]=useState(initialBook);
  const [scope,setScope]=useState('lesson');
  const [search,setSearch]=useState('');
  const [selected,setSelected]=useState(null);
