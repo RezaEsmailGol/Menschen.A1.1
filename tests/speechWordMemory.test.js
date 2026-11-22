@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {alignSpeechWords,recordSpeechWords,weakSpeechWords,recognitionTranscript,liveSpeechTranscript} from '../src/speechWordMemory.js';
+import {alignSpeechWords,recordSpeechWords,weakSpeechWords,recognitionTranscript,liveSpeechTranscript,dismissRecognizedWords} from '../src/speechWordMemory.js';
 import {scoreSpeechMatch} from '../src/speakingEngine.js';
 test('recognition uses primary final transcript, not reference-biased alternatives',()=>{
  assert.equal(recognitionTranscript({results:[[{transcript:'Buch'},{transcript:'Hallo'}]]}),'Buch');
@@ -42,4 +42,15 @@ test('interim preview does not get mistaken for final transcript',()=>{
  assert.equal(liveSpeechTranscript({results:[partial]}),'der Ber');
  assert.equal(recognitionTranscript({results:[partial]}),'');
  assert.equal(recognitionTranscript({results:[final]}),'der Beruf');
+});
+
+test('dismissed browser recognition mistake leaves failure history intact but clears weak words',()=>{
+ const wrong=recordSpeechWords({},[{word:'beruf',display:'Beruf',correct:false,heard:'bilder'}],2,1000);
+ const flagged=dismissRecognizedWords(wrong,[{word:'beruf',correct:false}],2000);
+ assert.equal(flagged.words.beruf.attempts,1);
+ assert.equal(flagged.words.beruf.misses,1);
+ assert.equal(flagged.words.beruf.lastCorrect,false);
+ assert.deepEqual(weakSpeechWords(flagged,2001),[]);
+ const newWrong=recordSpeechWords(flagged,[{word:'beruf',correct:false,heard:'bilder'}],2,3000);
+ assert.deepEqual(weakSpeechWords(newWrong,3001).map(x=>x.word),['beruf']);
 });
