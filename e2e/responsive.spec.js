@@ -822,3 +822,43 @@ test('audio practice stays compact on small phones and optional book audio does 
   await context.close();
  }
 });
+
+test('provisional speech gauge reacts to interim recognition but only final speech persists; retry clears weak word',async ({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.addInitScript(()=>{
+  let tries=0;
+  window.SpeechRecognition=class{
+   start(){
+    const second=++tries===2;
+    const partial=Object.assign([{transcript:second?'Hal':'Bu'}],{isFinal:false});
+    const final=Object.assign([{transcript:second?'Hallo!':'Buch'}],{isFinal:true});
+    setTimeout(()=>this.onresult?.({results:[partial]}),70);
+    setTimeout(()=>{this.onresult?.({results:[final]});this.onend?.()},440);
+   }
+   stop(){this.onend?.()}
+   abort(){}
+  };
+ });
+ await page.goto('/lessons/1#lesson-audio');
+ const studio=page.locator('.laWorkbook');
+ await studio.getByRole('button',{name:'تلفظ',exact:true}).click();
+ const mic=studio.getByRole('button',{name:'شروع سنجش تلفظ'});
+ await mic.click();
+ await expect(studio.locator('.speechGauge.provisional')).toBeVisible();
+ await expect(studio.locator('.laInterim')).toHaveText('Bu');
+ const during=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')||'{}').words||{});
+ expect(Object.keys(during)).toHaveLength(0);
+ await expect(studio.locator('.speechGauge')).toHaveAttribute('aria-valuenow','0');
+ await expect(studio.locator('.speechWeakLink')).toBeVisible();
+ await mic.click();
+ await expect(studio.locator('.laInterim')).toHaveText('Hal');
+ await expect(studio.locator('.speechGauge.provisional')).toBeVisible();
+ await expect(studio.locator('.speechGauge')).toHaveAttribute('aria-valuenow','100');
+ await expect(studio.locator('.speechWeakLink')).toHaveCount(0);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')||'{}'));
+ expect(saved.words.hallo.lastCorrect).toBe(true);
+ expect(saved.words.hallo.attempts).toBe(2);
+ expect(saved.words.hallo.misses).toBe(1);
+ await page.goto('/speaking?review=words');
+ await expect(page.locator('.speechWeakList')).toHaveCount(0);
+});
