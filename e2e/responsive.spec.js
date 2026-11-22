@@ -1007,7 +1007,7 @@ test('Arbeitsbuch lesson 8 grades exercises and persists recovery on 360px phone
  expect(draft.submitted).toBe(true);
  expect(draft.lastCorrect).toBeUndefined();
  await page.reload();
- await expect(studio.locator('.abStudioTotal')).toContainText('3');
+ await expect(studio.locator('.abStudioTotal')).toContainText('۳');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
 });
 test('Arbeitsbuch cards stay within 320px and 390px in dark and light mode',async({browser})=>{
