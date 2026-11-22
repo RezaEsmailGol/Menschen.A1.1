@@ -9,7 +9,7 @@ import {speakingStats} from './speakingEngine.js';
 import {buildProgressReport} from './progressAchievements.js';
 import ProgressAchievements from './ProgressAchievements.jsx';
 import PracticeJourney from './PracticeJourney.jsx';
-import {practiceJourney} from './practiceJourneyData.js';
+import {practiceJourney,normalizePracticeSearch} from './practiceJourneyData.js';
 import RouteLink from './RouteLink';
 import {currentHomeLessonId,bookLessonOverview,nextBookExerciseHref,practiceFilters,matchesPracticeFilter} from './homeLearningUX.js';
 import './mobileGame.css';
@@ -165,6 +165,8 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
   const bookSaved=savedBookAnswers();
   const audioSaved=savedAudioProgress();
   const journey=practiceJourney(bookSaved,audioSaved);
+  let storedLesson=null;
+  try{storedLesson=window.localStorage.getItem('dt_current_lesson');}catch{}
   const achievements=buildProgressReport({memory,progress,bookSaved,audioSaved,dailyGoal,speakingState});
   const report=learningInsights(memory);
   const [filter,setFilter]=React.useState('all');
@@ -177,19 +179,20 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
   const focusText=firstWeak?'برای تقویت: '+(firstWeak.label||skillLabels[firstWeak.kind]):'از یک تمرین شروع کن تا نقاط قابل مرور مشخص شوند.';
   const filtered=practiceCategories.filter(item=>
     matchesPracticeFilter(item.id,filter)&&
-    (item.label+' '+item.hint).toLocaleLowerCase('fa').includes(search.trim().toLocaleLowerCase('fa')));
+    normalizePracticeSearch(item.label+' '+item.hint).includes(normalizePracticeSearch(search)));
   return <div className="gamePage practiceV2">
     <header className="practiceV2Header">
-      <div><span className="homeV2Eyebrow">PRACTICE STUDIO</span><h1>تمرین‌های آلمانی من</h1><p>از بین ۱۲ درس، ۳۶۰ سؤال و تمرین‌های تصویری و شنیداری، مسیر مناسب خودت را انتخاب کن.</p></div>
+      <div><h1>تمرین‌های آلمانی</h1><p>{journey.lessons.length.toLocaleString('fa-IR')} درس · {journey.total.toLocaleString('fa-IR')} سؤال اصلی</p></div>
       <RouteLink to="course" navigate={setTab}><BookOpenCheck size={17}/> مشاهده درس‌ها <ArrowLeft size={17}/></RouteLink>
     </header>
-    <PracticeJourney journey={journey} setTab={setTab} medal={achievements.nextBadge} memory={memory}/>
+    <nav className="practiceJumpNav" aria-label="دسترسی سریع در صفحه تمرین‌ها"><a href="#practice-lessons"><BookOpenCheck size={17}/> درس‌ها</a><a href="#practice-tools"><Layers size={17}/> ابزارهای تمرینی</a><a href="#practice-review"><RotateCcw size={17}/> مرور و مدال</a></nav>
+    <PracticeJourney journey={journey} setTab={setTab} medal={achievements.nextBadge} memory={memory} storedLesson={storedLesson}/>
     <div className="practiceV2Recommended">
       <Brain size={21}/><span><strong>تمرین پیشنهادی برای مرور نقاط ضعف</strong><small>{focusText}</small></span>
       <RouteLink to={destination} navigate={setTab}>تمرین کن <ArrowLeft size={16}/></RouteLink>
     </div>
-    <section className="practiceV2Catalog" aria-label="فهرست قابل جست‌وجوی تمرین‌ها">
-      <div className="homeV2SectionBar"><div><span className="homeV2Eyebrow">MORE PRACTICE</span><h2>ابزارهای تمرینی تکمیلی</h2></div><span>{filtered.length} مورد</span></div>
+    <section className="practiceV2Catalog" id="practice-tools" aria-label="فهرست قابل جست‌وجوی تمرین‌ها">
+      <div className="homeV2SectionBar"><div><h2>ابزارهای تمرینی تکمیلی</h2></div><span>{filtered.length.toLocaleString('fa-IR')} ابزار</span></div>
       <div className="practiceV2Filters" role="group" aria-label="دسته‌بندی تمرین‌ها">
         {practiceFilters.map(item=><button key={item.id} type="button" aria-pressed={filter===item.id}
           className={filter===item.id?'active':''} onClick={()=>setFilter(item.id)}>{item.label}</button>)}

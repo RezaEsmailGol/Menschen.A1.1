@@ -758,3 +758,19 @@ test('lesson 8 classroom mini-games and expanded questions work on a narrow phon
  expect(saved[8].answers['l8-class-g01'].correct).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
 });
+
+test('organized practice page resumes selected lesson and opens the correct lesson 8 game directly',async({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.addInitScript(()=>localStorage.setItem('dt_current_lesson','8'));
+ await page.goto('/practice');
+ await expect(page.locator('.pjHero .pjMainAction')).toHaveAttribute('href',/\/lessons\/8\?/);
+ await expect(page.locator('.practiceV2Header')).toContainText('۴۰۰');
+ await expect(page.locator('.pjSpotlightGrid .pjLabLink')).toHaveCount(6);
+ await page.locator('.pjSearch input').fill('درس ۸');
+ await expect(page.locator('.pjLessonCard')).toHaveCount(1);
+ await expect(page.locator('.pjLessonCard h4')).toContainText('ماه');
+ await page.locator('.pjSpotlightGrid .pjLabLink').filter({hasText:'ماه‌های سال'}).click();
+ await expect(page).toHaveURL(/\/lessons\/8\?lab=months#lesson8-time-lab/);
+ await expect(page.locator('.l8-modes button.active')).toContainText('ماه‌ها');
+ await expect(page.locator('.l8-question-top')).toContainText('12');
+});

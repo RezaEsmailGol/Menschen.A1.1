@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
-import {ArrowLeft,BookOpenCheck,Brain,CheckCircle2,ChevronDown,ChevronLeft,Headphones,Layers,Mic2,Pencil,PlayCircle,Search,Target,Trophy,Volume2,Zap} from 'lucide-react';
+import {ArrowLeft,BookOpenCheck,Brain,CalendarDays,CheckCircle2,ChevronDown,ChevronLeft,Clock3,Headphones,Layers,MessageCircle,Pencil,PlayCircle,RotateCcw,Search,Target,Trophy,Volume2,Zap} from 'lucide-react';
 import RouteLink from './RouteLink';
-import {filterPracticeLessons,LESSON_PRACTICE_MODES,nextPracticeSection} from './practiceJourneyData.js';
+import {activePracticeLesson,filterPracticeLessons,LESSON_PRACTICE_MODES,LESSON8_QUICK_LINKS,nextPracticeSection} from './practiceJourneyData.js';
 import './practiceJourney.css';
 import './fourFormNouns.css';
 import {fourFormProgress} from './fourFormNouns.js';
@@ -9,26 +9,28 @@ import {fourFormProgress} from './fourFormNouns.js';
 const ICONS={all:Layers,vocabulary:BookOpenCheck,grammar:Brain,sentences:Pencil,listening:Headphones};
 const display=n=>Number(n||0).toLocaleString('fa-IR');
 
-export default function PracticeJourney({journey,setTab,medal,memory={}}){
+const LAB_ICONS={calendar:CalendarDays,clock:Clock3,message:MessageCircle,repeat:RotateCcw,brain:Brain};
+export default function PracticeJourney({journey,setTab,medal,memory={},storedLesson}){
  const [mode,setMode]=useState('all');
  const [search,setSearch]=useState('');
  const [status,setStatus]=useState('all');
- const [expanded,setExpanded]=useState(journey.next?.id||1);
+ const current=activePracticeLesson(journey,storedLesson);
+ const [expanded,setExpanded]=useState(current?.id||1);
  const filtered=filterPracticeLessons(journey.lessons,search,mode,status);
- const current=journey.next;
+ const lesson8=journey.lessons.find(lesson=>lesson.id===8);
  return <div className="pjRoot">
   <section className="pjHero" aria-label="پیشرفت تمرین‌های ۱۲ درس">
    <div className="pjHeroText">
-    <span className="pjEyebrow"><Zap size={16}/> PRACTICE JOURNEY · MENSCHEN A1.1</span>
-    <h2>تمرین کن، مهارت بساز، مدال بگیر!</h2>
-    <p>تمرین‌های جدید هر ۱۲ درس، با گرامر فارسی، جمله‌سازی، شنیداری و تلفظ تصویری.</p>
+    <span className="pjEyebrow"><Zap size={15}/> ادامه یادگیری · درس {display(current?.id||1)}</span>
+    <h2>{current?.title||'تمرین آلمانی'}</h2>
+    <p lang="de" dir="ltr" className="pjCurrentGerman">{current?.subtitle}</p>
     <div className="pjHeroStats">
      <span><b>{display(journey.correct)}</b> از {display(journey.total)} تمرین درست</span>
      <span><b>{display(journey.audioCompleted)}</b> تمرین صوتی موفق</span>
      <span><b>{display(journey.completedLessons)}</b> درس تکمیل‌شده</span>
     </div>
     <div className="pjHeroActions">
-      <a href={current?.href||'/lessons/1'} className="pjMainAction"><PlayCircle size={18}/> ادامه تمرین درس {display(current?.id||1)} <ArrowLeft size={17}/></a>
+      <a href={current?.href||'/lessons/1'} className="pjMainAction"><PlayCircle size={18}/> {current?.isComplete?'مرور':'ادامه'} تمرین درس {display(current?.id||1)} <ArrowLeft size={17}/></a>
       <RouteLink to="progress" navigate={setTab} className="pjSecondaryAction"><Trophy size={17}/> مدال‌های من</RouteLink>
     </div>
    </div>
@@ -48,17 +50,17 @@ export default function PracticeJourney({journey,setTab,medal,memory={}}){
     </a>;
    })}
   </section>
-  <a className="ffLaunch" href="/lessons/6#four-form"><Brain size={28}/><div><b>چالش چهارحالتی اسم‌ها · درس ۶</b><small>آرتیکل، جمع، Akkusativ مثبت و منفی · ۲۵ واژه / ۱۰۰ پاسخ · {display(fourFormProgress(memory).correct)} پاسخ صحیح اخیر</small></div><ChevronLeft size={20}/></a>
-  {medal&&<div className="pjMedalPrompt">
-    <span className="pjMedalIcon"><Trophy size={23}/></span>
-    <div><b>مدال بعدی: {medal.title}</b><small>{medal.detail} · {display(Math.min(medal.value,medal.target))} از {display(medal.target)}</small>
-      <div className="pjBar"><span style={{width:medal.percent+'%'}}/></div></div>
-    <RouteLink to="progress" navigate={setTab}>دیدن مدال‌ها <ChevronLeft size={15}/></RouteLink>
-  </div>}
+  {lesson8&&<section className="pjSpotlight" aria-label="دسترسی سریع به تمرین‌های درس ۸">
+   <div className="pjSpotlightHead"><span className="pjSpotlightNumber">۰۸</span><div><h3>تمرین‌های ویژه درس ۸</h3><p>{display(lesson8.total)} سؤال اصلی · بازی‌های زمان و گرامر کلاس</p></div><a href={lesson8.href} className="pjSpotlightAll">همه تمرین‌ها <ChevronLeft size={16}/></a></div>
+   <div className="pjSpotlightGrid">{LESSON8_QUICK_LINKS.map(item=>{
+    const Icon=LAB_ICONS[item.icon]||Brain;
+    return <a key={item.id} href={item.href} className="pjLabLink"><span className="pjLabIcon"><Icon size={19}/></span><span><b>{item.label}</b><small>{item.hint}</small></span><ChevronLeft size={15}/></a>;
+   })}</div>
+  </section>}
   <section className="pjLessonPanel" id="practice-lessons" aria-label="فهرست تمرین‌های اختصاصی ۱۲ درس">
    <div className="pjSectionHead">
     <div><span className="pjEyebrow">LESSON EXERCISES</span><h3><BookOpenCheck size={22}/> تمرین‌های اختصاصی هر درس</h3>
-      <p>هر درس چهار بخش دارد؛ برای شروع مستقیم، روی هر بخش بزن.</p></div>
+      <p>درس دلخواه را باز کن یا مستقیم تمرین را شروع کن.</p></div>
     <span className="pjCount">{display(filtered.length)} از ۱۲ درس</span>
    </div>
    <div className="pjControls">
@@ -84,14 +86,14 @@ export default function PracticeJourney({journey,setTab,medal,memory={}}){
        <span className={'pjLessonStatus '+(lesson.isComplete?'done':lesson.started?'started':'new')}>
         {lesson.isComplete?'تکمیل شد':lesson.started?'در حال یادگیری':'شروع‌نشده'}
        </span></div>
-      <h4>{lesson.title}</h4><small className="pjLessonGerman" lang="de">{lesson.subtitle}</small>
+      <div className="pjLessonTitle"><h4>{lesson.title}</h4><small className="pjLessonGerman" lang="de" dir="ltr">{lesson.subtitle}</small></div>
       <div className="pjLessonProgress"><div className="pjProgressNumbers"><b>{display(lesson.correct)} / {display(lesson.total)}</b><span>{display(lesson.percent)}٪</span></div>
        <div className="pjBar" role="progressbar" aria-label={'تمرین‌های درست درس '+lesson.id}
          aria-valuenow={lesson.correct} aria-valuemin={0} aria-valuemax={lesson.total}><span style={{width:lesson.percent+'%'}}/></div></div>
       <div className="pjLessonActions">
-       <a href={nextPracticeSection(lesson,mode)?.href||lesson.href} className="pjLessonStart"><PlayCircle size={17}/> {lesson.isComplete?'مرور دوباره':'ادامه تمرین'}</a>
+       <a href={nextPracticeSection(lesson,mode)?.href||lesson.href} className="pjLessonStart"><PlayCircle size={17}/> {lesson.isComplete?'مرور':lesson.started?'ادامه':'شروع'}</a>
        <button type="button" className="pjExpand" aria-expanded={open} aria-controls={'pj-sections-'+lesson.id}
-        onClick={()=>setExpanded(open?null:lesson.id)}>۴ بخش <ChevronDown size={16}/></button>
+        onClick={()=>setExpanded(open?null:lesson.id)}>{display(sections.length)} بخش <ChevronDown size={16}/></button>
       </div>
       {open&&<div className="pjSections" id={'pj-sections-'+lesson.id}>
        {sections.map(section=>{
@@ -115,5 +117,14 @@ export default function PracticeJourney({journey,setTab,medal,memory={}}){
      <button type="button" onClick={()=>{setSearch('');setMode('all');setStatus('all');}}>نمایش همه درس‌ها</button>
     </div>}
   </section>
+  <div className="pjReviewExtras" id="practice-review"> 
+  <a className="ffLaunch" href="/lessons/6#four-form"><Brain size={28}/><div><b>چالش چهارحالتی اسم‌ها · درس ۶</b><small>آرتیکل، جمع، Akkusativ مثبت و منفی · ۲۵ واژه / ۱۰۰ پاسخ · {display(fourFormProgress(memory).correct)} پاسخ صحیح اخیر</small></div><ChevronLeft size={20}/></a>
+  {medal&&<div className="pjMedalPrompt">
+    <span className="pjMedalIcon"><Trophy size={23}/></span>
+    <div><b>مدال بعدی: {medal.title}</b><small>{medal.detail} · {display(Math.min(medal.value,medal.target))} از {display(medal.target)}</small>
+      <div className="pjBar"><span style={{width:medal.percent+'%'}}/></div></div>
+    <RouteLink to="progress" navigate={setTab}>دیدن مدال‌ها <ChevronLeft size={15}/></RouteLink>
+  </div>}
+  </div>
  </div>;
 }

@@ -167,3 +167,14 @@
  .homeV2Destination>svg:last-child{display:none}
 }
 @media(prefers-reduced-motion:reduce){.homeV2Destination,.homeV2Track span,.homeV2LessonTrack span{transition:none}}
+
+/* Practice page: one compact heading and a functional section index. */
+.practiceV2Header{background:transparent;color:#28244d;border-radius:0;padding:4px 2px 0;gap:9px;align-items:center;flex-direction:row;box-shadow:none}
+.practiceV2Header h1{font-size:clamp(19px,3vw,25px);margin:0 0 4px}.practiceV2Header p{color:#716c8a;font-size:11px}
+.practiceV2Header>a{color:#5847b2;background:#f1edff;border:1px solid #e5def8;border-radius:10px;padding:8px;font-size:11px;align-self:center}
+.practiceJumpNav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;direction:rtl}
+.practiceJumpNav a{display:flex;justify-content:center;align-items:center;gap:6px;text-decoration:none;color:#59508c;background:#fff;border:1px solid #e7e5f0;border-radius:10px;padding:10px 5px;font-size:11px;font-weight:750;min-height:42px}
+.practiceV2 #practice-lessons,.practiceV2 #practice-tools,.practiceV2 #practice-review{scroll-margin-top:16px}
+.practiceV2{gap:12px}.practiceV2Tiles .practiceTile{min-height:66px;padding:10px;gap:9px}.practiceV2Tiles .tileIcon{width:36px;height:36px;min-width:36px}.practiceV2Tiles .tileIcon svg{width:20px}.practiceV2Tiles .tileCopy small{line-height:1.6;font-size:11px}.practiceV2Tiles .tileCopy strong{line-height:1.6}
+@media(max-width:470px){.practiceV2Header h1{font-size:19px}.practiceV2Header>a{font-size:10px;padding:7px 6px;gap:4px}.practiceV2Header>a svg:last-child{display:none}.practiceJumpNav a{font-size:10px;gap:4px}.practiceJumpNav a svg{width:15px}.practiceV2{gap:10px}.practiceV2Tiles{gap:7px}}
+@media(prefers-color-scheme:dark){.practiceV2Header{color:#eef1ff}.practiceV2Header p{color:#c6c7df}.practiceV2Header>a,.practiceJumpNav a{background:#2c3451;border-color:#4f5474;color:#dfd6ff}.practiceV2Tiles .tileCopy strong{color:#edf1ff}}
