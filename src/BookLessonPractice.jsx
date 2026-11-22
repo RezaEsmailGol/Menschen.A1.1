@@ -112,7 +112,8 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
     {lessonId===6&&<FourFormTrainer speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/>}
-    {lessonId===8&&<WeekdayFlashbox speak={speak} onPracticeEvent={onPracticeEvent}/>}\n    {lessonId===8&&<Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/>}
+    {lessonId===8&&<WeekdayFlashbox speak={speak} onPracticeEvent={onPracticeEvent}/>}
+    {lessonId===8&&<Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/>}
     <LessonAudioButtons lessonId={lessonId} speak={speak} onPracticeEvent={onPracticeEvent} speakingState={speakingState} setSpeakingState={setSpeakingState}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
