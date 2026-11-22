@@ -27,6 +27,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
  const [error,setError]=useState('');
  const [interim,setInterim]=useState('');
  const recognitionRef=useRef(null);
+ const micTimer=useRef(null);
  const sessionRef=useRef(0);
  const browserSupported=Boolean(getRecognition());
  const cards=useMemo(()=>speakingCards(category,{range,progress}),[category,range,progress]);
@@ -41,6 +42,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
  const [ready,setReady]=useState(false);
 
  function stopListening(invalidate=true){
+   clearTimeout(micTimer.current);
    if(invalidate)sessionRef.current++;
    const active=recognitionRef.current;
    recognitionRef.current=null;
@@ -49,7 +51,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    setInterim('');
  }
  useEffect(()=>()=>{
-   sessionRef.current++;
+   sessionRef.current++;clearTimeout(micTimer.current);
    try{recognitionRef.current?.abort()}catch{}
    recognitionRef.current=null;
  },[]);
@@ -65,7 +67,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    setError('');
    const chosen=available;
    if(!chosen.length){setError('در این فیلتر هنوز موردی برای تمرین وجود ندارد؛ گزینه «همه» را انتخاب کن.');return;}
-   setQueue(speakingReview(chosen,state,Math.min(8,chosen.length)));setIndex(0);
+   setQueue(category==='words'&&filter==='weak'&&weakWords.length?chosen.slice(0,8):speakingReview(chosen,state,Math.min(8,chosen.length)));setIndex(0);
    setResult(null);setReady(true);
  }
  function moveNext(){
@@ -98,7 +100,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
      if(live)setInterim(live);
      const text=recognitionTranscript(e);
      if(!text||captured||err)return;
-     captured=true;
+     captured=true;clearTimeout(micTimer.current);
      const best={text,match:scoreSpeechMatch(current.text,text,category)};
      setResult({...best.match,transcript:best.text});
      setListening(false);setInterim('');
@@ -108,7 +110,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    };
    instance.onerror=e=>{
      if(sessionRef.current!==identifier)return;
-     err=true;setListening(false);
+     err=true;clearTimeout(micTimer.current);setListening(false);
      const errors={
       'not-allowed':'مجوز میکروفون بسته است. از تنظیمات Chrome دسترسی Microphone را فعال کن.',
       'service-not-allowed':'سرویس تشخیص گفتار این مرورگر مجاز نیست.',
@@ -122,10 +124,10 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    };
    instance.onend=()=>{
      if(sessionRef.current!==identifier)return;
-     recognitionRef.current=null;setListening(false);setInterim('');
+     clearTimeout(micTimer.current);recognitionRef.current=null;setListening(false);setInterim('');
      if(!captured&&!err)setError('صدای قابل‌تشخیصی دریافت نشد؛ دوباره امتحان کن.');
    };
-   try{instance.start();setListening(true)}
+   try{instance.start();setListening(true);micTimer.current=setTimeout(()=>{if(sessionRef.current===identifier&&!captured){stopListening();setError('زمان ضبط پایان یافت؛ دوباره تلاش کن.');}},12000)}
    catch(e){recognitionRef.current=null;setListening(false);setError('شروع ضبط ممکن نشد. از اتصال امن HTTPS و مجوز میکروفون مطمئن شو.');}
  }
  const recent=Object.values(state?.items||{}).filter(x=>x.category===category &&

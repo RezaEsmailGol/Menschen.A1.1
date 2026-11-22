@@ -111,6 +111,7 @@ export function speakingReview(cards,state={},size=8,random=Math.random,now=Date
   else if(item.dueAt<=now)priority=95;
   else if(item.lastScore<85)priority=85;
   else priority=12;
+  if(c.category==='words'&&weakSpeechWords(state,now).some(w=>germanSpeechNormalize(c.text).split(' ').includes(w.word)))priority=Math.max(priority,110);
   return {...c,priority};
  }).sort((a,b)=>b.priority-a.priority);
  const count=Math.max(1,Math.min(Math.trunc(size)||8,scored.length));

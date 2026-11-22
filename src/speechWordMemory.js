@@ -16,7 +16,10 @@ export function recognitionTranscript(event){
 }
 export function recordSpeechWords(previous={},rows=[],lesson=1,now=Date.now()){
  const words={...(previous.words||{})};
- for(const {word,display,heard,correct} of rows){
+ // Count each word once per attempt; all occurrences must match.
+ const grouped=new Map();
+ for(const row of rows){if(!row.word)continue;const old=grouped.get(row.word);if(!old||!row.correct)grouped.set(row.word,row);}
+ for(const {word,display,heard,correct} of grouped.values()){
   if(!word||typeof correct!=='boolean')continue;
   const old=words[word]||{},attempts=(old.attempts||0)+1,misses=(old.misses||0)+Number(!correct),streak=correct?(old.streak||0)+1:0;
   words[word]={word,display:display||old.display||word,lesson:Number(lesson)||old.lesson||1,attempts,misses,streak,lastCorrect:correct,lastHeard:heard,lastAt:now,dueAt:now+(correct?Math.min(72,6*Math.max(1,streak))*3600000:15*60000)};

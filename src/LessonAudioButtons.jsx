@@ -161,7 +161,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
    setSpeakingState?.(old=>recordSpeechWords(old,best.wordRows||[],lessonId));
    setSpeech({cardId:card.id,...best});
    const key=audioLearningItemKey(lessonId,card.id,'repeat');
-   const correct=best.score>=80;
+   const correct=best.score>=85;
    setStats(old=>({...old,
     completed:{...old.completed,...(correct?{[key]:true}:{})},
     speech:{...old.speech,[key]:{lesson:Number(lessonId),score:best.score,heard:best.heard,at:Date.now()}}

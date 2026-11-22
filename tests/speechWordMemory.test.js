@@ -20,3 +20,8 @@ test('word memory retains prior state, tracks repeated misses and schedules reco
  for(let i=0;i<3;i++)state=recordSpeechWords(state,[{word:'lerne',correct:true}],8,2000+i);
  assert.equal(state.words.lerne.streak,3);assert.equal(weakSpeechWords(state,2003).length,0);
 });
+
+test('repeated word counts only once in each attempt',()=>{
+ const state=recordSpeechWords({},[{word:'ich',correct:true},{word:'ich',correct:false},{word:'ich',correct:true}],8,1000);
+ assert.equal(state.words.ich.attempts,1);assert.equal(state.words.ich.misses,1);assert.equal(state.words.ich.lastCorrect,false);
+});
