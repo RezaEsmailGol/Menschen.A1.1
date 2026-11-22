@@ -36,3 +36,6 @@
 .l8-lab-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px;font-size:.8rem;color:var(--muted,#697586)}
 .l8-lab-footer span{display:flex;align-items:center;gap:6px}
 @media(max-width:520px){.l8-modes{grid-template-columns:1fr}.l8-modes button{justify-content:flex-start}.l8-question{padding:13px}.l8-choice-grid{gap:8px}.l8-choice-grid button{font-size:.9rem}.l8-result button{flex:1;justify-content:center}}
+
+.l8-appointment .l8-prompt{font-size:clamp(1.1rem,4vw,1.5rem);line-height:1.8}.l8-appointment .l8-choice-grid{grid-template-columns:1fr}.l8-appointment .l8-choice-grid button{line-height:1.5;overflow-wrap:anywhere}.l8-modes button{min-width:0}.l8-modes button span{overflow-wrap:anywhere}
+@media(max-width:520px){.l8-modes{grid-template-columns:repeat(2,minmax(0,1fr))}.l8-modes button{padding:9px 7px;font-size:.8rem}.l8-modes button svg{flex-shrink:0}.l8-modes small{font-size:.63rem}}

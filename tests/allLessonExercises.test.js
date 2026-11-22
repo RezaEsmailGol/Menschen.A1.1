@@ -25,7 +25,7 @@ test('all 12 lessons have graded practice with a unique task ID and deep link',(
   if(lesson.id>6){
    assert.equal(plan.supplemental,true);
    assert.equal(outline.bookAligned,false,'do not imply an official book transcript');
-   assert.equal(outline.tasks,32);
+   assert.equal(outline.tasks,lesson.id===8?64:32);
   }
   for(const section of plan.sections){
    assert.ok(section.cards.length>=4);
@@ -55,8 +55,8 @@ test('all 12 lessons have graded practice with a unique task ID and deep link',(
    }
   }
  }
- assert.equal(count,368);
- assert.equal(ids.size,368);
+ assert.equal(count,400);
+ assert.equal(ids.size,400);
 });
 test('supplemental courses teach genuinely different topics rather than repeating first lessons',()=>{
  assert.deepEqual(Object.keys(supplementalBookLessons),['7','8','9','10','11','12']);

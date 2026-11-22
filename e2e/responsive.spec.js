@@ -650,12 +650,12 @@ test('fresh learner progress keeps trophies locked and shows no fabricated speec
 });
 
 
-test('new practice studio has 368 lesson exercises, four deep-linked skills and usable legacy activities',async ({browser})=>{
+test('new practice studio has 400 lesson exercises, four deep-linked skills and usable legacy activities',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
   viewport:{width:360,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const page=await context.newPage();
  await page.goto('/practice');
- await expect(page.locator('.pjHero')).toContainText('۳۶۸');
+ await expect(page.locator('.pjHero')).toContainText('۴۰۰');
  await expect(page.locator('.pjLessonCard')).toHaveCount(12);
  await expect(page.locator('.pjQuickMode')).toHaveCount(4);
  await expect(page.locator('.pjModeTabs button')).toHaveCount(5);
@@ -727,4 +727,34 @@ test('four-form noun challenge corrects each form and persists real XP on mobile
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
  await page.reload();
  await expect(trainer.locator('.ffStats')).toContainText('۳ / ۱۰۰');
+});
+
+test('lesson 8 classroom mini-games and expanded questions work on a narrow phone',async ({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.goto('/lessons/8?section=grammar-practice&question=9#book-practice');
+ const lab=page.locator('#lesson8-time-lab');
+ await expect(lab).toBeVisible();
+ await expect(lab.locator('.l8-modes button')).toHaveCount(6);
+ await lab.locator('.l8-modes button').filter({hasText:'ماه‌ها'}).click();
+ await expect(lab.locator('.l8-question-top')).toContainText('12');
+ await lab.locator('.l8-choice-grid button').filter({hasText:'Januar'}).click();
+ await expect(lab.locator('.l8-result')).toContainText('درست بود');
+ await lab.locator('.l8-modes button').filter({hasText:'ساعت‌ها'}).click();
+ await expect(lab.locator('svg.l8-clock')).toBeVisible();
+ await lab.locator('.l8-modes button').filter({hasText:'قرار ملاقات'}).click();
+ await lab.locator('.l8-choice-grid').getByRole('button',{name:'Hast du am Freitag um fünf Uhr Zeit?',exact:true}).click();
+ await expect(lab.locator('.l8-result')).toContainText('درست بود');
+ await lab.locator('.l8-modes button').filter({hasText:'قیدهای تکرار'}).click();
+ await lab.locator('.l8-choice-grid').getByRole('button',{name:'immer',exact:true}).click();
+ await expect(lab.locator('.l8-result')).toContainText('درست بود');
+ await lab.locator('.l8-modes button').filter({hasText:'jeden / jede / jedes'}).click();
+ await lab.locator('.l8-choice-grid').getByRole('button',{name:'jeden Tag',exact:true}).click();
+ await expect(lab.locator('.l8-result')).toContainText('درست بود');
+ const exercise=page.locator('.bookExercise');
+ await expect(exercise).toContainText('Ich lerne ___ Tag Deutsch.');
+ await exercise.locator('.bookOptions').getByRole('button',{name:'jeden',exact:true}).click();
+ await expect(exercise.locator('.bookFeedback')).toContainText('پاسخ درست است');
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_book_lessons_v1')||'{}'));
+ expect(saved[8].answers['l8-class-g01'].correct).toBe(true);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
 });

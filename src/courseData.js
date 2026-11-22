@@ -1,3 +1,4 @@
+import {class8Words} from './lesson8Classroom.js';
 import {articleNouns} from './articleNouns.js';
 // Original practice content aligned to CEFR A1 topics.
 // These are independent companion exercises, not a transcription of Hueber Menschen.
@@ -189,9 +190,9 @@ export const lessons = [
     sentences:[['Ich möchte ein Brot.','من یک نان می‌خواهم.'],['Das Wasser kostet zwei Euro.','این آب دو یورو قیمت دارد.'],['Ich kaufe Obst.','من میوه می‌خرم.'],['Wir brauchen Milch.','ما شیر لازم داریم.']],
   },
   {
-    id:8, label:'روزهای هفته، ساعت و قرار گذاشتن',german:'Kein Problem. Ich habe Zeit!',
+    id:8, label:'روزهای هفته، ماه‌ها، ساعت و قرار گذاشتن',german:'Kein Problem. Ich habe Zeit!',
     goal:'روزها و بخش‌های روز را بگو، ساعت را بخوان و برای تفریح قرار بگذار یا مؤدبانه رد کن. (درس ۸ کتاب Menschen A1.1)',
-    grammar:'am + روز و بخش روز؛ um + ساعت؛ in der Nacht؛ جایگاه دوم فعل؛ پرسش و پاسخ درباره زمان قرار',
+    grammar:'am / um / im؛ جایگاه دوم فعل؛ Wie oft و Wie gut؛ قیدهای تکرار؛ jeden / jede / jedes؛ قرار ملاقات',
     tip:'Am Freitag um fünf Uhr habe ich Zeit. · Am Montag um acht Uhr habe ich keine Zeit. · Hast du am Dienstag Zeit?',
     verbs:['haben','gehen','treffen'],
     words:[
@@ -204,7 +205,8 @@ export const lessons = [
       ['am Montag','روز دوشنبه'],['um acht Uhr','ساعت هشت'],['in der Nacht','در شب'],
       ['das Kino','سینما'],['das Museum','موزه'],['das Schwimmbad','استخر'],
       ['Gute Idee!','فکر خوبی است!'],['Leider nicht.','متأسفانه نه.'],
-      ['Januar','ژانویه (مرور اضافی)'],['Februar','فوریه (مرور اضافی)'],['März','مارس (مرور اضافی)']
+      ['Januar','ژانویه (مرور اضافی)'],['Februar','فوریه (مرور اضافی)'],['März','مارس (مرور اضافی)'],
+      ...class8Words
     ],
     sentences:[
       ['Ich habe am Dienstag Zeit.','سه‌شنبه وقت دارم.'],

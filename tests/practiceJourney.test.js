@@ -5,10 +5,10 @@ import {bookLessonPlans} from '../src/bookLessonData.js';
 import {lessonExerciseHref,readExerciseTarget} from '../src/lessonExerciseLinks.js';
 import {LESSON_PRACTICE_MODES,practiceJourney,filterPracticeLessons,nextPracticeSection} from '../src/practiceJourneyData.js';
 
-test('practice dashboard has 12 lessons, four skill modules each, 368 real question slots and valid deep links',()=>{
+test('practice dashboard has 12 lessons, four skill modules each, 400 real question slots and valid deep links',()=>{
  const model=practiceJourney();
  assert.equal(model.lessons.length,12);
- assert.equal(model.total,368);
+ assert.equal(model.total,400);
  assert.equal(model.correct,0);
  assert.equal(model.percent,0);
  assert.equal(model.completedLessons,0);
@@ -16,7 +16,7 @@ test('practice dashboard has 12 lessons, four skill modules each, 368 real quest
  assert.equal(model.audioCompleted,0);
  assert.equal(model.next.id,1);
  assert.deepEqual(LESSON_PRACTICE_MODES.map(x=>x.id),['all','vocabulary','grammar','sentences','listening']);
- assert.equal(Object.values(model.totals).reduce((sum,x)=>sum+x.total,0),368);
+ assert.equal(Object.values(model.totals).reduce((sum,x)=>sum+x.total,0),400);
  for(const lesson of model.lessons){
   const plan=bookLessonPlans[lesson.id];
   assert.equal(lesson.sections.length,4);
