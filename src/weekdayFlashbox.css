@@ -1,0 +1,42 @@
+.wdBox{color:#24354c;display:grid;gap:10px;padding:13px;background:linear-gradient(135deg,#f4f3ff,#eef8fb);border:1px solid #d5d9ef;border-radius:16px;min-width:0;max-width:100%;direction:rtl}
+.wdHeader{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0}
+.wdHeader>div{min-width:0}.wdEyebrow{display:block;letter-spacing:.05em;font-size:10px;color:#5b56ad;font-weight:850}
+.wdHeader h3{font-size:clamp(16px,3vw,19px);margin:3px 0;line-height:1.4}
+.wdHeader small{font-size:11px;color:#6d7897}.wdStats{flex:0 0 auto;font-size:10px;color:#544cad;background:#e4e1fa;border-radius:25px;padding:7px}
+.wdModes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.wdModes button{min-width:0;min-height:44px;display:flex;align-items:center;justify-content:center;gap:5px;border-radius:10px;border:1px solid #cbd2e7;color:#575e83;background:white;font-size:12px;font-weight:750;cursor:pointer}
+.wdModes button.selected{background:#6252c7;color:white;border-color:#6252c7}
+.wdModes svg{flex:none}.wdProgress{height:5px;background:#dce4ee;border-radius:9px;overflow:hidden}
+.wdProgress span{height:100%;display:block;background:#6252c7;transition:width .26s ease}
+.wdCounter{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:#64718a}
+.wdCounter span:first-child{direction:ltr;font-weight:850;color:#6555c9;white-space:nowrap}
+.wdFlash{position:relative;display:grid;justify-items:center;align-content:center;gap:9px;width:100%;min-height:161px;padding:12px;border:1px solid #c7cae3;border-radius:16px;background:linear-gradient(140deg,#fff,#f8f7ff);color:#2f345b;cursor:pointer;box-shadow:0 8px 24px #3436740b;transition:transform .22s,background .25s}
+.wdFlash.flipped{background:linear-gradient(140deg,#e8faf5,#f1fffe);transform:scale(.985)}
+.wdFlashHint{font-size:11px;color:#686da0}.wdFlash strong{font-size:clamp(27px,6vw,37px);font-weight:900;overflow-wrap:anywhere;line-height:1.4;text-align:center}
+.wdFlash small{font-size:11px;line-height:1.6;color:#73809a;text-align:center}
+.wdExample{display:flex;gap:9px;align-items:center;justify-content:space-between}
+.wdExample>span{display:flex;align-items:center;gap:6px;min-width:0;font-size:12px}.wdExample>span svg{flex:none;color:#6556b9}
+.wdExample b{font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.wdExample button,.wdAnswer button{display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;min-height:44px;padding:7px 9px;border-radius:10px;border:1px solid #c8d5e7;background:#fff;color:#4f4e9c;font-size:11px;font-weight:800;cursor:pointer}
+.wdActions{display:grid;grid-template-columns:1fr 1.5fr;gap:7px}
+.wdActions button{min-height:46px;border-radius:10px;border:1px solid #cdd4e6;background:#fff;color:#5e5b8d;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:850;cursor:pointer}
+.wdActions button.primary{background:#6452c9;color:white;border-color:#6452c9}
+.wdActions button:disabled{opacity:.45;cursor:not-allowed}
+.wdPlay{display:grid;gap:9px}.wdPlayPrompt{display:grid;place-items:center;min-height:96px;border:1px solid #d4daf0;background:#fff;color:#333964;border-radius:12px;padding:12px;text-align:center;font-size:clamp(24px,5.6vw,32px);font-weight:850}
+.wdOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.wdOptions button{min-width:0;min-height:48px;border:1px solid #c7cfe4;background:#fff;color:#343e69;border-radius:11px;font-size:clamp(13px,2.6vw,17px);font-weight:750;padding:8px;cursor:pointer;overflow-wrap:anywhere}
+.wdOptions button.correct{border-color:#29a47d;background:#dcf9ed;color:#136b4b}
+.wdOptions button.wrong{border-color:#d76b6b;background:#ffe5e5;color:#9b3030}
+.wdOptions button:disabled{opacity:1}
+.wdAnswer{display:flex;align-items:center;flex-wrap:wrap;gap:6px;border-radius:11px;padding:8px;background:#e0f6ee;color:#19674f;font-size:12px}
+.wdAnswer.wrong{background:#fff0e4;color:#914d27}.wdAnswer>span{flex:1 1 100%;line-height:1.6}
+.wdAnswer button{flex:1;min-height:42px;border-color:#aecaca}
+.wdFinished{min-height:190px;display:grid;place-items:center;gap:9px;text-align:center;background:#fff;border-radius:13px;padding:16px}
+.wdFinished svg{color:#28a87a}.wdFinished p{font-size:12px;line-height:1.7;margin:0}
+.wdFinished button{display:flex;align-items:center;gap:7px;min-height:44px;border:0;border-radius:10px;background:#6452c9;color:white;padding:9px 13px;cursor:pointer}
+.wdNote{font-size:11px;color:#647491;line-height:1.8;text-align:center;border-top:1px solid #d8ddec;padding-top:8px}
+.wdBox :where(button):focus-visible{outline:3px solid #b297ff;outline-offset:2px}
+@media(max-width:540px){.wdBox{padding:10px;gap:8px;border-radius:14px}.wdHeader h3{font-size:16px}.wdHeader small{font-size:10px}.wdStats{font-size:9px;padding:6px}.wdModes button{font-size:11px}.wdFlash{min-height:145px}.wdExample b{font-size:10px}.wdExample button{font-size:10px;padding:6px}.wdOptions button{font-size:14px}}
+@media(max-width:355px){.wdStats{display:none}.wdModes button{font-size:10px}.wdModes button svg{width:14px}.wdActions button{font-size:11px}}
+@media(prefers-color-scheme:dark){.wdBox{background:linear-gradient(130deg,#26374b,#303553);border-color:#536079;color:#f2f4ff}.wdEyebrow,.wdStats{color:#d3c8ff}.wdStats{background:#47416c}.wdHeader small,.wdCounter,.wdNote{color:#c8d2ea}.wdModes button,.wdExample button,.wdActions button,.wdPlayPrompt,.wdOptions button,.wdFinished{background:#35445c;color:#f2f2ff;border-color:#5b6785}.wdModes button.selected,.wdActions button.primary,.wdFinished button{background:#7058d6;color:white;border-color:#7058d6}.wdFlash{background:#2d4159;color:#f6f4ff;border-color:#60708c}.wdFlash.flipped{background:#2b5a54}.wdFlashHint,.wdFlash small{color:#c6d4e6}.wdPlayPrompt{color:#fff}.wdOptions button.correct{background:#245741;color:#ddffed}.wdOptions button.wrong{background:#644040;color:#ffe0e0}.wdAnswer{background:#285346;color:#e7fff3}.wdAnswer.wrong{background:#5c4235;color:#ffe7c8}.wdCounter span:first-child{color:#c6baff}.wdNote{border-color:#54647e}}
+@media(prefers-reduced-motion:reduce){.wdFlash,.wdProgress span{transition:none}.wdFlash.flipped{transform:none}}
