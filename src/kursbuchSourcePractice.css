@@ -1,0 +1,54 @@
+.kbSourcePage{max-width:1040px;margin:0 auto;display:grid;gap:12px;padding-bottom:115px;color:#26364e;min-width:0}
+.kbSourceHero{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px;background:linear-gradient(115deg,#283769,#5447bd);color:white;border-radius:20px}
+.kbSourceHero h1{font-size:clamp(20px,3vw,27px);margin:7px 0}
+.kbSourceHero p{font-size:12px;line-height:1.85;margin:0;max-width:620px}.kbSourceHero small{display:block;margin-top:7px;font-size:10px;color:#d3c9ff;line-height:1.7}
+.kbSourceEyebrow{font-size:12px;display:flex;align-items:center;gap:7px;font-weight:750;color:#bce9e3}
+.kbSourceTotal{display:grid;justify-items:center;flex-shrink:0;border:1px solid #ffffff55;background:#ffffff18;border-radius:16px;padding:12px}
+.kbSourceTotal b{font-size:29px}.kbSourceTotal span{font-size:10px}
+.kbSourcePicker{display:flex;gap:10px;align-items:center;padding:10px;background:#fff;border-radius:13px;border:1px solid #e3e4ee}
+.kbSourcePicker label{font-size:12px;font-weight:800}.kbSourcePicker select{min-width:0;flex:1;height:45px;color:#26364e;background:#f6f7fc;border-radius:9px;border:1px solid #d7dded;font-size:12px;padding:8px}
+.kbSourceSwitch{display:grid;grid-template-columns:1fr 1fr;gap:6px}.kbSourceSwitch button{border:1px solid #d7deef;background:#fff;color:#5a6282;border-radius:11px;min-height:45px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;cursor:pointer}
+.kbSourceSwitch button.active{color:white;background:#624fcc;border-color:#624fcc}
+.kbSourceSummary{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;background:#e9ebfc;color:#373267;border-radius:12px;padding:11px}
+.kbSourceSummary>span:first-child{display:grid;gap:3px}.kbSourceSummary small{color:#5b6190}.kbSourceSummary>span:last-child{white-space:nowrap}
+.kbSourceAll label{display:flex;gap:8px;align-items:center;font-size:12px;color:#5c6087;min-height:40px}.kbSourceAll input{accent-color:#6650ca;width:17px;height:17px}
+.kbSourceCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:7px}
+.kbSourceCards button{background:#fff;border:1px solid #e0e4f2;border-radius:12px;padding:9px;display:flex;align-items:center;gap:7px;text-align:right;color:#293853;min-width:0;min-height:64px;cursor:pointer}
+.kbSourceCards button.selected{border-color:#7868d3;background:#f1efff}.kbSourceCards button>span:nth-child(2){flex:1;min-width:0;display:grid;gap:3px}
+.kbSourceCards strong{font-size:12px;line-height:1.45}.kbSourceCards small{font-size:10px;color:#697797}
+.kbSourcePageNo{display:grid;place-items:center;flex:0 0 38px;height:38px;border-radius:10px;background:#e9e5fa;color:#5545aa;font-weight:900;font-variant-numeric:tabular-nums}
+.kbSourceDone{color:#319977}
+.kbSourceEmpty,.kbSourceExercise,.kbSourceFooter{background:#fff;border:1px solid #dce1ef;border-radius:15px;padding:14px}
+.kbSourceExercise{display:grid;gap:12px}.kbSourceExerciseHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.kbSourceExerciseHead span{font-size:11px;color:#6f6c8e}.kbSourceExerciseHead b{font-size:17px;color:#3c3965}
+.kbSourceGoal,.kbSourceBookHint{margin:0;background:#f3f5ff;color:#526183;border-radius:10px;padding:10px;font-size:12px;line-height:1.9}
+.kbSourceBookHint{background:#fff5e1;color:#835d2a}
+.kbSourceFill,.kbSourceQuiz,.kbSourceDialogue,.kbSourceBingo{display:grid;gap:11px}
+.kbSourceQuestion{min-height:120px;border-radius:13px;border:1px solid #d9e0f1;background:#f5f7fb;padding:15px;display:grid;place-items:center;text-align:center;gap:12px}
+.kbSourceQuestion small{font-size:11px;color:#68768d}.kbSourceQuestion strong{font-size:clamp(19px,4vw,29px);line-height:1.6;color:#333b64;overflow-wrap:anywhere}.kbSourceQuestion>span{font-size:12px;color:#647187}.kbSourceBlank{color:#9c82df;border-bottom:2px dashed #9c82df}
+.kbSourceFill form{display:flex;gap:8px}.kbSourceFill input{min-width:0;flex:1;border:1px solid #c8d0e3;border-radius:10px;min-height:45px;padding:8px 12px;font-size:15px;color:#26364e;background:#fff}
+.kbSourceFill form button,.kbSourceNext,.kbSourceDialogActions button:last-child{min-height:45px;padding:8px 13px;border:0;background:#6350c7;color:white;border-radius:10px;font-weight:800;cursor:pointer}
+.kbSourceFeedback{display:flex;align-items:center;flex-wrap:wrap;gap:8px;border-radius:10px;padding:10px;font-size:12px;line-height:1.75}
+.kbSourceFeedback.correct{background:#e1f8ed;color:#226d51}.kbSourceFeedback.wrong{background:#fff0ee;color:#a13e40}
+.kbSourceRepeat{display:flex;align-items:center;justify-content:center;gap:6px;border-radius:9px;min-height:44px;background:#ecebfd;color:#604eb5;border:0;cursor:pointer;font-weight:700}
+.kbSourceQuizAnswers{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px}.kbSourceQuizAnswers button{min-height:48px;border:1px solid #bfc7e2;border-radius:10px;background:#fff;color:#344361;padding:8px;font-size:13px;font-weight:750;cursor:pointer}
+.kbSourceQuizAnswers button.chosen{border-color:#6551cb;background:#e7e3ff}.kbSourceEnd{display:grid;justify-items:center;text-align:center;gap:9px;background:#e6f5ef;color:#206c52;padding:16px;border-radius:12px;font-size:13px}
+.kbSourceEnd button{min-height:44px;background:#6350c7;color:white;border:0;border-radius:9px;padding:8px 15px;font-weight:750;cursor:pointer}
+.kbSourceTurns{display:flex;justify-content:space-between;align-items:center;color:#554f93;font-size:12px;gap:10px}.kbSourceTurns span{font-size:11px;color:#66738c}
+.kbSourceSpeech{display:grid;gap:9px;justify-items:center;padding:16px;border:1px solid #dbe2f1;border-radius:14px;background:#f4f6ff;text-align:center}
+.kbSourceSpeech small{font-size:12px;color:#64738b}.kbSourceSpeech strong{font-size:clamp(20px,5vw,28px);line-height:1.65;color:#333c69}.kbSourceSpeech span{font-size:13px;color:#66748c}
+.kbSourceSpeech button,.kbSourceSample button{display:flex;align-items:center;gap:7px;min-height:44px;border-radius:10px;border:0;background:#6450cf;color:white;padding:9px 14px;font-weight:750;cursor:pointer}
+.kbSourceResponse{display:grid;justify-items:center;gap:11px;text-align:center;border-radius:13px;border:1px solid #c4e7db;background:#eefbf6;padding:14px}
+.kbSourceResponse>b{font-size:13px;color:#256c52}.kbSourceResponse>button{min-height:44px;padding:9px 14px;border:1px solid #a8d4c3;border-radius:9px;background:#dbf5e9;color:#247154;cursor:pointer;font-weight:800}
+.kbSourceSample{display:grid;justify-items:center;gap:9px}.kbSourceSample strong{font-size:clamp(17px,4vw,23px);line-height:1.6}.kbSourceSample span{font-size:12px}
+.kbSourceDialogActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kbSourceDialogActions button{min-height:45px;border-radius:10px;font-size:12px;font-weight:750;cursor:pointer}
+.kbSourceDialogActions button:first-child{background:#fff1df;border:1px solid #ddc8a3;color:#7b5e26}.kbSourceDialogActions button:last-child{display:flex;gap:5px;align-items:center;justify-content:center}
+.kbSourceBingo>p{font-size:12px;color:#62728d;line-height:1.85;margin:0}.kbBingoGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.kbBingoGrid button{border:1px solid #bfc9e0;background:#f7f9fd;color:#39465f;border-radius:7px;min-height:58px;font-size:10px;padding:3px;overflow-wrap:anywhere;cursor:pointer;line-height:1.4}
+.kbBingoGrid button.selected{background:#5c55bf;color:white;border-color:#5c55bf}
+.kbSourceFooter{display:flex;align-items:flex-start;gap:8px;background:#f7f5ff;color:#5d5788;font-size:11px;line-height:1.8}
+.kbSourceFooter p{margin:0}.kbSourceNav{display:flex;gap:9px;flex-wrap:wrap}
+.kbSourceNav a{display:flex;align-items:center;gap:6px;min-height:44px;background:#e9e8fb;color:#544bab;text-decoration:none;padding:9px 12px;border-radius:9px;font-size:12px;font-weight:750}
+@media(max-width:600px){.kbSourcePage{gap:9px}.kbSourceHero{padding:13px;gap:9px;flex-wrap:wrap}.kbSourceHero h1{font-size:19px}.kbSourceTotal{padding:5px 9px;display:flex;gap:8px}.kbSourceTotal b{font-size:18px}.kbSourceTotal span{font-size:10px}.kbSourcePicker{padding:8px;gap:6px}.kbSourcePicker label{font-size:11px}.kbSourceSummary{padding:8px;font-size:11px}.kbSourceCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.kbSourceCards button{padding:6px;gap:5px;min-height:67px}.kbSourceCards strong{font-size:11px}.kbSourceCards small{font-size:9px}.kbSourcePageNo{flex-basis:28px;height:32px;font-size:11px}.kbSourceExercise{padding:10px;gap:8px}.kbSourceQuestion{padding:10px;min-height:105px}.kbSourceFill form{display:grid;grid-template-columns:minmax(0,1fr) auto}.kbSourceFill form button{font-size:11px;padding:7px}.kbBingoGrid button{min-height:60px;font-size:9px}.kbSourceTurns{font-size:11px}.kbSourceTurns span{font-size:10px}.kbSourceSpeech{padding:12px}.kbSourceResponse{padding:10px}}
+@media(max-width:360px){.kbSourceCards{grid-template-columns:1fr}.kbSourceSwitch button{font-size:11px}.kbSourceHero small{font-size:9px}.kbSourceExerciseHead b{font-size:14px}.kbBingoGrid button{font-size:8px;min-height:55px}}
+@media(prefers-color-scheme:dark){.kbSourcePage{color:#eff2ff}.kbSourcePicker,.kbSourceSwitch button,.kbSourceCards button,.kbSourceExercise,.kbSourceEmpty{background:#26364d;border-color:#51617d;color:#f4f3ff}.kbSourcePicker select,.kbSourceFill input{background:#35455c;color:#fff;border-color:#61718a}.kbSourceSwitch button.active{background:#6b55cf;color:white}.kbSourceSummary{background:#384165;color:#e6e4ff}.kbSourceSummary small,.kbSourceCards small{color:#c2cde4}.kbSourceCards button.selected{background:#3f3d77;border-color:#a99cee}.kbSourcePageNo{background:#51478d;color:#e8e1ff}.kbSourceExerciseHead b{color:#fff}.kbSourceGoal,.kbSourceQuestion,.kbSourceSpeech{background:#223047;color:#dce4fa;border-color:#50617e}.kbSourceQuestion strong,.kbSourceSpeech strong{color:#f8f5ff}.kbSourceQuestion small,.kbSourceQuestion>span,.kbSourceSpeech span{color:#c4d0e4}.kbSourceBookHint{background:#50442c;color:#ffe5ad}.kbSourceQuizAnswers button,.kbBingoGrid button{background:#36445e;border-color:#5c6984;color:#eef1fc}.kbSourceQuizAnswers button.chosen,.kbBingoGrid button.selected{background:#6550c9;color:white}.kbSourceResponse{background:#28433e;border-color:#4c7164}.kbSourceResponse>b{color:#d4ffea}.kbSourceFooter{background:#34355b;color:#e2ddfa;border-color:#4b4d76}.kbSourceNav a,.kbSourceRepeat{background:#403f73;color:#e2dcff}}

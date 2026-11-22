@@ -936,3 +936,36 @@ test('lesson eight has two-person speaking drills with persisting progress on na
  await expect(page.getByRole('button',{name:/قرار جمعه/})).toContainText('تکمیل شده');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
 });
+
+test('real-book source exercises cover lesson eight chat and source page 81 bingo without phone overflow',async({page})=>{
+ await page.setViewportSize({width:360,height:760});
+ await page.goto('/lessons/8');
+ const link=page.getByRole('link',{name:/تمرین‌های داخل Kursbuch و Aktionsseiten/});
+ await expect(link).toHaveAttribute('href','/book-exercises?lesson=8');
+ await link.click();
+ await expect(page).toHaveURL(/book-exercises\?lesson=8/);
+ const source=page.locator('.kbSourcePage');
+ await expect(source.locator('#kb-source-lesson')).toHaveValue('8');
+ await expect(source.locator('.kbSourceCards button')).toHaveCount(2);
+ await expect(source.locator('.kbSourceQuestion')).toContainText('Hast du');
+ await source.getByRole('textbox',{name:'جواب آلمانی جای خالی'}).fill('am');
+ await source.getByRole('button',{name:'بررسی جواب'}).click();
+ await expect(source.locator('.kbSourceFeedback')).toContainText('درست است');
+ await source.getByRole('button',{name:/گفت‌وگوهای کتاب/}).click();
+ await expect(source.locator('.kbSourceCards button')).toHaveCount(3);
+ await source.getByRole('button',{name:/Verabreden Sie sich im Chat/}).click();
+ await expect(source.locator('.kbSourceSpeech strong')).toContainText('Was machst du heute?');
+ await expect(source.locator('.kbSourceSample')).toHaveCount(0);
+ await source.getByRole('button',{name:/نمایش پاسخ نمونه/}).click();
+ await expect(source.locator('.kbSourceSample')).toContainText('Ich habe');
+ for(let n=0;n<3;n++)await source.getByRole('button',{name:/نوبت بعد/}).click();
+ await expect(source.locator('.kbSourceEnd')).toContainText('تمرین این گفت‌وگو انجام شد');
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_kursbuch_exercises_v1')||'{}')['A87-chat']?.completed)).toBe(true);
+ await source.getByRole('checkbox',{name:/نمایش همه فعالیت‌های صفحات ۸۰ تا ۹۰/}).check();
+ await source.getByRole('button',{name:/Aktivitäten-Bingo/}).click();
+ const boxes=source.locator('.kbBingoGrid button');
+ await expect(boxes).toHaveCount(25);
+ for(let n=0;n<5;n++)await boxes.nth(n).click();
+ await expect(source.locator('.kbSourceFeedback')).toContainText('BINGO');
+ await expect(page.locator('html').evaluate(el=>el.scrollWidth)).resolves.toBeLessThanOrEqual(362);
+});
