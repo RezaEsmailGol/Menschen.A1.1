@@ -1,0 +1,13 @@
+.abmArt{position:relative;display:grid;place-items:center;isolation:isolate;width:100%;max-width:300px;min-height:155px;aspect-ratio:1.8;margin:0 auto;border-radius:15px;overflow:hidden;background:linear-gradient(135deg,#ede8ff,#d7eeef);color:#4c6b9d}
+.abmArtGlow{position:absolute;width:126px;height:126px;border-radius:50%;background:#ffffffaa;box-shadow:0 12px 40px #7060a544;z-index:-1}
+.abmArt svg:not(.abmArtClock svg){filter:drop-shadow(3px 7px 2px #394a6322)}
+.abmArtBase{position:absolute;bottom:11px;width:52%;height:6px;border-radius:50%;background:#47547625;filter:blur(3px)}
+.abmArtClock{background:linear-gradient(145deg,#e5f2ff,#f5e7ed);min-height:160px;max-width:260px}
+.abmArtClock svg{max-width:205px;width:80%;height:auto}
+.abmArt-sun{color:#e5a53c;background:linear-gradient(140deg,#fff3c9,#e7f5e9)}
+.abmArt-snow{color:#5699c3;background:linear-gradient(140deg,#e7f5ff,#dbe0f8)}
+.abmArt-lamp,.abmArt-coffee,.abmArt-bread{color:#9e704c;background:linear-gradient(140deg,#faeedf,#eedfe1)}
+.abmArt-guitar,.abmArt-football{color:#4a8969;background:linear-gradient(135deg,#edf8d9,#d3e7ef)}
+.abmArt-calendar,.abmArt-alarm{color:#6f61a5;background:linear-gradient(145deg,#e8e1ff,#e0eef3)}
+@media(max-width:550px){.abmArt{max-width:220px;min-height:125px;aspect-ratio:1.7}.abmArt svg:not(.abmArtClock svg){width:88px;height:88px}.abmArtClock{min-height:132px}.abmArtClock svg{width:135px}}
+@media(prefers-color-scheme:dark){.abmArt{background:linear-gradient(135deg,#374466,#2e6269);color:#d2d5ff}.abmArtGlow{background:#233c5d;border:1px solid #7f92ba}.abmArtClock{background:linear-gradient(145deg,#34436a,#2c5b67)}.abmArt-sun{color:#f7c65e}.abmArt-snow{color:#c8eaff}.abmArt-lamp,.abmArt-coffee,.abmArt-bread{color:#ffe0bd}}
