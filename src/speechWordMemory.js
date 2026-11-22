@@ -14,6 +14,10 @@ export function alignSpeechWords(expected,heard){
 export function recognitionTranscript(event){
  return Array.from(event?.results||[]).filter(r=>r.isFinal!==false).map(r=>String(r[0]?.transcript||'').trim()).filter(Boolean).join(' ');
 }
+// Interim transcripts are for provisional visual feedback, never persisted.
+export function liveSpeechTranscript(event){
+ return Array.from(event?.results||[]).map(r=>String(r?.[0]?.transcript||'').trim()).filter(Boolean).join(' ');
+}
 export function recordSpeechWords(previous={},rows=[],lesson=1,now=Date.now()){
  const words={...(previous.words||{})};
  // Count each word once per attempt; all occurrences must match.
@@ -27,6 +31,6 @@ export function recordSpeechWords(previous={},rows=[],lesson=1,now=Date.now()){
  return {...previous,words};
 }
 export function weakSpeechWords(state={},now=Date.now()){
- return Object.values(state.words||{}).filter(x=>!x.lastCorrect||(x.misses>0&&x.streak<3)||x.dueAt<=now)
+ return Object.values(state.words||{}).filter(x=>x.lastCorrect===false)
  .sort((a,b)=>Number(a.lastCorrect)-Number(b.lastCorrect)||b.misses-a.misses||a.dueAt-b.dueAt);
 }

@@ -78,3 +78,14 @@ test('missed speech is prioritized for the next scheduled round',()=>{
  assert.ok(round.some(x=>x.id===weak.id));
  assert.equal(speakingStatus(stored.items[weak.id],now+1000),'weak');
 });
+
+test('successful retry removes speech item from weak status even if average and due time remain poor',()=>{
+ const now=Date.now(),card={id:'word:beruf',text:'Beruf',category:'words',lesson:2};
+ const a=addSpeechReview(makeSpeakingState(),card,scoreSpeechMatch(card.text,'Buch'),'Buch',now);
+ assert.equal(speakingStatus(a.items[card.id],now),'weak');
+ const b=addSpeechReview(a,card,scoreSpeechMatch(card.text,'Beruf'),'Beruf',now+1000);
+ assert.equal(b.words.beruf.lastCorrect,true);assert.equal(b.words.beruf.misses,1);
+ assert.notEqual(speakingStatus(b.items[card.id],now+1001),'weak');
+ assert.notEqual(speakingStatus(b.items[card.id],now+12*86400000),'weak');
+ assert.equal(speakingStats(b).weak,0);
+});
