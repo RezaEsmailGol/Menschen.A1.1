@@ -93,3 +93,51 @@
 @media(max-width:430px){.scListeningLive{grid-template-columns:minmax(0,1fr) 116px;gap:5px;padding:6px}.scListeningLive .scListening{font-size:10px;padding:7px}}
 @media(prefers-reduced-motion:reduce){.scDot{animation:none}}
 @media(prefers-color-scheme:dark){.scListeningLive{background:#29354d;border-color:#53617c}}
+
+/* Compact speaking coach: avoid scrolling past duplicated scores and verbose privacy text. */
+.scResultCompact{gap:8px;scroll-margin-bottom:100px}
+.scResultCompactTop{display:grid;grid-template-columns:minmax(120px, .95fr) minmax(0,1fr);gap:12px;align-items:center}
+.scResultCompactTop .speechGauge{min-width:0;padding:7px 5px;gap:1px}
+.scResultCompactTop .speechGauge svg{max-height:100px}.scResultCompactTop .speechGaugeValue{font-size:22px}
+.scResultCompactTop .speechGauge b{font-size:11px}.scResultCompactTop .speechGauge small{font-size:9px;line-height:1.35}
+.scResultOverview{display:flex;flex-direction:column;align-items:stretch;gap:7px;min-width:0}
+.scResultMiniLabel{font-size:11px;color:#777f9b}.scResultOverview>strong{font-size:clamp(18px,4.2vw,25px);line-height:1.4;text-align:center;overflow-wrap:anywhere;color:#41456c}
+.scResultOverview>small{font-size:10px;line-height:1.7;color:#717d94;text-align:center}
+.scRecognitionIssue{display:flex;align-items:center;justify-content:center;gap:5px;min-height:44px;background:#f4f2ff;border:1px solid #bdb6eb;color:#5951a2;border-radius:10px;padding:7px;font-size:11px;font-weight:850}
+.scDisputed{display:flex;gap:5px;align-items:center;background:#eaf8f0;color:#24694c;border-radius:9px;padding:8px;font-size:11px;line-height:1.6}
+.scResultDetails{border-top:1px solid #e2e5f1;padding-top:4px}
+.scResultDetails>summary{list-style:none;display:flex;align-items:center;gap:8px;padding:10px 4px;min-height:44px;cursor:pointer;font-size:12px;font-weight:750;color:#68639e}
+.scResultDetails>summary::-webkit-details-marker{display:none}.scResultDetails summary svg{margin-inline-start:auto;transition:transform .2s}
+.scResultDetails[open] summary svg{transform:rotate(-90deg)}
+.scResultDetails .scCompare{margin:6px 0}.scResultDetails p{font-size:11px;line-height:1.75;color:#71809c;margin:8px 0}
+.scPrivacy{display:block;gap:0}.scPrivacy summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;list-style:none;font-size:12px;font-weight:750}
+.scPrivacy summary::-webkit-details-marker{display:none}.scPrivacy summary svg:last-child{margin-inline-start:auto;transition:transform .2s}.scPrivacy[open] summary svg:last-child{transform:rotate(-90deg)}
+.scPrivacy p{padding:8px 2px 3px}
+@media(max-width:620px){
+ .scPage{gap:10px;padding-bottom:100px}.scPractice{gap:9px}
+ .scPrompt{min-height:125px;padding:10px;gap:5px}
+ .scPrompt h2{font-size:clamp(25px,8vw,33px);line-height:1.35}
+ .scMemoryState{padding:5px 8px;font-size:10px;line-height:1.4}
+ .scActions{gap:7px}.scActions button{min-height:48px;padding:7px;font-size:11px}
+ .scResultCompact{padding:9px}.scResultCompactTop{grid-template-columns:minmax(108px, .92fr) minmax(0,1fr);gap:8px}
+ .scResultCompactTop .speechGauge{display:grid;grid-template-columns:1fr;gap:1px;padding:5px}
+ .scResultCompactTop .speechGauge svg{grid-row:auto;max-height:81px;width:100%}
+ .scResultCompactTop .speechGaugeValue{font-size:20px}
+ .scResultCompactTop .speechGauge b,.scResultCompactTop .speechGauge small{font-size:10px}
+ .scResultOverview>strong{font-size:20px}
+ .scResultCompact .speechWordRows{margin:1px 0;gap:5px}
+ .scNavigation{position:sticky;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:3;flex-wrap:nowrap;padding:7px;background:rgba(242,242,255,.94);backdrop-filter:blur(9px);border:1px solid #d2d0e6;border-radius:13px}
+ .scNavigation>*{min-width:0;flex:1;min-height:44px}
+ .scPrivacy{padding:8px 12px}
+}
+@media(max-width:380px){.scResultCompactTop{grid-template-columns:minmax(103px,.88fr) minmax(0,1fr);gap:6px}.scRecognitionIssue{font-size:10px}.scPrompt p{font-size:12px}}
+@media(prefers-color-scheme:dark){
+ .scResultMiniLabel,.scResultOverview>small,.scResultDetails p{color:#bfc9dc}
+ .scResultOverview>strong{color:#fff}
+ .scResultDetails{border-color:#51617c}
+ .scResultDetails>summary{color:#d6ccff}
+ .scRecognitionIssue{background:#3d406b;border-color:#6969aa;color:#ede8ff}
+ .scDisputed{background:#285345;color:#d4ffea}
+ @media(max-width:620px){.scNavigation{background:rgba(32,43,66,.96);border-color:#536481}}
+}
+@media(prefers-reduced-motion:reduce){.scResultDetails summary svg,.scPrivacy summary svg:last-child{transition:none}}
