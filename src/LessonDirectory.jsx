@@ -3,11 +3,14 @@ import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,Gr
 import {courseLessonOutlines} from './lessonOutline.js';
 import {lessonExerciseHref,lessonModuleHref} from './lessonExerciseLinks.js';
 import RouteLink from './RouteLink';
+import WeekdayFlashbox from './WeekdayFlashbox.jsx';
 import './lessonDirectory.css';
 
-export default function LessonDirectory({navigate,progress={}}){
+export default function LessonDirectory({navigate,progress={},speak=()=>{},onPracticeEvent}){
  const [expanded,setExpanded]=useState(()=>new Set([1]));
  const [search,setSearch]=useState('');
+ const [showEntireTopic,setShowEntireTopic]=useState(()=>new Set());
+ function toggleEntireTopic(key){setShowEntireTopic(old=>{const next=new Set(old);if(next.has(key))next.delete(key);else next.add(key);return next;});}
  const matching=useMemo(()=>courseLessonOutlines.filter(entry=>{
    const value=search.trim().toLocaleLowerCase('de');
    if(!value)return true;
@@ -54,6 +57,7 @@ export default function LessonDirectory({navigate,progress={}}){
          </button>
          {isOpen&&<div className="ldExpandedBody" id={'ld-sections-'+entry.id}>
            <p className="ldGoal">{entry.goal}</p>
+           {entry.id===8&&<WeekdayFlashbox speak={speak} onPracticeEvent={onPracticeEvent}/>}
            {entry.hasExercises?<div className="ldSectionGroup">
              <h3><BookOpenCheck size={18}/> {entry.supplemental?'تمرین‌های تألیفی تکمیلی این درس':'سرفصل‌ها و تمرین‌های هم‌موضوع کتاب'} <span>{entry.pages&&'صفحات '+entry.pages}</span></h3>
              <ol className="ldTopics">
@@ -66,7 +70,7 @@ export default function LessonDirectory({navigate,progress={}}){
                      <ChevronDown className="ldTopicChevron" size={18}/>
                    </summary>
                    <div className="ldExerciseList">
-                     {topic.exercises.map(exercise=><a className="ldExerciseLink"
+                     {topic.exercises.slice(0,showEntireTopic.has(entry.id+':'+topic.id)?undefined:3).map(exercise=><a className="ldExerciseLink"
                        key={exercise.id}
                        href={lessonExerciseHref(entry.id,topic.id,exercise.number)}
                        aria-label={'شروع تمرین '+exercise.number+' از '+topic.count+': '+exercise.title}>
@@ -75,6 +79,11 @@ export default function LessonDirectory({navigate,progress={}}){
                        <span className="ldExerciseType">{exercise.type==='choice'?'چهارگزینه‌ای':exercise.type==='listen'?'شنیداری':exercise.type==='build'?'جمله‌سازی':'نوشتاری'}</span>
                        <ArrowLeft size={16} className="ldExerciseArrow"/>
                      </a>)}
+                     {topic.exercises.length>3&&<button type="button" className="ldShowTopicMore"
+                       aria-expanded={showEntireTopic.has(entry.id+':'+topic.id)}
+                       onClick={()=>toggleEntireTopic(entry.id+':'+topic.id)}>
+                       {showEntireTopic.has(entry.id+':'+topic.id)?'نمایش فقط ۳ تمرین':'نمایش '+(topic.exercises.length-3)+' تمرین دیگر'} <ChevronDown size={16}/>
+                     </button>}
                    </div>
                  </details>
                </li>)}

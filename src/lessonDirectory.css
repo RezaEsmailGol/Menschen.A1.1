@@ -94,3 +94,9 @@
 .ldTopicDescription{display:block;font-size:11px;line-height:1.8;color:#708996;overflow-wrap:anywhere}
 .ldTopicDisclosure[open] .ldTopicSummary{color:#137981}
 @media(prefers-color-scheme:dark){.ldTopicDescription{color:#c0d4dd}}
+
+/* Limit lengthy lesson 8 exercise lists to three entries until requested. */
+.ldShowTopicMore{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;width:100%;background:#e9f3f7;border:1px dashed #b6d5de;border-radius:9px;color:#216c80;font-size:12px;font-weight:850;cursor:pointer}
+.ldShowTopicMore[aria-expanded="true"] svg{transform:rotate(180deg)}
+.ldExpandedBody>.wdBox{margin:0 0 16px}
+@media(prefers-color-scheme:dark){.ldShowTopicMore{background:#2d4b60;border-color:#5c7b8b;color:#def5ff}}
