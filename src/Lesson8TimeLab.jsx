@@ -2,6 +2,7 @@ import React,{useMemo,useState} from 'react';
 import {CalendarDays,CheckCircle2,Clock3,Headphones,RotateCcw,Volume2,XCircle} from 'lucide-react';
 import {activityItemKey} from './learningMemory.js';
 import './lesson8TimeLab.css';
+import {class8Games} from './lesson8Classroom.js';
 
 // Original interactive mini-games complement the authored book exercises.
 // Months are clearly labelled as extra review, not core Lektion 8 material.
@@ -27,10 +28,14 @@ export const lesson8Clocks=[
 const modes=[
   {id:'days',title:'روزهای هفته',description:'۷ روز',Icon:CalendarDays},
   {id:'clocks',title:'ساعت‌ها',description:'۸ ساعت تصویری',Icon:Clock3},
-  {id:'months',title:'ماه‌ها (مرور اضافه)',description:'۱۲ ماه',Icon:CalendarDays}
+  {id:'months',title:'ماه‌ها (مرور اضافه)',description:'۱۲ ماه',Icon:CalendarDays},
+  {id:'appointments',title:'قرار ملاقات',description:'۶ موقعیت مکالمه',Icon:CalendarDays},
+  {id:'frequency',title:'قیدهای تکرار',description:'۷ قید Wie oft',Icon:RotateCcw},
+  {id:'intervals',title:'jeden / jede / jedes',description:'۶ عبارت زمانی',Icon:CalendarDays}
 ];
 function itemsFor(mode){
   if(mode==='clocks')return lesson8Clocks;
+  if(class8Games[mode])return class8Games[mode];
   return (mode==='months'?lesson8Months:lesson8Days).map(([de,fa])=>({de,fa}));
 }
 export function timeLabChoices(items,index){
@@ -60,13 +65,13 @@ function ClockFace({hour,minute}){
 }
 export default function Lesson8TimeLab({speak,onPracticeEvent}){
   const [mode,setMode]=useState('days');
-  const [indexes,setIndexes]=useState({days:0,clocks:0,months:0});
+  const [indexes,setIndexes]=useState(Object.fromEntries(modes.map(m=>[m.id,0])));
   const [answered,setAnswered]=useState(null);
-  const [results,setResults]=useState({days:{good:0,total:0},clocks:{good:0,total:0},months:{good:0,total:0}});
+  const [results,setResults]=useState(Object.fromEntries(modes.map(m=>[m.id,{good:0,total:0}])));
   const items=itemsFor(mode);
   const index=indexes[mode]%items.length;
   const item=items[index];
-  const choices=useMemo(()=>timeLabChoices(items,index),[mode,index]);
+  const choices=useMemo(()=>item.choices||timeLabChoices(items,index),[mode,index]);
   const result=results[mode];
   function select(value){
     if(answered!==null)return;
@@ -75,7 +80,7 @@ export default function Lesson8TimeLab({speak,onPracticeEvent}){
     setResults(prev=>({...prev,[mode]:{good:prev[mode].good+Number(correct),total:prev[mode].total+1}}));
     onPracticeEvent?.({
       id:activityItemKey('lesson8-time-lab',mode,item.de),
-      lesson:8,kind:mode==='clocks'?'number':'vocab',
+      lesson:8,kind:mode==='clocks'?'number':mode==='appointments'?'sentence':mode==='intervals'?'grammar':'vocab',
       label:item.de,correct
     });
   }
@@ -84,9 +89,9 @@ export default function Lesson8TimeLab({speak,onPracticeEvent}){
     setAnswered(null);
   }
   function changeMode(value){setMode(value);setAnswered(null);}
-  return <section className="l8-lab" aria-label="بازی تصویری روز، ساعت و ماه درس هشت">
-    <div className="l8-lab-head"><div><span className="l8-overline">LEKTION 8 · 3 MINI-GAMES</span>
-      <h4>بازی روزها، ساعت و ماه‌ها</h4>
+  return <section className="l8-lab" id="lesson8-time-lab" aria-label="بازی تصویری روز، ساعت، ماه و قرار ملاقات درس هشت">
+    <div className="l8-lab-head"><div><span className="l8-overline">LEKTION 8 · 6 MINI-GAMES</span>
+      <h4>بازی روزها، ساعت، ماه‌ها و گرامر کلاس</h4>
       <p>هر بار فقط یک سؤال؛ بعد از پاسخ، کلمه درست را بشنو و تکرار کن.</p>
     </div><span className="l8-score">{result.good} / {result.total} درست</span></div>
     <div className="l8-modes" role="group" aria-label="انتخاب نوع تمرین">
@@ -94,8 +99,8 @@ export default function Lesson8TimeLab({speak,onPracticeEvent}){
         className={id===mode?'active':''} aria-pressed={id===mode}>
         <Icon size={17}/><span>{title}<small>{description}</small></span></button>)}
     </div>
-    <div className="l8-question">
-      <div className="l8-question-top"><span>سؤال {index+1} از {items.length}</span><span>{mode==='clocks'?'ساعت عقربه‌ای را بخوان':'معادل آلمانی را انتخاب کن'}</span></div>
+    <div className={"l8-question "+(mode==='appointments'?'l8-appointment':'')}>
+      <div className="l8-question-top"><span>سؤال {index+1} از {items.length}</span><span>{mode==='clocks'?'ساعت عقربه‌ای را بخوان':mode==='appointments'?'جمله مناسب قرار را انتخاب کن':mode==='intervals'?'شکل درست jeder را انتخاب کن':'معادل آلمانی را انتخاب کن'}</span></div>
       <div className="l8-progress"><span style={{width:((index+1)/items.length*100)+'%'}}/></div>
       {mode==='clocks'?<ClockFace hour={item.hour} minute={item.minute}/>:
         <div className="l8-prompt">{item.fa}</div>}

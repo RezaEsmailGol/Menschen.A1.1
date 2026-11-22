@@ -1,16 +1,18 @@
+import {class8ExtraSections} from './lesson8Classroom.js';
 // Authored Menschen A1.1 Lektion 8 companion exercises: days, times and invitations.
 // These prompts are original and do not reproduce the publisher's exercises or recordings.
 export const lesson8BookLesson = {
   title:'Kein Problem. Ich habe Zeit!',
   pages:'۴۵ تا ۴۸',
-  focus:'روزهای هفته، ساعت، زمان‌های روز، قرار گذاشتن و جایگاه فعل',
+  focus:'روزهای هفته، ماه‌ها، ساعت، قرار ملاقات، قیدهای تکرار و گرامر کلاس',
   supplemental:true,
   goals:[
     'روزهای هفته و بخش‌های روز را بشناس و درست تلفظ کن',
     'ساعت رسمی و گفتاری را بخوان و قرار مشخص کن',
     'حروف اضافه am / um و استثنای in der Nacht را به کار ببر',
     'فعل صرف‌شده را در جایگاه دوم جمله خبری نگه دار',
-    'پیشنهاد قرار بده، بپذیر یا مؤدبانه رد کن'
+    'پیشنهاد قرار بده، بپذیر یا مؤدبانه رد کن',
+    'با Wie oft و jeden / jede / jedes درباره سرگرمی و تکرار فعالیت‌ها صحبت کن'
   ],
   sections:[
     {
@@ -97,5 +99,9 @@ export const lesson8BookLesson = {
         {id:'l8-listen08',type:'listen',prompt:'جمله قرار گذاشتن را بشنو و بنویس.',audio:'Wir treffen uns am Samstag um sechs Uhr.',answer:'Wir treffen uns am Samstag um sechs Uhr.'}
       ]
     }
-  ]
+  ].map((section,index)=>({
+    ...section,
+    cards:[...section.cards,...class8ExtraSections[index].cards.filter(card=>!section.cards.some(old=>old[1]===card[1]))],
+    tasks:[...section.tasks,...class8ExtraSections[index].tasks]
+  }))
 };

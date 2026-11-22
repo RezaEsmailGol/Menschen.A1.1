@@ -139,7 +139,7 @@ export const persianGrammarGuides = {
     ]
   },
   8: {
-    summary:'در درس هشتم با روزهای هفته، ساعت و قرار گذاشتن کار می‌کنیم: am برای روزها و بخش‌های روز، um برای ساعت و in der Nacht برای شب است. فعل جمله خبری همیشه جایگاه دوم دارد.',
+    summary:'در درس هشتم با روزهای هفته، ساعت و قرار گذاشتن کار می‌کنیم: am برای روزها و بخش‌های روز، um برای ساعت، im برای ماه‌ها و in der Nacht برای شب است. فعل جمله خبری همیشه جایگاه دوم دارد.',
     rules:[
       rule('am-um','am / um برای زمان','قبل از روزهای هفته و اغلب بخش‌های روز am می‌آید: am Montag، am Nachmittag. قبل از ساعت مشخص um می‌آید: um acht Uhr. استثنای مهم: in der Nacht.','am + Wochentag / Tageszeit · um + Uhrzeit · in der Nacht',
         [['Wir treffen uns am Freitag.','ما جمعه همدیگر را می‌بینیم.'],['Der Kurs beginnt um neun Uhr.','کلاس ساعت نه شروع می‌شود.'],['In der Nacht schlafe ich.','شب می‌خوابم.']],
@@ -152,7 +152,27 @@ export const persianGrammarGuides = {
         quiz('halb neun یعنی چه ساعتی؟',['۸:۳۰','۹:۳۰','۸:۱۵','۹:۴۵'],'۸:۳۰','halb در آلمانی به ساعت بعدی اشاره می‌کند.')),
       rule('appointments','قرار گذاشتن، قبول و رد کردن','برای پرسیدن وقت آزاد از Hast du ... Zeit? و برای پیشنهاد از Gehen wir ...? استفاده کن. برای رد مؤدبانه Ich habe leider keine Zeit. رایج است. Zeit اسم مؤنث است؛ منفی آن keine Zeit می‌شود.','Hast du am Samstag Zeit? · Gehen wir ins Kino?',
         [['Hast du am Samstag Zeit?','شنبه وقت داری؟'],['Gute Idee! Am Samstag habe ich Zeit.','فکر خوبی است! شنبه وقت دارم.'],['Leider habe ich keine Zeit.','متأسفانه وقت ندارم.']],
-        quiz('کدام جمله به معنی «وقت ندارم» درست است؟',['Ich habe keine Zeit.','Ich habe keinen Zeit.','Ich bin nicht Zeit.','Ich habe nicht einen Zeit.'],'Ich habe keine Zeit.','Zeit مؤنث است و برای نفی اسم از keine استفاده می‌کنیم.'))
+        quiz('کدام جمله به معنی «وقت ندارم» درست است؟',['Ich habe keine Zeit.','Ich habe keinen Zeit.','Ich bin nicht Zeit.','Ich habe nicht einen Zeit.'],'Ich habe keine Zeit.','Zeit مؤنث است و برای نفی اسم از keine استفاده می‌کنیم.')),
+      rule('frequency','قیدهای تکرار و Wie oft?','برای پرسیدن دفعات یک کار از Wie oft? استفاده کن. immer یعنی همیشه، fast immer تقریباً همیشه، sehr oft خیلی زیاد، oft اغلب، manchmal گاهی، fast nie تقریباً هرگز و nie هرگز. häufig نزدیک به oft است؛ meistens یعنی بیشتر اوقات. ab und zu، ab und dann و von Zeit zu Zeit به معنی گهگاه‌اند.','Wie oft + فعل + فاعل؟ · Ich schwimme oft.',
+        [['Wie oft schwimmst du?','هر چند وقت یک‌بار شنا می‌کنی؟'],['Ich spiele sehr oft Fußball.','من به دفعات زیاد فوتبال بازی می‌کنم.'],['Ich mache manchmal Fotos.','من گاهی عکس می‌گیرم.']],
+        quiz('کدام کلمه یعنی تقریباً هرگز؟',['fast nie','fast immer','oft','immer'],'fast nie','fast یعنی تقریباً و nie یعنی هرگز.')),
+      rule('intervals','jeden / jede / jedes در عبارت‌های زمانی','در بیان تکرار بدون حرف اضافه از Akkusativ زمانی استفاده می‌کنیم: اسم مذکر jeden، مؤنث jede و خنثی jedes می‌گیرد. این قاعده برای همین عبارت‌های زمانی است.','der Tag → jeden Tag · die Woche → jede Woche · das Jahr → jedes Jahr',
+        [['Ich lerne jeden Tag Deutsch.','من هر روز آلمانی می‌خوانم.'],['Ich schwimme jede Woche.','هر هفته شنا می‌کنم.'],['Wir fahren jedes Wochenende Rad.','هر آخر هفته دوچرخه‌سواری می‌کنیم.']],
+        quiz('Ich arbeite ___ Tag.',['jeden','jede','jedes','jeder'],'jeden','der Tag در Akkusativ می‌شود jeden Tag.'),'',[
+          ['جنس اسم','عبارت زمانی','معادل'],
+          ['der','jeden Tag / jeden Monat','täglich / monatlich'],
+          ['die','jede Woche / jede Stunde','wöchentlich / stündlich'],
+          ['das','jedes Wochenende / jedes Jahr','هر آخر هفته / jährlich']
+        ]),
+      rule('frequency-questions','Wie oft یا Wie gut؛ ساخت سؤال','Wie oft درباره دفعات و Wie gut درباره کیفیت یا مهارت می‌پرسد. در سؤال پرسشی فعل بعد از Wie oft می‌آید؛ در سؤال بله/خیر فعل اول است. ein bisschen یعنی کمی.','Wie oft schwimmst du? · Wie gut schwimmst du? · Spielst du oft Fußball?',
+        [['Spielst du sehr oft Fußball?','آیا خیلی زیاد فوتبال بازی می‌کنی؟'],['Wie gut schwimmst du?','چقدر خوب شنا می‌کنی؟'],['Ich kann ein bisschen schwimmen.','کمی شنا بلدم.']],
+        quiz('چطور می‌پرسی هر چند وقت یک بار شنا می‌کنی؟',['Wie oft schwimmst du?','Wie gut schwimmst du?','Wie alt bist du?','Wo wohnst du?'],'Wie oft schwimmst du?','oft درباره تکرار است.')),
+      rule('possessive-class','صفت ملکی: meine و deinen','die Lieblingsfarbe مؤنث و در جمله نمونه فاعل (Nominativ) است، پس meine می‌گیرد. der Lieblingsroman مذکر و مفعول مستقیم lesen است؛ در Akkusativ از deinen استفاده می‌کنیم.','Meine Lieblingsfarbe ist hellblau. · Liest du heute deinen Lieblingsroman?',
+        [['Meine Lieblingsfarbe ist hellblau.','رنگ مورد علاقه‌ام آبی روشن است.'],['Liest du heute deinen Lieblingsroman?','آیا امروز رمان مورد علاقه‌ات را می‌خوانی؟']],
+        quiz('Liest du heute ___ Lieblingsroman?',['dein','deine','deinen','deinem'],'deinen','مفعول مستقیم اسم مذکر به Akkusativ می‌رود.')),
+      rule('months','ماه‌ها با im (مرور تکمیلی)','برای گفتن در یک ماه از im استفاده می‌کنیم. در کنار am برای روز و um برای ساعت، im برای ماه‌ها کاربرد دارد. این بخش مرور تکمیلی کلاس است.','im Januar · im Februar · im März',
+        [['Ich habe im März Urlaub.','در مارس تعطیلات دارم.'],['Im Januar lerne ich Deutsch.','در ژانویه آلمانی می‌خوانم.']],
+        quiz('Ich habe ___ November Zeit.',['am','um','im','an'],'im','پیش از نام ماه im درست است.'))
     ]
   },
   9: {

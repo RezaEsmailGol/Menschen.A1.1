@@ -111,5 +111,6 @@ export function normalizeBookAnswer(value) {
     .replace(/[.!?,؛،]/g,'').replace(/\s+/g,' ').trim();
 }
 export function isBookAnswerCorrect(question,response) {
-  return normalizeBookAnswer(question.answer)===normalizeBookAnswer(response);
+  const normalized=normalizeBookAnswer(response);
+  return [question.answer,...(Array.isArray(question.alternatives)?question.alternatives:[])].some(answer=>normalizeBookAnswer(answer)===normalized);
 }
