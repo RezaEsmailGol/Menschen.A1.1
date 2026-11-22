@@ -969,3 +969,57 @@ test('real-book source exercises cover lesson eight chat and source page 81 bing
  await expect(source.locator('.kbSourceFeedback')).toContainText('BINGO');
  await expect(page.locator('html').evaluate(el=>el.scrollWidth)).resolves.toBeLessThanOrEqual(362);
 });
+
+test('Arbeitsbuch lesson 8 grades exercises and persists recovery on 360px phone',async({page})=>{
+ await page.setViewportSize({width:360,height:740});
+ await page.goto('/lessons/8');
+ const link=page.getByRole('link',{name:/کتاب کار این درس · Arbeitsbuch/});
+ await expect(link).toHaveAttribute('href','/arbeitsbuch?lesson=8');
+ await link.click();
+ await expect(page).toHaveURL(/\/arbeitsbuch\?lesson=8/);
+ const studio=page.locator('.abStudio');
+ await expect(studio.locator('.abStudioLessonGrid button')).toHaveCount(12);
+ await expect(studio.locator('.abStudioTask')).toHaveCount(7);
+ await expect(studio.locator('.abStudioChapterInfo')).toContainText('AB S. 60–65');
+ await expect(studio.locator('.abStudioExerciseHead')).toContainText('PDF 56');
+ const input=studio.getByRole('textbox',{name:'پاسخ آلمانی'});
+ await input.fill('an');
+ await studio.getByRole('button',{name:'بررسی پاسخ'}).click();
+ await expect(studio.locator('.abStudioFeedback.wrong')).toBeVisible();
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_arbeitsbuch_studio_v1')||'{}')['ab-8-1']?.misses)).toBe(1);
+ await studio.getByRole('button',{name:'تلاش دوباره'}).click();
+ await input.fill('am');
+ await studio.getByRole('button',{name:'بررسی پاسخ'}).click();
+ await expect(studio.locator('.abStudioFeedback.correct')).toBeVisible();
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_arbeitsbuch_studio_v1')||'{}')['ab-8-1']?.lastCorrect)).toBe(true);
+ await studio.getByRole('button',{name:'نیازمند تکرار'}).click();
+ await expect(studio.locator('.abStudioEmpty')).toBeVisible();
+ await studio.getByRole('button',{name:'نمایش همه تمرین‌ها'}).click();
+ await studio.locator('.abStudioTask').filter({hasText:'ساعت محاوره'}).click();
+ await studio.getByRole('button',{name:'08:30'}).click();
+ await expect(studio.locator('.abStudioFeedback.correct')).toBeVisible();
+ await studio.locator('.abStudioTask').filter({hasText:'پیام برای تغییر قرار'}).click();
+ const textarea=studio.getByRole('textbox',{name:'پاسخ نوشتاری آلمانی'});
+ await textarea.fill('Am Freitag habe ich keine Zeit. Geht es am Sonntag?');
+ await studio.getByRole('button',{name:'ذخیره متن من'}).click();
+ await expect(studio.locator('.abStudioModel')).toContainText('نمره خودکار ندارد');
+ const draft=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_arbeitsbuch_studio_v1')||'{}')['ab-8-6']);
+ expect(draft.submitted).toBe(true);
+ expect(draft.lastCorrect).toBeUndefined();
+ await page.reload();
+ await expect(studio.locator('.abStudioTotal')).toContainText('۳');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+});
+test('Arbeitsbuch cards stay within 320px and 390px in dark and light mode',async({browser})=>{
+ for(const [width,scheme] of [[320,'dark'],[390,'light']]){
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width,height:760},colorScheme:scheme,isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  await page.goto('/arbeitsbuch?lesson=8');
+  await expect(page.locator('.abStudio')).toBeVisible();
+  await expect(page.locator('.abStudioTask')).toHaveCount(7);
+  await expect(page.locator('.abStudioLessonGrid button')).toHaveCount(12);
+  const widthActual=await page.evaluate(()=>document.documentElement.scrollWidth);
+  expect(widthActual).toBeLessThanOrEqual(width+2);
+  await context.close();
+ }
+});
