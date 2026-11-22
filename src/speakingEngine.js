@@ -139,7 +139,8 @@ export function addSpeechReview(previous={},card,scoreData,recognized,now=Date.n
 export function speakingStatus(entry,now=Date.now()){
  if(!entry)return 'new';
  if(entry.goodDays>=2&&entry.avgScore>=85&&entry.attempts>=3)return 'mastered';
- if(entry.lastScore<65 || entry.dueAt<=now)return 'weak';
+ // Past misses and elapsed review intervals never override the last successful attempt.
+ if(entry.lastScore<85)return 'weak';
  return 'learning';
 }
 export function speakingStats(state={},category,now=Date.now()){

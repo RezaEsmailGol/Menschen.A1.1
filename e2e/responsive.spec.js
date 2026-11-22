@@ -372,6 +372,7 @@ test('lesson 4 plays a manually linked book MP3 inside its illustrated learning 
  await page.goto('/lessons/4?section=furniture&question=5#book-practice');
  const workbook=page.locator('.laWorkbook');
  await expect(workbook.locator('.laWorkbookPage')).toBeVisible();
+ await workbook.locator('.laOriginalToggle').click();
  const selector=workbook.getByRole('combobox',{name:'انتخاب فایل صوتی برای کارت فعلی'});
  await expect(selector.locator('option')).toHaveCount(3);
  await selector.selectOption('kursbuch:Lektion 4, 2.mp3');
@@ -382,6 +383,7 @@ test('lesson 4 plays a manually linked book MP3 inside its illustrated learning 
  await expect(page.locator('.laExercisePlay')).toBeVisible();
  await expect(page.locator('.baUpload,.baRoot,.caRoot,.laStrip')).toHaveCount(0);
  await page.reload();
+ await workbook.locator('.laOriginalToggle').click();
  await expect(workbook.getByRole('combobox',{name:'انتخاب فایل صوتی برای کارت فعلی'})).toHaveValue('kursbuch:Lektion 4, 2.mp3');
  const visible=await page.locator('.app').innerText();
  expect(visible).not.toMatch(/رانفلر|Runflare|ZIP|آپلود/);
@@ -506,6 +508,7 @@ test('supplemental lesson shows book sound inside the current illustrated exerci
  await expect(studio).toBeVisible();
  await expect(studio.locator('.laWorkbookIndex button')).toHaveCount(6);
  await expect(studio.locator('.laWorkbookPage')).toBeVisible();
+ await studio.locator('.laOriginalToggle').click();
  const trackSelect=studio.getByRole('combobox',{name:'انتخاب فایل صوتی برای کارت فعلی'});
  await expect(trackSelect.locator('option')).toHaveCount(2);
  await trackSelect.selectOption('kursbuch:Lektion 9, 1.mp3');
@@ -787,4 +790,75 @@ test('speech gauge and word memory persist the primary transcript on mobile',asy
  await expect(studio.locator('.speechWordRows .missed')).toContainText('Hallo');
  await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')||'{}').words?.hallo?.misses)).toBe(1);
  await expect(studio.locator('.speechWeakLink')).toBeVisible();
+});
+
+test('audio practice stays compact on small phones and optional book audio does not interrupt speaking',async ({browser})=>{
+ for(const colorScheme of ['light','dark']){
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',viewport:{width:360,height:720},isMobile:true,hasTouch:true,colorScheme,reducedMotion:'reduce'});
+  const page=await context.newPage();
+  await page.route('**/api/audio/catalog?**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({configured:false,tracks:[]})}));
+  await page.goto('/lessons/2#lesson-audio');
+  const studio=page.locator('.laWorkbook');
+  await studio.getByRole('button',{name:'تلفظ',exact:true}).click();
+  await expect(studio.locator('.laWorkbookOriginal')).not.toHaveAttribute('open','');
+  await expect(studio.locator('.laWorkbookOriginal .laWorkbookSelect')).toBeHidden();
+  const rect=await studio.evaluate(el=>{
+   const bounds=s=>el.querySelector(s).getBoundingClientRect();
+   const card=bounds('.laWorkbookPage'),art=bounds('.laWorkbookArt'),word=bounds('.laWorkbookText'),gauge=bounds('.speechGauge'),mic=bounds('.laMicActions'),paging=bounds('.laWorkbookPaging'),original=bounds('.laWorkbookOriginal');
+   return {height:card.height,art:art.height,sameRow:Math.abs(art.top-word.top)<40,actionsNear:Math.abs(gauge.top-mic.top)<70,pagingBeforeAudio:paging.bottom<=original.top+2,overflow:document.documentElement.scrollWidth,viewport:innerWidth};
+  });
+  expect(rect.height).toBeLessThan(480);
+  expect(rect.art).toBeLessThanOrEqual(105);
+  expect(rect.sameRow).toBeTruthy();
+  expect(rect.actionsNear).toBeTruthy();
+  expect(rect.pagingBeforeAudio).toBeTruthy();
+  expect(rect.overflow).toBeLessThanOrEqual(rect.viewport+2);
+  await studio.locator('.laOriginalToggle').click();
+  await expect(studio.locator('.laWorkbookSelect')).toBeVisible();
+  await studio.locator('.laOriginalToggle').click();
+  await studio.locator('.laWorkbookPaging button').last().click();
+  await expect(studio.locator('.laWorkbookPageTop')).toContainText('SEITE 2 / 6');
+  await expect(studio.getByRole('button',{name:'تلفظ',exact:true})).toHaveAttribute('aria-pressed','true');
+  await context.close();
+ }
+});
+
+test('provisional speech gauge reacts to interim recognition but only final speech persists; retry clears weak word',async ({page})=>{
+ await page.setViewportSize({width:360,height:800});
+ await page.addInitScript(()=>{
+  let tries=0;
+  window.SpeechRecognition=class{
+   start(){
+    const second=++tries===2;
+    const partial=Object.assign([{transcript:second?'Hal':'Bu'}],{isFinal:false});
+    const final=Object.assign([{transcript:second?'Hallo!':'Buch'}],{isFinal:true});
+    setTimeout(()=>this.onresult?.({results:[partial]}),70);
+    setTimeout(()=>{this.onresult?.({results:[final]});this.onend?.()},440);
+   }
+   stop(){this.onend?.()}
+   abort(){}
+  };
+ });
+ await page.goto('/lessons/1#lesson-audio');
+ const studio=page.locator('.laWorkbook');
+ await studio.getByRole('button',{name:'تلفظ',exact:true}).click();
+ const mic=studio.getByRole('button',{name:'شروع سنجش تلفظ'});
+ await mic.click();
+ await expect(studio.locator('.speechGauge.provisional')).toBeVisible();
+ await expect(studio.locator('.laInterim')).toHaveText('Bu');
+ const during=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')||'{}').words||{});
+ expect(Object.keys(during)).toHaveLength(0);
+ await expect(studio.locator('.speechGauge')).toHaveAttribute('aria-valuenow','0');
+ await expect(studio.locator('.speechWeakLink')).toBeVisible();
+ await mic.click();
+ await expect(studio.locator('.laInterim')).toHaveText('Hal');
+ await expect(studio.locator('.speechGauge.provisional')).toBeVisible();
+ await expect(studio.locator('.speechGauge')).toHaveAttribute('aria-valuenow','100');
+ await expect(studio.locator('.speechWeakLink')).toHaveCount(0);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('dt_speaking_v1')||'{}'));
+ expect(saved.words.hallo.lastCorrect).toBe(true);
+ expect(saved.words.hallo.attempts).toBe(2);
+ expect(saved.words.hallo.misses).toBe(1);
+ await page.goto('/speaking?review=words');
+ await expect(page.locator('.speechWeakList')).toHaveCount(0);
 });

@@ -7,7 +7,7 @@ import {NUMBER_SECTIONS} from './numberSections.js';
 import MnemonicArt from './MnemonicArt.jsx';
 import './speakingCoach.css';
 import SpeechGauge from './SpeechGauge.jsx';
-import {recognitionTranscript,weakSpeechWords} from './speechWordMemory.js';
+import {recognitionTranscript,liveSpeechTranscript,weakSpeechWords} from './speechWordMemory.js';
 
 const statuses={new:'جدید',weak:'نیاز به تمرین',learning:'در حال یادگیری',mastered:'مسلط'};
 const fmt=n=>Number(n||0).toLocaleString('fa-IR');
@@ -96,7 +96,7 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    let captured=false,err=false;
    instance.onresult=e=>{
      if(sessionRef.current!==identifier)return;
-     const live=Array.from(e.results||[]).filter(r=>r.isFinal===false).map(r=>r[0]?.transcript||'').join(' ');
+     const live=liveSpeechTranscript(e);
      if(live)setInterim(live);
      const text=recognitionTranscript(e);
      if(!text||captured||err)return;
@@ -131,9 +131,9 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
    catch(e){recognitionRef.current=null;setListening(false);setError('شروع ضبط ممکن نشد. از اتصال امن HTTPS و مجوز میکروفون مطمئن شو.');}
  }
  const recent=Object.values(state?.items||{}).filter(x=>x.category===category &&
-    (speakingStatus(x)==='weak'||x.avgScore<85))
+    speakingStatus(x)==='weak')
   .sort((a,b)=>(speakingStatus(a)==='weak'?0:1)-(speakingStatus(b)==='weak'?0:1)||
-    (a.avgScore||0)-(b.avgScore||0)).slice(0,5);
+    (a.lastScore||0)-(b.lastScore||0)).slice(0,5);
  return <div className="scPage">
   <header className="scHero">
    <div><span className="scEyebrow"><Mic size={17}/> SPRECHEN · A1.1</span>
@@ -199,7 +199,10 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
         {listening?'توقف میکروفون':'شروع گفتن با میکروفون'}
       </button>
     </div>
-    {listening&&<div className="scListening" role="status"><span className="scDot"/> در حال گوش دادن… {interim&&<span dir="ltr">{interim}</span>}</div>}
+    {listening&&<div className="scListeningLive" role="status">
+    <div className="scListening"><span className="scDot"/> در حال شنیدن… {interim&&<span lang="de" dir="ltr">{interim}</span>}</div>
+    <SpeechGauge score={interim?scoreSpeechMatch(current.text,interim,category).score:undefined} provisional listening/>
+   </div>}
     {error&&<div className="scError" role="alert"><AlertCircle size={18}/>{error}</div>}
     {result&&<div className="scResult" aria-live="polite"><SpeechGauge score={result.score}/><div className="speechWordRows">{result.wordRows?.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>
        <div className="scResultHeading">
@@ -231,8 +234,8 @@ export default function SpeakingCoach({speak=()=>{},state={},setState=()=>{},pro
     <div className="scHistoryTitle"><BarChart3 size={21}/><div><h2>مواردی که بیشتر باید تمرین کنی</h2><p>بر اساس آخرین نتیجه و سابقه همین دستگاه</p></div></div>
     {recent.map(item=><div className="scHistoryItem" key={item.id}>
       <div><b dir="ltr" lang="de">{item.text}</b><small>{fmt(item.attempts)} بار تمرین</small></div>
-      <div className="scHistoryBar"><i style={{width:item.avgScore+'%'}}/></div>
-      <strong>{fmt(item.avgScore)}٪</strong>
+      <div className="scHistoryBar"><i style={{width:item.lastScore+'%'}}/></div>
+      <strong>{fmt(item.lastScore)}٪</strong>
     </div>)}
    </section>}
   <aside className="scPrivacy"><ShieldCheck size={20}/><p><b>نکته درباره دقت و حریم خصوصی:</b> درصد بالا، میزان شباهت متن بازشناسی‌شده با عبارت درست است، نه اندازه‌گیری مستقیم لهجه، آواها یا نمره رسمی گفتار. این اپ فایل صوتی را ذخیره نمی‌کند؛ متن تشخیص‌داده‌شده و پیشرفت روی همین مرورگر نگه داشته می‌شوند. سرویس تشخیص گفتار Chrome ممکن است برای پردازش صدا از سرورهای ارائه‌دهنده مرورگر استفاده کند؛ تنها با موافقت خودت میکروفون را روشن کن.</p></aside>

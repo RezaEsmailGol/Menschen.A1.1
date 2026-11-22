@@ -1,10 +1,10 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
-import {AudioLines,ArrowLeft,BookOpen,CheckCircle2,ChevronLeft,ChevronRight,Headphones,Mic,MicOff,Pause,Play,Volume2,X} from 'lucide-react';
+import {AudioLines,ArrowLeft,BookOpen,CheckCircle2,ChevronDown,ChevronLeft,ChevronRight,Headphones,Mic,MicOff,Pause,Play,Volume2,X} from 'lucide-react';
 import AudioLessonArt from './AudioLessonArt.jsx';
 import {lessonAudioCards,soundMeaningOptions,verifyAudioDictation,AUDIO_LEARNING_MODES,audioLearningItemKey,parseAudioLearningStats} from './audioLearningData.js';
 import {scoreSpeechMatch} from './speakingEngine.js';
 import SpeechGauge from './SpeechGauge.jsx';
-import {recognitionTranscript,recordSpeechWords,weakSpeechWords} from './speechWordMemory.js';
+import {recognitionTranscript,liveSpeechTranscript,recordSpeechWords,weakSpeechWords} from './speechWordMemory.js';
 import {AUDIO_CARD_TRACK_KEY,normalizeAudioCardBindings,getAudioCardBinding,withAudioCardBinding,audioCardTrackLabel,completedAudioCards} from './audioWorkbookData.js';
 import './lessonAudioButtons.css';
 import './illustratedAudioWorkbook.css';
@@ -50,6 +50,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
  const [quizAnswer,setQuizAnswer]=useState(null);
  const [recording,setRecording]=useState(false);
  const [speech,setSpeech]=useState(null);
+ const [interim,setInterim]=useState('');
  const [micError,setMicError]=useState('');
  const [originalUrl,setOriginalUrl]=useState('');
  const [originalBusy,setOriginalBusy]=useState(false);
@@ -83,7 +84,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   return ()=>controller.abort();
  },[lessonId]);
  function stopRecording(){
-  clearTimeout(micTimer.current);sequence.current++;
+  clearTimeout(micTimer.current);sequence.current++;setInterim('');
   try{recognizer.current?.abort();}catch{}
   recognizer.current=null;setRecording(false);
  }
@@ -112,6 +113,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   stopRecording();setMode(next);setQuizInput('');setQuizAnswer(null);setSpeech(null);setMicError('');
  }
  function registerSample(card){
+  stopRecording();stopOriginal();
   try{speak(card.text);}catch{}
   const key=audioLearningItemKey(lessonId,card.id,'listen');
   setStats(old=>({...old,plays:{...old.plays,[key]:(old.plays[key]||0)+1}}));
@@ -124,6 +126,7 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
  }
  async function playOriginal(){
   if(!linked)return;
+  stopRecording();try{window.speechSynthesis?.cancel()}catch{}
   const el=audioRef.current;
   if(!el)return;
   if(originalUrl){
@@ -149,14 +152,16 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   if(!Ctor){setMicError('تشخیص گفتار در این مرورگر فعال نیست؛ Chrome با مجوز میکروفون را امتحان کن.');return;}
   stopRecording();stopOriginal();try{window.speechSynthesis?.cancel()}catch{}setMicError('');setSpeech(null);setQuizAnswer(null);
   let instance;
-  try{instance=new Ctor();instance.lang='de-DE';instance.continuous=false;instance.interimResults=false;instance.maxAlternatives=3;}
+  try{instance=new Ctor();instance.lang='de-DE';instance.continuous=false;instance.interimResults=true;instance.maxAlternatives=3;}
   catch{setMicError('امکان راه‌اندازی میکروفون وجود ندارد.');return;}
   const call=++sequence.current;recognizer.current=instance;let captured=false,failed=false;
   instance.onresult=event=>{
    if(call!==sequence.current||captured||failed)return;
+   const live=liveSpeechTranscript(event);
+   if(live)setInterim(live);
    const heard=recognitionTranscript(event);
    if(!heard)return;
-   captured=true;clearTimeout(micTimer.current);
+   captured=true;clearTimeout(micTimer.current);setInterim('');setRecording(false);
    const best={...scoreSpeechMatch(card.text,heard,'sentences'),heard};
    setSpeakingState?.(old=>recordSpeechWords(old,best.wordRows||[],lessonId));
    setSpeech({cardId:card.id,...best});
@@ -171,10 +176,10 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   };
   instance.onerror=event=>{
    if(call!==sequence.current)return;
-   failed=true;clearTimeout(micTimer.current);setRecording(false);
+   failed=true;clearTimeout(micTimer.current);setRecording(false);setInterim('');
    setMicError(event.error==='not-allowed'?'اجازه میکروفون داده نشده است.':event.error==='no-speech'?'صدایی تشخیص داده نشد.':'خطا در تشخیص گفتار؛ دوباره امتحان کن.');
   };
-  instance.onend=()=>{if(call===sequence.current){clearTimeout(micTimer.current);setRecording(false);recognizer.current=null;if(!captured&&!failed)setMicError('صدای قابل تشخیصی دریافت نشد؛ دوباره امتحان کن.');}};
+  instance.onend=()=>{if(call===sequence.current){clearTimeout(micTimer.current);setRecording(false);setInterim('');recognizer.current=null;if(!captured&&!failed)setMicError('صدای قابل تشخیصی دریافت نشد؛ دوباره امتحان کن.');}};
   try{instance.start();setRecording(true);micTimer.current=setTimeout(()=>{if(call===sequence.current&&!captured){try{instance.stop()}catch{};stopRecording();setMicError('زمان ضبط پایان یافت؛ دوباره تلاش کن.');}},12000);}catch{setRecording(false);setMicError('میکروفون باز نشد.');}
  }
  function submitQuiz(value){
@@ -196,12 +201,12 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
     <h3><BookOpen size={24}/> کتاب تصویری و تمرین صوتی درس {lessonId}</h3>
     <p>تصویر را ببین، صدا را بشنو، جمله را بخوان و همان‌جا تمرین کن.</p>
    </div>
-   <span className="laWorkbookCount">{completed} / {cards.length} کارت تمرین‌شده</span>
+   <span className="laWorkbookCount"><b dir="ltr">{completed} / {cards.length}</b> کارت</span>
   </header>
   <div className="laWorkbookProgress" role="progressbar" aria-label="پیشرفت کارت‌های صوتی" aria-valuenow={completed} aria-valuemin={0} aria-valuemax={cards.length}><span style={{width:Math.round(completed/cards.length*100)+'%'}}/></div>
   <nav className="laWorkbookIndex" aria-label="انتخاب صفحه تصویری درس">
    {cards.map((card,position)=><button type="button" key={card.id}
-    aria-current={index===position?'step':undefined}
+    aria-label={(position+1)+'، '+card.meaning} title={card.meaning} aria-current={index===position?'step':undefined}
     className={(index===position?'active ':'')+(completedAudioCards([card],stats,lessonId)?'completed':'')}
     onClick={()=>choose(position)}><span>{String(position+1).padStart(2,'0')}</span>
     <strong dir="auto">{card.meaning}</strong>
@@ -210,6 +215,10 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
   </nav>
   <article className="laWorkbookPage">
    <div className="laWorkbookPageTop"><span>SEITE {index+1} / {cards.length}</span><span>درس {lessonId} · تمرین تصویری</span></div>
+    <div className="laWorkbookTabs" role="group" aria-label="روش یادگیری با این تصویر">
+     {LEARNING_TABS.map(item=><button type="button" key={item.id} className={mode===item.id?'chosen':''}
+      aria-pressed={mode===item.id} onClick={()=>changeMode(item.id)}>{item.title}</button>)}
+    </div>
    <div className="laWorkbookScene">
     <div className="laWorkbookArt"><AudioLessonArt key={current.id} scene={current.scene} word={current.text}/></div>
     <div className="laWorkbookText">
@@ -217,12 +226,53 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
      {visibleText?<h4 dir="ltr" lang="de">{current.text}</h4>:<h4 className="laWorkbookMasked" aria-label="متن تمرین تا بررسی پاسخ مخفی است">● ● ●</h4>}
      {visibleMeaning?<p>{current.meaning}</p>:<p>اول پاسخ بده؛ سپس معنی را ببین.</p>}
      <button type="button" className="laWorkbookSample" onClick={()=>registerSample(current)}>
-      <Volume2 size={20}/> شنیدن تلفظ نمونه
+      <Volume2 size={17}/> شنیدن نمونه
      </button>
     </div>
    </div>
-   <div className="laWorkbookOriginal">
-    <div className="laWorkbookOriginalHeading"><Headphones size={18}/><b>صدای اصلی کتاب</b><small>قطعه مرتبط را انتخاب کن؛ متن بالا، رونویسی فایل نیست.</small></div>
+   <div className="laWorkbookTasks">
+    {mode==='study'?<div className="laWorkbookInstruction"><BookOpen size={20}/><div>
+      <strong>نمونه را بشنو و تکرار کن.</strong>
+      <p>از بالا یک تمرین انتخاب کن.</p>
+     </div></div>:<div className="laWorkbookExercise" key={mode+':'+current.id}>
+      {mode!=='repeat'&&<div className="laWorkbookExerciseHeading"><strong>{currentMode?.title}</strong><small>{currentMode?.description}</small></div>}
+      {mode==='meaning'&&<div className="laWorkbookMeaningChoices">
+       {meaningChoices.map(choice=><button type="button" key={choice} disabled={quizAnswer!==null}
+        className={quizAnswer!==null&&choice===current.meaning?'right':''} onClick={()=>submitQuiz(choice)}>{choice}</button>)}
+      </div>}
+      {mode==='dictation'&&<form className="laDictation" onSubmit={event=>{event.preventDefault();submitQuiz(quizInput);}}>
+       <input lang="de" dir="ltr" aria-label="متن شنیده‌شده به آلمانی" placeholder="آنچه شنیدی را به آلمانی بنویس…"
+        value={quizInput} disabled={quizAnswer!==null} onChange={event=>setQuizInput(event.target.value)}/>
+       <button type="submit" disabled={!quizInput.trim()||quizAnswer!==null}>بررسی</button>
+      </form>}
+      {mode==='repeat'&&<div className="laWorkbookRepeat"><SpeechGauge score={recording?(interim?scoreSpeechMatch(current.text,interim,'sentences').score:undefined):(speech?.cardId===current.id?speech.score:undefined)} listening={recording} provisional={recording}/>
+       <div className="laMicActions"><button type="button" className="laMicButton" disabled={!recognizerSupported}
+        aria-label={recording?'توقف تمرین گفتار':'شروع سنجش تلفظ'} onClick={()=>{if(recording){try{recognizer.current?.stop()}catch{stopRecording()}}else startRecording(current)}}>
+        {recording?<MicOff size={18}/>:<Mic size={18}/>}
+        {recording?'پایان ضبط':'تکرار با میکروفون'}</button><small>{recording?'در حال شنیدن…':'با صدای بلند بگو'}</small>{recording&&interim&&<span className="laInterim" lang="de" dir="ltr">{interim}</span>}</div>
+       {!recognizerSupported&&<small>این مرورگر تشخیص گفتار را پشتیبانی نمی‌کند؛ همچنان می‌توانی با نمونه تکرار کنی.</small>}
+       <details className="laSpeechNote"><summary>درباره نمره و حریم خصوصی</summary><p>امتیاز بر اساس تطبیق متن گفتار است، نه اندازه‌گیری دقیق لهجه. ممکن است تشخیص گفتار توسط سرویس مرورگر انجام شود.</p></details>
+      </div>}
+      {recording&&<span role="status" className="laScreenReader">گوش می‌دهم؛ عبارت را با صدای بلند بگو…</span>}
+      {micError&&<p className="laError" role="alert">{micError}</p>}
+      {speech?.cardId===current.id&&<div className="speechWordRows">{speech.wordRows?.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>}
+      {mode==='repeat'&&weakSpeechWords(speakingState).length>0&&<a className="speechWeakLink" href="/speaking?review=words"><Mic size={18}/><span>مرور {weakSpeechWords(speakingState).length} کلمه نیازمند تمرین</span><ChevronLeft size={16}/></a>}
+      {speech?.cardId===current.id&&<p role="status" className="laWorkbookSpeechScore">متن تشخیص‌داده‌شده: <b dir="ltr">{speech.heard}</b> · امتیاز تطبیق {speech.score}٪</p>}
+      {quizAnswer!==null&&mode!=='repeat'&&<div className={'laWorkbookFeedback '+(quizAnswer.correct?'correct':'wrong')} role="status">
+       {quizAnswer.correct?<CheckCircle2 size={20}/>:<X size={20}/>}
+       <span><strong>{quizAnswer.correct?'آفرین! درست انجام شد.':'این بار درست نبود؛ نمونه را دوباره گوش بده.'}</strong>
+       <b dir="ltr" lang="de">{quizAnswer.text}</b><small>{quizAnswer.meaning}</small></span>
+      </div>}
+     </div>}
+   </div>
+   <div className="laWorkbookPaging">
+    <button type="button" disabled={index===0} onClick={()=>choose(index-1)}><ChevronRight size={17}/> قبلی</button>
+    <span dir="ltr">{index+1} / {cards.length}</span>
+    <button type="button" onClick={()=>choose((index+1)%cards.length)}>{index===cards.length-1?'از اول':'بعدی'} <ArrowLeft size={17}/></button>
+   </div>
+   <details className="laWorkbookOriginal">
+    <summary className="laOriginalToggle"><Headphones size={18}/><b>صدای اصلی کتاب</b><small>{linked?'قطعه انتخاب شده':tracks.length?'انتخاب قطعه':'فایل‌های درس'}</small><ChevronDown size={16}/></summary>
+    <div className="laOriginalContent"><div className="laWorkbookOriginalHeading"><small>قطعه مرتبط را انتخاب کن؛ متن بالا، رونویسی فایل نیست.</small></div>
     <div className="laWorkbookTrackRow">
      <label className="laWorkbookSelect">انتخاب قطعه برای این تصویر
       <select aria-label="انتخاب فایل صوتی برای کارت فعلی" value={trackValue} onChange={event=>setTrack(event.target.value)}>
@@ -246,51 +296,8 @@ export default function LessonAudioButtons({lessonId,speak=()=>{},onPracticeEven
        <option value={0.75}>۰٫۷۵×</option><option value={1}>۱×</option><option value={1.25}>۱٫۲۵×</option>
       </select></label>}
     {originalError&&<p className="laError" role="alert">{originalError}</p>}
-   </div>
-   <div className="laWorkbookTasks">
-    <div className="laWorkbookTabs" role="group" aria-label="روش یادگیری با این تصویر">
-     {LEARNING_TABS.map(item=><button type="button" key={item.id} className={mode===item.id?'chosen':''}
-      aria-pressed={mode===item.id} onClick={()=>changeMode(item.id)}>{item.title}</button>)}
     </div>
-    {mode==='study'?<div className="laWorkbookInstruction"><BookOpen size={20}/><div>
-      <strong>گام اول: تصویر، متن و معنی را با هم یاد بگیر.</strong>
-      <p>نمونه را پخش کن، با صدای بلند تکرار کن و سپس یکی از تمرین‌های «معنی»، «دیکته» یا «تلفظ» را انتخاب کن.</p>
-     </div></div>:<div className="laWorkbookExercise" key={mode+':'+current.id}>
-      <div className="laWorkbookExerciseHeading"><strong>{currentMode?.title}</strong><small>{currentMode?.description}</small></div>
-      {mode==='meaning'&&<div className="laWorkbookMeaningChoices">
-       {meaningChoices.map(choice=><button type="button" key={choice} disabled={quizAnswer!==null}
-        className={quizAnswer!==null&&choice===current.meaning?'right':''} onClick={()=>submitQuiz(choice)}>{choice}</button>)}
-      </div>}
-      {mode==='dictation'&&<form className="laDictation" onSubmit={event=>{event.preventDefault();submitQuiz(quizInput);}}>
-       <input lang="de" dir="ltr" aria-label="متن شنیده‌شده به آلمانی" placeholder="آنچه شنیدی را به آلمانی بنویس…"
-        value={quizInput} disabled={quizAnswer!==null} onChange={event=>setQuizInput(event.target.value)}/>
-       <button type="submit" disabled={!quizInput.trim()||quizAnswer!==null}>بررسی</button>
-      </form>}
-      {mode==='repeat'&&<div className="laWorkbookRepeat"><SpeechGauge score={speech?.cardId===current.id?speech.score:undefined}/>
-       <button type="button" className="laMicButton" disabled={!recognizerSupported}
-        aria-label={recording?'توقف تمرین گفتار':'شروع سنجش تلفظ'} onClick={()=>{if(recording){try{recognizer.current?.stop()}catch{stopRecording()}}else startRecording(current)}}>
-        {recording?<MicOff size={18}/>:<Mic size={18}/>}
-        {recording?'توقف':'با میکروفون تکرار کن'}</button>
-       {!recognizerSupported&&<small>این مرورگر تشخیص گفتار را پشتیبانی نمی‌کند؛ همچنان می‌توانی با نمونه تکرار کنی.</small>}
-       <small>امتیاز بر اساس تطبیق متن گفتار است، نه اندازه‌گیری دقیق لهجه. ممکن است تشخیص گفتار توسط سرویس مرورگر انجام شود.</small>
-      </div>}
-      {recording&&<p role="status" className="laRecording">گوش می‌دهم؛ عبارت را با صدای بلند بگو…</p>}
-      {micError&&<p className="laError" role="alert">{micError}</p>}
-      {speech?.cardId===current.id&&<div className="speechWordRows">{speech.wordRows?.map((w,i)=><b key={i} className={w.correct?'':'missed'} dir="ltr">{w.display||w.word}</b>)}</div>}
-      {mode==='repeat'&&weakSpeechWords(speakingState).length>0&&<a className="speechWeakLink" href="/speaking?review=words"><Mic size={18}/><span>مرور {weakSpeechWords(speakingState).length} کلمه نیازمند تمرین</span><ChevronLeft size={16}/></a>}
-      {speech?.cardId===current.id&&<p role="status" className="laWorkbookSpeechScore">متن تشخیص‌داده‌شده: <b dir="ltr">{speech.heard}</b> · امتیاز تطبیق {speech.score}٪</p>}
-      {quizAnswer!==null&&<div className={'laWorkbookFeedback '+(quizAnswer.correct?'correct':'wrong')} role="status">
-       {quizAnswer.correct?<CheckCircle2 size={20}/>:<X size={20}/>}
-       <span><strong>{quizAnswer.correct?'آفرین! درست انجام شد.':'این بار درست نبود؛ نمونه را دوباره گوش بده.'}</strong>
-       <b dir="ltr" lang="de">{quizAnswer.text}</b><small>{quizAnswer.meaning}</small></span>
-      </div>}
-     </div>}
-   </div>
-   <div className="laWorkbookPaging">
-    <button type="button" disabled={index===0} onClick={()=>choose(index-1)}><ChevronRight size={17}/> صفحه قبل</button>
-    <span>صفحه {index+1} از {cards.length}</span>
-    <button type="button" onClick={()=>choose((index+1)%cards.length)}>{index===cards.length-1?'از اول':'تصویر بعدی'} <ArrowLeft size={17}/></button>
-   </div>
+   </details>
   </article>
  </section>;
 }
