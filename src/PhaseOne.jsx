@@ -93,7 +93,7 @@ export default function PhaseOne({mode,routeLesson,setTab,speak,progress,setProg
 
     {mode==='course' && (routeLesson?
        <CoursePanel lesson={lesson} selected={selected} select={select} progress={progress} startLesson={startLesson} speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent} memory={memory} speakingState={speakingState} setSpeakingState={setSpeakingState}/>:
-       <LessonDirectory navigate={setTab} progress={progress}/>)}
+       <LessonDirectory navigate={setTab} progress={progress} speak={speak} onPracticeEvent={onPracticeEvent}/>)}
     {mode==='srs' && <ReviewPanel available={available} schedule={schedule} due={due} rate={rate} speak={speak} setTab={setTab}/>}
     {mode==='builder' && <BuilderPanel lesson={lesson} selected={selected} select={select} speak={speak} onPracticeEvent={onPracticeEvent}/>}
     {mode==='exam' && <ExamPanel lesson={lesson} selected={selected} select={select} progress={progress} examDone={examDone} speak={speak} onPracticeEvent={onPracticeEvent}/>}

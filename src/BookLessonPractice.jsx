@@ -9,6 +9,7 @@ import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeB
 import './bookLessonPractice.css';
 import FourFormTrainer from './FourFormTrainer.jsx';
 import Lesson8TimeLab from './Lesson8TimeLab.jsx';
+import WeekdayFlashbox from './WeekdayFlashbox.jsx';
 
 const STORE='dt_book_lessons_v1';
 function readSaved() {
@@ -66,6 +67,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
   const [submitted,setSubmitted]=useState(null);
   const [saved,setSaved]=useState(readSaved);
   const [showSummary,setShowSummary]=useState(false);
+ const [showAllStudyCards,setShowAllStudyCards]=useState(false);
   const [cloudTaskMap]=useState(readCloudTaskMap);
   useEffect(()=>{try{localStorage.setItem(STORE,JSON.stringify(saved));}catch{}},[saved]);
   const stats=saved[lessonId]?.answers||{};
@@ -79,7 +81,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
   if(!plan)return null;
 
   function resetQuestion(){setAnswer('');setSubmitted(null);setChosen([]);}
-  function chooseSection(index){setSectionIndex(index);setTaskIndex(0);setShowSummary(false);resetQuestion();}
+  function chooseSection(index){setSectionIndex(index);setTaskIndex(0);setShowSummary(false);setShowAllStudyCards(false);resetQuestion();}
   function send(value){
     if(submitted!==null||!task||!String(value).trim())return;
     const correct=isBookAnswerCorrect(task,value);
@@ -110,7 +112,7 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
     </div>
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
     {lessonId===6&&<FourFormTrainer speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/>}
-    {lessonId===8&&<Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/>}
+    {lessonId===8&&<><WeekdayFlashbox speak={speak} onPracticeEvent={onPracticeEvent}/><Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/></>}
     <LessonAudioButtons lessonId={lessonId} speak={speak} onPracticeEvent={onPracticeEvent} speakingState={speakingState} setSpeakingState={setSpeakingState}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
@@ -130,10 +132,14 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
         <h4>{section.title}</h4><p>{section.caption}</p>
       </div>
       <div className="bookPictureGrid">
-        {section.cards.map(([emoji,de,fa])=><button className="bookPictureCard" key={de} type="button" onClick={()=>speak(de.includes(' / ')?de.split(' / ')[0]:de)}>
+        {section.cards.slice(0,lessonId===8&&!showAllStudyCards?4:undefined).map(([emoji,de,fa])=><button className="bookPictureCard" key={de} type="button" onClick={()=>speak(de.includes(' / ')?de.split(' / ')[0]:de)}>
           {hasLessonScene(de)?<span className="bookPictureSvg"><LessonSceneArt word={de} size={190}/></span>
             :<span aria-hidden="true">{emoji}</span>}<b lang="de" dir="ltr">{de}</b><small>{fa}</small><Volume2 size={15} aria-hidden="true"/></button>)}
       </div>
+      {lessonId===8&&section.cards.length>4&&<button type="button" className="bookCardsMore"
+        aria-expanded={showAllStudyCards} onClick={()=>setShowAllStudyCards(v=>!v)}>
+        {showAllStudyCards?'بستن کارت‌های اضافه':'نمایش '+(section.cards.length-4)+' واژه دیگر'} <ChevronLeft size={16}/>
+      </button>}
       {section.reading&&<div className="bookReading"><span><BookOpen size={16}/> متن خواندنی اختصاصی</span><p dir="ltr" lang="de">{section.reading}</p><button type="button" onClick={()=>speak(section.reading)}><Volume2 size={17}/> پخش متن</button></div>}
       <div className="bookExercise" key={task.id}>
         <div className="bookExerciseHead"><span>تمرین {taskIndex+1} از {section.tasks.length}</span><small>{task.type==='listen'?'شنیداری و دیکته':task.type==='build'?'جمله‌سازی':task.type==='type'?'نوشتاری':'چهارگزینه‌ای'}</small></div>
