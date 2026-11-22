@@ -44,7 +44,7 @@ export default function KursbuchSourcePractice({speak=()=>{},onPracticeEvent}){
  function markDone(item,correct=null,difficult=0){
   if(!item)return;
   setSaved(prev=>({...prev,[item.id]:{
-   ...prev[item.id],completed:true,attempts:(prev[item.id]?.attempts||0)+1,
+   ...prev[item.id],completed:Boolean(prev[item.id]?.completed)||(correct===null||correct===true),attempts:(prev[item.id]?.attempts||0)+1,
    ...(correct===null?{}:{correct,lastScore:correct?100:0}),
    difficult:(prev[item.id]?.difficult||0)+difficult,lastAt:Date.now()
   }}));
