@@ -2,6 +2,7 @@ import React,{useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,ChevronRight,FileText,Headphones,Lightbulb,Mic2,RotateCcw,Save,Search,Target,Volume2,X} from 'lucide-react';
 import {ARBEITSBUCH_KEY,ARBEITSBUCH_SOURCE,ARBEITSBUCH_NOTE,arbeitsbuchLessons,arbeitsbuchLesson,arbeitsbuchTasks,arbeitsbuchTotal,gradeArbeitsbuchTask,recordArbeitsbuchAttempt,recordArbeitsbuchWriting,arbeitsbuchWeakTasks} from './arbeitsbuchSourceData.js';
 import './arbeitsbuchStudio.css';
+import Lesson8WorkbookExtensions from './Lesson8WorkbookExtensions.jsx';
 
 function loadState(){
  try{const data=JSON.parse(localStorage.getItem(ARBEITSBUCH_KEY)||'{}');return data&&typeof data==='object'&&!Array.isArray(data)?data:{}}catch{return {}}
@@ -97,6 +98,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
    <div className="abStudioProgress"><span style={{width:(done/Math.max(1,lesson?.tasks.length||1)*100)+'%'}}/></div>
    <div className="abStudioStats"><span><CheckCircle2 size={15}/> {display(done)} تمرین انجام‌شده</span><span><Target size={15}/> {display(mastered)} پاسخ صحیح</span><span><RotateCcw size={15}/> {display(weak)} نیازمند مرور</span></div>
   </section>
+  {lessonId===8&&<Lesson8WorkbookExtensions speak={speak} onPracticeEvent={onPracticeEvent}/>}
   <section className="abStudioControls" aria-label="فیلتر تمرین‌ها">
    <div className="abStudioFilters">
     <button type="button" className={filter==='all'?'active':''} aria-pressed={filter==='all'} onClick={()=>{setFilter('all');setActiveId('')}}>همه</button>

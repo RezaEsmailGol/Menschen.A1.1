@@ -50,7 +50,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',speaking:'تمرین گفتار',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed','dt_audio_learning_v1','dt_menschen_audio_card_tracks_v1','dt_partner_practice_v1','dt_kursbuch_exercises_v1','dt_arbeitsbuch_studio_v1','dt_arbeitsbuch_media_v1','dt_arbeitsbuch_page_index_v1','dt_book_audio_task_map_v1','dt_menschen_cloud_audio_tasks_v1','dt_aktionsseiten_73_96_v1','dt_essential_vocab_20261123_v1'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed','dt_audio_learning_v1','dt_menschen_audio_card_tracks_v1','dt_partner_practice_v1','dt_kursbuch_exercises_v1','dt_arbeitsbuch_studio_v1','dt_arbeitsbuch_media_v1','dt_arbeitsbuch_page_index_v1','dt_book_audio_task_map_v1','dt_menschen_cloud_audio_tasks_v1','dt_aktionsseiten_73_96_v1','dt_essential_vocab_20261123_v1','dt_l8_minute_accuracy_v1','dt_ab8_days_appointments_v1'];
 
 
 function savedBookAnswers(){

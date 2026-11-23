@@ -9,6 +9,7 @@ import {bookLessonPlans,allBookTasks,germanNumber,isBookAnswerCorrect,normalizeB
 import './bookLessonPractice.css';
 import FourFormTrainer from './FourFormTrainer.jsx';
 import Lesson8TimeLab from './Lesson8TimeLab.jsx';
+import Lesson8MinuteTrainer from './Lesson8MinuteTrainer.jsx';
 import WeekdayFlashbox from './WeekdayFlashbox.jsx';
 
 const STORE='dt_book_lessons_v1';
@@ -113,7 +114,8 @@ export default function BookLessonPractice({lessonId,speak,onPracticeEvent,setTa
     <div className="bookProgress" role="progressbar" aria-valuenow={correctCount} aria-valuemin={0} aria-valuemax={allTasks.length} aria-label="تسلط تمرین‌های کتاب"><span style={{width:progress+'%'}}/></div>
     {lessonId===6&&<FourFormTrainer speak={speak} onPracticeEvent={onPracticeEvent} memory={memory}/>}
     {lessonId===8&&<WeekdayFlashbox speak={speak} onPracticeEvent={onPracticeEvent}/>}
-    {lessonId===8&&<Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/>}
+    {lessonId===8&&<Lesson8TimeLab speak={speak} onPracticeEvent={onPracticeEvent}/>} 
+    {lessonId===8&&<details className="bookMinuteDisclosure"><summary>⏰ ساعت دقیق دقیقه‌ای · رسمی، محاوره‌ای و دیکته تا ۵۹ دقیقه</summary><Lesson8MinuteTrainer speak={speak} onPracticeEvent={onPracticeEvent} initialSet="precision"/></details>}
     <LessonAudioButtons lessonId={lessonId} speak={speak} onPracticeEvent={onPracticeEvent} speakingState={speakingState} setSpeakingState={setSpeakingState}/>
     <div className="bookLessonTabs" role="group" aria-label="انتخاب فصل تمرینی">
       {plan.sections.map((item,index)=><button key={item.id} type="button"
