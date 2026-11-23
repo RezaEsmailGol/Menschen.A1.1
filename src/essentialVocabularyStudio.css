@@ -1,0 +1,50 @@
+.evPage{max-width:940px;margin:0 auto;padding-bottom:115px;display:grid;gap:11px;min-width:0;color:#27364b;direction:rtl}
+.evPage button{font-family:inherit}
+.evHero{display:flex;align-items:center;justify-content:space-between;gap:15px;border-radius:18px;padding:18px;background:linear-gradient(130deg,#304071,#5c51c5);color:#fff}
+.evHero>div>span{font-size:11px;letter-spacing:.05em;color:#d5f7ee;font-weight:800}.evHero h1{font-size:clamp(20px,3vw,27px);margin:5px 0}
+.evHero p{margin:0;font-size:12px;line-height:1.75}.evHero small{display:block;font-size:10px;line-height:1.7;color:#ded8ff;margin-top:6px}
+.evHero>b{flex:none;display:grid;place-items:center;white-space:nowrap;background:#ffffff24;border:1px solid #ffffff55;border-radius:12px;padding:11px;font-size:18px}
+.evHero>b small{margin:0;font-size:10px}
+.evLessonChoose{background:#fff;border:1px solid #dfe3ef;border-radius:15px;padding:12px;display:grid;gap:9px}
+.evLessonChoose>div:first-child{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.evLessonChoose b{font-size:13px}.evLessonChoose span{font-size:11px;color:#69768e}
+.evLessonChoose>small{font-size:10px;color:#7c83a0}
+.evLessonGrid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px}
+.evLessonGrid button{min-width:0;min-height:43px;border-radius:9px;background:#f3f3fc;color:#584c9d;border:1px solid #d8d9ec;cursor:pointer;font-size:12px;font-weight:800}
+.evLessonGrid button.active{background:#6250c6;border-color:#6250c6;color:#fff}
+.evModes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.evModes button{min-height:45px;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:1px solid #cbd1e1;background:#fff;color:#556083;cursor:pointer;font-size:13px;font-weight:800}
+.evModes button.active{background:#6553cc;color:#fff;border-color:#6553cc}
+.evCounts{display:flex;justify-content:space-between;align-items:center;gap:9px;font-size:11px;color:#65738d}
+.evProgress{height:6px;background:#e1e4ef;border-radius:9px;overflow:hidden}
+.evProgress span{display:block;height:100%;background:#5e55ca;transition:width .2s}
+.evWeakButton{display:flex;gap:7px;align-items:center;justify-content:center;min-height:44px;border:1px solid #ddc8a2;background:#fff2d8;border-radius:10px;color:#8d5b24;font-size:12px;font-weight:800;cursor:pointer}
+.evCard,.evFinished{background:#fff;border:1px solid #dde3ef;border-radius:17px;padding:14px;display:grid;gap:10px;min-width:0}
+.evLearning,.evGame{display:grid;gap:10px}
+.evFlip{display:grid;gap:14px;place-items:center;align-content:center;min-height:190px;padding:16px;border:1px solid #d2d3e7;border-radius:16px;background:linear-gradient(145deg,#f7f6ff,#ecf7fa);color:#34406b;cursor:pointer;transition:transform .22s,background .2s}
+.evFlip.flipped{background:#e7faf1;transform:scale(.99)}
+.evFlip small{font-size:11px;color:#727b9c}.evFlip strong{font-size:clamp(26px,5vw,38px);line-height:1.5;text-align:center;overflow-wrap:anywhere}
+.evFlip>span{font-size:12px;color:#68799a}
+.evAudio,.evMark{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;min-height:46px;border:1px solid #cfdaef;background:#f4f7ff;color:#5959aa;font-size:12px;font-weight:800;cursor:pointer}
+.evMark{background:#6652cc;color:#fff;border-color:#6652cc}
+.evGame>span{font-size:12px;color:#6b7892}
+.evPrompt{min-height:108px;padding:16px;text-align:center;display:grid;place-items:center;border:1px solid #d6dcf0;border-radius:13px;background:#f7f8ff;color:#303b66;font-size:clamp(24px,5vw,35px);line-height:1.5}
+.evOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.evOptions button{min-width:0;min-height:55px;padding:8px;border:1px solid #d0d6e5;background:#fff;color:#313e61;border-radius:12px;font-size:clamp(13px,3vw,17px);font-weight:800;overflow-wrap:anywhere;cursor:pointer}
+.evOptions button.correct{background:#e0faec;border-color:#34a576;color:#146b48}
+.evOptions button.wrong{background:#ffe7e6;border-color:#d97870;color:#a73f38}.evOptions button:disabled{opacity:1}
+.evAnswer{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px;border-radius:10px;background:#e5f8ed;color:#20684e;line-height:1.8;font-size:12px}
+.evAnswer.wrong{background:#fff0e5;color:#8e4d26}.evAnswer>span{flex:1 1 100%;overflow-wrap:anywhere}
+.evAnswer>button{display:flex;justify-content:center;align-items:center;gap:6px;min-height:44px;padding:8px 10px;border:1px solid currentColor;background:transparent;color:inherit;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer}
+.evNavigation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.evNavigation button{display:flex;gap:7px;justify-content:center;align-items:center;min-width:0;min-height:48px;padding:9px 7px;border-radius:11px;border:1px solid #cfd5e4;background:#fff;color:#545b85;font-size:13px;font-weight:800;cursor:pointer}
+.evNavigation button:last-child{background:#6450c9;color:#fff;border-color:#6450c9}.evNavigation button:disabled{opacity:.4;cursor:not-allowed}
+.evFinished{justify-items:center;text-align:center;gap:9px;padding:18px}.evFinished svg{color:#269b6d}.evFinished h2{margin:0;font-size:18px}.evFinished p{font-size:12px}.evFinished button{min-height:44px;border-radius:10px;border:0;background:#6551cb;color:white;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer}
+.evNote{font-size:11px;color:#65718c;line-height:1.85;background:#f1f3fe;border:1px solid #e0e4f1;border-radius:11px;padding:11px}
+.evRelated{display:flex;flex-wrap:wrap;gap:8px}
+.evRelated a{min-height:44px;padding:9px 12px;display:flex;align-items:center;gap:7px;border-radius:10px;background:#eeecfc;color:#5949a6;text-decoration:none;font-size:11px;font-weight:800}
+.evPage button:focus-visible{outline:3px solid #a898fa;outline-offset:2px}
+@media(max-width:650px){.evLessonGrid{grid-template-columns:repeat(6,minmax(0,1fr))}.evHero{display:grid;gap:9px;padding:12px}.evHero>b{justify-self:start;display:flex;gap:6px;padding:6px 9px;font-size:13px}.evHero>b small{font-size:10px}.evHero h1{font-size:20px}.evHero p{font-size:11px}.evLessonChoose{padding:10px}.evCard{padding:10px}.evFlip{min-height:161px}.evModes button{font-size:11px}.evNavigation button{font-size:12px}.evOptions button{min-height:51px}}
+@media(max-width:345px){.evModes button svg{width:15px}.evOptions button{font-size:12px}.evHero small{font-size:9px}}
+@media(prefers-color-scheme:dark){.evPage{color:#f2f3ff}.evLessonChoose,.evCard,.evFinished{background:#26364d;color:#eff2fa;border-color:#4c5f7b}.evLessonChoose span,.evLessonChoose>small{color:#c6d2e8}.evLessonGrid button,.evModes button,.evNavigation button,.evOptions button,.evAudio{background:#34435e;color:#eff3ff;border-color:#63708b}.evLessonGrid button.active,.evModes button.active,.evNavigation button:last-child,.evMark{background:#6a55ce;color:white;border-color:#6a55ce}.evWeakButton{background:#4e4635;color:#ffe3af;border-color:#8b7448}.evCounts,.evNote{color:#c3cce3}.evProgress{background:#515b72}.evFlip{background:#30415b;color:#f6f3ff;border-color:#536784}.evFlip.flipped{background:#29594d}.evFlip small,.evFlip>span{color:#d3dbee}.evPrompt{background:#25344b;color:white;border-color:#536581}.evOptions button.correct,.evAnswer{background:#245644;color:#deffeb}.evOptions button.wrong,.evAnswer.wrong{background:#5a3b3e;color:#ffdddc}.evNote{background:#2d3c55;border-color:#54617b}.evRelated a{background:#454272;color:#eeeaff}}
+@media(prefers-reduced-motion:reduce){.evFlip,.evProgress span{transition:none}.evFlip.flipped{transform:none}}
