@@ -1,6 +1,6 @@
 // Cache only public app-shell assets. Never intercept private Runflare/Vercel audio APIs.
 const CACHE_PREFIX='deutsch-trainer-pwa-';
-const CACHE_NAME=CACHE_PREFIX+'20261122-weekday-audio-nav-v10';
+const CACHE_NAME=CACHE_PREFIX+'20261123-aktionsseiten-v11';
 const APP_SHELL=['/','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(
