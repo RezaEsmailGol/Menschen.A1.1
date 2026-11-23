@@ -72,3 +72,9 @@
 .bookCardsMore{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-height:44px;margin:8px 0;border-radius:10px;border:1px dashed #b6d2da;background:#e9f8f7;color:#167981;font-weight:800;font-size:12px;cursor:pointer}
 .bookLessonRoot>.wdBox{margin:12px 0}
 @media(prefers-color-scheme:dark){.bookCardsMore{background:#28505b;color:#ddf7fa;border-color:#4d7d86}}
+
+.bookMinuteDisclosure{border:1px solid #d6d7ed;border-radius:15px;background:#f6f4ff;min-width:0;padding:10px;margin:12px 0}
+.bookMinuteDisclosure summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:13px;font-weight:850;line-height:1.65;color:#5d4ab6}
+.bookMinuteDisclosure[open] summary{margin-bottom:10px}
+@media(max-width:520px){.bookMinuteDisclosure{padding:8px}.bookMinuteDisclosure summary{font-size:11px}}
+@media(prefers-color-scheme:dark){.bookMinuteDisclosure{background:#2e3658;border-color:#505a7b}.bookMinuteDisclosure summary{color:#e0d7ff}}

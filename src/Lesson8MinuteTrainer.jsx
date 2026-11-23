@@ -39,8 +39,9 @@ export default function Lesson8MinuteTrainer({speak=()=>{},onPracticeEvent,initi
  const [progress,setProgress]=useState(loadProgress);
  const [attempts,setAttempts]=useState({correct:0,total:0});
  const [weakOnly,setWeakOnly]=useState(false);
+ const [weakIds,setWeakIds]=useState([]);
  const source=setId==='book'?minuteBookBank:minutePrecisionBank;
- const items=useMemo(()=>weakOnly?minuteWeak(progress,source):source,[weakOnly,progress,source]);
+ const items=useMemo(()=>weakOnly?source.filter(item=>weakIds.includes(item.id)):source,[weakOnly,weakIds,source]);
  const item=items[idx]||null;
  const finished=idx>=items.length||items.length===0;
  const correctText=item?(mode==='formal'?item.formal:item.colloquial):'';
@@ -61,7 +62,7 @@ export default function Lesson8MinuteTrainer({speak=()=>{},onPracticeEvent,initi
  function next(){setIdx(i=>Math.min(i+1,items.length));setAnswer(null);setTyped('')}
  function previous(){setIdx(i=>Math.max(i-1,0));setAnswer(null);setTyped('')}
  function retry(){setAnswer(null);setTyped('')}
- function startWeak(){setWeakOnly(true);setIdx(0);setAnswer(null);setTyped('');setAttempts({correct:0,total:0})}
+ function startWeak(){setWeakIds(minuteWeak(progress,source).map(item=>item.id));setWeakOnly(true);setIdx(0);setAnswer(null);setTyped('');setAttempts({correct:0,total:0})}
  function resetSet(){setWeakOnly(false);setIdx(0);setAnswer(null);setTyped('');setAttempts({correct:0,total:0})}
  return <section className="mcLab" id="lesson8-minute-trainer" dir="rtl" aria-label="تمرین دقیقه‌ای ساعت درس هشت">
   <header className="mcHeader">
