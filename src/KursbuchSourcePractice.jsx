@@ -168,6 +168,6 @@ export default function KursbuchSourcePractice({speak=()=>{},onPracticeEvent}){
    </div>}
   </section>}
   <div className="kbSourceFooter"><Target size={18}/><p>این مجموعه از PDF کتاب ارسالی تهیه شده است. تمرین‌های داخل درس به فعالیت‌های همان صفحه مرتبط‌اند؛ در صفحات تصویری/شنیداری برای انجام دقیق‌تر به کتاب و فایل صوتی مربوط مراجعه کن.</p></div>
-  <div className="kbSourceNav"><a href={'/arbeitsbuch-media?lesson='+lessonId}><Headphones size={17}/> تصاویر و شنیداری کتاب کار</a><a href={'/arbeitsbuch?lesson='+lessonId}><BookOpenCheck size={17}/> کتاب کار این درس</a><a href={'/lessons/'+lessonId+'#book-practice'}><BookOpenCheck size={18}/> تمرین‌های قبلی درس {lessonId}</a><a href="/partner-practice?lesson=8"><Users size={18}/> گفت‌وگوهای آزاد</a></div>
+  <div className="kbSourceNav"><a href={'/action-pages?lesson='+lessonId}><BookOpenCheck size={17}/> همه Aktionsseiten · صفحات ۷۳ تا ۹۶</a><a href={'/essential-words?lesson='+lessonId}><BookOpenCheck size={17}/> واژگان مهم همین درس</a><a href={'/arbeitsbuch-media?lesson='+lessonId}><Headphones size={17}/> تصاویر و شنیداری کتاب کار</a><a href={'/arbeitsbuch?lesson='+lessonId}><BookOpenCheck size={17}/> کتاب کار این درس</a><a href={'/lessons/'+lessonId+'#book-practice'}><BookOpenCheck size={18}/> تمرین‌های قبلی درس {lessonId}</a><a href="/partner-practice?lesson=8"><Users size={18}/> گفت‌وگوهای آزاد</a></div>
  </div>;
 }

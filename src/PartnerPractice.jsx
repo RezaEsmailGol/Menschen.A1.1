@@ -92,6 +92,7 @@ export default function PartnerPractice({speak=()=>{}}){
    <a href={'/arbeitsbuch-media?lesson='+lessonId}><Headphones size={17}/> تمرین‌های شنیداری و تصویری</a>
    <a href={'/arbeitsbuch?lesson='+lessonId}><BookOpenCheck size={17}/> کتاب کار همین درس</a>
    <a href={'/book-exercises?lesson='+lessonId+'&collection=actions'}><BookOpenCheck size={17}/> تمرین‌های صفحه‌دار کتاب</a>
+   <a href={'/action-pages?lesson='+lessonId}><BookOpenCheck size={17}/> بازی‌های پارتنری اصلی کتاب</a>
    <a href="/practice"><ArrowLeft size={17}/> همه تمرین‌ها</a>
   </nav>
  </div>;
