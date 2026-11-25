@@ -3,16 +3,13 @@ import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,Cl
 import {lessons} from './courseData.js';
 import {KURSBUCH_SOURCE,KURSBUCH_SOURCE_NOTE,kursbuchChapters,kursbuchActions,kursbuchChapter,kursbuchActionByLesson,bookBingoWon,normalizeBookFill} from './kursbuchSourceExercises.js';
 import './kursbuchSourcePractice.css';
+import {lessonFromSearch,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
 
 export const KURSBUCH_PROGRESS_KEY='dt_kursbuch_exercises_v1';
 function loadSaved(){
  try{const saved=JSON.parse(localStorage.getItem(KURSBUCH_PROGRESS_KEY)||'{}');return saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{}}catch{return {}}
 }
-function requestedLesson(){
- const q=new URLSearchParams(window.location.search);
- const lesson=Number(q.get('lesson'));
- return Number.isInteger(lesson)&&lesson>=1&&lesson<=12?lesson:8;
-}
+function requestedLesson(){return lessonFromSearch(window.location.search,window.localStorage,8)}
 function initialSection(){return new URLSearchParams(window.location.search).get('collection')==='actions'?'actions':'lesson'}
 function tokenizedLabel(text){return String(text||'').split('___');}
 export default function KursbuchSourcePractice({speak=()=>{},onPracticeEvent}){
@@ -36,11 +33,12 @@ export default function KursbuchSourcePractice({speak=()=>{},onPracticeEvent}){
  const finished=items.filter(x=>saved[x.id]?.completed).length;
  const totalCompleted=Object.values(saved).filter(x=>x?.completed).length;
  useEffect(()=>{try{localStorage.setItem(KURSBUCH_PROGRESS_KEY,JSON.stringify(saved))}catch{}},[saved]);
+ useEffect(()=>{writeLessonFocus(window.localStorage,lessonId,true)},[lessonId]);
  useEffect(()=>{if(items.length&&!items.some(x=>x.id===activeId)){setActiveId(items[0].id);setStep(0);setRevealed(false);setChecked(null);setTyped('');setQuizScore(0);setHard(0);setBingo(Array(25).fill(false));}},[items,activeId]);
  function resetRound(item){
   setActiveId(item.id);setStep(0);setRevealed(false);setChecked(null);setTyped('');setQuizScore(0);setHard(0);setBingo(Array(25).fill(false));
  }
- function changeLesson(id){setLessonId(id);setShowAllActions(false);setActiveId('')}
+ function changeLesson(id){writeLessonFocus(window.localStorage,id,true);setLessonId(id);setShowAllActions(false);setActiveId('')}
  function markDone(item,correct=null,difficult=0){
   if(!item)return;
   setSaved(prev=>({...prev,[item.id]:{
@@ -87,6 +85,7 @@ export default function KursbuchSourcePractice({speak=()=>{},onPracticeEvent}){
    </div>
    <div className="kbSourceTotal"><b>{totalCompleted.toLocaleString('fa-IR')}</b><span>فعالیت انجام‌شده</span></div>
   </header>
+  <nav className="bookFocusBack" aria-label="بازگشت به درس متمرکز"><a href={scopedLessonLinks(lessonId).focus}><Target size={17}/> برگشت به تمرین‌های متمرکز درس {lessonId}</a><a href={scopedLessonLinks(lessonId).arbeitsbuch}><BookOpenCheck size={17}/> Arbeitsbuch همین درس</a></nav>
   <div className="kbSourcePicker">
    <label htmlFor="kb-source-lesson">انتخاب درس</label>
    <select id="kb-source-lesson" value={lessonId} onChange={e=>changeLesson(Number(e.target.value))}>
