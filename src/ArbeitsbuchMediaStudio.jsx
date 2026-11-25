@@ -49,7 +49,7 @@ export default function ArbeitsbuchMediaStudio({speak=()=>{},onPracticeEvent}){
  const cloudTrack=task?.kind==='originalAudio'&&cloudMap[task.id]?.book==='arbeitsbuch'?cloudMap[task.id]:null;
  const localId=task?.kind==='originalAudio'?localMap[task.id]:null;
  const hasAudio=Boolean(cloudTrack||localUrl);
- const totalDone=arbeitsbuchMediaTasks.filter(t=>progress[t.id]?.completed).length;
+ const totalDone=arbeitsbuchMediaForLesson(lessonId).filter(t=>progress[t.id]?.completed).length;
  const lessonReview=mediaNeedsReview(progress,arbeitsbuchMediaForLesson(lessonId)).length;
  useEffect(()=>{try{localStorage.setItem(AB_MEDIA_KEY,JSON.stringify(progress))}catch{}},[progress]);
  useEffect(()=>{writeLessonFocus(window.localStorage,lessonId,true)},[lessonId]);
@@ -104,7 +104,7 @@ export default function ArbeitsbuchMediaStudio({speak=()=>{},onPracticeEvent}){
    <span className="abmEyebrow"><BookOpenCheck size={18}/> Menschen A1.1 · Arbeitsbuch</span>
    <h1>تمرین‌های شنیداری و تصویری کتاب کار</h1>
    <p>{AB_MEDIA_NOTE}</p>
-   <div className="abmHeroStats"><span>{digits(totalDone)} فعالیت تکمیل‌شده</span><span>{digits(lessonReview)} نیازمند مرور در این درس</span></div>
+   <div className="abmHeroStats"><span>{digits(totalDone)} فعالیت تکمیل‌شده این درس</span><span>{digits(lessonReview)} نیازمند مرور در این درس</span></div>
   </header>
   <nav className="bookFocusBack" aria-label="بخش‌های متمرکز درس"><a href={scopedLessonLinks(lessonId).focus}><ArrowLeft size={17}/> صفحه تمرین متمرکز درس {lessonId}</a><a href={scopedLessonLinks(lessonId).arbeitsbuch}><BookOpenCheck size={17}/> سؤال‌های نوشتاری این درس</a></nav>
   <section className="abmControls" aria-label="انتخاب تمرین">
