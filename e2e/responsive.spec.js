@@ -698,7 +698,7 @@ test('intensive number and clock drill pages fit 320px and support writing, audi
  expect(widthNumbers).toBeLessThanOrEqual(322);
  await page.goto('/clock-mastery');
  await expect(page.locator('.ipHeader')).toContainText('ساعت');
- await page.getByRole('button',{name:/محاوره‌ای/}).click();
+ await page.locator('.ipToggle button').filter({hasText:'محاوره‌ای'}).click();
  await page.getByRole('button',{name:/فلش‌کارت سخت/}).click();
  await page.getByRole('button',{name:/شروع آزمون/}).click();
  await page.getByRole('button',{name:'نمایش پاسخ پشت فلش‌کارت'}).click();
