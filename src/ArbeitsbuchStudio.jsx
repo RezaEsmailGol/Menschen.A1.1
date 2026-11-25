@@ -3,17 +3,12 @@ import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,ChevronRight,FileText,H
 import {ARBEITSBUCH_KEY,ARBEITSBUCH_SOURCE,ARBEITSBUCH_NOTE,arbeitsbuchLessons,arbeitsbuchLesson,arbeitsbuchTasks,arbeitsbuchTotal,gradeArbeitsbuchTask,recordArbeitsbuchAttempt,recordArbeitsbuchWriting,arbeitsbuchWeakTasks} from './arbeitsbuchSourceData.js';
 import './arbeitsbuchStudio.css';
 import Lesson8WorkbookExtensions from './Lesson8WorkbookExtensions.jsx';
+import {lessonFromSearch,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
 
 function loadState(){
  try{const data=JSON.parse(localStorage.getItem(ARBEITSBUCH_KEY)||'{}');return data&&typeof data==='object'&&!Array.isArray(data)?data:{}}catch{return {}}
 }
-function requestedLesson(){
- const q=new URLSearchParams(window.location.search).get('lesson');
- const n=Number(q);
- if(/^\d+$/.test(q||'')&&n>=1&&n<=12)return n;
- try{const stored=Number(localStorage.getItem('dt_current_lesson'));if(stored>=1&&stored<=12)return stored}catch{}
- return 8;
-}
+function requestedLesson(){return lessonFromSearch(window.location.search,window.localStorage,8)}
 function isDone(state,item){return Boolean(state[item.id]?.completed||state[item.id]?.submitted)}
 const display=n=>Number(n||0).toLocaleString('fa-IR');
 const kindName={fill:'جای خالی',choice:'چندگزینه‌ای',order:'ترتیب کلمات',writing:'نوشتن'};
@@ -23,6 +18,8 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
  const [lessonId,setLessonId]=useState(requestedLesson);
  const [progress,setProgress]=useState(loadState);
  const [filter,setFilter]=useState('all');
+ const [chooserOpen,setChooserOpen]=useState(false);
+ const [showTasks,setShowTasks]=useState(false);
  const [activeId,setActiveId]=useState('');
  const [typed,setTyped]=useState('');
  const [selected,setSelected]=useState([]);
@@ -43,6 +40,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
  const totalDone=arbeitsbuchTasks.filter(t=>isDone(progress,t)).length;
  const used=new Set(selected);
  useEffect(()=>{try{localStorage.setItem(ARBEITSBUCH_KEY,JSON.stringify(progress))}catch{}},[progress]);
+ useEffect(()=>{writeLessonFocus(window.localStorage,lessonId,true)},[lessonId]);
  useEffect(()=>{
   if(current?.id!==activeId||(!current&&activeId)){
    setActiveId(current?.id||'');setSelected([]);setResult(null);setShowModel(false);
@@ -50,11 +48,14 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
   }
  },[current?.id,activeId]);
  function chooseTask(task){
+  setShowTasks(false);
   setActiveId(task.id);setTyped(task.kind==='writing'?progress[task.id]?.draft||'':'');
   setSelected([]);setResult(null);setShowModel(false);setSubmitted(false);
  }
  function changeLesson(value){
+  writeLessonFocus(window.localStorage,value,true);
   setLessonId(value);setActiveId('');setFilter('all');setTyped('');
+  setChooserOpen(false);setShowTasks(false);
   setSelected([]);setResult(null);setShowModel(false);setSubmitted(false);
  }
  function resetTask(){if(!current)return;chooseTask(current)}
@@ -87,8 +88,8 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
     <small>تصاویر تألیفی، صوت تمرینی، اتصال صدای اصلی و فهرست صفحات کتاب کار</small></span><ArrowLeft size={19}/>
    </a>
   <section className="abStudioChoose" aria-label="انتخاب درس کتاب کار">
-   <div className="abStudioChooserHead"><b>درس را انتخاب کن</b><span>{display(lessonId)} از ۱۲</span></div>
-   <div className="abStudioLessonGrid">
+   <div className="abStudioChooserHead"><b>فقط کتاب کار درس {display(lessonId)}</b><button type="button" className="abStudioChangeLesson" aria-expanded={chooserOpen} onClick={()=>setChooserOpen(v=>!v)}>{chooserOpen?'بستن فهرست درس‌ها':'تغییر درس'} <ChevronLeft size={15}/></button></div>
+   <div className="abStudioLessonGrid" hidden={!chooserOpen}>
     {arbeitsbuchLessons.map(item=><button type="button" key={item.id} aria-pressed={lessonId===item.id} onClick={()=>changeLesson(item.id)} className={lessonId===item.id?'selected':''} title={item.title}>{display(item.id)}{item.tasks.every(t=>isDone(progress,t))&&<CheckCircle2 size={12}/>}</button>)}
    </div>
    <div className="abStudioChapterInfo">
@@ -98,14 +99,18 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
    <div className="abStudioProgress"><span style={{width:(done/Math.max(1,lesson?.tasks.length||1)*100)+'%'}}/></div>
    <div className="abStudioStats"><span><CheckCircle2 size={15}/> {display(done)} تمرین انجام‌شده</span><span><Target size={15}/> {display(mastered)} پاسخ صحیح</span><span><RotateCcw size={15}/> {display(weak)} نیازمند مرور</span></div>
   </section>
-  {lessonId===8&&<Lesson8WorkbookExtensions speak={speak} onPracticeEvent={onPracticeEvent}/>}
+  <nav className="abStudioFocusLinks" aria-label="بخش‌های متمرکز این درس">
+   <a href={scopedLessonLinks(lessonId).focus}><Target size={16}/> صفحه تمرین متمرکز درس {display(lessonId)}</a>
+   <a href={scopedLessonLinks(lessonId).kursbuch}><BookOpenCheck size={16}/> Kursbuch همین درس</a>
+  </nav>
   <section className="abStudioControls" aria-label="فیلتر تمرین‌ها">
    <div className="abStudioFilters">
     <button type="button" className={filter==='all'?'active':''} aria-pressed={filter==='all'} onClick={()=>{setFilter('all');setActiveId('')}}>همه</button>
     <button type="button" className={filter==='new'?'active':''} aria-pressed={filter==='new'} onClick={()=>{setFilter('new');setActiveId('')}}>جدید</button>
     <button type="button" className={filter==='weak'?'active':''} aria-pressed={filter==='weak'} onClick={()=>{setFilter('weak');setActiveId('')}}>نیازمند تکرار {weak>0?'('+display(weak)+')':''}</button>
    </div>
-   <div className="abStudioTaskGrid">
+   <button type="button" className="abStudioToggleTasks" aria-expanded={showTasks} onClick={()=>setShowTasks(value=>!value)}><Search size={17}/>{showTasks?'بستن فهرست سؤال‌ها':'انتخاب سؤال دیگر از همین درس'} <span>{display(filtered.length)} تمرین</span></button>
+   <div className="abStudioTaskGrid" hidden={!showTasks}>
     {filtered.map(t=><button type="button" key={t.id} aria-current={current?.id===t.id?'true':undefined} onClick={()=>chooseTask(t)} className={'abStudioTask '+(current?.id===t.id?'active':'')}>
      <span className="abStudioTaskNum">{t.page}</span><span><b>{t.title}</b><small>{kindName[t.kind]} · {sectionName[t.section]||t.section}</small></span>
      {progress[t.id]?.lastCorrect===true?<CheckCircle2 size={17} color="#31a66e"/>:progress[t.id]?.lastCorrect===false?<RotateCcw size={17} color="#d78838"/>:progress[t.id]?.submitted?<FileText size={17} color="#36a38a"/>:<ChevronLeft size={16}/>}
@@ -158,6 +163,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
     <button type="button" className="primary" disabled={filtered.findIndex(t=>t.id===current.id)>=filtered.length-1} onClick={next}>تمرین بعدی <ArrowLeft size={17}/></button>
    </div>
   </section>}
+  {lessonId===8&&<Lesson8WorkbookExtensions speak={speak} onPracticeEvent={onPracticeEvent}/>}
   <div className="abStudioSourceNote"><BookOpenCheck size={17}/><span>شماره صفحات بر اساس نسخه چاپی Arbeitsbuch است؛ شماره صفحه PDF نیز کنار هر تمرین آمده. سؤال‌های شنیداری وابسته به فایل صوتی کتاب فعلاً به‌صورت آزمون ساختگی نمره‌گذاری نمی‌شوند.</span></div>
   <nav className="abStudioRelated"><a href={'/book-exercises?lesson='+lessonId}><BookOpenCheck size={17}/> تمرین‌های Kursbuch این درس</a><a href={'/partner-practice?lesson='+lessonId}><Mic2 size={17}/> تمرین با پارتنر</a><a href="/practice"><ChevronRight size={16}/> همه تمرین‌ها</a></nav>
  </main>;
