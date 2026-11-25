@@ -4,6 +4,7 @@ import { allStudyCards, getLessonCards, lessons, pronouns, verbForms } from './c
 import { buildExam, dueCards, nextReview, normalizeAnswer, REVIEW_KEY, COURSE_KEY, shuffleArray, safeParse, todayKey } from './studyEngine.js';
 import { activityItemKey } from './learningMemory.js';
 import RouteLink from './RouteLink';
+import {writeLessonFocus} from './lessonFocus.js';
 import QuizFocusShell from './QuizFocusShell.jsx';
 import BookLessonPractice from './BookLessonPractice.jsx';
 import PersianGrammarGuide from './PersianGrammarGuide.jsx';
@@ -29,7 +30,7 @@ function useLessonSelection() {
   });
   const select = id => {
     setValue(id);
-    try{window.localStorage.setItem('dt_current_lesson',String(id));}catch{}
+    if(typeof window!=='undefined')writeLessonFocus(window.localStorage,id,true);
   };
   return [selected,select];
 }
@@ -44,7 +45,7 @@ const modes = [
 export default function PhaseOne({mode,routeLesson,setTab,speak,progress,setProgress,schedule,setSchedule,onPracticeEvent,memory={},speakingState,setSpeakingState}) {
   const [selectedLocal,selectLocal] = useLessonSelection();
   const selected=routeLesson||selectedLocal;
-  useEffect(()=>{if(routeLesson&&routeLesson!==selectedLocal)selectLocal(routeLesson);},[routeLesson]);
+  useEffect(()=>{if(routeLesson){if(routeLesson!==selectedLocal)selectLocal(routeLesson);else writeLessonFocus(window.localStorage,routeLesson,true);}},[routeLesson]);
   const select=id=>{
     selectLocal(id);
     if(mode==='course')setTab('course/'+id);
@@ -124,6 +125,7 @@ function CoursePanel({lesson,selected,select,progress,startLesson,speak,setTab,o
     </aside>
     <div className="courseLessonBody">
       <RouteLink className="courseBackIndex" to="course" navigate={setTab}><BookOpen size={17}/> فهرست همه درس‌ها و زیرشاخه‌ها <ChevronLeft size={17}/></RouteLink>
+      <RouteLink className="courseFocusShortcut" to={'practiceLesson/'+lesson.id} navigate={setTab}><Target size={19}/> تمرکز روی تمرین‌های درس {lesson.id} · Kursbuch و Arbeitsbuch <ArrowLeft size={18}/></RouteLink>
       {lesson.id===1&&<RouteLink className="wbCourseBanner" to="visual" navigate={setTab}>
         <span className="wbCourseBannerIcon"><BookOpen size={23}/></span>
         <span><b>جمله‌ها و فلش‌کارت‌های تصویری درس اول</b><small>۵۰ عبارت با تصویر و تلفظ، بازی چهارگزینه‌ای و ۱۰ گفت‌وگو</small></span>
