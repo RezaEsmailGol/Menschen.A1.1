@@ -12,7 +12,7 @@ import {
  mediaCorrect,saveMediaResult,saveOriginalAudioPractice,mediaNeedsReview,savePageProgress
 } from './arbeitsbuchMediaData.js';
 import './arbeitsbuchMediaStudio.css';
-import {lessonFromSearch,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
+import {lessonFromSearch,replaceLessonQuery,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
 
 function saved(key){try{const x=JSON.parse(localStorage.getItem(key)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch{return {}}}
 const digits=n=>Number(n||0).toLocaleString('fa-IR');
@@ -74,7 +74,7 @@ export default function ArbeitsbuchMediaStudio({speak=()=>{},onPracticeEvent}){
   }
  },[task?.id,activeId]);
  function choose(item){setActiveId(item.id);setAttempt(null);setHeard(false);setPlayedDemo(false);setRevealDemo(false)}
- function newLesson(next){writeLessonFocus(window.localStorage,next,true);setLessonId(Number(next));setActiveId('');setAttempt(null);setPageNo(null);setVerifiedPage(false)}
+ function newLesson(next){writeLessonFocus(window.localStorage,next,true);replaceLessonQuery(next,window.location,window.history);setLessonId(Number(next));setActiveId('');setAttempt(null);setPageNo(null);setVerifiedPage(false)}
  function newMode(next){setMode(next);setActiveId('');setAttempt(null);setHeard(false)}
  function grade(value){
   if(!task||task.kind==='originalAudio'||attempt)return;
