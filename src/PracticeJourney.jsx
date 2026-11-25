@@ -59,7 +59,7 @@ export default function PracticeJourney({journey,setTab,medal,memory={},storedLe
   <section className="pjLessonPanel" id="practice-lessons" aria-label="فهرست تمرین‌های اختصاصی ۱۲ درس">
    <div className="pjSectionHead">
     <div><span className="pjEyebrow">LESSON EXERCISES</span><h3><BookOpenCheck size={22}/> تمرین‌های اختصاصی هر درس</h3>
-      <p>درس دلخواه را باز کن یا مستقیم تمرین را شروع کن.</p></div>
+      <p>درس‌ها را اسکرول کن؛ بخش‌های هر درس در صفحه مستقل و بزرگ باز می‌شوند.</p></div>
     <span className="pjCount">{display(filtered.length)} از ۱۲ درس</span>
    </div>
    <div className="pjControls">
@@ -67,7 +67,7 @@ export default function PracticeJourney({journey,setTab,medal,memory={},storedLe
       onChange={e=>setSearch(e.target.value)} placeholder="موضوع، واژه، گرامر یا شماره درس…"/></label>
     <label className="pjStatus">وضعیت
      <select value={status} onChange={e=>setStatus(e.target.value)} aria-label="فیلتر وضعیت درس‌ها">
-      <option value="all">همه درس‌ها</option><option value="ongoing">در حال تمرین</option><option value="new">شروع‌نشده</option><option value="done">تکمیل‌شده</option>
+      <option value="all">همه درس‌ها</option><option value="weak">نیازمند مرور</option><option value="ongoing">در حال تمرین</option><option value="new">شروع‌نشده</option><option value="done">تکمیل‌شده</option>
      </select>
     </label>
    </div>
@@ -81,7 +81,7 @@ export default function PracticeJourney({journey,setTab,medal,memory={},storedLe
       <div className="pjLessonHeading">
        <span className="pjNumber">{display(lesson.id).padStart(2,'۰')}</span>
        <span className={'pjLessonStatus '+(lesson.isComplete?'done':lesson.started?'started':'new')}>
-        {lesson.isComplete?'تکمیل شد':lesson.started?'در حال یادگیری':'شروع‌نشده'}
+        {lesson.isComplete?'تکمیل شد':lesson.weakQuestions>0?'نیازمند مرور · '+display(lesson.weakQuestions):lesson.started?'در حال یادگیری':'شروع‌نشده'}
        </span>
       </div>
       <div className="pjLessonTitle"><h4>{lesson.title}</h4><small className="pjLessonGerman" lang="de" dir="ltr">{lesson.subtitle}</small></div>
@@ -117,7 +117,8 @@ export function PracticeLessonDetail({journey,lessonId,setTab}){
  const [showTips,setShowTips]=useState(false);
  const lesson=journey.lessons.find(item=>item.id===Number(lessonId));
  if(!lesson)return <div className="pjDetail"><p>این درس پیدا نشد.</p><RouteLink to="practice" navigate={setTab}>بازگشت به تمرین‌ها</RouteLink></div>;
- const sections=mode==='all'?lesson.sections:lesson.sections.filter(item=>item.kind===mode);
+ const sections=(mode==='all'?lesson.sections:lesson.sections.filter(item=>item.kind===mode)).slice()
+  .sort((a,b)=>b.wrong-a.wrong||a.percent-b.percent);
  return <div className="pjDetail" dir="rtl">
   <header className="pjDetailHeader">
    <div><span className="pjEyebrow">LESSON {display(lesson.id)} · FOCUS PAGE</span>
@@ -127,7 +128,8 @@ export function PracticeLessonDetail({journey,lessonId,setTab}){
   </header>
   <div className="pjDetailSummary"><div><b>{display(lesson.correct)} از {display(lesson.total)}</b><small>سؤال صحیح کتاب</small></div>
    <div><b>{display(lesson.percent)}٪</b><small>پیشرفت درس</small></div>
-   <div><b>{display(lesson.audioCompleted)}</b><small>موفقیت صوتی</small></div></div>
+   <div><b>{display(lesson.audioCompleted)}</b><small>موفقیت صوتی</small></div>
+   <div><b>{display(lesson.weakQuestions)}</b><small>پاسخ نیازمند مرور</small></div></div>
   <div className="pjDetailModeTabs" role="group" aria-label="فیلتر بخش‌های این درس">
    {LESSON_PRACTICE_MODES.map(item=><button type="button" key={item.id} aria-pressed={mode===item.id}
     className={mode===item.id?'selected':''} onClick={()=>setMode(item.id)}>{item.label}</button>)}
@@ -138,6 +140,7 @@ export function PracticeLessonDetail({journey,lessonId,setTab}){
     return <a key={section.id} href={section.href} className="pjDetailSection">
      <span className={'pjSectionIcon '+section.kind}><Icon size={24}/></span>
      <span className="pjSectionCopy"><b>{section.label}</b><small>{section.name}</small>
+      <small className={section.wrong?'pjDetailWeakText':'pjDetailNeutralText'}>{section.wrong?display(section.wrong)+' سؤال نیازمند مرور':section.completed===0?'هنوز شروع نکرده‌ای':section.percent===100?'مسلط':'در حال پیشرفت'}</small>
       <span className="pjBar"><span style={{width:section.percent+'%'}}/></span></span>
      <span className="pjDetailSectionProgress">{display(section.completed)} / {display(section.total)} <ChevronLeft size={17}/></span>
     </a>;
