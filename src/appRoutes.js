@@ -15,6 +15,10 @@ function validLesson(value){
 export function normalizeRoute(route){
  if(typeof route!=='string')return 'home';
  const sanitized=route.trim().replace(/^\/+|\/+$/g,'');
+ if(sanitized.startsWith('practiceLesson/')){
+  const lesson=sanitized.slice('practiceLesson/'.length);
+  return validLesson(lesson)?'practiceLesson/'+lesson:'practice';
+ }
  if(sanitized.startsWith('dialogues/')){
    const id=sanitized.slice('dialogues/'.length);
    return DIALOGUE_IDS.includes(id)?'dialogues/'+id:'dialogues';
@@ -31,6 +35,7 @@ export function normalizeRoute(route){
 }
 export function pathForRoute(route){
  const id=normalizeRoute(route);
+ if(id.startsWith('practiceLesson/'))return '/practice/lesson/'+id.slice('practiceLesson/'.length);
  if(id.startsWith('dialogues/'))return '/dialogues/'+id.slice('dialogues/'.length);
  if(id.startsWith('workbook/'))return '/workbook/'+id.slice('workbook/'.length);
  if(id.startsWith('course/'))return '/lessons/'+id.slice('course/'.length);
@@ -38,6 +43,10 @@ export function pathForRoute(route){
 }
 export function routeFromPath(pathname){
  const path=String(pathname||'/').replace(/\/+$/,'')||'/';
+ if(path.startsWith('/practice/lesson/')){
+  const id=path.slice('/practice/lesson/'.length);
+  return validLesson(id)?'practiceLesson/'+id:'home';
+ }
  if(path.startsWith('/dialogues/')){
    const id=path.slice('/dialogues/'.length);
    return DIALOGUE_IDS.includes(id)?'dialogues/'+id:'home';
