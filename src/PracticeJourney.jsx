@@ -151,7 +151,7 @@ export function PracticeLessonDetail({journey,lessonId,setTab}){
    </a>
   </section>
   {lesson.id===8&&<div className="pjDetailCallout"><Clock3 size={24}/><div><b>ساعت رسمی و محاوره‌ای را سخت تمرین کن</b><small>دیکته، نیم و ربع، دقیقه‌های چالشی</small></div>
-   <RouteLink to="clockMastery" navigate={setTab}>باشگاه ساعت <ChevronLeft size={17}/></RouteLink></div>}
+   <RouteLink to="teacherClock" navigate={setTab}>گرامر تخته استاد <ChevronLeft size={17}/></RouteLink><RouteLink to="clockMastery" navigate={setTab}>باشگاه ساعت <ChevronLeft size={17}/></RouteLink></div>}
   <button type="button" className="pjDetailTipsButton" aria-expanded={showTips} aria-controls="pj-detail-tips"
    onClick={()=>setShowTips(value=>!value)}>روش تمرین سخت‌گیرانه <ChevronDown size={16}/></button>
   {showTips&&<div id="pj-detail-tips" className="pjDetailTips">
