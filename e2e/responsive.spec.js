@@ -455,6 +455,9 @@ test('home resume, lesson and practice buttons work on Android-sized screens',as
   await expect(page.locator('.homeV2Destinations a')).toHaveCount(2);
   await page.locator('.homeV2Destinations a[href="/practice"]').click();
   await expect(page).toHaveURL(/\/practice$/);
+  await expect(page.locator('.lfWorkspace')).toBeVisible();
+  await expect(page.locator('#lfChooseLesson')).toHaveValue('5');
+  await page.locator('.lfRibbonActions button').click();
   await expect(page.getByRole('heading',{name:'تمرین‌های آلمانی'})).toBeVisible();
   await page.getByRole('button',{name:'گفتار و شنیدن'}).click();
   await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
@@ -736,6 +739,50 @@ test('lesson eight teacher whiteboard clock, Wann and verb drill fit 320px mobil
  await context.close();
 });
 
+test('selecting a lesson focuses Practice, Kursbuch and Arbeitsbuch without losing the selection',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:360,height:740},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.goto('/lessons/6');
+ await expect.poll(()=>page.evaluate(()=>localStorage.getItem('dt_current_lesson'))).toBe('6');
+ await page.goto('/practice');
+ await expect(page.locator('.lfWorkspace')).toBeVisible();
+ await expect(page.locator('#lfChooseLesson')).toHaveValue('6');
+ await expect(page.locator('.lfBookCard')).toHaveCount(4);
+ await expect(page.locator('.lfBookGrid a[href="/arbeitsbuch?lesson=6"]')).toBeVisible();
+ await page.locator('.lfBookGrid a[href="/arbeitsbuch?lesson=6"]').click();
+ await expect(page).toHaveURL(/\/arbeitsbuch\?lesson=6/);
+ await expect(page.locator('.abStudioExercise')).toBeVisible();
+ await expect(page.locator('.abStudioLessonGrid')).toBeHidden();
+ await expect(page.locator('.abStudioTaskGrid')).toBeHidden();
+ await page.locator('.abStudioToggleTasks').click();
+ await expect(page.locator('.abStudioTaskGrid')).toBeVisible();
+ await page.locator('.abStudioChangeLesson').click();
+ await expect(page.locator('.abStudioLessonGrid')).toBeVisible();
+ await page.locator('.abStudioLessonGrid button').nth(7).click();
+ await expect(page.locator('.abStudioChapterInfo')).toContainText('AB S. 60–65');
+ await expect.poll(()=>page.evaluate(()=>localStorage.getItem('dt_current_lesson'))).toBe('8');
+ await expect(page).toHaveURL(/\/arbeitsbuch\?lesson=8/);
+ await page.reload();
+ await expect(page.locator('.abStudioChapterInfo')).toContainText('AB S. 60–65');
+ await page.locator('.abStudioFocusLinks a[href="/practice/lesson/8"]').click();
+ await expect(page).toHaveURL(/\/practice\/lesson\/8/);
+ await expect(page.locator('#lfChooseLesson')).toHaveValue('8');
+ await expect(page.locator('.lfBookGrid a[href="/book-exercises?lesson=8"]')).toBeVisible();
+ await page.goto('/book-exercises');
+ await expect(page.locator('#kb-source-lesson')).toHaveValue('8');
+ await page.goto('/arbeitsbuch-media');
+ await expect(page.locator('#abmLessonSelect')).toHaveValue('8');
+ await page.goto('/practice');
+ await expect(page.locator('#lfChooseLesson')).toHaveValue('8');
+ await page.locator('.lfRibbonActions button').click();
+ await expect(page.locator('.practiceV2Catalog')).toBeVisible();
+ await page.reload();
+ await expect(page.locator('.practiceV2Catalog')).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(362);
+ await context.close();
+});
+
 test('practice progress shows saved book answers, audio progress and filters at 320px without overflow',async ({browser})=>{
  const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
   viewport:{width:320,height:780},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
@@ -822,6 +869,10 @@ test('organized practice page resumes selected lesson and opens the correct less
  await page.setViewportSize({width:360,height:800});
  await page.addInitScript(()=>localStorage.setItem('dt_current_lesson','8'));
  await page.goto('/practice');
+ await expect(page.locator('.lfWorkspace')).toBeVisible();
+ await expect(page.locator('#lfChooseLesson')).toHaveValue('8');
+ await expect(page.locator('.lfBookGrid a[href="/arbeitsbuch?lesson=8"]')).toBeVisible();
+ await page.locator('.lfRibbonActions button').click();
  await expect(page.locator('.pjHero .pjMainAction')).toHaveAttribute('href',/\/lessons\/8\?/);
  await expect(page.locator('.practiceV2Header')).toContainText('۴۰۰');
  await expect(page.locator('.pjSpotlightGrid .pjLabLink')).toHaveCount(6);
@@ -1051,9 +1102,11 @@ test('Arbeitsbuch lesson 8 grades exercises and persists recovery on 360px phone
  await studio.getByRole('button',{name:'نیازمند تکرار'}).click();
  await expect(studio.locator('.abStudioEmpty')).toBeVisible();
  await studio.getByRole('button',{name:'نمایش همه تمرین‌ها'}).click();
+ await studio.locator('.abStudioToggleTasks').click();
  await studio.locator('.abStudioTask').filter({hasText:'ساعت محاوره'}).click();
  await studio.getByRole('button',{name:'08:30'}).click();
  await expect(studio.locator('.abStudioFeedback.correct')).toBeVisible();
+ await studio.locator('.abStudioToggleTasks').click();
  await studio.locator('.abStudioTask').filter({hasText:'پیام برای تغییر قرار'}).click();
  const textarea=studio.getByRole('textbox',{name:'پاسخ نوشتاری آلمانی'});
  await textarea.fill('Am Freitag habe ich keine Zeit. Geht es am Sonntag?');

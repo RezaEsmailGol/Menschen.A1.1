@@ -1,0 +1,62 @@
+.lfWorkspace{direction:rtl;display:grid;gap:14px;min-width:0;max-width:100%}
+.lfWorkspace *{box-sizing:border-box;min-width:0}
+.lfRibbon{background:linear-gradient(120deg,#282f68,#4b56a8 68%,#128f86);border-radius:19px;padding:20px 23px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:#fff}
+.lfRibbonTitle>span{display:flex;gap:7px;align-items:center;color:#b7ffdf;font-size:12px;font-weight:850}
+.lfRibbonTitle h2{font-size:clamp(20px,3vw,27px);color:#fff;margin:8px 0}
+.lfRibbonTitle p{color:#e4e9ff;margin:0;font-size:12px;line-height:1.8}
+.lfRibbonTitle p>b{display:inline-block;margin-right:7px}
+.lfRibbonActions{display:flex;align-items:end;gap:8px;flex-wrap:wrap}
+.lfRibbonActions label{display:grid;gap:5px;color:#e6ecff;font-size:11px;font-weight:850}
+.lfRibbonActions select{width:min(100%,242px);max-width:242px;background:#fff;color:#27344d;border:1px solid #b7c2e0;border-radius:11px;min-height:43px;padding:9px;font:inherit;font-size:12px}
+.lfRibbonActions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #ffffff80;background:#ffffff26;color:#fff;padding:10px 13px;border-radius:11px;min-height:43px;font-weight:850;font-size:12px;cursor:pointer}
+.lfBookArea{padding:17px 18px;background:#fff;border:1px solid #e3e8f1;border-radius:17px;display:grid;gap:13px}
+.lfBookHead{display:flex;gap:10px;align-items:start;justify-content:space-between}
+.lfBookHead h3{display:flex;align-items:center;gap:8px;margin:0 0 5px;font-size:18px;color:#35426c}
+.lfBookHead p{color:#738198;font-size:12px;line-height:1.9;margin:0}
+.lfBookHead>span{flex:0 0 auto;background:#f0f0ff;color:#574b9b;padding:7px 11px;border-radius:15px;font-size:12px;font-weight:900}
+.lfBookGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.lfBookCard{background:#f8f9fc;border:1px solid #e1e5ed;border-radius:13px;min-height:99px;padding:12px;display:flex;align-items:center;gap:11px;text-decoration:none;color:#3e4764}
+.lfBookCard:hover{border-color:#8274c3;background:#f0effe}
+.lfBookCard .lfBookIcon{flex:0 0 44px;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#e5e8ff;color:#5752b2}
+.lfBookCard .lfBookIcon.arbeitsbuch{background:#e2f6ed;color:#1e9472}
+.lfBookCard .lfBookIcon.media{background:#f4eaff;color:#8058ba}
+.lfBookCard .lfBookIcon.lesson{background:#fff0da;color:#ba7e24}
+.lfBookContent{flex:1;display:grid;gap:5px}
+.lfBookContent>b{font-size:14px;line-height:1.6}
+.lfBookContent small{font-size:11px;color:#768198;line-height:1.65}
+.lfBookContent>span{font-size:11px;color:#087d6c;font-weight:850}
+.lfBookCard>svg:last-child{flex:0 0 auto;color:#8b85b4}
+.lfExtraBooks{border:1px solid #e5e9f1;border-radius:11px;background:#fafbfe;overflow:hidden}
+.lfExtraBooks summary{display:flex;align-items:center;gap:7px;cursor:pointer;min-height:42px;padding:10px 12px;font-size:12px;font-weight:850;color:#53618d}
+.lfExtraBooks[open] summary svg{transform:rotate(-90deg)}
+.lfExtraBooks>div{display:flex;gap:9px;padding:0 12px 13px;flex-wrap:wrap}
+.lfExtraBooks a{display:inline-flex;gap:6px;align-items:center;text-decoration:none;padding:10px 11px;border:1px solid #dfe5ed;background:white;color:#4c5285;border-radius:10px;font-size:11px;font-weight:800;min-height:42px}
+.lfWorkspace :is(button,select,a,summary):focus-visible{outline:3px solid #1cbca2;outline-offset:2px}
+@media(max-width:700px){.lfRibbon{display:grid;gap:13px;padding:15px}.lfRibbonActions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto)}.lfRibbonActions select{width:100%;max-width:none}.lfBookArea{padding:12px}.lfBookGrid{grid-template-columns:1fr;gap:8px}.lfBookCard{min-height:82px;padding:10px}.lfBookCard .lfBookIcon{width:39px;flex-basis:39px;height:39px}.lfBookHead h3{font-size:16px}.lfBookContent>b{font-size:13px}.lfBookContent small{font-size:11px}.lfBookHead>span{font-size:11px}}
+@media(max-width:360px){.lfRibbonActions{grid-template-columns:1fr}.lfRibbonActions button{justify-self:start}.lfBookHead{flex-wrap:wrap}.lfBookHead>span{margin-right:auto}.lfBookCard .lfBookIcon{width:34px;flex-basis:34px;height:34px}}
+@media(prefers-color-scheme:dark){.lfBookArea,.lfExtraBooks{background:#233047;border-color:#455672}.lfBookHead h3{color:#e2eafc}.lfBookHead p{color:#bac9df}.lfBookCard,.lfExtraBooks a{background:#2d3a50;color:#f0f3ff;border-color:#52627b}.lfBookContent small{color:#becde0}.lfBookContent>span{color:#8ce2ce}.lfExtraBooks summary{color:#c5d0f3}.lfBookHead>span{background:#4b4571;color:#e1d8ff}.lfRibbonActions button{color:#fff}}
+
+.lfStartFocus{background:#f1efff;border:1px solid #c6baf0;border-radius:15px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lfStartFocus>div{flex:1 1 245px;display:flex;align-items:center;gap:9px;color:#49429b}
+.lfStartFocus>div>span{display:grid;gap:4px}.lfStartFocus>div b{font-size:14px}.lfStartFocus>div small{font-size:11px;line-height:1.7;color:#65618d}
+.lfStartFocus label{display:grid;gap:4px;font-size:11px;font-weight:850;color:#60558e}
+.lfStartFocus select{width:min(100%,220px);max-width:220px;min-height:42px;border:1px solid #bfc5db;border-radius:10px;background:#fff;color:#293551;padding:8px}
+.lfStartFocus button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;background:#594dc0;color:white;padding:10px 13px;font-weight:900;font-size:12px;min-height:42px}
+@media(max-width:650px){.lfStartFocus{display:grid}.lfStartFocus>div{flex:auto}.lfStartFocus select{width:100%;max-width:none}.lfStartFocus button{width:100%}}
+@media(prefers-color-scheme:dark){.lfStartFocus{background:#35305b;border-color:#6f62a3}.lfStartFocus>div{color:#e4daff}.lfStartFocus>div small,.lfStartFocus label{color:#cfc6ee}}
+
+/* Keep book work strictly centered on one exercise. Lists stay available on demand. */
+.courseFocusShortcut{display:flex;align-items:center;gap:9px;text-decoration:none;background:linear-gradient(110deg,#e9f8ef,#edf0ff);border:1px solid #b9dbd1;color:#346554;padding:12px 15px;min-height:51px;border-radius:13px;font-size:13px;font-weight:900}
+.courseFocusShortcut svg:last-child{margin-inline-start:auto}
+.abStudioLessonGrid[hidden],.abStudioTaskGrid[hidden]{display:none!important}
+.abStudioChangeLesson,.abStudioToggleTasks{display:inline-flex;align-items:center;gap:7px;border:1px solid #cbd6e5;background:#f5f8fd;color:#4b5f83;border-radius:10px;padding:9px 12px;min-height:43px;font-size:12px;font-weight:850}
+.abStudioChangeLesson{min-width:0}
+.abStudioToggleTasks{width:100%;justify-content:center;margin:9px 0}
+.abStudioToggleTasks span{color:#098675;background:#e1f7ed;border-radius:20px;padding:3px 8px}
+.abStudioFocusLinks,.bookFocusBack{display:flex;gap:8px;align-items:stretch;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:4px 0 8px}
+.abStudioFocusLinks a,.bookFocusBack a{flex:1 0 170px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:11px;min-height:45px;padding:10px;border:1px solid #c5dfd5;background:#ecf9f2;text-decoration:none;color:#1b7967;font-size:12px;font-weight:900}
+.abStudioTaskGrid:not([hidden]){max-height:min(34vh,270px);overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin}
+.abStudioLessonGrid:not([hidden]){max-height:170px;overflow-y:auto;scrollbar-width:thin}
+.abStudioChoose{padding-block:12px}
+@media(max-width:640px){.courseFocusShortcut{padding:11px;font-size:12px}.abStudioFocusLinks a,.bookFocusBack a{flex:0 0 190px}.abStudioChoose{padding:10px}.abStudioTaskGrid:not([hidden]){max-height:min(35vh,220px)}}
+@media(prefers-color-scheme:dark){.courseFocusShortcut,.abStudioFocusLinks a,.bookFocusBack a{background:#254a46;border-color:#39766c;color:#b4fce3}.abStudioChangeLesson,.abStudioToggleTasks{background:#2a3b54;border-color:#536781;color:#e6efff}}

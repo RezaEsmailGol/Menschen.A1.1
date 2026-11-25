@@ -12,10 +12,11 @@ import {
  mediaCorrect,saveMediaResult,saveOriginalAudioPractice,mediaNeedsReview,savePageProgress
 } from './arbeitsbuchMediaData.js';
 import './arbeitsbuchMediaStudio.css';
+import {lessonFromSearch,replaceLessonQuery,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
 
 function saved(key){try{const x=JSON.parse(localStorage.getItem(key)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch{return {}}}
 const digits=n=>Number(n||0).toLocaleString('fa-IR');
-function currentLesson(){const n=Number(new URLSearchParams(location.search).get('lesson'));return Number.isInteger(n)&&n>=1&&n<=12?n:8;}
+function currentLesson(){return lessonFromSearch(window.location.search,window.localStorage,8)}
 const tabs=[
  {id:'visual',title:'تصویری',Icon:ImageIcon},
  {id:'listeningPractice',title:'شنیداری تمرینی',Icon:Headphones},
@@ -48,9 +49,10 @@ export default function ArbeitsbuchMediaStudio({speak=()=>{},onPracticeEvent}){
  const cloudTrack=task?.kind==='originalAudio'&&cloudMap[task.id]?.book==='arbeitsbuch'?cloudMap[task.id]:null;
  const localId=task?.kind==='originalAudio'?localMap[task.id]:null;
  const hasAudio=Boolean(cloudTrack||localUrl);
- const totalDone=arbeitsbuchMediaTasks.filter(t=>progress[t.id]?.completed).length;
+ const totalDone=arbeitsbuchMediaForLesson(lessonId).filter(t=>progress[t.id]?.completed).length;
  const lessonReview=mediaNeedsReview(progress,arbeitsbuchMediaForLesson(lessonId)).length;
  useEffect(()=>{try{localStorage.setItem(AB_MEDIA_KEY,JSON.stringify(progress))}catch{}},[progress]);
+ useEffect(()=>{writeLessonFocus(window.localStorage,lessonId,true)},[lessonId]);
  useEffect(()=>{try{localStorage.setItem(AB_PAGE_PROGRESS_KEY,JSON.stringify(pageProgress))}catch{}},[pageProgress]);
  useEffect(()=>{
   let alive=true,blobUrl=null;
@@ -72,7 +74,7 @@ export default function ArbeitsbuchMediaStudio({speak=()=>{},onPracticeEvent}){
   }
  },[task?.id,activeId]);
  function choose(item){setActiveId(item.id);setAttempt(null);setHeard(false);setPlayedDemo(false);setRevealDemo(false)}
- function newLesson(next){setLessonId(Number(next));setActiveId('');setAttempt(null);setPageNo(null);setVerifiedPage(false)}
+ function newLesson(next){writeLessonFocus(window.localStorage,next,true);replaceLessonQuery(next,window.location,window.history);setLessonId(Number(next));setActiveId('');setAttempt(null);setPageNo(null);setVerifiedPage(false)}
  function newMode(next){setMode(next);setActiveId('');setAttempt(null);setHeard(false)}
  function grade(value){
   if(!task||task.kind==='originalAudio'||attempt)return;
@@ -102,8 +104,9 @@ export default function ArbeitsbuchMediaStudio({speak=()=>{},onPracticeEvent}){
    <span className="abmEyebrow"><BookOpenCheck size={18}/> Menschen A1.1 · Arbeitsbuch</span>
    <h1>تمرین‌های شنیداری و تصویری کتاب کار</h1>
    <p>{AB_MEDIA_NOTE}</p>
-   <div className="abmHeroStats"><span>{digits(totalDone)} فعالیت تکمیل‌شده</span><span>{digits(lessonReview)} نیازمند مرور در این درس</span></div>
+   <div className="abmHeroStats"><span>{digits(totalDone)} فعالیت تکمیل‌شده این درس</span><span>{digits(lessonReview)} نیازمند مرور در این درس</span></div>
   </header>
+  <nav className="bookFocusBack" aria-label="بخش‌های متمرکز درس"><a href={scopedLessonLinks(lessonId).focus}><ArrowLeft size={17}/> صفحه تمرین متمرکز درس {lessonId}</a><a href={scopedLessonLinks(lessonId).arbeitsbuch}><BookOpenCheck size={17}/> سؤال‌های نوشتاری این درس</a></nav>
   <section className="abmControls" aria-label="انتخاب تمرین">
    <label htmlFor="abmLessonSelect">درس
     <select id="abmLessonSelect" value={lessonId} onChange={e=>newLesson(e.target.value)}>

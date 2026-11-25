@@ -1,8 +1,9 @@
 import React,{useMemo,useState} from 'react';
-import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,GraduationCap,Headphones,Image as ImageIcon,Layers,Search,Sparkles,Volume2} from 'lucide-react';
+import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,GraduationCap,Headphones,Image as ImageIcon,Layers,Search,Sparkles,Target,Volume2} from 'lucide-react';
 import {courseLessonOutlines} from './lessonOutline.js';
 import {lessonExerciseHref,lessonModuleHref} from './lessonExerciseLinks.js';
 import RouteLink from './RouteLink';
+import {writeLessonFocus} from './lessonFocus.js';
 import WeekdayFlashbox from './WeekdayFlashbox.jsx';
 import './lessonDirectory.css';
 
@@ -18,7 +19,9 @@ export default function LessonDirectory({navigate,progress={},speak=()=>{},onPra
    return haystack.includes(value);
  }),[search]);
  const allExpanded=matching.length>0&&matching.every(entry=>expanded.has(entry.id));
+ function saveFocus(id){if(typeof window!=='undefined')writeLessonFocus(window.localStorage,id,true)}
  function toggle(id){
+   saveFocus(id);
    setExpanded(previous=>{const next=new Set(previous);if(next.has(id))next.delete(id);else next.add(id);return next;});
  }
  function toggleAll(){
@@ -99,7 +102,8 @@ export default function LessonDirectory({navigate,progress={},speak=()=>{},onPra
              </a>)}</div>
            </div>
            <div className="ldActions">
-             <RouteLink className="ldEnter" to={'course/'+entry.id} navigate={navigate}>ورود به درس {entry.id} و انجام تمرین‌ها <ArrowLeft size={17}/></RouteLink>
+             <RouteLink className="ldEnter" to={'course/'+entry.id} navigate={navigate} onClick={()=>saveFocus(entry.id)}>ورود به درس {entry.id} و انجام تمرین‌ها <ArrowLeft size={17}/></RouteLink>
+             <RouteLink className="ldSecondary" to={'practiceLesson/'+entry.id} navigate={navigate} onClick={()=>saveFocus(entry.id)}><Target size={17}/> تمرین متمرکز درس {entry.id} · کتاب کار</RouteLink>
              <RouteLink className="ldSecondary" to="numbers" navigate={navigate}><Headphones size={17}/> بازی اعداد</RouteLink>
            </div>
          </div>}
