@@ -36,7 +36,8 @@ test('styles touch every major route family, including workbook and SVG memory',
    '.wbRoot','.nrGame','.wcGame','.pgPage','.nightPage','.dcPage','.phasePage',
    '.vocabGrid','.numberDuoHero','.hero','.progressColumns','.gameHome'];
  for(const selector of families)assert.ok(css.includes(selector),selector);
- assert.equal(Object.keys(ROUTES).length,32);
+ assert.equal(Object.keys(ROUTES).length,33);
+ assert.equal(ROUTES.teacherClock,'/teacher-clock');
  assert.equal(ROUTES.numberMastery,'/number-mastery');
  assert.equal(ROUTES.clockMastery,'/clock-mastery');
  assert.equal(ROUTES.articles,'/articles');
