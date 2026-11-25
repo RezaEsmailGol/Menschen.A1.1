@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react';
 import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,ChevronRight,Headphones,RotateCcw,Users,Volume2} from 'lucide-react';
 import {ACTION_KEY,actionStations,actionsForLesson,actionKinds,actionTrack,actionBingoWon,actionNormalize} from './actionPagesData.js';
 import './actionPagesStudio.css';
-import {lessonFromSearch,writeLessonFocus} from './lessonFocus.js';
+import {lessonFromSearch,replaceLessonQuery,writeLessonFocus} from './lessonFocus.js';
 const number=n=>Number(n).toLocaleString('fa-IR');
 function load(){try{return JSON.parse(localStorage.getItem(ACTION_KEY)||'{}')||{}}catch{return {}}}
 export default function ActionPagesStudio({speak=()=>{},onPracticeEvent}){
@@ -26,7 +26,7 @@ export default function ActionPagesStudio({speak=()=>{},onPracticeEvent}){
  useEffect(()=>{try{localStorage.setItem(ACTION_KEY,JSON.stringify(progress))}catch{}},[progress]);
  useEffect(()=>{if(lesson)writeLessonFocus(window.localStorage,lesson,true)},[lesson]);
  function reset(item){if(!item)return;setActiveId(item.id);setStep(0);setRevealed(false);setAnswer(null);setHits(0);setHard(0);setTokens([]);setCells(Array(25).fill(false));setDraft(progress[item.id]?.draft||'')}
- function changeLesson(id){if(id)writeLessonFocus(window.localStorage,id,true);setLesson(id);setExpanded(false);reset((id?actionsForLesson(id):actionStations)[0])}
+ function changeLesson(id){if(id)writeLessonFocus(window.localStorage,id,true);replaceLessonQuery(id,window.location,window.history);setLesson(id);setExpanded(false);reset((id?actionsForLesson(id):actionStations)[0])}
  function record(item,fields){setProgress(old=>actionTrack(old,item.id,fields))}
  function end(item,fields,graded=false){record(item,{completed:true,...fields});if(graded)onPracticeEvent?.({id:item.id,lesson:item.lesson,kind:'grammar',label:item.title,correct:fields.score===100})}
  function nextTalk(isHard){const count=hard+Number(isHard);setHard(count);if(step+1>=active.turns.length){end(active,{hard:count});setStep(x=>x+1)}else{setStep(x=>x+1);setRevealed(false)}}
