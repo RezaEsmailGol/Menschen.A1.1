@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
  CURRENT_LESSON_KEY,LESSON_FOCUS_KEY,validLessonId,readLessonFocus,
- writeLessonFocus,lessonFromSearch,scopedLessonLinks
+ writeLessonFocus,lessonFromSearch,scopedLessonLinks,replaceLessonQuery
 } from '../src/lessonFocus.js';
 
 function makeStore(initial={}){
@@ -61,4 +61,19 @@ test('malformed localStorage or denied storage cannot crash focus',()=>{
  const denied={getItem(){throw Error('denied')},setItem(){throw Error('denied')}};
  assert.deepEqual(readLessonFocus(denied),{lessonId:1,enabled:false});
  assert.equal(writeLessonFocus(denied,8),false);
+});
+
+test('changing lesson rewrites its direct URL without reloading or dropping unrelated filters',()=>{
+ let replaced='';
+ const loc={href:'https://example.test/arbeitsbuch?lesson=6&mode=weak#question'};
+ const history={state:{foo:1},replaceState(state,title,url){replaced=url;this.state=state;}};
+ assert.equal(replaceLessonQuery(8,loc,history),true);
+ assert.equal(replaced,'/arbeitsbuch?lesson=8&mode=weak#question');
+ assert.equal(history.state.foo,1);
+ const page={href:'https://example.test/action-pages?page=80&lesson=8'};
+ assert.equal(replaceLessonQuery(6,page,history),true);
+ assert.equal(replaced,'/action-pages?lesson=6');
+ assert.equal(replaceLessonQuery(null,loc,history),true);
+ assert.equal(replaced,'/arbeitsbuch?mode=weak#question');
+ assert.equal(replaceLessonQuery(6,{},history),false);
 });
