@@ -50,3 +50,17 @@ export function scopedLessonLinks(id){
   vocabulary:'/essential-words?lesson='+value
  });
 }
+
+export function replaceLessonQuery(lessonId,locationObject,historyObject){
+ const lesson=validLessonId(lessonId);
+ if(!locationObject?.href||!historyObject?.replaceState)return false;
+ try{
+  const url=new URL(locationObject.href);
+  if(lesson===null)url.searchParams.delete('lesson');
+  else url.searchParams.set('lesson',String(lesson));
+  // A specific action-page bookmark must not override the new lesson scope.
+  url.searchParams.delete('page');
+  historyObject.replaceState(historyObject.state||null,'',url.pathname+url.search+url.hash);
+  return true;
+ }catch{return false;}
+}
