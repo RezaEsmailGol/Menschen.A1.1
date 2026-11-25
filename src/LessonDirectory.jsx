@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,GraduationCap,Headphones,Image as ImageIcon,Layers,Search,Sparkles,Volume2} from 'lucide-react';
+import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,GraduationCap,Headphones,Image as ImageIcon,Layers,Search,Sparkles,Target,Volume2} from 'lucide-react';
 import {courseLessonOutlines} from './lessonOutline.js';
 import {lessonExerciseHref,lessonModuleHref} from './lessonExerciseLinks.js';
 import RouteLink from './RouteLink';
