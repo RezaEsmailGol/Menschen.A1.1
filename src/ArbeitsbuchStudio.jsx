@@ -3,7 +3,7 @@ import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,ChevronRight,FileText,H
 import {ARBEITSBUCH_KEY,ARBEITSBUCH_SOURCE,ARBEITSBUCH_NOTE,arbeitsbuchLessons,arbeitsbuchLesson,arbeitsbuchTasks,arbeitsbuchTotal,gradeArbeitsbuchTask,recordArbeitsbuchAttempt,recordArbeitsbuchWriting,arbeitsbuchWeakTasks} from './arbeitsbuchSourceData.js';
 import './arbeitsbuchStudio.css';
 import Lesson8WorkbookExtensions from './Lesson8WorkbookExtensions.jsx';
-import {lessonFromSearch,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
+import {lessonFromSearch,replaceLessonQuery,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
 
 function loadState(){
  try{const data=JSON.parse(localStorage.getItem(ARBEITSBUCH_KEY)||'{}');return data&&typeof data==='object'&&!Array.isArray(data)?data:{}}catch{return {}}
@@ -53,7 +53,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
   setSelected([]);setResult(null);setShowModel(false);setSubmitted(false);
  }
  function changeLesson(value){
-  writeLessonFocus(window.localStorage,value,true);
+  writeLessonFocus(window.localStorage,value,true);replaceLessonQuery(value,window.location,window.history);
   setLessonId(value);setActiveId('');setFilter('all');setTyped('');
   setChooserOpen(false);setShowTasks(false);
   setSelected([]);setResult(null);setShowModel(false);setSubmitted(false);
