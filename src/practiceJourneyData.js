@@ -40,12 +40,13 @@ export function practiceJourney(bookSaved={},audioSaved={}){
   const answers=bookSaved?.[lesson.id]?.answers||{};
   const sections=plan.sections.map((section,n)=>{
    const completed=countAnswers(section.tasks,answers);
+   const wrong=section.tasks.filter(task=>Number(answers[task.id]?.attempts)>0&&answers[task.id]?.correct!==true).length;
    const taskIndex=section.tasks.findIndex(t=>answers[t.id]?.correct!==true);
    const first=taskIndex>=0?taskIndex+1:1;
    return {
     id:section.id,kind:MODES[n],label:labels[MODES[n]],
     name:section.title.replace(/^\s*[۰-۹\d]+\.\s*/,''),caption:section.caption,
-    total:section.tasks.length,completed,
+    total:section.tasks.length,completed,wrong,
     percent:Math.round(completed/Math.max(section.tasks.length,1)*100),
     href:lessonExerciseHref(lesson.id,section.id,first)
    };
@@ -53,7 +54,7 @@ export function practiceJourney(bookSaved={},audioSaved={}){
   const audioSummary=audioLearningSummary(audio,lesson.id);
   return {
    ...entry,description:lesson.goal,searchTerms:[lesson.grammar,...lesson.words.flat()],
-   sections,audioCompleted:audioSummary.completed,
+   sections,weakQuestions:sections.reduce((count,section)=>count+section.wrong,0),audioCompleted:audioSummary.completed,
    audioPlays:audioSummary.plays,
    audioHref:'/lessons/'+lesson.id+'#lesson-audio',
    href:nextBookExerciseHref(lesson.id,bookSaved),
@@ -88,6 +89,7 @@ export function filterPracticeLessons(lessons,search='',mode='all',status='all')
   if(status==='ongoing'&&(!lesson.started||lesson.isComplete))return false;
   if(status==='new'&&lesson.started)return false;
   if(status==='done'&&!lesson.isComplete)return false;
+  if(status==='weak'&&!lesson.weakQuestions)return false;
   if(mode!=='all'&&!lesson.sections.some(s=>s.kind===mode))return false;
   if(!query)return true;
   const numeric=query.match(/^(?:درس\s*)?(\d{1,2})$/);
