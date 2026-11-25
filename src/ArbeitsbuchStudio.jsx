@@ -37,7 +37,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
  const done=lesson?.tasks.filter(t=>isDone(progress,t)).length||0;
  const mastered=lesson?.tasks.filter(t=>progress[t.id]?.lastCorrect===true).length||0;
  const weak=arbeitsbuchWeakTasks(progress,lessonId).length;
- const totalDone=arbeitsbuchTasks.filter(t=>isDone(progress,t)).length;
+ const totalDone=done;
  const used=new Set(selected);
  useEffect(()=>{try{localStorage.setItem(ARBEITSBUCH_KEY,JSON.stringify(progress))}catch{}},[progress]);
  useEffect(()=>{writeLessonFocus(window.localStorage,lessonId,true)},[lessonId]);
@@ -81,7 +81,7 @@ export default function ArbeitsbuchStudio({speak=()=>{},onPracticeEvent}){
     <p>تمارین مستقل Arbeitsbuch، با منبع درس و صفحه، راهنمای فارسی و مرور اشتباه‌ها.</p>
     <small>{ARBEITSBUCH_NOTE}</small>
    </div>
-   <div className="abStudioTotal"><strong>{display(totalDone)} / {display(arbeitsbuchTotal)}</strong><span>فعالیت انجام‌شده</span></div>
+   <div className="abStudioTotal"><strong>{display(totalDone)} / {display(lesson?.tasks.length||0)}</strong><span>فعالیت انجام‌شده این درس</span></div>
   </header>
   <a className="abStudioMediaBanner" href={'/arbeitsbuch-media?lesson='+lessonId}>
     <Headphones size={20}/><span><b>تمرین‌های تصویری و شنیداری این درس</b>
