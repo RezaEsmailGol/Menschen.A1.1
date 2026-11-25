@@ -2,11 +2,12 @@ import React,{useEffect,useState} from 'react';
 import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,ChevronRight,Headphones,RotateCcw,Users,Volume2} from 'lucide-react';
 import {ACTION_KEY,actionStations,actionsForLesson,actionKinds,actionTrack,actionBingoWon,actionNormalize} from './actionPagesData.js';
 import './actionPagesStudio.css';
+import {lessonFromSearch,writeLessonFocus} from './lessonFocus.js';
 const number=n=>Number(n).toLocaleString('fa-IR');
 function load(){try{return JSON.parse(localStorage.getItem(ACTION_KEY)||'{}')||{}}catch{return {}}}
 export default function ActionPagesStudio({speak=()=>{},onPracticeEvent}){
  const params=new URLSearchParams(location.search);
- const [lesson,setLesson]=useState(()=>Number(params.get('page'))?0:Number(params.get('lesson'))||0);
+ const [lesson,setLesson]=useState(()=>Number(params.get('page'))?0:lessonFromSearch(window.location.search,window.localStorage,8));
  const [activeId,setActiveId]=useState('action-'+(Number(params.get('page'))||73));
  const [expanded,setExpanded]=useState(false);
  const [progress,setProgress]=useState(load);
@@ -23,8 +24,9 @@ export default function ActionPagesStudio({speak=()=>{},onPracticeEvent}){
  const index=list.findIndex(e=>e.id===active?.id);
  const completed=actionStations.filter(e=>progress[e.id]?.completed).length;
  useEffect(()=>{try{localStorage.setItem(ACTION_KEY,JSON.stringify(progress))}catch{}},[progress]);
+ useEffect(()=>{if(lesson)writeLessonFocus(window.localStorage,lesson,true)},[lesson]);
  function reset(item){if(!item)return;setActiveId(item.id);setStep(0);setRevealed(false);setAnswer(null);setHits(0);setHard(0);setTokens([]);setCells(Array(25).fill(false));setDraft(progress[item.id]?.draft||'')}
- function changeLesson(id){setLesson(id);setExpanded(false);reset((id?actionsForLesson(id):actionStations)[0])}
+ function changeLesson(id){if(id)writeLessonFocus(window.localStorage,id,true);setLesson(id);setExpanded(false);reset((id?actionsForLesson(id):actionStations)[0])}
  function record(item,fields){setProgress(old=>actionTrack(old,item.id,fields))}
  function end(item,fields,graded=false){record(item,{completed:true,...fields});if(graded)onPracticeEvent?.({id:item.id,lesson:item.lesson,kind:'grammar',label:item.title,correct:fields.score===100})}
  function nextTalk(isHard){const count=hard+Number(isHard);setHard(count);if(step+1>=active.turns.length){end(active,{hard:count});setStep(x=>x+1)}else{setStep(x=>x+1);setRevealed(false)}}
