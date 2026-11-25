@@ -664,7 +664,7 @@ test('new practice studio has 400 lesson exercises, four deep-linked skills and 
  await expect(page.locator('.pjModeTabs button')).toHaveCount(5);
  await expect(page.locator('.pjCompactLessonGrid')).toBeVisible();
  await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(0);
- await expect(page.locator('.practiceV2FocusLinks a')).toHaveCount(2);
+ await expect(page.locator('.practiceV2FocusLinks a')).toHaveCount(3);
  await expect(page.locator('.practiceV2Catalog')).toContainText('بازی اعداد');
  await expect(page.locator('.practiceV2Catalog')).toContainText('مرور هوشمند');
  await page.locator('.pjSearch input').fill('مبلمان');
@@ -720,7 +720,7 @@ test('lesson eight teacher whiteboard clock, Wann and verb drill fit 320px mobil
  await expect(page.locator('.tbClockDrawing')).toBeVisible();
  await page.locator('.tbCategoryTabs button').filter({hasText:'Wann?'}).click();
  await expect(page.locator('.tbUsageCard')).toContainText('am Mittwochabend um 19:00 Uhr');
- await expect(page.locator('.tbWords')).toContainText('in der Nacht');
+ await expect(page.locator('.tbWords').last()).toContainText('in der Nacht');
  await page.locator('.tbCategoryTabs button').filter({hasText:'sehen / wissen'}).click();
  await expect(page.locator('.tbVerbGrid')).toContainText('wisst');
  await page.locator('.tbCategoryTabs button').filter({hasText:'ساعت تخته استاد'}).click();
