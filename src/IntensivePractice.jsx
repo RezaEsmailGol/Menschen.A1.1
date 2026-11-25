@@ -88,6 +88,7 @@ export default function IntensivePractice({kind='number',speak=()=>{},onPractice
   <nav className="ipSwitch" aria-label="انتخاب درس فشرده">
    <RouteLink to="numberMastery" navigate={setTab} className={!clock?'selected':''}><Hash size={18}/> اعداد</RouteLink>
    <RouteLink to="clockMastery" navigate={setTab} className={clock?'selected':''}><Clock3 size={18}/> ساعت</RouteLink>
+   {clock&&<RouteLink to="teacherClock" navigate={setTab}><BookOpenCheck size={18}/> تخته استاد</RouteLink>}
    <RouteLink to="numbers" navigate={setTab}><Shuffle size={18}/> بازی قبلی اعداد</RouteLink>
   </nav>
   <section className="ipSetup" aria-label="تنظیم تمرین">
