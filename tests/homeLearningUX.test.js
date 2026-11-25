@@ -44,12 +44,14 @@ test('continue practice links to first unfinished exercise, not the first repeat
 });
 
 test('practice filters are substantive and preserve all activities through all tab',()=>{
- assert.deepEqual(practiceFilters.map(x=>x.id),['all','daily','speaking','words','challenge']);
+ assert.deepEqual(practiceFilters.map(x=>x.id),['all','daily','speaking','numbers','words','challenge']);
  for(const id of ['coach','speaking','night','visualMemory','classNotes','pictureGame','visual','dialogues','workbook','srs','builder','numbers','pronunciation','listen','exam','verbs','alphabet','words','flash']){
   assert.equal(matchesPracticeFilter(id,'all'),true);
   assert.ok(practiceFilters.some(x=>x.id!=='all'&&matchesPracticeFilter(id,x.id)),id+' is unfindable via groups');
  }
  assert.equal(matchesPracticeFilter('numbers','challenge'),true);
+ assert.equal(matchesPracticeFilter('numberMastery','numbers'),true);
+ assert.equal(matchesPracticeFilter('clockMastery','numbers'),true);
  assert.equal(matchesPracticeFilter('numbers','speaking'),false);
  assert.equal(matchesPracticeFilter('speaking','speaking'),true);
 });
