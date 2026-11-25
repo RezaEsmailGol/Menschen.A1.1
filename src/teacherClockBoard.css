@@ -1,0 +1,99 @@
+.tbPage{direction:rtl;display:grid;gap:16px;min-width:0;max-width:100%;color:#2f3a56}
+.tbPage *{box-sizing:border-box;min-width:0}
+.tbHero{display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(120deg,#303367,#5146a8 65%,#1d7c7b);padding:24px 28px;border-radius:22px;color:#fff;overflow:hidden}
+.tbHero h1{font-size:clamp(20px,3vw,28px);color:#fff;margin:10px 0 8px}
+.tbHero p{font-size:13px;line-height:1.95;max-width:680px;color:#e4e8ff;margin:0}
+.tbKicker{font-size:11px;display:inline-flex;align-items:center;gap:7px;color:#c9fbe5;font-weight:900}
+.tbHeroReturn{flex-shrink:0;display:flex;align-items:center;gap:7px;border:1px solid #ffffff6b;background:#ffffff24;color:#fff;border-radius:12px;padding:11px 14px;font-size:12px;font-weight:850;text-decoration:none;min-height:43px}
+.tbCategoryTabs{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:3px 1px 10px}
+.tbCategoryTabs>button{flex:1 0 185px;min-height:72px;scroll-snap-align:start;display:flex;gap:11px;align-items:center;padding:12px 14px;background:#fff;border:1px solid #e4e7f1;color:#4a5269;border-radius:15px;text-align:right;cursor:pointer}
+.tbCategoryTabs>button.active{border-color:#6e5bc8;background:#eeeaff;color:#4b3ca4;box-shadow:inset 0 0 0 1px #9487dd}
+.tbCategoryTabs>button svg{flex:0 0 auto}
+.tbCategoryTabs>button span{display:grid;gap:3px}
+.tbCategoryTabs b{font-size:13px}.tbCategoryTabs small{font-size:10px;line-height:1.6;color:#7a8196}
+.tbReference,.tbPractice{background:#fff;border:1px solid #e5e9f3;border-radius:19px;padding:20px;box-shadow:0 6px 21px #2636570c}
+.tbReference h3{font-size:15px;margin:18px 0 10px}
+.tbSectionHead{display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:16px}
+.tbSectionHead h2{font-size:18px;margin:0 0 7px;display:flex;gap:8px;align-items:center}
+.tbSectionHead p{font-size:12px;line-height:1.8;color:#6f7c92;margin:0}
+.tbSectionHead>span{flex:0 0 auto;border-radius:30px;background:#f1efff;color:#5a4aab;padding:7px 11px;font-size:11px;font-weight:900}
+.tbClockLayout{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:20px;align-items:stretch}
+.tbClockPanel{display:grid;place-items:center;background:#f6f8fd;border:1px solid #e4e8f1;border-radius:19px;padding:16px}
+.tbClockDrawing{width:100%;max-width:252px;height:auto;aspect-ratio:1}
+.tbDialNumber{font-size:17px;fill:#41476c;font-family:Arial,sans-serif;font-weight:800}
+.tbDialAfter{font-size:13px;fill:#c07f67;font-family:Arial,sans-serif;font-weight:bold}
+.tbDialBefore{font-size:13px;fill:#17917b;font-family:Arial,sans-serif;font-weight:bold}
+.tbClockLegend{display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap;font-size:10px}
+.tbAfter{color:#b96851}.tbBefore{color:#087f6e}
+.tbClockReadings{display:grid;gap:10px;align-content:center}
+.tbClockTime{font-size:clamp(26px,4vw,39px);letter-spacing:.02em;color:#4e4097}
+.tbReading{display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:4px 8px;padding:13px;background:#f4f1ff;border:1px solid #e7dffc;border-radius:13px}
+.tbReading.conversational{background:#eaf8f3;border-color:#c9e7dc}
+.tbReading>small{grid-column:1/-1;color:#76728c;font-size:11px}
+.tbReading>b{font-size:clamp(16px,2.4vw,20px);overflow-wrap:anywhere;text-align:right;color:#3c3675}
+.tbReading.conversational>b{color:#166f60}
+.tbReading button{grid-column:2;grid-row:2;display:grid;place-items:center;border:0;border-radius:9px;background:white;color:#6454b4;cursor:pointer;min-height:38px}
+.tbClockNote{font-size:12px;line-height:1.9;color:#68748a;margin:0}
+.tbTimeStrip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;padding:13px 1px 11px}
+.tbTimeStrip button{flex:0 0 138px;scroll-snap-align:start;border:1px solid #e0e3ed;background:#f9fafe;color:#374665;border-radius:13px;min-height:76px;display:grid;align-content:center;gap:6px;padding:11px;text-align:center;cursor:pointer}
+.tbTimeStrip button.active{border-color:#379983;background:#e6f7f0;box-shadow:inset 0 0 0 1px #1aaf8d}
+.tbTimeStrip button b{font-size:19px}.tbTimeStrip button small{font-size:11px;color:#6f7691;overflow-wrap:anywhere}
+.tbGrammarRules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tbGrammarRules>div{border:1px solid #e9e6f4;background:#f9f8ff;border-radius:12px;padding:12px;display:grid;gap:8px}
+.tbGrammarRules b{font-size:12px;color:#4a428e;line-height:1.8}.tbGrammarRules small{font-size:11px;color:#7a8394}
+.tbUsageCard{border:1px solid #d8e8dc;background:#eff9f0;border-radius:16px;padding:18px;display:grid;gap:9px}
+.tbUsageCard>span{font-size:11px;color:#347b62;font-weight:800}.tbUsageCard>strong{font-size:clamp(17px,2.7vw,24px);color:#1d725b;overflow-wrap:anywhere}
+.tbUsageCard p{margin:0;font-size:15px;line-height:1.9;overflow-wrap:anywhere}
+.tbUsageCard small{font-size:12px;color:#497864;line-height:1.9}
+.tbUsageCard button{justify-self:start;background:#fff;border:1px solid #add7bd;border-radius:10px;color:#237555;padding:10px 13px;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800}
+.tbWords{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tbWords button{display:grid;grid-template-columns:minmax(0,1fr) 17px;gap:4px;text-align:right;border:1px solid #e1e6ee;background:#f9fbff;border-radius:12px;min-height:67px;padding:10px;color:#354569;cursor:pointer}
+.tbWords button b{font-size:13px;grid-column:1;overflow-wrap:anywhere}
+.tbWords button small{font-size:11px;color:#7a859a;grid-column:1}
+.tbWords button svg{grid-column:2;grid-row:1/3;align-self:center;color:#5b66a3}
+.tbWeekend,.tbException{font-size:12px;line-height:1.95;color:#695781;background:#f7f4ff;border-radius:12px;padding:11px 14px;margin:12px 0}
+.tbVerbGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tbVerb{border:1px solid #e3e7f0;border-radius:14px;padding:13px;background:#fafbff}
+.tbVerb h3{display:flex;justify-content:space-between;align-items:center;font-size:21px;color:#4e46a3;margin:0 0 9px}.tbVerb h3 small{font-size:12px;color:#737d91}
+.tbVerbRows{display:grid;gap:3px}.tbVerbRows button{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 20px;gap:8px;align-items:center;border:0;border-bottom:1px solid #e9edf4;background:transparent;padding:8px 6px;text-align:right;font-size:13px;color:#3d4967;cursor:pointer}
+.tbVerbRows button b{color:#1b7b6f}.tbVerbRows button svg{color:#766bb4}
+.tbVerb>p{border-top:1px solid #e5e8f1;margin:10px 0 0;padding-top:10px;font-size:13px;line-height:1.9;color:#464c78;overflow-wrap:anywhere}
+.tbPractice{display:grid;gap:12px}
+.tbSetting{display:grid;gap:7px}.tbSetting>span{font-size:13px;font-weight:850}
+.tbOptions{display:flex;gap:7px;flex-wrap:wrap}.tbOptions>button{flex:1 1 115px;min-height:45px;border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800;border:1px solid #dfe4ee;background:#f6f8fc;color:#485775;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.tbOptions>button.selected{background:#ebe9ff;color:#5647ad;border-color:#9080dc}
+.tbStartActions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.tbStartActions>button{flex:1 1 180px}
+.tbPrimary,.tbReview,.tbNext,.tbReveal{min-height:46px;display:inline-flex;justify-content:center;align-items:center;gap:9px;border:0;border-radius:12px;font-weight:900;padding:12px 15px;cursor:pointer}
+.tbPrimary{background:#4e43a9;color:white}.tbReview{background:#e9f8f2;color:#187c65}.tbNext{width:100%;background:#176d63;color:#fff}
+.tbReveal{background:#e9e5ff;color:#5145a2;width:100%}
+.tbPage button:disabled{opacity:.48;cursor:not-allowed}
+.tbPage button:focus-visible,.tbPage a:focus-visible,.tbPage input:focus-visible{outline:3px solid #1da98a;outline-offset:2px}
+.tbQuestion{display:grid;gap:13px;width:min(100%,680px);margin:0 auto}
+.tbQuestionBar{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;font-size:12px;font-weight:850;color:#53647f}
+.tbProgress{height:7px;background:#e9eaf4;border-radius:8px;overflow:hidden}
+.tbProgress>span{display:block;height:100%;background:linear-gradient(90deg,#21bca0,#6b5fd5);transition:width .2s}
+.tbQuestion h3{font-size:16px;margin:4px 0;line-height:1.8}
+.tbQuestionDisplay{min-height:88px;border:1px solid #e0dff5;border-radius:15px;background:#f5f3ff;display:grid;place-items:center;font-size:clamp(24px,5vw,36px);font-weight:900;color:#4a3f93;padding:15px 12px;overflow-wrap:anywhere;text-align:center}
+.tbAudioPrompt{display:flex;align-items:center;justify-content:center;gap:12px;border-radius:15px;border:1px solid #d9d9ef;background:#f3f3ff;padding:22px;font-size:15px;color:#574caf;font-weight:900}
+.tbWriteForm{display:grid;gap:9px}.tbWriteForm label{font-size:12px;font-weight:800;color:#526079}
+.tbWriteForm input{width:100%;min-height:52px;padding:12px 14px;border:2px solid #cfd5e5;border-radius:12px;background:#fff;color:#202f49;text-align:left;font-size:18px}
+.tbUmlauts{display:flex;gap:7px;direction:ltr}.tbUmlauts button{min-width:40px;min-height:37px;border-radius:8px;border:1px solid #d7ddea;background:#eff2fb;font-size:17px;font-weight:900}
+.tbFeedback{display:flex;gap:13px;align-items:center;border:1px solid #f2adad;background:#fff0ed;color:#a74338;border-radius:13px;padding:12px}
+.tbFeedback.correct{background:#e8f9f0;border-color:#a0e3c6;color:#126e52}
+.tbFeedback>div{flex:1;display:grid;gap:6px}.tbFeedback b{font-size:13px}
+.tbFeedback strong{font-size:16px;overflow-wrap:anywhere}.tbFeedback small{font-size:11px;line-height:1.8}
+.tbFeedback>button,.tbFlip>button{background:#fff;border:1px solid #dce1e8;border-radius:9px;padding:9px 12px;color:#5363a6;min-height:40px;display:flex;align-items:center;gap:6px}
+.tbFlip{display:grid;gap:8px;justify-items:center;background:#effbf7;padding:17px;border:1px solid #ceeadd;border-radius:12px}
+.tbFlip>b{font-size:clamp(17px,4vw,24px);overflow-wrap:anywhere;text-align:center}
+.tbFlashChoices{display:flex;gap:9px}.tbFlashChoices>button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;border:1px solid #dbe1ec;border-radius:11px;padding:11px 14px;background:#f4f7fd;color:#44546f;font-weight:850}
+.tbFlashChoices>button:last-child{background:#e5f8f0;color:#11826a;border-color:#bde8d8}
+.tbSummary{display:grid;justify-items:center;gap:12px;padding:25px 10px;text-align:center}
+.tbSummary svg{color:#1aa47b}.tbSummary h3{font-size:22px;margin:0}
+.tbSummary strong{font-size:23px;color:#3f3294}.tbSummary p{font-size:13px;margin:0}.tbSummary .tbStartActions{width:100%;max-width:460px}
+.tbFooter{display:flex;flex-wrap:wrap;gap:8px}.tbFooter>a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;border:1px solid #dfe2f0;background:#fff;border-radius:11px;padding:11px 13px;color:#4e479c;font-size:12px;font-weight:900}
+@media(max-width:780px){.tbClockLayout{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:12px}.tbGrammarRules{grid-template-columns:repeat(2,minmax(0,1fr))}.tbWords{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:610px){.tbHero{display:block;padding:16px}.tbHeroReturn{width:max-content;margin-top:12px}.tbReference,.tbPractice{padding:13px}.tbCategoryTabs>button{flex:0 0 195px}.tbClockLayout{grid-template-columns:1fr}.tbClockPanel{padding:8px}.tbClockDrawing{max-width:235px}.tbClockReadings{gap:8px}.tbClockTime{font-size:26px}.tbSectionHead{flex-wrap:wrap}.tbSectionHead>span{margin-inline-start:auto}.tbWords{grid-template-columns:repeat(2,minmax(0,1fr))}.tbVerbGrid{grid-template-columns:1fr}.tbGrammarRules{gap:6px}.tbTimeStrip button{flex-basis:135px}.tbFlashChoices{flex-wrap:wrap}.tbFeedback{flex-wrap:wrap}.tbFeedback>button{margin-inline-start:auto}}
+@media(max-width:360px){.tbGrammarRules{grid-template-columns:1fr 1fr}.tbGrammarRules>div{padding:8px}.tbGrammarRules b{font-size:11px}.tbWords button{padding:8px}.tbWords button b{font-size:12px}}
+@media(prefers-color-scheme:dark){.tbPage{color:#e8effd}.tbReference,.tbPractice,.tbFooter>a,.tbCategoryTabs>button{background:#233148;border-color:#465572;color:#e8efff}.tbCategoryTabs small,.tbSectionHead p{color:#bdcae0}.tbCategoryTabs>button.active,.tbOptions>button.selected{background:#423a72;color:#e5dfff;border-color:#7568cc}.tbClockPanel,.tbVerb,.tbWords button,.tbGrammarRules>div{background:#2a3a54;border-color:#506180;color:#e9f0ff}.tbReading{background:#343057;border-color:#595080}.tbReading>b,.tbClockTime,.tbGrammarRules b{color:#dfdaff}.tbReading.conversational{background:#214d48;border-color:#327a70}.tbReading.conversational>b{color:#a8f5d9}.tbReading>small,.tbGrammarRules small,.tbWords button small,.tbClockNote{color:#bdcae0}.tbTimeStrip button,.tbOptions button{background:#2d3e56;border-color:#52617e;color:#e8eeff}.tbTimeStrip button.active{background:#1c5049;color:#caffed}.tbUsageCard{background:#214739;border-color:#47715d}.tbUsageCard p,.tbUsageCard>strong{color:#d3ffec}.tbUsageCard small{color:#a7e6cd}.tbVerbRows button{color:#e0eaff;border-color:#495973}.tbVerbRows button b{color:#a6f8df}.tbVerb>p{color:#e0e8f9;border-color:#495973}.tbQuestion h3,.tbWriteForm label{color:#edf2ff}.tbQuestionDisplay,.tbAudioPrompt{background:#34345c;border-color:#5b5488;color:#e5ddff}.tbWriteForm input{background:#111a2a;color:#f7f8ff;border-color:#5c6c86}.tbFeedback.correct{background:#164e42;color:#d5ffec}.tbFeedback.incorrect{background:#5c3535;color:#ffddd7}.tbSummary strong{color:#dfdaff}.tbWeekend,.tbException{background:#443b64;color:#e4d8ff}}
+@media(prefers-reduced-motion:reduce){.tbProgress>span{transition:none}}

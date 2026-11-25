@@ -37,6 +37,7 @@ const practiceCategories=[
   {id:'srs',label:'مرور هوشمند',hint:'کلمه‌هایی که زمان مرورشان رسیده',Icon:Layers,theme:'purple'},
   {id:'builder',label:'بازی جمله‌سازی',hint:'کلمات را به جمله صحیح تبدیل کن',Icon:Gamepad2,theme:'green'},
   {id:'numberMastery',label:'تمرین سخت اعداد · نوشتن و فلش‌کارت',hint:'ده، بیست، چهل، دویست، سیصد تا هزار · دیکته اجباری و مرور هوشمند ضعف',Icon:Hash,theme:'amber'},
+  {id:'teacherClock',label:'گرامر ساعت تخته استاد · درس ۸',hint:'همه ساعت‌های ۱۶:۰۰ تا ۱۷:۰۰، vor/nach/halb، روزهای هفته، sehen/wissen و آزمون نوشتن',Icon:Clock3,theme:'sky'},
   {id:'clockMastery',label:'ساعت رسمی و محاوره‌ای · درس ۸',hint:'ربع، نیم، دقیقه، دیکته نوشتاری، فلش‌کارت و آزمون سخت',Icon:Clock3,theme:'sky'},
   {id:'numbers',label:'بازی اعداد تا ۱۰۰ میلیون',hint:'شنیدن، نوشتن، تشخیص کلمه و مرور اعداد سخت',Icon:Hash,theme:'amber'},
   {id:'pronunciation',label:'تلفظ و استثناها',hint:'از Ich-Laut تا Ach-Laut',Icon:Volume2,theme:'sky'},
@@ -52,7 +53,7 @@ const skillLabels={
   vocab:'واژگان',grammar:'صرف و گرامر',sentence:'جمله‌سازی',speaking:'تمرین گفتار',reading:'درک جمله',
   number:'اعداد',dictation:'دیکته',pronunciation:'تلفظ',dialogue:'گفت‌وگو',visual:'تمرین تصویری'
 };
-const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed','dt_audio_learning_v1','dt_menschen_audio_card_tracks_v1','dt_partner_practice_v1','dt_kursbuch_exercises_v1','dt_arbeitsbuch_studio_v1','dt_arbeitsbuch_media_v1','dt_arbeitsbuch_page_index_v1','dt_book_audio_task_map_v1','dt_menschen_cloud_audio_tasks_v1','dt_aktionsseiten_73_96_v1','dt_essential_vocab_20261123_v1','dt_l8_minute_accuracy_v1','dt_ab8_days_appointments_v1','dt_intensive_spelling_v1'];
+const backupKeys=['dt_daily_goal_v1','dt_dialogues_v1','dt_cards','dt_stats','dt_course_v1','dt_srs_v1','dt_mastery_v1','dt_teacher_workbook_v1','dt_teacher_workbook_page_v1','dt_book_lessons_v1','dt_night_shift_v1','dt_speaking_v1','dt_current_lesson','dt_audio_speed','dt_audio_learning_v1','dt_menschen_audio_card_tracks_v1','dt_partner_practice_v1','dt_kursbuch_exercises_v1','dt_arbeitsbuch_studio_v1','dt_arbeitsbuch_media_v1','dt_arbeitsbuch_page_index_v1','dt_book_audio_task_map_v1','dt_menschen_cloud_audio_tasks_v1','dt_aktionsseiten_73_96_v1','dt_essential_vocab_20261123_v1','dt_l8_minute_accuracy_v1','dt_ab8_days_appointments_v1','dt_intensive_spelling_v1','dt_teacher_clock_board_v1'];
 
 
 function savedBookAnswers(){
@@ -196,7 +197,7 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
       <RouteLink to="course" navigate={setTab}><BookOpenCheck size={17}/> مشاهده درس‌ها <ArrowLeft size={17}/></RouteLink>
     </header>
     <nav className="practiceJumpNav" aria-label="دسترسی سریع در صفحه تمرین‌ها"><a href="#practice-lessons"><BookOpenCheck size={17}/> درس‌ها</a><a href="#practice-tools"><Layers size={17}/> ابزارهای تمرینی</a><a href="#practice-review"><RotateCcw size={17}/> مرور و مدال</a></nav>
-    <div className="practiceV2FocusLinks"><RouteLink to="numberMastery" navigate={setTab}><Hash size={22}/><span><b>تمرین سخت اعداد</b><small>فلش‌کارت · دیکته · ۱۰، ۲۰، ۴۰، ۲۰۰، ۳۰۰</small></span><ArrowLeft size={18}/></RouteLink><RouteLink to="clockMastery" navigate={setTab}><Clock3 size={22}/><span><b>تمرین سخت ساعت</b><small>نوشتن ساعت رسمی و محاوره‌ای · دقیقه به دقیقه</small></span><ArrowLeft size={18}/></RouteLink></div>
+    <div className="practiceV2FocusLinks"><RouteLink to="teacherClock" navigate={setTab}><Clock3 size={22}/><span><b>گرامر ساعت تخته استاد</b><small>۱۶:۰۰ تا ۱۷:۰۰ · vor / nach / halb · آزمون سخت</small></span><ArrowLeft size={18}/></RouteLink><RouteLink to="numberMastery" navigate={setTab}><Hash size={22}/><span><b>تمرین سخت اعداد</b><small>فلش‌کارت · دیکته · ۱۰، ۲۰، ۴۰، ۲۰۰، ۳۰۰</small></span><ArrowLeft size={18}/></RouteLink><RouteLink to="clockMastery" navigate={setTab}><Clock3 size={22}/><span><b>تمرین سخت ساعت</b><small>نوشتن ساعت رسمی و محاوره‌ای · دقیقه به دقیقه</small></span><ArrowLeft size={18}/></RouteLink></div>
     <a className="speechWeakLink" href="/speaking?review=words"><Mic2 size={21}/><span>تمرین هوشمند تلفظ · {weakSpeechWords(speakingState).length.toLocaleString('fa-IR')} کلمه برای مرور</span><ChevronLeft size={17}/></a>
     <PracticeJourney journey={journey} setTab={setTab} medal={achievements.nextBadge} memory={memory} storedLesson={storedLesson}/>
     <div className="practiceV2Recommended">

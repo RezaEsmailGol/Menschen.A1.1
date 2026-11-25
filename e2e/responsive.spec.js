@@ -664,7 +664,7 @@ test('new practice studio has 400 lesson exercises, four deep-linked skills and 
  await expect(page.locator('.pjModeTabs button')).toHaveCount(5);
  await expect(page.locator('.pjCompactLessonGrid')).toBeVisible();
  await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(0);
- await expect(page.locator('.practiceV2FocusLinks a')).toHaveCount(2);
+ await expect(page.locator('.practiceV2FocusLinks a')).toHaveCount(3);
  await expect(page.locator('.practiceV2Catalog')).toContainText('بازی اعداد');
  await expect(page.locator('.practiceV2Catalog')).toContainText('مرور هوشمند');
  await page.locator('.pjSearch input').fill('مبلمان');
@@ -705,6 +705,34 @@ test('intensive number and clock drill pages fit 320px and support writing, audi
  await expect(page.locator('.ipReveal')).toBeVisible();
  const widthClock=await page.evaluate(()=>document.documentElement.scrollWidth);
  expect(widthClock).toBeLessThanOrEqual(322);
+ await context.close();
+});
+
+test('lesson eight teacher whiteboard clock, Wann and verb drill fit 320px mobile',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:320,height:760},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.goto('/teacher-clock');
+ await expect(page.locator('.tbHero')).toContainText('تخته استاد');
+ await expect(page.locator('.tbTimeStrip button')).toHaveCount(13);
+ await page.locator('.tbTimeStrip button').filter({hasText:'16:30'}).click();
+ await expect(page.locator('.tbReading.conversational')).toContainText('halb fünf');
+ await expect(page.locator('.tbClockDrawing')).toBeVisible();
+ await page.locator('.tbCategoryTabs button').filter({hasText:'Wann?'}).click();
+ await expect(page.locator('.tbUsageCard')).toContainText('am Mittwochabend um 19:00 Uhr');
+ await expect(page.locator('.tbWords').last()).toContainText('in der Nacht');
+ await page.locator('.tbCategoryTabs button').filter({hasText:'sehen / wissen'}).click();
+ await expect(page.locator('.tbVerbGrid')).toContainText('wisst');
+ await page.locator('.tbCategoryTabs button').filter({hasText:'ساعت تخته استاد'}).click();
+ await page.locator('.tbPractice .tbStartActions .tbPrimary').click();
+ await expect(page.locator('.tbQuestion')).toBeVisible();
+ await page.locator('#tb-answer').fill('wrong spelling');
+ await page.getByRole('button',{name:'بررسی دقیق پاسخ'}).click();
+ await expect(page.locator('.tbFeedback.incorrect')).toBeVisible();
+ const storage=await page.evaluate(()=>localStorage.getItem('dt_teacher_clock_board_v1'));
+ expect(storage).toContain('clock:');
+ const pageWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(pageWidth).toBeLessThanOrEqual(322);
  await context.close();
 });
 

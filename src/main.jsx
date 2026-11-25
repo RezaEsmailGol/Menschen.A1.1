@@ -6,6 +6,7 @@ import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, La
 import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
 const IntensivePractice = React.lazy(() => import('./IntensivePractice.jsx'));
+const TeacherClockBoard = React.lazy(() => import('./TeacherClockBoard.jsx'));
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
@@ -129,7 +130,7 @@ const routes = [
 ];
 const secondaryTitles = {
   arbeitsbuchMedia:'کتاب کار · تمرین تصویری و شنیداری',arbeitsbuch:'کتاب کار Arbeitsbuch',actionPages:'تمرین‌های دوره‌ای ۷۳ تا ۹۶',essentialWords:'واژگان مهم کتاب',bookSource:'تمرین‌های اصلی کتاب',partner:'گفت‌وگوی دونفره',coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
-  numbers:'بازی اعداد ۰ تا ۱۰۰',numberMastery:'تمرین سخت اعداد و املا',clockMastery:'ساعت رسمی و محاوره‌ای',practiceLesson:'بخش‌های تمرینی درس',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
+  numbers:'بازی اعداد ۰ تا ۱۰۰',numberMastery:'تمرین سخت اعداد و املا',clockMastery:'ساعت رسمی و محاوره‌ای',teacherClock:'گرامر ساعت تخته استاد · درس ۸',practiceLesson:'بخش‌های تمرینی درس',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'باشگاه صرف افعال'
 };
@@ -203,6 +204,7 @@ function App() {
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} progress={progress} dailyGoal={dailyGoal} speakingState={speakingState} />}
       {tab==='practiceLesson' && <PracticeLessonPage lessonId={Number(route.split('/')[1])} setTab={setTab}/>}
       {['numberMastery','clockMastery'].includes(tab) && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین سخت...</p>}><IntensivePractice key={tab} kind={tab==='clockMastery'?'clock':'number'} speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
+      {tab==='teacherClock' && <React.Suspense fallback={<p role="status">در حال بازکردن گرامر ساعت تخته استاد...</p>}><TeacherClockBoard speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
       {tab==='coach' && <DailyCoach setTab={setTab} memory={memory} progress={progress} schedule={schedule} goal={dailyGoal} setGoal={updateDailyGoal} />}
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}

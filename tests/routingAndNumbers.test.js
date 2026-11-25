@@ -33,6 +33,8 @@ test('all 12 lessons and workbook pages support direct deep links',()=>{
 test('all lesson focus pages and strict number/time drills are independently shareable',()=>{
  assert.equal(pathForRoute('numberMastery'),'/number-mastery');
  assert.equal(pathForRoute('clockMastery'),'/clock-mastery');
+ assert.equal(pathForRoute('teacherClock'),'/teacher-clock');
+ assert.equal(routeFromPath('/teacher-clock'),'teacherClock');
  for(let id=1;id<=12;id++){
   assert.equal(pathForRoute('practiceLesson/'+id),'/practice/lesson/'+id);
   assert.equal(routeFromPath('/practice/lesson/'+id),'practiceLesson/'+id);
