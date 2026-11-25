@@ -2,10 +2,11 @@ import React,{useEffect,useState} from 'react';
 import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,ChevronRight,Gamepad2,GraduationCap,RotateCcw,Volume2} from 'lucide-react';
 import {ESSENTIAL_KEY,essentialGroups,essentialForLesson,essentialWords,essentialOptions,essentialGrade,essentialRecord,essentialMarkSeen,essentialWeak} from './essentialVocabularyData.js';
 import './essentialVocabularyStudio.css';
+import {lessonFromSearch,writeLessonFocus} from './lessonFocus.js';
 const number=n=>Number(n).toLocaleString('fa-IR');
 function restore(){try{return JSON.parse(localStorage.getItem(ESSENTIAL_KEY)||'{}')||{}}catch{return {}}}
 export default function EssentialVocabularyStudio({speak=()=>{},onPracticeEvent}){
- const [lesson,setLesson]=useState(()=>{const n=Number(new URLSearchParams(location.search).get('lesson'));return n>=1&&n<=12?n:8});
+ const [lesson,setLesson]=useState(()=>lessonFromSearch(window.location.search,window.localStorage,8));
  const [mode,setMode]=useState('learn');
  const [index,setIndex]=useState(0);
  const [flipped,setFlipped]=useState(false);
@@ -20,7 +21,8 @@ export default function EssentialVocabularyStudio({speak=()=>{},onPracticeEvent}
  const completed=essentialWords.filter(w=>progress[w.id]?.seen).length;
  const weak=essentialWeak(progress,lesson);
  useEffect(()=>{try{localStorage.setItem(ESSENTIAL_KEY,JSON.stringify(progress))}catch{}},[progress]);
- function chooseLesson(value){setLesson(value);setIndex(0);setMode('learn');setFlipped(false);setAnswer(null);setSession({right:0,total:0});setReviewIds(null)}
+ useEffect(()=>{writeLessonFocus(window.localStorage,lesson,true)},[lesson]);
+ function chooseLesson(value){writeLessonFocus(window.localStorage,value,true);setLesson(value);setIndex(0);setMode('learn');setFlipped(false);setAnswer(null);setSession({right:0,total:0});setReviewIds(null)}
  function switchMode(next){setMode(next);setIndex(0);setFlipped(false);setAnswer(null);setSession({right:0,total:0});setReviewIds(null)}
  function startWeak(){if(!weak.length)return;setMode('game');setIndex(0);setFlipped(false);setAnswer(null);setSession({right:0,total:0});setReviewIds(weak.map(w=>w.id))}
  function next(){setIndex(i=>Math.min(words.length,i+1));setAnswer(null);setFlipped(false)}
