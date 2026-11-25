@@ -3,7 +3,7 @@ import {ArrowLeft,BookOpenCheck,CheckCircle2,ChevronLeft,Headphones,MessageCircl
 import {lessons} from './courseData.js';
 import {PARTNER_STORE,partnerScenarios,partnerForLesson,partnerProgress,advancePartnerProgress} from './partnerPracticeData.js';
 import './partnerPractice.css';
-import {lessonFromSearch,writeLessonFocus} from './lessonFocus.js';
+import {lessonFromSearch,replaceLessonQuery,writeLessonFocus} from './lessonFocus.js';
 
 const readState=()=>{try{const saved=JSON.parse(localStorage.getItem(PARTNER_STORE)||'{}');return saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{}}catch{return {}}};
 const initialLesson=()=>lessonFromSearch(window.location.search,window.localStorage,8);
@@ -22,7 +22,7 @@ export default function PartnerPractice({speak=()=>{}}){
  const completed=partnerScenarios.filter(s=>state[s.id]?.completed).length;
  useEffect(()=>{try{localStorage.setItem(PARTNER_STORE,JSON.stringify(state));}catch{}},[state]);
  useEffect(()=>{writeLessonFocus(window.localStorage,lessonId,true)},[lessonId]);
- function changeLesson(id){writeLessonFocus(window.localStorage,id,true);setLessonId(id);setActiveId('');setRevealed(false);setFinished(false);setTurnIndex(0)}
+ function changeLesson(id){writeLessonFocus(window.localStorage,id,true);replaceLessonQuery(id,window.location,window.history);setLessonId(id);setActiveId('');setRevealed(false);setFinished(false);setTurnIndex(0)}
  function start(scenario,reset=false){
   setActiveId(scenario.id);
   const before=partnerProgress(state,scenario.id);
