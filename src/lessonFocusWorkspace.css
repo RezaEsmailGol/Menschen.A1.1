@@ -35,3 +35,12 @@
 @media(max-width:700px){.lfRibbon{display:grid;gap:13px;padding:15px}.lfRibbonActions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto)}.lfRibbonActions select{width:100%;max-width:none}.lfBookArea{padding:12px}.lfBookGrid{grid-template-columns:1fr;gap:8px}.lfBookCard{min-height:82px;padding:10px}.lfBookCard .lfBookIcon{width:39px;flex-basis:39px;height:39px}.lfBookHead h3{font-size:16px}.lfBookContent>b{font-size:13px}.lfBookContent small{font-size:11px}.lfBookHead>span{font-size:11px}}
 @media(max-width:360px){.lfRibbonActions{grid-template-columns:1fr}.lfRibbonActions button{justify-self:start}.lfBookHead{flex-wrap:wrap}.lfBookHead>span{margin-right:auto}.lfBookCard .lfBookIcon{width:34px;flex-basis:34px;height:34px}}
 @media(prefers-color-scheme:dark){.lfBookArea,.lfExtraBooks{background:#233047;border-color:#455672}.lfBookHead h3{color:#e2eafc}.lfBookHead p{color:#bac9df}.lfBookCard,.lfExtraBooks a{background:#2d3a50;color:#f0f3ff;border-color:#52627b}.lfBookContent small{color:#becde0}.lfBookContent>span{color:#8ce2ce}.lfExtraBooks summary{color:#c5d0f3}.lfBookHead>span{background:#4b4571;color:#e1d8ff}.lfRibbonActions button{color:#fff}}
+
+.lfStartFocus{background:#f1efff;border:1px solid #c6baf0;border-radius:15px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lfStartFocus>div{flex:1 1 245px;display:flex;align-items:center;gap:9px;color:#49429b}
+.lfStartFocus>div>span{display:grid;gap:4px}.lfStartFocus>div b{font-size:14px}.lfStartFocus>div small{font-size:11px;line-height:1.7;color:#65618d}
+.lfStartFocus label{display:grid;gap:4px;font-size:11px;font-weight:850;color:#60558e}
+.lfStartFocus select{width:min(100%,220px);max-width:220px;min-height:42px;border:1px solid #bfc5db;border-radius:10px;background:#fff;color:#293551;padding:8px}
+.lfStartFocus button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;background:#594dc0;color:white;padding:10px 13px;font-weight:900;font-size:12px;min-height:42px}
+@media(max-width:650px){.lfStartFocus{display:grid}.lfStartFocus>div{flex:auto}.lfStartFocus select{width:100%;max-width:none}.lfStartFocus button{width:100%}}
+@media(prefers-color-scheme:dark){.lfStartFocus{background:#35305b;border-color:#6f62a3}.lfStartFocus>div{color:#e4daff}.lfStartFocus>div small,.lfStartFocus label{color:#cfc6ee}}
