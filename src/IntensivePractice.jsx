@@ -3,7 +3,7 @@ import {ArrowLeft,ArrowRight,BookOpenCheck,CheckCircle2,Clock3,Headphones,Hash,K
 import RouteLink from './RouteLink.jsx';
 import {germanNumber} from './learningData.js';
 import {
- INTENSIVE_KEY,NUMBER_LEVELS,CLOCK_LEVELS,drillKey,loadIntensiveProgress,
+ NUMBER_LEVELS,CLOCK_LEVELS,drillKey,loadIntensiveProgress,
  saveIntensiveProgress,recordIntensiveAnswer,weakDrillItems,makeIntensiveRound,
  clockAnswer,checkIntensiveAnswer
 } from './intensivePracticeEngine.js';
@@ -113,7 +113,7 @@ export default function IntensivePractice({kind='number',speak=()=>{},onPractice
    </div>
    <div className="ipStartRow">
     <button type="button" className="ipPrimary" onClick={()=>start(false)} disabled={running&&!complete}>
-      <Target size={18}/> {running?'شروع دور جدید':'شروع آزمون ۱۶ سؤالی'} <ArrowLeft size={16}/>
+      <Target size={18}/> {running?'شروع دور جدید':'شروع آزمون تا ۱۶ سؤال'} <ArrowLeft size={16}/>
     </button>
     <button type="button" className="ipWeak" disabled={!weak.length||running&&!complete} onClick={()=>start(true)}>
      <RotateCcw size={17}/> مرور ضعف‌ها ({fa(weak.length)})
