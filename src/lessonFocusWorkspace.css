@@ -44,3 +44,19 @@
 .lfStartFocus button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;background:#594dc0;color:white;padding:10px 13px;font-weight:900;font-size:12px;min-height:42px}
 @media(max-width:650px){.lfStartFocus{display:grid}.lfStartFocus>div{flex:auto}.lfStartFocus select{width:100%;max-width:none}.lfStartFocus button{width:100%}}
 @media(prefers-color-scheme:dark){.lfStartFocus{background:#35305b;border-color:#6f62a3}.lfStartFocus>div{color:#e4daff}.lfStartFocus>div small,.lfStartFocus label{color:#cfc6ee}}
+
+/* Keep book work strictly centered on one exercise. Lists stay available on demand. */
+.courseFocusShortcut{display:flex;align-items:center;gap:9px;text-decoration:none;background:linear-gradient(110deg,#e9f8ef,#edf0ff);border:1px solid #b9dbd1;color:#346554;padding:12px 15px;min-height:51px;border-radius:13px;font-size:13px;font-weight:900}
+.courseFocusShortcut svg:last-child{margin-inline-start:auto}
+.abStudioLessonGrid[hidden],.abStudioTaskGrid[hidden]{display:none!important}
+.abStudioChangeLesson,.abStudioToggleTasks{display:inline-flex;align-items:center;gap:7px;border:1px solid #cbd6e5;background:#f5f8fd;color:#4b5f83;border-radius:10px;padding:9px 12px;min-height:43px;font-size:12px;font-weight:850}
+.abStudioChangeLesson{min-width:0}
+.abStudioToggleTasks{width:100%;justify-content:center;margin:9px 0}
+.abStudioToggleTasks span{color:#098675;background:#e1f7ed;border-radius:20px;padding:3px 8px}
+.abStudioFocusLinks,.bookFocusBack{display:flex;gap:8px;align-items:stretch;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:4px 0 8px}
+.abStudioFocusLinks a,.bookFocusBack a{flex:1 0 170px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:11px;min-height:45px;padding:10px;border:1px solid #c5dfd5;background:#ecf9f2;text-decoration:none;color:#1b7967;font-size:12px;font-weight:900}
+.abStudioTaskGrid:not([hidden]){max-height:min(34vh,270px);overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin}
+.abStudioLessonGrid:not([hidden]){max-height:170px;overflow-y:auto;scrollbar-width:thin}
+.abStudioChoose{padding-block:12px}
+@media(max-width:640px){.courseFocusShortcut{padding:11px;font-size:12px}.abStudioFocusLinks a,.bookFocusBack a{flex:0 0 190px}.abStudioChoose{padding:10px}.abStudioTaskGrid:not([hidden]){max-height:min(35vh,220px)}}
+@media(prefers-color-scheme:dark){.courseFocusShortcut,.abStudioFocusLinks a,.bookFocusBack a{background:#254a46;border-color:#39766c;color:#b4fce3}.abStudioChangeLesson,.abStudioToggleTasks{background:#2a3b54;border-color:#536781;color:#e6efff}}
