@@ -759,6 +759,9 @@ test('selecting a lesson focuses Practice, Kursbuch and Arbeitsbuch without losi
  await page.locator('.abStudioLessonGrid button').nth(7).click();
  await expect(page.locator('.abStudioChapterInfo')).toContainText('AB S. 60–65');
  await expect.poll(()=>page.evaluate(()=>localStorage.getItem('dt_current_lesson'))).toBe('8');
+ await expect(page).toHaveURL(/\/arbeitsbuch\?lesson=8/);
+ await page.reload();
+ await expect(page.locator('.abStudioChapterInfo')).toContainText('AB S. 60–65');
  await page.locator('.abStudioFocusLinks a[href="/practice/lesson/8"]').click();
  await expect(page).toHaveURL(/\/practice\/lesson\/8/);
  await expect(page.locator('#lfChooseLesson')).toHaveValue('8');
