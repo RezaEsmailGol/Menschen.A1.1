@@ -3,7 +3,7 @@ import {ArrowLeft,BookOpen,BookOpenCheck,CheckCircle2,ChevronDown,ChevronLeft,Cl
 import {lessons} from './courseData.js';
 import {KURSBUCH_SOURCE,KURSBUCH_SOURCE_NOTE,kursbuchChapters,kursbuchActions,kursbuchChapter,kursbuchActionByLesson,bookBingoWon,normalizeBookFill} from './kursbuchSourceExercises.js';
 import './kursbuchSourcePractice.css';
-import {lessonFromSearch,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
+import {lessonFromSearch,replaceLessonQuery,writeLessonFocus,scopedLessonLinks} from './lessonFocus.js';
 
 export const KURSBUCH_PROGRESS_KEY='dt_kursbuch_exercises_v1';
 function loadSaved(){
@@ -38,7 +38,7 @@ export default function KursbuchSourcePractice({speak=()=>{},onPracticeEvent}){
  function resetRound(item){
   setActiveId(item.id);setStep(0);setRevealed(false);setChecked(null);setTyped('');setQuizScore(0);setHard(0);setBingo(Array(25).fill(false));
  }
- function changeLesson(id){writeLessonFocus(window.localStorage,id,true);setLessonId(id);setShowAllActions(false);setActiveId('')}
+ function changeLesson(id){writeLessonFocus(window.localStorage,id,true);replaceLessonQuery(id,window.location,window.history);setLessonId(id);setShowAllActions(false);setActiveId('')}
  function markDone(item,correct=null,difficult=0){
   if(!item)return;
   setSaved(prev=>({...prev,[item.id]:{
