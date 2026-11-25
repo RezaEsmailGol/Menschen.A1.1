@@ -15,7 +15,6 @@ export default function PracticeJourney({journey,setTab,medal,memory={},storedLe
  const [search,setSearch]=useState('');
  const [status,setStatus]=useState('all');
  const current=activePracticeLesson(journey,storedLesson);
- const [expanded,setExpanded]=useState(current?.id||1);
  const filtered=filterPracticeLessons(journey.lessons,search,mode,status);
  const lesson8=journey.lessons.find(lesson=>lesson.id===8);
  return <div className="pjRoot">
@@ -77,39 +76,23 @@ export default function PracticeJourney({journey,setTab,medal,memory={},storedLe
       className={mode===item.id?'active':''} aria-pressed={mode===item.id} onClick={()=>setMode(item.id)}>
       {item.label}</button>)}
    </div>
-   <div className="pjLessonGrid">
-    {filtered.map(lesson=>{
-     const open=expanded===lesson.id;
-     const sections=mode==='all'?lesson.sections:lesson.sections.filter(s=>s.kind===mode);
-     return <article key={lesson.id} className={'pjLessonCard '+(open?'open ':'')+(lesson.isComplete?'complete':'')}>
-      <div className="pjLessonHeading"><span className="pjNumber">{display(lesson.id).padStart(2,'۰')}</span>
+   <div className="pjLessonGrid pjCompactLessonGrid">
+    {filtered.map(lesson=><article key={lesson.id} className={'pjLessonCard pjCompactLesson '+(lesson.isComplete?'complete':'')}>
+      <div className="pjLessonHeading">
+       <span className="pjNumber">{display(lesson.id).padStart(2,'۰')}</span>
        <span className={'pjLessonStatus '+(lesson.isComplete?'done':lesson.started?'started':'new')}>
         {lesson.isComplete?'تکمیل شد':lesson.started?'در حال یادگیری':'شروع‌نشده'}
-       </span></div>
+       </span>
+      </div>
       <div className="pjLessonTitle"><h4>{lesson.title}</h4><small className="pjLessonGerman" lang="de" dir="ltr">{lesson.subtitle}</small></div>
       <div className="pjLessonProgress"><div className="pjProgressNumbers"><b>{display(lesson.correct)} / {display(lesson.total)}</b><span>{display(lesson.percent)}٪</span></div>
        <div className="pjBar" role="progressbar" aria-label={'تمرین‌های درست درس '+lesson.id}
-         aria-valuenow={lesson.correct} aria-valuemin={0} aria-valuemax={lesson.total}><span style={{width:lesson.percent+'%'}}/></div></div>
+        aria-valuenow={lesson.correct} aria-valuemin={0} aria-valuemax={lesson.total}><span style={{width:lesson.percent+'%'}}/></div></div>
       <div className="pjLessonActions">
-       <a href={nextPracticeSection(lesson,mode)?.href||lesson.href} className="pjLessonStart"><PlayCircle size={17}/> {lesson.isComplete?'مرور':lesson.started?'ادامه':'شروع'}</a>
-       <button type="button" className="pjExpand" aria-expanded={open} aria-controls={'pj-sections-'+lesson.id}
-        onClick={()=>setExpanded(open?null:lesson.id)}>{display(sections.length)} بخش <ChevronDown size={16}/></button>
+       <RouteLink to={'practiceLesson/'+lesson.id} navigate={setTab} className="pjLessonStart"><Layers size={17}/> مشاهده {display(lesson.sections.length)} بخش در صفحه جدا</RouteLink>
+       <a href={nextPracticeSection(lesson,mode)?.href||lesson.href} className="pjExpand"><PlayCircle size={17}/> تمرین بعدی</a>
       </div>
-      {open&&<div className="pjSections" id={'pj-sections-'+lesson.id}>
-       {sections.map(section=>{
-        const Icon=ICONS[section.kind]||Layers;
-        return <a key={section.id} href={section.href} className="pjSectionLink">
-         <span className={'pjSectionIcon '+section.kind}><Icon size={17}/></span>
-         <span className="pjSectionCopy"><b>{section.label}</b><small>{section.name}</small></span>
-         <span className="pjSectionProgress">{display(section.completed)}/{display(section.total)}</span>
-         <ChevronLeft size={16}/>
-        </a>;
-       })}
-       <a className="pjAudioLink" href={lesson.audioHref}><Volume2 size={17}/> یادگیری صوتی، تصویر و تلفظ
-        <span>{display(lesson.audioCompleted)} تمرین موفق</span><ChevronLeft size={16}/></a>
-      </div>}
-     </article>;
-    })}
+     </article>)}
    </div>
    {!filtered.length&&<div className="pjEmpty">
      <Target size={26}/><strong>درسی با این فیلتر پیدا نشد.</strong>
@@ -126,5 +109,51 @@ export default function PracticeJourney({journey,setTab,medal,memory={},storedLe
     <RouteLink to="progress" navigate={setTab}>دیدن مدال‌ها <ChevronLeft size={15}/></RouteLink>
   </div>}
   </div>
+ </div>;
+}
+
+export function PracticeLessonDetail({journey,lessonId,setTab}){
+ const [mode,setMode]=useState('all');
+ const [showTips,setShowTips]=useState(false);
+ const lesson=journey.lessons.find(item=>item.id===Number(lessonId));
+ if(!lesson)return <div className="pjDetail"><p>این درس پیدا نشد.</p><RouteLink to="practice" navigate={setTab}>بازگشت به تمرین‌ها</RouteLink></div>;
+ const sections=mode==='all'?lesson.sections:lesson.sections.filter(item=>item.kind===mode);
+ return <div className="pjDetail" dir="rtl">
+  <header className="pjDetailHeader">
+   <div><span className="pjEyebrow">LESSON {display(lesson.id)} · FOCUS PAGE</span>
+    <h1>تمرین‌های درس {display(lesson.id)} · {lesson.title}</h1>
+    <p lang="de" dir="ltr">{lesson.subtitle}</p></div>
+   <RouteLink to="practice" navigate={setTab} className="pjDetailBack"><ArrowLeft size={17}/> فهرست تمرین‌ها</RouteLink>
+  </header>
+  <div className="pjDetailSummary"><div><b>{display(lesson.correct)} از {display(lesson.total)}</b><small>سؤال صحیح کتاب</small></div>
+   <div><b>{display(lesson.percent)}٪</b><small>پیشرفت درس</small></div>
+   <div><b>{display(lesson.audioCompleted)}</b><small>موفقیت صوتی</small></div></div>
+  <div className="pjDetailModeTabs" role="group" aria-label="فیلتر بخش‌های این درس">
+   {LESSON_PRACTICE_MODES.map(item=><button type="button" key={item.id} aria-pressed={mode===item.id}
+    className={mode===item.id?'selected':''} onClick={()=>setMode(item.id)}>{item.label}</button>)}
+  </div>
+  <section className="pjDetailSections" aria-label="بخش‌های مستقل تمرین">
+   {sections.map(section=>{
+    const Icon=ICONS[section.kind]||Layers;
+    return <a key={section.id} href={section.href} className="pjDetailSection">
+     <span className={'pjSectionIcon '+section.kind}><Icon size={24}/></span>
+     <span className="pjSectionCopy"><b>{section.label}</b><small>{section.name}</small>
+      <span className="pjBar"><span style={{width:section.percent+'%'}}/></span></span>
+     <span className="pjDetailSectionProgress">{display(section.completed)} / {display(section.total)} <ChevronLeft size={17}/></span>
+    </a>;
+   })}
+   <a className="pjDetailSection pjDetailAudio" href={lesson.audioHref}><span className="pjSectionIcon listening"><Volume2 size={24}/></span>
+    <span className="pjSectionCopy"><b>تمرین شنیداری و تلفظ</b><small>تصویر، فایل صوتی و تکرار</small></span>
+    <span className="pjDetailSectionProgress">{display(lesson.audioCompleted)} موفق <ChevronLeft size={17}/></span>
+   </a>
+  </section>
+  {lesson.id===8&&<div className="pjDetailCallout"><Clock3 size={24}/><div><b>ساعت رسمی و محاوره‌ای را سخت تمرین کن</b><small>دیکته، نیم و ربع، دقیقه‌های چالشی</small></div>
+   <RouteLink to="clockMastery" navigate={setTab}>باشگاه ساعت <ChevronLeft size={17}/></RouteLink></div>}
+  <button type="button" className="pjDetailTipsButton" aria-expanded={showTips} aria-controls="pj-detail-tips"
+   onClick={()=>setShowTips(value=>!value)}>روش تمرین سخت‌گیرانه <ChevronDown size={16}/></button>
+  {showTips&&<div id="pj-detail-tips" className="pjDetailTips">
+   یک بخش را انتخاب کن، پاسخ‌ها را بدون نگاه به راه‌حل بنویس، سپس پاسخ‌های اشتباه را دوباره تمرین کن.
+   <a href={nextPracticeSection(lesson,mode)?.href||lesson.href}>ادامه از اولین سؤال حل‌نشده</a>
+  </div>}
  </div>;
 }
