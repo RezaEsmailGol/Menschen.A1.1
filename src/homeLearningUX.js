@@ -55,8 +55,8 @@ const practiceFilterIds={
   daily:['articles','coach','classNotes','night','srs','workbook'],
   speaking:['speaking','pronunciation','listen','dialogues','classNotes'],
   words:['articles','visualMemory','visual','srs','flash','words','alphabet','verbs'],
-  challenge:['articles','pictureGame','builder','numbers','numberMastery','clockMastery','exam','workbook'],
-  numbers:['numbers','numberMastery','clockMastery','alphabet']
+  challenge:['articles','pictureGame','builder','numbers','numberMastery','clockMastery','teacherClock','exam','workbook'],
+  numbers:['numbers','numberMastery','clockMastery','teacherClock','alphabet']
 };
 export function matchesPracticeFilter(id,filter){
   return filter==='all'||(practiceFilterIds[filter]?.includes(id)??false);
