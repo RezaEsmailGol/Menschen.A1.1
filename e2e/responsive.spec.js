@@ -455,6 +455,9 @@ test('home resume, lesson and practice buttons work on Android-sized screens',as
   await expect(page.locator('.homeV2Destinations a')).toHaveCount(2);
   await page.locator('.homeV2Destinations a[href="/practice"]').click();
   await expect(page).toHaveURL(/\/practice$/);
+  await expect(page.locator('.lfWorkspace')).toBeVisible();
+  await expect(page.locator('#lfChooseLesson')).toHaveValue('5');
+  await page.locator('.lfRibbonActions button').click();
   await expect(page.getByRole('heading',{name:'تمرین‌های آلمانی'})).toBeVisible();
   await page.getByRole('button',{name:'گفتار و شنیدن'}).click();
   await expect(page.locator('.practiceV2Tiles')).toContainText('مربی تلفظ من');
@@ -866,6 +869,10 @@ test('organized practice page resumes selected lesson and opens the correct less
  await page.setViewportSize({width:360,height:800});
  await page.addInitScript(()=>localStorage.setItem('dt_current_lesson','8'));
  await page.goto('/practice');
+ await expect(page.locator('.lfWorkspace')).toBeVisible();
+ await expect(page.locator('#lfChooseLesson')).toHaveValue('8');
+ await expect(page.locator('.lfBookGrid a[href="/arbeitsbuch?lesson=8"]')).toBeVisible();
+ await page.locator('.lfRibbonActions button').click();
  await expect(page.locator('.pjHero .pjMainAction')).toHaveAttribute('href',/\/lessons\/8\?/);
  await expect(page.locator('.practiceV2Header')).toContainText('۴۰۰');
  await expect(page.locator('.pjSpotlightGrid .pjLabLink')).toHaveCount(6);
