@@ -662,21 +662,49 @@ test('new practice studio has 400 lesson exercises, four deep-linked skills and 
  await expect(page.locator('.pjLessonCard')).toHaveCount(12);
  await expect(page.locator('.pjQuickMode')).toHaveCount(4);
  await expect(page.locator('.pjModeTabs button')).toHaveCount(5);
- await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(4);
- await expect(page.locator('.pjLessonCard.open .pjAudioLink')).toHaveAttribute('href','/lessons/1#lesson-audio');
+ await expect(page.locator('.pjCompactLessonGrid')).toBeVisible();
+ await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(0);
+ await expect(page.locator('.practiceV2FocusLinks a')).toHaveCount(2);
  await expect(page.locator('.practiceV2Catalog')).toContainText('بازی اعداد');
  await expect(page.locator('.practiceV2Catalog')).toContainText('مرور هوشمند');
  await page.locator('.pjSearch input').fill('مبلمان');
  await expect(page.locator('.pjLessonCard')).toHaveCount(1);
  await expect(page.locator('.pjLessonCard h4')).toContainText('مبلمان');
- await page.locator('.pjModeTabs button').filter({hasText:'شنیداری'}).click();
- await page.locator('.pjExpand').click();
- await expect(page.locator('.pjLessonCard.open .pjSectionLink')).toHaveCount(1);
- const href=await page.locator('.pjLessonCard.open .pjSectionLink').getAttribute('href');
+ await page.locator('.pjLessonStart').click();
+ await expect(page).toHaveURL(/\/practice\/lesson\/4/);
+ await expect(page.locator('.pjDetailSections .pjDetailSection')).toHaveCount(5);
+ await page.locator('.pjDetailModeTabs button').filter({hasText:'شنیداری'}).click();
+ await expect(page.locator('.pjDetailSections .pjDetailSection')).toHaveCount(2);
+ const href=await page.locator('.pjDetailSection').first().getAttribute('href');
  expect(href).toMatch(/^\/lessons\/4\?section=/);
- await page.locator('.pjLessonCard.open .pjSectionLink').click();
+ await page.locator('.pjDetailSection').first().click();
  await expect(page).toHaveURL(/\/lessons\/4\?section=.*#book-practice/);
  await expect(page.locator('.bookLessonRoot')).toBeVisible();
+ await context.close();
+});
+
+test('intensive number and clock drill pages fit 320px and support writing, audio and flashcards',async ({browser})=>{
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:5173',
+  viewport:{width:320,height:740},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.goto('/number-mastery');
+ await expect(page.locator('.ipHeader')).toContainText('اعداد');
+ await expect(page.locator('.ipScroll').first().locator('button')).toHaveCount(5);
+ await expect(page.locator('.ipRule')).toContainText('۹۰٪');
+ await page.getByRole('button',{name:/شروع آزمون/}).click();
+ await expect(page.locator('.ipQuestion')).toBeVisible();
+ await expect(page.locator('#ip-entry')).toBeVisible();
+ const widthNumbers=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(widthNumbers).toBeLessThanOrEqual(322);
+ await page.goto('/clock-mastery');
+ await expect(page.locator('.ipHeader')).toContainText('ساعت');
+ await page.locator('.ipToggle button').filter({hasText:'محاوره‌ای'}).click();
+ await page.getByRole('button',{name:/فلش‌کارت سخت/}).click();
+ await page.getByRole('button',{name:/شروع آزمون/}).click();
+ await page.getByRole('button',{name:'نمایش پاسخ پشت فلش‌کارت'}).click();
+ await expect(page.locator('.ipReveal')).toBeVisible();
+ const widthClock=await page.evaluate(()=>document.documentElement.scrollWidth);
+ expect(widthClock).toBeLessThanOrEqual(322);
  await context.close();
 });
 

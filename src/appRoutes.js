@@ -3,7 +3,7 @@ export const ROUTES=Object.freeze({
   home:'/', course:'/lessons', practice:'/practice', progress:'/progress', coach:'/coach',
   articles:'/articles', classNotes:'/class-notes', night:'/night-shift', visualMemory:'/visual-memory',
   workbook:'/workbook', dialogues:'/dialogues',partner:'/partner-practice',bookSource:'/book-exercises',actionPages:'/action-pages',essentialWords:'/essential-words',arbeitsbuch:'/arbeitsbuch',arbeitsbuchMedia:'/arbeitsbuch-media',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
-  numbers:'/numbers',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
+  numbers:'/numbers',numberMastery:'/number-mastery',clockMastery:'/clock-mastery',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
   listen:'/dictation',words:'/first-words',alphabet:'/alphabet',verbs:'/verbs'
 });
 export const DIALOGUE_IDS=Object.freeze(['greetings','origin','cafe','office','interview']);
@@ -15,6 +15,10 @@ function validLesson(value){
 export function normalizeRoute(route){
  if(typeof route!=='string')return 'home';
  const sanitized=route.trim().replace(/^\/+|\/+$/g,'');
+ if(sanitized.startsWith('practiceLesson/')){
+  const lesson=sanitized.slice('practiceLesson/'.length);
+  return validLesson(lesson)?'practiceLesson/'+lesson:'practice';
+ }
  if(sanitized.startsWith('dialogues/')){
    const id=sanitized.slice('dialogues/'.length);
    return DIALOGUE_IDS.includes(id)?'dialogues/'+id:'dialogues';
@@ -31,6 +35,7 @@ export function normalizeRoute(route){
 }
 export function pathForRoute(route){
  const id=normalizeRoute(route);
+ if(id.startsWith('practiceLesson/'))return '/practice/lesson/'+id.slice('practiceLesson/'.length);
  if(id.startsWith('dialogues/'))return '/dialogues/'+id.slice('dialogues/'.length);
  if(id.startsWith('workbook/'))return '/workbook/'+id.slice('workbook/'.length);
  if(id.startsWith('course/'))return '/lessons/'+id.slice('course/'.length);
@@ -38,6 +43,10 @@ export function pathForRoute(route){
 }
 export function routeFromPath(pathname){
  const path=String(pathname||'/').replace(/\/+$/,'')||'/';
+ if(path.startsWith('/practice/lesson/')){
+  const id=path.slice('/practice/lesson/'.length);
+  return validLesson(id)?'practiceLesson/'+id:'home';
+ }
  if(path.startsWith('/dialogues/')){
    const id=path.slice('/dialogues/'.length);
    return DIALOGUE_IDS.includes(id)?'dialogues/'+id:'home';

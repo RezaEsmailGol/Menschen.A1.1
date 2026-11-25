@@ -30,6 +30,17 @@ test('all 12 lessons and workbook pages support direct deep links',()=>{
  assert.equal(normalizeRoute('course/13'),'course');
  assert.equal(routeFromPath('/not-a-page'),'home');
 });
+test('all lesson focus pages and strict number/time drills are independently shareable',()=>{
+ assert.equal(pathForRoute('numberMastery'),'/number-mastery');
+ assert.equal(pathForRoute('clockMastery'),'/clock-mastery');
+ for(let id=1;id<=12;id++){
+  assert.equal(pathForRoute('practiceLesson/'+id),'/practice/lesson/'+id);
+  assert.equal(routeFromPath('/practice/lesson/'+id),'practiceLesson/'+id);
+ }
+ assert.equal(routeFromPath('/practice/lesson/13'),'home');
+ assert.equal(normalizeRoute('practiceLesson/0'),'practice');
+});
+
 test('multiple-choice number game always has 4 unique valid options, including answer',()=>{
  for(const maximum of [12,20,100]){
   for(let round=0;round<8;round++){

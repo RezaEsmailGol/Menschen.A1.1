@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { Volume2, RotateCcw, CheckCircle2, XCircle, BookOpen, Keyboard, Hash, Languages, Play, Shuffle, Trophy, Upload, Download, Plus, Trash2 } from 'lucide-react';
 import PronunciationLab from './PronunciationLab';
 import NumberLab from './NumberLab';
+const IntensivePractice = React.lazy(() => import('./IntensivePractice.jsx'));
 import PhaseOne from './PhaseOne';
 import TeacherWorkbook from './TeacherWorkbook';
 import ClassNotes from './ClassNotes';
@@ -30,7 +31,7 @@ import {usePageRoute} from './usePageRoute';
 import { pronouns, verbForms } from './courseData';
 import VerbTrainer from './VerbTrainer.jsx';
 import { Home as HomeIcon, BookOpenCheck, LayoutGrid, ChartNoAxesCombined, ChevronRight } from 'lucide-react';
-import { TodayDashboard, PracticeHub, ProgressPage } from './LearningScreens';
+import { TodayDashboard, PracticeHub, PracticeLessonPage, ProgressPage } from './LearningScreens';
 import { MEMORY_KEY, recordActivity, learningInsights, activityItemKey } from './learningMemory';
 import { COURSE_KEY, REVIEW_KEY } from './studyEngine';
 import './mobileGame.css';
@@ -47,6 +48,7 @@ if(import.meta.env.PROD&&typeof window!=='undefined'&&'serviceWorker' in navigat
 
 // Final viewport-safe overrides apply to every in-app route and modal.
 import './responsive.css';
+import './practiceFocus.css';
 
 const lessonOneWords = [
   { de: 'Sonne', fa: 'خورشید', hint: 'S در ابتدای واژه معمولاً /z/ شنیده می‌شود.' },
@@ -127,7 +129,7 @@ const routes = [
 ];
 const secondaryTitles = {
   arbeitsbuchMedia:'کتاب کار · تمرین تصویری و شنیداری',arbeitsbuch:'کتاب کار Arbeitsbuch',actionPages:'تمرین‌های دوره‌ای ۷۳ تا ۹۶',essentialWords:'واژگان مهم کتاب',bookSource:'تمرین‌های اصلی کتاب',partner:'گفت‌وگوی دونفره',coach:'مربی روزانه',pictureGame:'بازی تصویر به آلمانی',visual:'درس تصویری اول',dialogues:'گفت‌وگوی تعاملی',workbook:'دفتر جلسه اول استاد',articles:'باشگاه جنسیت کلمات',classNotes:'تمرین‌های جدید کلاس',night:'شیفت شب',visualMemory:'یادسپاری تصویری',srs:'مرور هوشمند',builder:'جمله‌سازی',exam:'آزمون درس',
-  numbers:'بازی اعداد ۰ تا ۱۰۰',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
+  numbers:'بازی اعداد ۰ تا ۱۰۰',numberMastery:'تمرین سخت اعداد و املا',clockMastery:'ساعت رسمی و محاوره‌ای',practiceLesson:'بخش‌های تمرینی درس',pronunciation:'تلفظ و استثناها',speaking:'مربی تلفظ من',
   flash:'فلش‌کارت شخصی',listen:'دیکته شنیداری',
   words:'کلمات جلسه اول',alphabet:'الفبا',verbs:'باشگاه صرف افعال'
 };
@@ -144,7 +146,7 @@ function BottomNav({tab,setTab}) {
 
 function App() {
   const [route, setTab] = usePageRoute();
-  const tab=route.startsWith('dialogues/')?'dialogues':route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route;
+  const tab=route.startsWith('dialogues/')?'dialogues':route.startsWith('workbook/')?'workbook':route.startsWith('course/')?'course':route.startsWith('practiceLesson/')?'practiceLesson':route;
   const [audioSpeed, setAudioSpeed] = useLocalStorage('dt_audio_speed', 0.82);
   const [cards, setCards] = useLocalStorage('dt_cards', defaultCards);
   const [progress, setProgress] = useLocalStorage(COURSE_KEY, {1:{started:true}});
@@ -199,6 +201,8 @@ function App() {
     <main>
       {tab==='home' && <TodayDashboard setTab={setTab} memory={memory} progress={progress} schedule={schedule} legacyStats={stats} dailyGoal={safeDailyGoal(dailyGoal)} />}
       {tab==='practice' && <PracticeHub setTab={setTab} memory={memory} progress={progress} dailyGoal={dailyGoal} speakingState={speakingState} />}
+      {tab==='practiceLesson' && <PracticeLessonPage lessonId={Number(route.split('/')[1])} setTab={setTab}/>}
+      {['numberMastery','clockMastery'].includes(tab) && <React.Suspense fallback={<p role="status">در حال آماده‌سازی تمرین سخت...</p>}><IntensivePractice key={tab} kind={tab==='clockMastery'?'clock':'number'} speak={speak} setTab={setTab} onPracticeEvent={onPracticeEvent}/></React.Suspense>}
       {tab==='coach' && <DailyCoach setTab={setTab} memory={memory} progress={progress} schedule={schedule} goal={dailyGoal} setGoal={updateDailyGoal} />}
       {tab==='visual' && <VisualLesson speak={speak} memory={memory} onPracticeEvent={onPracticeEvent} setTab={setTab} />}
       {tab==='pictureGame' && <PictureGame speak={speak} onPracticeEvent={onPracticeEvent} memory={memory} setTab={setTab} />}

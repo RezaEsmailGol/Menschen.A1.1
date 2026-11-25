@@ -46,6 +46,7 @@ export const practiceFilters=Object.freeze([
   {id:'all',label:'همه تمرین‌ها'},
   {id:'daily',label:'روزانه و کلاس'},
   {id:'speaking',label:'گفتار و شنیدن'},
+  {id:'numbers',label:'اعداد و ساعت'},
   {id:'words',label:'کلمات و حافظه'},
   {id:'challenge',label:'بازی و آزمون'}
 ]);
@@ -54,7 +55,8 @@ const practiceFilterIds={
   daily:['articles','coach','classNotes','night','srs','workbook'],
   speaking:['speaking','pronunciation','listen','dialogues','classNotes'],
   words:['articles','visualMemory','visual','srs','flash','words','alphabet','verbs'],
-  challenge:['articles','pictureGame','builder','numbers','exam','workbook']
+  challenge:['articles','pictureGame','builder','numbers','numberMastery','clockMastery','exam','workbook'],
+  numbers:['numbers','numberMastery','clockMastery','alphabet']
 };
 export function matchesPracticeFilter(id,filter){
   return filter==='all'||(practiceFilterIds[filter]?.includes(id)??false);

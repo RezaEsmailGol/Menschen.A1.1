@@ -108,7 +108,9 @@ test('new practice UI integrates real progress and keeps original 19 practice to
  assert.match(jsx,/href=\{section.href\}/);
  assert.match(jsx,/href=\{lesson.audioHref\}/);
  assert.match(jsx,/nextPracticeSection\(lesson,mode\)/);
- assert.match(jsx,/aria-expanded=\{open\}/);
+ assert.match(jsx,/aria-expanded=\{showTips\}/);
+ assert.match(jsx,/practiceLesson/);
+ assert.match(jsx,/PracticeLessonDetail/);
  assert.match(jsx,/aria-label="جست‌وجو در درس‌ها و تمرین‌ها"/);
  assert.match(css,/@media\(max-width:470px\)/);
  assert.match(css,/prefers-reduced-motion:reduce/);
