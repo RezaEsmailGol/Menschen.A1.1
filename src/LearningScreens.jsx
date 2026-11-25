@@ -10,7 +10,9 @@ import {weakSpeechWords} from './speechWordMemory.js';
 import './speechGauge.css';
 import {buildProgressReport} from './progressAchievements.js';
 import ProgressAchievements from './ProgressAchievements.jsx';
-import PracticeJourney,{PracticeLessonDetail} from './PracticeJourney.jsx';
+import PracticeJourney from './PracticeJourney.jsx';
+import LessonFocusWorkspace from './LessonFocusWorkspace.jsx';
+import {readLessonFocus,writeLessonFocus,validLessonId} from './lessonFocus.js';
 import {practiceJourney,normalizePracticeSearch} from './practiceJourneyData.js';
 import RouteLink from './RouteLink';
 import {currentHomeLessonId,bookLessonOverview,nextBookExerciseHref,practiceFilters,matchesPracticeFilter} from './homeLearningUX.js';
@@ -180,6 +182,7 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
   try{storedLesson=window.localStorage.getItem('dt_current_lesson');}catch{}
   const achievements=buildProgressReport({memory,progress,bookSaved,audioSaved,dailyGoal,speakingState});
   const report=learningInsights(memory);
+  const [focusState,setFocusState]=React.useState(()=>readLessonFocus(typeof window==='undefined'?null:window.localStorage));
   const [filter,setFilter]=React.useState('all');
   const [search,setSearch]=React.useState('');
   const firstWeak=report.weakItems[0];
@@ -191,11 +194,27 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
   const filtered=practiceCategories.filter(item=>
     matchesPracticeFilter(item.id,filter)&&
     normalizePracticeSearch(item.label+' '+item.hint).includes(normalizePracticeSearch(search)));
+  function focusLesson(id){
+    const next=validLessonId(id);if(!next)return;
+    writeLessonFocus(window.localStorage,next,true);
+    setFocusState({lessonId:next,enabled:true});
+  }
+  if(focusState.enabled)return <LessonFocusWorkspace lessonId={focusState.lessonId} journey={journey} setTab={setTab}
+    onExit={()=>setFocusState(old=>({...old,enabled:false}))}/>;
   return <div className="gamePage practiceV2">
     <header className="practiceV2Header">
       <div><h1>تمرین‌های آلمانی</h1><p>{journey.lessons.length.toLocaleString('fa-IR')} درس · {journey.total.toLocaleString('fa-IR')} سؤال اصلی</p></div>
       <RouteLink to="course" navigate={setTab}><BookOpenCheck size={17}/> مشاهده درس‌ها <ArrowLeft size={17}/></RouteLink>
     </header>
+    <section className="lfStartFocus" aria-label="انتخاب تمرین متمرکز برای یک درس">
+     <div><Target size={21}/><span><b>روی یک درس تمرکز کن</b><small>بعد از انتخاب، همه تمرین‌های درس، Kursbuch و Arbeitsbuch در یک صفحه جمع می‌شوند.</small></span></div>
+     <label>درس
+      <select aria-label="درس تمرین متمرکز" value={focusState.lessonId} onChange={e=>setFocusState(s=>({...s,lessonId:Number(e.target.value)}))}>
+       {lessons.map(item=><option key={item.id} value={item.id}>درس {item.id} · {item.label}</option>)}
+      </select>
+     </label>
+     <button type="button" onClick={()=>focusLesson(focusState.lessonId)}><Target size={16}/> شروع تمرین متمرکز</button>
+    </section>
     <nav className="practiceJumpNav" aria-label="دسترسی سریع در صفحه تمرین‌ها"><a href="#practice-lessons"><BookOpenCheck size={17}/> درس‌ها</a><a href="#practice-tools"><Layers size={17}/> ابزارهای تمرینی</a><a href="#practice-review"><RotateCcw size={17}/> مرور و مدال</a></nav>
     <div className="practiceV2FocusLinks"><RouteLink to="teacherClock" navigate={setTab}><Clock3 size={22}/><span><b>گرامر ساعت تخته استاد</b><small>۱۶:۰۰ تا ۱۷:۰۰ · vor / nach / halb · آزمون سخت</small></span><ArrowLeft size={18}/></RouteLink><RouteLink to="numberMastery" navigate={setTab}><Hash size={22}/><span><b>تمرین سخت اعداد</b><small>فلش‌کارت · دیکته · ۱۰، ۲۰، ۴۰، ۲۰۰، ۳۰۰</small></span><ArrowLeft size={18}/></RouteLink><RouteLink to="clockMastery" navigate={setTab}><Clock3 size={22}/><span><b>تمرین سخت ساعت</b><small>نوشتن ساعت رسمی و محاوره‌ای · دقیقه به دقیقه</small></span><ArrowLeft size={18}/></RouteLink></div>
     <a className="speechWeakLink" href="/speaking?review=words"><Mic2 size={21}/><span>تمرین هوشمند تلفظ · {weakSpeechWords(speakingState).length.toLocaleString('fa-IR')} کلمه برای مرور</span><ChevronLeft size={17}/></a>
@@ -224,7 +243,7 @@ export function PracticeHub({setTab,memory,progress={},dailyGoal=10,speakingStat
 
 export function PracticeLessonPage({lessonId,setTab}){
   const journey=practiceJourney(savedBookAnswers(),savedAudioProgress());
-  return <PracticeLessonDetail journey={journey} lessonId={lessonId} setTab={setTab}/>;
+  return <LessonFocusWorkspace journey={journey} lessonId={lessonId} setTab={setTab}/>;
 }
 
 export function ProgressPage({setTab,memory,progress,schedule,dailyGoal=10,speakingState={}}) {
