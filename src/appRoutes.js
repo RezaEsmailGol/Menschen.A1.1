@@ -3,7 +3,7 @@ export const ROUTES=Object.freeze({
   home:'/', course:'/lessons', practice:'/practice', progress:'/progress', coach:'/coach',
   articles:'/articles', classNotes:'/class-notes', night:'/night-shift', visualMemory:'/visual-memory',
   workbook:'/workbook', dialogues:'/dialogues',partner:'/partner-practice',bookSource:'/book-exercises',actionPages:'/action-pages',essentialWords:'/essential-words',arbeitsbuch:'/arbeitsbuch',arbeitsbuchMedia:'/arbeitsbuch-media',visual:'/visual-lesson',pictureGame:'/picture-game', srs:'/review',builder:'/sentences',exam:'/lesson-test',
-  numbers:'/numbers',numberMastery:'/number-mastery',clockMastery:'/clock-mastery',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
+  numbers:'/numbers',numberMastery:'/number-mastery',clockMastery:'/clock-mastery',teacherClock:'/teacher-clock',pronunciation:'/pronunciation',speaking:'/speaking',flash:'/flashcards',
   listen:'/dictation',words:'/first-words',alphabet:'/alphabet',verbs:'/verbs'
 });
 export const DIALOGUE_IDS=Object.freeze(['greetings','origin','cafe','office','interview']);
