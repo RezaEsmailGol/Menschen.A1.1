@@ -4,7 +4,7 @@ import {lessons} from './courseData.js';
 import {arbeitsbuchLesson,ARBEITSBUCH_KEY} from './arbeitsbuchSourceData.js';
 import {kursbuchChapter,kursbuchActionByLesson} from './kursbuchSourceExercises.js';
 import {arbeitsbuchMediaForLesson,AB_MEDIA_KEY} from './arbeitsbuchMediaData.js';
-import {KURSBUCH_PROGRESS_KEY} from './KursbuchSourcePractice.jsx';
+const KURSBUCH_PROGRESS_KEY='dt_kursbuch_exercises_v1';
 import {PracticeLessonDetail} from './PracticeJourney.jsx';
 import {scopedLessonLinks,validLessonId,writeLessonFocus} from './lessonFocus.js';
 import RouteLink from './RouteLink.jsx';
