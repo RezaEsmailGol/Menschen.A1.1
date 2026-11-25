@@ -52,3 +52,13 @@
 .pjDetailSection .pjDetailNeutralText{color:#6c7d90}
 @media(max-width:390px){.pjDetailSummary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-color-scheme:dark){.pjDetailSection .pjDetailWeakText{color:#ffd09d}}
+
+/* One swipeable strip per skill instead of stacking every tile vertically on phones. */
+@media(max-width:700px){
+ .practiceV2 .pjQuickModes{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;gap:8px;scrollbar-width:thin;padding-bottom:9px}
+ .practiceV2 .pjQuickMode{flex:0 0 190px;scroll-snap-align:start;min-height:74px}
+ .practiceV2 .pjSpotlightGrid{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:9px}
+ .practiceV2 .pjLabLink{flex:0 0 170px;scroll-snap-align:start;min-height:70px}
+ .practiceV2 .practiceV2Tiles{grid-template-columns:1fr}
+ .practiceV2 .pjLessonPanel{padding:10px}
+}
